@@ -1,12 +1,14 @@
 modelo\Cotizacion.class
 modelo\Proyecto.class
 utils\Conexion.class
+com\mycompany\vidriera\Test2Crear.class
 modelo\CanceleriaFijaDetalle.class
 modelo\PuertaAbatibleDetalle.class
 modelo\TipoCanceleria.class
 modelo\TipoPuerta.class
+com\mycompany\vidriera\Test3Editar.class
 modelo\Vendedor.class
-com\mycompany\vidriera\Test2.class
+com\mycompany\vidriera\Test4Cancelar.class
 dao\CotizacionDAO.class
 modelo\Cliente.class
 modelo\VentanaDetalle.class

@@ -6,7 +6,7 @@ package modelo;
 
 /**
  *
- * @author pauli
+ * @author Vidrieria
  */
 public enum TipoCanceleria {
     TIPO_2("\"2\""),

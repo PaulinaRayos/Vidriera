@@ -10,7 +10,7 @@ import utils.Conexion;
 
 /**
  *
- * @author pauli
+ * @author Vidrieria
  */
 public class TestConexion {
     public static void main(String[] args) {

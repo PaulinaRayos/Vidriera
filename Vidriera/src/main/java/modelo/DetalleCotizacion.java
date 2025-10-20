@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * cantidad, tipo de cristal, subtotal y descripción del trabajo.
  * Cada detalle pertenece a una cotización.
  * 
- * @author pauli
+ * @author Vidrieria
  */
 public class DetalleCotizacion {
 

@@ -12,12 +12,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import modelo.Cliente;
 import modelo.Cotizacion;
+import modelo.Vendedor;
 import utils.Conexion;
 
 /**
  *
- * @author pauli
+ * @author Vidrieria
  */
 public class CotizacionDAO {
 
@@ -27,7 +29,11 @@ public class CotizacionDAO {
         this.conexion = conexion;
     }
 
-    // Crear Cotización
+    public Connection getConexion() {
+        return this.conexion;
+    }
+
+    // Crear Cotizacion
     public boolean crearCotizacion(Cotizacion cotizacion) {
         String sql = "INSERT INTO cotizacion(fecha, subtotal, manoObra, iva, descuentoMonto, total, estado, idCliente, idProyecto, idVendedor) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -41,7 +47,6 @@ public class CotizacionDAO {
             ps.setString(7, cotizacion.getEstado());
             ps.setInt(8, cotizacion.getCliente().getIdCliente());
 
-            // Permitir proyecto nulo
             if (cotizacion.getProyecto() != null) {
                 ps.setInt(9, cotizacion.getProyecto().getIdProyecto());
             } else {
@@ -54,7 +59,7 @@ public class CotizacionDAO {
             if (filas > 0) {
                 ResultSet rs = ps.getGeneratedKeys();
                 if (rs.next()) {
-                    cotizacion.setIdCotizacion(rs.getInt(1)); // asigna el ID generado
+                    cotizacion.setIdCotizacion(rs.getInt(1));
                 }
                 return true;
             }
@@ -67,7 +72,7 @@ public class CotizacionDAO {
     // Leer todas las Cotizaciones
     public List<Cotizacion> obtenerTodas() {
         List<Cotizacion> lista = new ArrayList<>();
-        String sql = "SELECT * FROM cotizacion";
+        String sql = "SELECT * FROM cotizacion"; // Para una version mas completa, este tambien deberia usar JOINs
         try (Statement stmt = conexion.createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -78,7 +83,7 @@ public class CotizacionDAO {
                 c.setDescuentoMonto(rs.getBigDecimal("descuentoMonto"));
                 c.setTotal(rs.getBigDecimal("total"));
                 c.setEstado(rs.getString("estado"));
-                // despues aqui agregar para cargar Cliente y Vendedor 
+                // NOTA: Faltaria cargar Cliente y Vendedor
                 lista.add(c);
             }
         } catch (SQLException e) {
@@ -87,17 +92,29 @@ public class CotizacionDAO {
         return lista;
     }
 
-    // Actualizar Cotización
+    // ========= METODO CORREGIDO =========
+    // Actualizar Cotizacion (Version Completa)
     public boolean actualizarCotizacion(Cotizacion cotizacion) {
-        String sql = "UPDATE cotizacion SET fecha=?, subtotal=?, descuentoMonto=?, total=?, estado=? "
+        String sql = "UPDATE cotizacion SET fecha=?, subtotal=?, manoObra=?, iva=?, descuentoMonto=?, total=?, estado=?, idCliente=?, idProyecto=?, idVendedor=? "
                 + "WHERE idCotizacion=?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setDate(1, new java.sql.Date(cotizacion.getFecha().getTime()));
             ps.setBigDecimal(2, cotizacion.getSubtotal());
-            ps.setBigDecimal(3, cotizacion.getDescuentoMonto());
-            ps.setBigDecimal(4, cotizacion.getTotal());
-            ps.setString(5, cotizacion.getEstado());
-            ps.setInt(6, cotizacion.getIdCotizacion());
+            ps.setBigDecimal(3, cotizacion.getManoObra());
+            ps.setBigDecimal(4, cotizacion.getIva());
+            ps.setBigDecimal(5, cotizacion.getDescuentoMonto());
+            ps.setBigDecimal(6, cotizacion.getTotal());
+            ps.setString(7, cotizacion.getEstado());
+            ps.setInt(8, cotizacion.getCliente().getIdCliente());
+
+            if (cotizacion.getProyecto() != null) {
+                ps.setInt(9, cotizacion.getProyecto().getIdProyecto());
+            } else {
+                ps.setNull(9, java.sql.Types.INTEGER);
+            }
+            
+            ps.setInt(10, cotizacion.getVendedor().getIdVendedor());
+            ps.setInt(11, cotizacion.getIdCotizacion());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -106,7 +123,7 @@ public class CotizacionDAO {
         return false;
     }
 
-    // Eliminar Cotización
+    // Eliminar Cotizacion
     public boolean eliminarCotizacion(int idCotizacion) {
         String sql = "DELETE FROM cotizacion WHERE idCotizacion=?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -118,24 +135,40 @@ public class CotizacionDAO {
         return false;
     }
 
-    //obtener cotizacion por id
+    // ========= METODO CORRECTO =========
+    // Obtener Cotizacion por ID con datos relacionados
     public Cotizacion obtenerPorId(int id) {
         Cotizacion c = null;
-        try {
-            Connection con = Conexion.getConnection();
-            String sql = "SELECT * FROM cotizacion WHERE idCotizacion = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
+        String sql = "SELECT c.*, cl.nombre AS cliente_nombre, v.nombre AS vendedor_nombre "
+                + "FROM cotizacion c "
+                + "JOIN cliente cl ON c.idCliente = cl.idCliente "
+                + "JOIN vendedor v ON c.idVendedor = v.idVendedor "
+                + "WHERE c.idCotizacion = ?";
+
+        try (PreparedStatement ps = this.conexion.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 c = new Cotizacion();
                 c.setIdCotizacion(rs.getInt("idCotizacion"));
+                c.setFecha(rs.getDate("fecha"));
                 c.setSubtotal(rs.getBigDecimal("subtotal"));
+                c.setManoObra(rs.getBigDecimal("manoObra"));
+                c.setIva(rs.getBigDecimal("iva"));
                 c.setDescuentoMonto(rs.getBigDecimal("descuentoMonto"));
                 c.setTotal(rs.getBigDecimal("total"));
                 c.setEstado(rs.getString("estado"));
-                // aquí puedes asignar cliente, vendedor, proyecto si quieres
+
+                Cliente cliente = new Cliente();
+                cliente.setIdCliente(rs.getInt("idCliente"));
+                cliente.setNombre(rs.getString("cliente_nombre"));
+                c.setCliente(cliente);
+
+                Vendedor vendedor = new Vendedor();
+                vendedor.setIdVendedor(rs.getInt("idVendedor"));
+                vendedor.setNombre(rs.getString("vendedor_nombre"));
+                c.setVendedor(vendedor);
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -14,7 +14,7 @@ import modelo.VentanaDetalle;
 
 /**
  *
- * @author pauli
+ * @author Vidrieria
  */
 public class DetalleCotizacionDAO {
     
@@ -143,4 +143,56 @@ public class DetalleCotizacionDAO {
         }
         return false;
     }
+
+/**
+ * Elimina todos los detalles de ventana asociados a un ID de cotización.
+ * @param idCotizacion El ID de la cotizacio
+ * @return true si la operación fue exitosa, false en caso contrario.
+ */
+public boolean eliminarDetallesVentanaPorCotizacionId(int idCotizacion) {
+    String sql = "DELETE FROM ventanadetalle WHERE id_cotizacion = ?";
+    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setInt(1, idCotizacion);
+        ps.executeUpdate(); 
+        return true;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
+/**
+ * Elimina todos los detalles de canceleria asociados a un ID de cotizacion.
+ * @param idCotizacion El ID de la cotizacion
+ * @return true si la operación fue exitosa, false en caso contrario.
+ */
+public boolean eliminarDetallesCanceleriaPorCotizacionId(int idCotizacion) {
+    String sql = "DELETE FROM canceleriafijadetalle WHERE id_cotizacion = ?";
+    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setInt(1, idCotizacion);
+        ps.executeUpdate();
+        return true;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
+/**
+ * Elimina todos los detalles de puerta asociados a un ID de cotización.
+ * @param idCotizacion El ID de la cotizacion
+ * @return true si la operación fue exitosa, false en caso contrario.
+ */
+public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
+    String sql = "DELETE FROM detalle_puertaabatible WHERE id_cotizacion = ?";
+    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setInt(1, idCotizacion);
+        ps.executeUpdate();
+        return true;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+    
 }

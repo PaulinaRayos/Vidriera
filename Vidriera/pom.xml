@@ -7,9 +7,9 @@
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <exec.mainClass>com.mycompany.vidriera.Test</exec.mainClass>
+        <maven.compiler.source>20</maven.compiler.source>
+        <maven.compiler.target>20</maven.compiler.target>
+        <exec.mainClass>com.mycompany.vidriera.Test2</exec.mainClass>
     </properties>
     <dependencies>
 

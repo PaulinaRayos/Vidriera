@@ -6,7 +6,7 @@ package modelo;
 
 /**
  *
- * @author pauli
+ * @author Vidrieria
  */
 public enum TipoVentana {
     TIPO_1_5("1 ½\""),

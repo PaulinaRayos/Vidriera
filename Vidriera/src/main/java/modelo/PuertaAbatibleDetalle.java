@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 /**
  *
- * @author pauli
+ * @author Vidrieria
  */
 public class PuertaAbatibleDetalle {
     private int idDetallePuerta;

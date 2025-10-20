@@ -6,7 +6,7 @@ package modelo;
 
 /**
  *
- * @author pauli
+ * @author Vidrieria
  */
 public enum TipoPuerta {
     SERIE_1751("Serie 1.751"),

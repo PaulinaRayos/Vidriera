@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  *
- * @author pauli
+ * @author Vidrieria
  */
 public class Proyecto {
     private int idProyecto;
