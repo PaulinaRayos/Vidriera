@@ -50,7 +50,7 @@ CREATE TABLE cotizacion (
     iva DECIMAL(10,2),
     descuentoMonto DECIMAL(10,2),
     total DECIMAL(10,2),
-    estado ENUM('Pendiente', 'Aceptado', 'Rechazada') NOT NULL DEFAULT 'Pendiente',
+    estado ENUM('Pendiente', 'Aceptado', 'Cancelada') NOT NULL DEFAULT 'Pendiente',
     idCliente INT,
     idProyecto INT,
     idVendedor INT,
@@ -178,13 +178,7 @@ CREATE TABLE material (
     descripcion TEXT,
     precio DECIMAL(10,2),
     stockActual INT,
-    tipo ENUM('Vidrio', 'Aluminio', 'Accesorio') NOT NULL,
-    ventanadetalle_idVentanaDetalle INT,
-    detalle_puertaabatible_id_detalle_puerta INT,
-    canceleriafijadetalle_idCanceleriaDetalle INT,
-    FOREIGN KEY (ventanadetalle_idVentanaDetalle) REFERENCES ventanadetalle(idVentanaDetalle),
-    FOREIGN KEY (detalle_puertaabatible_id_detalle_puerta) REFERENCES detalle_puertaabatible(id_detalle_puerta),
-    FOREIGN KEY (canceleriafijadetalle_idCanceleriaDetalle) REFERENCES canceleriafijadetalle(idCanceleriaDetalle)
+    tipo ENUM('Vidrio', 'Aluminio', 'Accesorio') NOT NULL
 );
 
 -- ===========================
@@ -258,18 +252,32 @@ CREATE TABLE pago (
     FOREIGN KEY (idProyecto) REFERENCES proyecto(idProyecto)
 );
 
-
 -- ===========================
--- Inserts para pruebas
+-- Tablas: Detalles a materiales
 -- ===========================
-INSERT INTO cliente (nombre, telefono, direccion, email, RFC)
-VALUES ('Juan Pérez', '1234567890', 'Calle 123', 'juan@email.com', 'RFC123');
+CREATE TABLE VentanaDetalle_Material (
+    idVentanaDetalle INT NOT NULL,
+    idMaterial INT NOT NULL,
+    cantidad DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY (idVentanaDetalle, idMaterial),
+    FOREIGN KEY (idVentanaDetalle) REFERENCES VentanaDetalle(idVentanaDetalle) ON DELETE CASCADE,
+    FOREIGN KEY (idMaterial) REFERENCES Material(idMaterial) ON DELETE CASCADE
+);
 
-INSERT INTO vendedor (nombre, telefono, email)
-VALUES ('Ana Gómez', '0987654321', 'ana@email.com');
+CREATE TABLE CanceleriaFijaDetalle_Material (
+    idCanceleriaDetalle INT NOT NULL,
+    idMaterial INT NOT NULL,
+    cantidad DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY (idCanceleriaDetalle, idMaterial),
+    FOREIGN KEY (idCanceleriaDetalle) REFERENCES CanceleriaFijaDetalle(idCanceleriaDetalle) ON DELETE CASCADE,
+    FOREIGN KEY (idMaterial) REFERENCES Material(idMaterial) ON DELETE CASCADE
+);
 
-INSERT INTO catalogotrabajos (codigoInterno, nombre, descripcion, serieBase, precioBase)
-VALUES
-('TRB-001', 'Instalación de ventana', 'Incluye medición, corte y colocación del marco de aluminio.', 'SERIE-A', 500.00),
-('TRB-002', 'Reparación de ventana', 'Sustitución de vidrios o componentes dañados.', 'SERIE-B', 350.00),
-('TRB-003', 'Mantenimiento de cancelería', 'Limpieza, lubricación y ajuste de cancelería.', 'SERIE-C', 250.00);
+CREATE TABLE PuertaAbatible_Material (
+    id_detalle_puerta INT NOT NULL,
+    idMaterial INT NOT NULL,
+    cantidad DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY (id_detalle_puerta, idMaterial),
+    FOREIGN KEY (id_detalle_puerta) REFERENCES Detalle_PuertaAbatible(id_detalle_puerta) ON DELETE CASCADE,
+    FOREIGN KEY (idMaterial) REFERENCES Material(idMaterial) ON DELETE CASCADE
+);
