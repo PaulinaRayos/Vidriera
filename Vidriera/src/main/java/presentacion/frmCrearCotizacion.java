@@ -28,6 +28,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
         panelTitulo = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        iconoTitulo = new javax.swing.JLabel();
         panelTipoTrabajo = new javax.swing.JPanel();
         tituloTipoTrabajo = new javax.swing.JLabel();
         cbxTipoTrabajo1 = new javax.swing.JComboBox<>();
@@ -37,6 +38,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         btnImprimir = new javax.swing.JButton();
         panelSubtitulo = new javax.swing.JPanel();
         ConsultarCotizacion = new javax.swing.JLabel();
+        iconoCrear = new javax.swing.JLabel();
         panelInformacionTrabajo = new javax.swing.JPanel();
         labelHorizontal = new javax.swing.JLabel();
         tituloCantidad = new javax.swing.JLabel();
@@ -76,6 +78,9 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Administrar cotizaciones");
 
+        iconoTitulo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/clipboard-48.png"))); // NOI18N
+        iconoTitulo.setText("jLabel2");
+
         javax.swing.GroupLayout panelTituloLayout = new javax.swing.GroupLayout(panelTitulo);
         panelTitulo.setLayout(panelTituloLayout);
         panelTituloLayout.setHorizontalGroup(
@@ -83,13 +88,17 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             .addGroup(panelTituloLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(iconoTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelTituloLayout.setVerticalGroup(
             panelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTituloLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(jLabel1)
+                .addGroup(panelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(iconoTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -127,6 +136,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         btnVistaPrevia.setBackground(new java.awt.Color(254, 188, 47));
         btnVistaPrevia.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnVistaPrevia.setForeground(new java.awt.Color(255, 255, 255));
+        btnVistaPrevia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vistaprevia-20.png"))); // NOI18N
         btnVistaPrevia.setText("Vista Previa");
         btnVistaPrevia.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnVistaPrevia.setBorderPainted(false);
@@ -139,6 +149,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         btnDescargar.setBackground(new java.awt.Color(0, 81, 168));
         btnDescargar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnDescargar.setForeground(new java.awt.Color(255, 255, 255));
+        btnDescargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/download-updates-20.png"))); // NOI18N
         btnDescargar.setText("Descargar");
         btnDescargar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnDescargar.setBorderPainted(false);
@@ -151,6 +162,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         btnImprimir.setBackground(new java.awt.Color(0, 81, 168));
         btnImprimir.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnImprimir.setForeground(new java.awt.Color(255, 255, 255));
+        btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/print-20.png"))); // NOI18N
         btnImprimir.setText("Imprimir");
         btnImprimir.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnImprimir.setBorderPainted(false);
@@ -190,12 +202,16 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         ConsultarCotizacion.setForeground(new java.awt.Color(255, 255, 255));
         ConsultarCotizacion.setText("Crear cotización");
 
+        iconoCrear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-24.png"))); // NOI18N
+
         javax.swing.GroupLayout panelSubtituloLayout = new javax.swing.GroupLayout(panelSubtitulo);
         panelSubtitulo.setLayout(panelSubtituloLayout);
         panelSubtituloLayout.setHorizontalGroup(
             panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelSubtituloLayout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addGap(17, 17, 17)
+                .addComponent(iconoCrear)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ConsultarCotizacion)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -203,8 +219,10 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelSubtituloLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(ConsultarCotizacion)
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(iconoCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ConsultarCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         panelInformacionTrabajo.setBackground(new java.awt.Color(255, 255, 255));
@@ -322,7 +340,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelNumHojas)
                     .addComponent(cbxNumHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         panelBuscarCliente.setBackground(new java.awt.Color(255, 255, 255));
@@ -336,6 +354,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         btnCrearCliente.setBackground(new java.awt.Color(0, 81, 168));
         btnCrearCliente.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnCrearCliente.setForeground(new java.awt.Color(255, 255, 255));
+        btnCrearCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-20.png"))); // NOI18N
         btnCrearCliente.setText("Cliente nuevo");
         btnCrearCliente.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnCrearCliente.setBorderPainted(false);
@@ -444,6 +463,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
         btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
+        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
         btnDescartar.setText("Descartar");
         btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnDescartar.setBorderPainted(false);
@@ -456,6 +476,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
         btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
         btnGuardar.setText("Guardar");
         btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnGuardar.setBorderPainted(false);
@@ -590,6 +611,8 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JCheckBox ckbxDescuentoSi;
     private javax.swing.JCheckBox ckbxMosquiteroNo;
     private javax.swing.JCheckBox ckbxMosquiteroSi;
+    private javax.swing.JLabel iconoCrear;
+    private javax.swing.JLabel iconoTitulo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel labelHorizontal;

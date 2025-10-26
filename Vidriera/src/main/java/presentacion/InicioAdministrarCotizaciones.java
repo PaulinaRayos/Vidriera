@@ -45,8 +45,10 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         panelTitulo = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        iconoTitulo = new javax.swing.JLabel();
         panelSubtitulo = new javax.swing.JPanel();
         ConsultarCotizacion = new javax.swing.JLabel();
+        iconoConsulta = new javax.swing.JLabel();
         panelBtnCrearCotizacion = new javax.swing.JPanel();
         btnCrearCotizacion = new javax.swing.JButton();
         Buscar = new javax.swing.JLabel();
@@ -105,6 +107,8 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Administrar cotizaciones");
 
+        iconoTitulo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/clipboard-48.png"))); // NOI18N
+
         javax.swing.GroupLayout panelTituloLayout = new javax.swing.GroupLayout(panelTitulo);
         panelTitulo.setLayout(panelTituloLayout);
         panelTituloLayout.setHorizontalGroup(
@@ -112,14 +116,18 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
             .addGroup(panelTituloLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(iconoTitulo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelTituloLayout.setVerticalGroup(
             panelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTituloLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(panelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(iconoTitulo)
+                    .addComponent(jLabel1))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         panelSubtitulo.setBackground(new java.awt.Color(0, 81, 168));
@@ -128,12 +136,16 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         ConsultarCotizacion.setForeground(new java.awt.Color(255, 255, 255));
         ConsultarCotizacion.setText("Consultar cotización");
 
+        iconoConsulta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/searchlist-24.png"))); // NOI18N
+
         javax.swing.GroupLayout panelSubtituloLayout = new javax.swing.GroupLayout(panelSubtitulo);
         panelSubtitulo.setLayout(panelSubtituloLayout);
         panelSubtituloLayout.setHorizontalGroup(
             panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelSubtituloLayout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addGap(13, 13, 13)
+                .addComponent(iconoConsulta)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ConsultarCotizacion)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -141,8 +153,10 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
             panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelSubtituloLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(ConsultarCotizacion)
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(iconoConsulta)
+                    .addComponent(ConsultarCotizacion))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         panelBtnCrearCotizacion.setBackground(new java.awt.Color(255, 255, 255));
@@ -150,6 +164,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         btnCrearCotizacion.setBackground(new java.awt.Color(0, 81, 168));
         btnCrearCotizacion.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnCrearCotizacion.setForeground(new java.awt.Color(255, 255, 255));
+        btnCrearCotizacion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-20.png"))); // NOI18N
         btnCrearCotizacion.setText("Crear cotización");
 
         Buscar.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
@@ -164,7 +179,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
                 .addGap(47, 47, 47)
                 .addComponent(Buscar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnCrearCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCrearCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
         );
         panelBtnCrearCotizacionLayout.setVerticalGroup(
@@ -172,7 +187,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBtnCrearCotizacionLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(Buscar))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBtnCrearCotizacionLayout.createSequentialGroup()
+            .addGroup(panelBtnCrearCotizacionLayout.createSequentialGroup()
                 .addComponent(btnCrearCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -195,6 +210,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         btnBuscar.setBackground(new java.awt.Color(0, 81, 168));
         btnBuscar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/search-20.png"))); // NOI18N
         btnBuscar.setText("Buscar");
         btnBuscar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnBuscar.setBorderPainted(false);
@@ -452,6 +468,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         btnVistaPrevia.setBackground(new java.awt.Color(254, 188, 47));
         btnVistaPrevia.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnVistaPrevia.setForeground(new java.awt.Color(255, 255, 255));
+        btnVistaPrevia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vistaprevia-20.png"))); // NOI18N
         btnVistaPrevia.setText("Vista Previa");
         btnVistaPrevia.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnVistaPrevia.setBorderPainted(false);
@@ -464,6 +481,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         btnDescargar.setBackground(new java.awt.Color(0, 81, 168));
         btnDescargar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnDescargar.setForeground(new java.awt.Color(255, 255, 255));
+        btnDescargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/download-updates-20.png"))); // NOI18N
         btnDescargar.setText("Descargar");
         btnDescargar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnDescargar.setBorderPainted(false);
@@ -476,8 +494,8 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         btnEditar.setBackground(new java.awt.Color(97, 85, 245));
         btnEditar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnEditar.setForeground(new java.awt.Color(255, 255, 255));
+        btnEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edit-20.png"))); // NOI18N
         btnEditar.setText("Editar");
-        btnEditar.setActionCommand("Editar");
         btnEditar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnEditar.setBorderPainted(false);
         btnEditar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -489,6 +507,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         btnImprimir.setBackground(new java.awt.Color(0, 81, 168));
         btnImprimir.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnImprimir.setForeground(new java.awt.Color(255, 255, 255));
+        btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/print-20.png"))); // NOI18N
         btnImprimir.setText("Imprimir");
         btnImprimir.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnImprimir.setBorderPainted(false);
@@ -533,14 +552,14 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
             .addComponent(panelSubtitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelBtnCrearCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelBuscador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelTituloTabla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panelTabla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelTituloDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelDetalles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelTituloTabla, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -553,9 +572,9 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
                 .addComponent(panelBtnCrearCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelBuscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelTituloTabla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelTabla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelTituloDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -563,7 +582,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
                 .addComponent(panelDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(18, 18, 18))
         );
 
         pack();
@@ -660,6 +679,8 @@ private void quitarEspaciosEntrePaneles() {
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnVistaPrevia;
+    private javax.swing.JLabel iconoConsulta;
+    private javax.swing.JLabel iconoTitulo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
