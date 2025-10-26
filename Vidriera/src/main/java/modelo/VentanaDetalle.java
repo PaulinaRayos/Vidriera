@@ -30,6 +30,7 @@ public class VentanaDetalle extends DetalleCotizacion{
     private String tipoCanalillo;
     private BigDecimal medidaCanalillo;
 
+    
 
 
     public VentanaDetalle() {

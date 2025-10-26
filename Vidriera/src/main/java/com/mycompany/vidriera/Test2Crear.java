@@ -4,13 +4,16 @@
  */
 package com.mycompany.vidriera;
 
+import dao.MaterialDetalleDAO;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import modelo.Cliente;
 import modelo.Cotizacion;
 import modelo.TipoVentana;
@@ -73,6 +76,35 @@ public static void main(String[] args) {
             boolean ok = bo.crearCotizacionCompleta(cotizacion, detalles, new ArrayList<>(), new ArrayList<>());
             if(ok) {
                 System.out.println("Cotizacion creada con exito. ID: " + cotizacion.getIdCotizacion());
+               
+                                if (vd.getIdVentanaDetalle() > 0) {
+                    System.out.println("\nAsociando materiales...");
+                    
+                    // Preparar materiales a asociar
+                    Map<Integer, BigDecimal> materiales = new HashMap<>();
+                    materiales.put(1, new BigDecimal("3.5"));  // Material 1: 3.5 m²
+                    materiales.put(2, new BigDecimal("8.0"));  // Material 2: 8.0 m
+                    materiales.put(3, new BigDecimal("4"));    // Material 3: 4 pzas
+                    
+                    MaterialDetalleDAO materialDAO = new MaterialDetalleDAO(con.getConnection());
+                    boolean materialesOk = materialDAO.asociarMaterialesVentana(
+                        vd.getIdVentanaDetalle(), 
+                        materiales
+                    );
+                    
+                    if (materialesOk) {
+                        System.out.println("Materiales asociados correctamente:");
+                        System.out.println("  - Material 1: 3.5 unidades");
+                        System.out.println("  - Material 2: 8.0 unidades");
+                        System.out.println("  - Material 3: 4 unidades");
+                    } else {
+                        System.out.println("Error al asociar materiales.");
+                    }
+                } else {
+                    System.out.println("Advertencia: El detalle no tiene ID asignado.");
+                }
+
+                    
             } else {
                 System.out.println("Error al crear la cotizacion.");
             }

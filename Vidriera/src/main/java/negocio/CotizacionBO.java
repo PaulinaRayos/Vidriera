@@ -6,6 +6,7 @@ package negocio;
 
 import dao.CotizacionDAO;
 import dao.DetalleCotizacionDAO;
+import dao.MaterialDAO;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,10 +24,13 @@ public class CotizacionBO {
 
     private CotizacionDAO cotizacionDAO;
     private DetalleCotizacionDAO detalleDAO;
+     private MaterialDAO materialDetalleDAO;
+
 
     public CotizacionBO(Connection conexion) {
         this.cotizacionDAO = new CotizacionDAO(conexion);
         this.detalleDAO = new DetalleCotizacionDAO(conexion);
+        
     }
 
     public CotizacionBO() {
