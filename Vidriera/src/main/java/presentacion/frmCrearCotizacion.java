@@ -514,7 +514,48 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDescartarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-       
+          
+        //ES ALGO ASI PERO HAY QUE VER BIEN COMO HACERLA FUNCIONAR, ESTA NO ES FUNCIONAL ES  SOLO UNA GUIA
+//        Cotizacion cotizacion = new Cotizacion();
+//    cotizacion.setCliente(getClienteSeleccionado());
+//    cotizacion.setVendedor(getVendedorSeleccionado());
+//    cotizacion.setFecha(new Date());
+//    cotizacion.setEstado("Pendiente");
+//    // ...otros campos generales...
+//
+//    ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
+//    ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
+//    ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
+//
+//    for (Component comp : panelDetallesDinamicos.getComponents()) {
+//        if (comp instanceof PanelExpandible) {
+//            JPanel detallePanel = ((PanelExpandible) comp).getContenido();
+//            if (detallePanel instanceof PanelDetalleVentana) {
+//                detallesVentana.add(((PanelDetalleVentana) detallePanel).getDetalle());
+//            }
+//            if (detallePanel instanceof PanelDetallePuertaAbatible) {
+//                detallesPuerta.add(((PanelDetallePuertaAbatible) detallePanel).getDetalle());
+//            }
+//            if (detallePanel instanceof PanelDetalleCanceleria) {
+//                detallesCanceleria.add(((PanelDetalleCanceleria) detallePanel).getDetalle());
+//            }
+//        }
+//    }
+//
+//    CotizacionBO bo = new CotizacionBO();
+//    boolean exito = bo.crearCotizacionCompleta(
+//        cotizacion,
+//        detallesVentana,
+//        detallesPuerta,
+//        detallesCanceleria
+//    );
+//
+//    if (exito) {
+//        JOptionPane.showMessageDialog(this, "Cotización guardada correctamente.");
+//    } else {
+//        JOptionPane.showMessageDialog(this, "Error al guardar la cotización.");
+//    }
+
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void cbxTipoTrabajo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoTrabajo1ActionPerformed
