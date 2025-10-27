@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.CanceleriaFijaDetalle;
+import modelo.CatalogoTrabajo;
 import modelo.Cotizacion;
 import modelo.PuertaAbatibleDetalle;
 import modelo.TipoCanceleria;
@@ -36,7 +37,7 @@ public class DetalleCotizacionDAO {
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             for (VentanaDetalle d : detalles) {
-                ps.setInt(1, d.getTipoTrabajo().getIdCatalogo()); // CORREGIDO: Usar el objeto CatalogoTrabajo
+                ps.setInt(1, d.getTipoTrabajo().getIdCatalogo());
                 ps.setInt(2, d.getCotizacion().getIdCotizacion());
                 ps.setBigDecimal(3, d.getMedidaHorizontal());
                 ps.setBigDecimal(4, d.getMedidaVertical());
@@ -69,7 +70,7 @@ public class DetalleCotizacionDAO {
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             for (CanceleriaFijaDetalle d : detalles) {
-                ps.setInt(1, d.getTipoTrabajo().getIdCatalogo()); // CORREGIDO: Usar el objeto CatalogoTrabajo
+                ps.setInt(1, d.getTipoTrabajo().getIdCatalogo());
                 ps.setInt(2, d.getCotizacion().getIdCotizacion());
                 ps.setBigDecimal(3, d.getMedidaHorizontal());
                 ps.setBigDecimal(4, d.getMedidaVertical());
@@ -111,7 +112,7 @@ public class DetalleCotizacionDAO {
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             for (PuertaAbatibleDetalle d : detalles) {
-                ps.setInt(1, d.getTipoTrabajo().getIdCatalogo()); // CORREGIDO: Usar el objeto CatalogoTrabajo
+                ps.setInt(1, d.getTipoTrabajo().getIdCatalogo());
                 ps.setInt(2, d.getCotizacion().getIdCotizacion());
                 ps.setBigDecimal(3, d.getMedidaHorizontal());
                 ps.setBigDecimal(4, d.getMedidaVertical());
@@ -121,7 +122,7 @@ public class DetalleCotizacionDAO {
                 ps.setBigDecimal(8, d.getPrecioSoloUnaUnidadCalculado());
                 ps.setBigDecimal(9, d.getSubtotalLinea());
                 ps.setString(10, d.getDescripcion());
-                ps.setString(11, d.getTipoPuerta() != null ? d.getTipoPuerta().name() : null); // Usa .name()
+                ps.setString(11, d.getTipoPuerta() != null ? d.getTipoPuerta().name() : null);
                 ps.setBoolean(12, d.isMosquitero());
                 ps.setBoolean(13, d.isDuela());
                 ps.setString(14, d.getTipoDuela());
@@ -150,12 +151,6 @@ public class DetalleCotizacionDAO {
         return false;
     }
 
-    /**
-     * Elimina todos los detalles de ventana asociados a un ID de cotización.
-     *
-     * @param idCotizacion El ID de la cotizacio
-     * @return true si la operación fue exitosa, false en caso contrario.
-     */
     public boolean eliminarDetallesVentanaPorCotizacionId(int idCotizacion) {
         String sql = "DELETE FROM ventanadetalle WHERE id_cotizacion = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -168,12 +163,6 @@ public class DetalleCotizacionDAO {
         }
     }
 
-    /**
-     * Elimina todos los detalles de canceleria asociados a un ID de cotizacion.
-     *
-     * @param idCotizacion El ID de la cotizacion
-     * @return true si la operación fue exitosa, false en caso contrario.
-     */
     public boolean eliminarDetallesCanceleriaPorCotizacionId(int idCotizacion) {
         String sql = "DELETE FROM canceleriafijadetalle WHERE id_cotizacion = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -186,12 +175,6 @@ public class DetalleCotizacionDAO {
         }
     }
 
-    /**
-     * Elimina todos los detalles de puerta asociados a un ID de cotización.
-     *
-     * @param idCotizacion El ID de la cotizacion
-     * @return true si la operación fue exitosa, false en caso contrario.
-     */
     public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
         String sql = "DELETE FROM detalle_puertaabatible WHERE id_cotizacion = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -204,9 +187,6 @@ public class DetalleCotizacionDAO {
         }
     }
 
-    /**
-     * Obtiene todos los detalles de ventana para un ID de cotización.
-     */
     public List<VentanaDetalle> obtenerVentanasPorCotizacion(int idCotizacion) throws SQLException {
         List<VentanaDetalle> lista = new ArrayList<>();
         String sql = "SELECT * FROM ventanadetalle WHERE id_cotizacion = ?";
@@ -222,9 +202,6 @@ public class DetalleCotizacionDAO {
         return lista;
     }
 
-    /**
-     * Obtiene todos los detalles de cancelería para un ID de cotización.
-     */
     public List<CanceleriaFijaDetalle> obtenerCanceleriasPorCotizacion(int idCotizacion) throws SQLException {
         List<CanceleriaFijaDetalle> lista = new ArrayList<>();
         String sql = "SELECT * FROM canceleriafijadetalle WHERE id_cotizacion = ?";
@@ -240,9 +217,6 @@ public class DetalleCotizacionDAO {
         return lista;
     }
 
-    /**
-     * Obtiene todos los detalles de puerta para un ID de cotización.
-     */
     public List<PuertaAbatibleDetalle> obtenerPuertasPorCotizacion(int idCotizacion) throws SQLException {
         List<PuertaAbatibleDetalle> lista = new ArrayList<>();
         String sql = "SELECT * FROM detalle_puertaabatible WHERE id_cotizacion = ?";
@@ -258,12 +232,10 @@ public class DetalleCotizacionDAO {
         return lista;
     }
 
-    // METODOS DE MAPEO (Helpers)
     private VentanaDetalle mapearVentanaDetalle(ResultSet rs) throws SQLException {
         VentanaDetalle d = new VentanaDetalle();
 
         d.setIdVentanaDetalle(rs.getInt("idVentanaDetalle"));
-        d.setIdTipoTrabajo(rs.getInt("id_tipo_trabajo"));
         d.setMedidaHorizontal(rs.getBigDecimal("medidaHorizontal"));
         d.setMedidaVertical(rs.getBigDecimal("medidaVertical"));
         d.setCantidad(rs.getInt("cantidad"));
@@ -273,7 +245,6 @@ public class DetalleCotizacionDAO {
         d.setSubtotalLinea(rs.getBigDecimal("subtotalLinea"));
         d.setDescripcion(rs.getString("descripcion"));
         d.setTipoVentana(TipoVentana.fromDescripcion(rs.getString("tipoVentana")));
-
         d.setMosquitero(rs.getBoolean("mosquitero"));
         d.setArco(rs.getBoolean("arco"));
         d.setTipoArco(rs.getString("tipoArco"));
@@ -285,6 +256,10 @@ public class DetalleCotizacionDAO {
         cot.setIdCotizacion(rs.getInt("id_cotizacion"));
         d.setCotizacion(cot);
 
+        CatalogoTrabajo ct = new CatalogoTrabajo();
+        ct.setIdCatalogo(rs.getInt("id_tipo_trabajo"));
+        d.setTipoTrabajo(ct);
+
         return d;
     }
 
@@ -292,7 +267,6 @@ public class DetalleCotizacionDAO {
         CanceleriaFijaDetalle d = new CanceleriaFijaDetalle();
 
         d.setIdCanceleriaDetalle(rs.getInt("idCanceleriaDetalle"));
-        d.setIdTipoTrabajo(rs.getInt("id_tipo_trabajo"));
         d.setMedidaHorizontal(rs.getBigDecimal("medidaHorizontal"));
         d.setMedidaVertical(rs.getBigDecimal("medidaVertical"));
         d.setCantidad(rs.getInt("cantidad"));
@@ -322,6 +296,10 @@ public class DetalleCotizacionDAO {
         cot.setIdCotizacion(rs.getInt("id_cotizacion"));
         d.setCotizacion(cot);
 
+        CatalogoTrabajo ct = new CatalogoTrabajo();
+        ct.setIdCatalogo(rs.getInt("id_tipo_trabajo"));
+        d.setTipoTrabajo(ct);
+
         return d;
     }
 
@@ -329,7 +307,6 @@ public class DetalleCotizacionDAO {
         PuertaAbatibleDetalle d = new PuertaAbatibleDetalle();
 
         d.setIdDetallePuerta(rs.getInt("id_detalle_puerta"));
-        d.setIdTipoTrabajo(rs.getInt("id_tipo_trabajo"));
         d.setMedidaHorizontal(rs.getBigDecimal("medidaHorizontal"));
         d.setMedidaVertical(rs.getBigDecimal("medidaVertical"));
         d.setCantidad(rs.getInt("cantidad"));
@@ -362,7 +339,10 @@ public class DetalleCotizacionDAO {
         cot.setIdCotizacion(rs.getInt("id_cotizacion"));
         d.setCotizacion(cot);
 
+        CatalogoTrabajo ct = new CatalogoTrabajo();
+        ct.setIdCatalogo(rs.getInt("id_tipo_trabajo"));
+        d.setTipoTrabajo(ct);
+
         return d;
     }
-
 }
