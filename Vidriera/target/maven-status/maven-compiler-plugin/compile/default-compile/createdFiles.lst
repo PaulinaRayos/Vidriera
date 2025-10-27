@@ -2,6 +2,7 @@ utils\Conexion.class
 modelo\MaterialDetalle.class
 presentacion\InicioAdministrarCotizaciones$2.class
 modelo\Vendedor.class
+presentacion\InicioAdministrarCotizaciones$6.class
 dao\ClienteDAO.class
 modelo\TipoVentana.class
 presentacion\frmEditarCotizacion.class
@@ -20,6 +21,7 @@ modelo\Proyecto.class
 presentacion\frmCrearCotizacion.class
 modelo\Material$TipoMaterial.class
 dao\MaterialDAO.class
+presentacion\InicioAdministrarCotizaciones$7.class
 presentacion\frmCrearCotizacion$2.class
 com\mycompany\vidriera\Test3Editar.class
 presentacion\frmCrearCotizacion$5.class
@@ -39,3 +41,4 @@ presentacion\frmEditarCotizacion$1.class
 modelo\Cliente.class
 modelo\VentanaDetalle.class
 negocio\CotizacionBO.class
+presentacion\InicioAdministrarCotizaciones$5.class

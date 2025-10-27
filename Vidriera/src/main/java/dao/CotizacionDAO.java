@@ -68,25 +68,40 @@ public class CotizacionDAO {
     // Leer todas las Cotizaciones
     public List<Cotizacion> obtenerTodas() {
         List<Cotizacion> lista = new ArrayList<>();
-        String sql = "SELECT * FROM cotizacion"; // Para una version mas completa, este tambien deberia usar JOINs
-        try (Statement stmt = conexion.createStatement()) {
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                Cotizacion c = new Cotizacion();
-                c.setIdCotizacion(rs.getInt("idCotizacion"));
-                c.setFecha(rs.getDate("fecha"));
-                c.setSubtotal(rs.getBigDecimal("subtotal"));
-                c.setDescuentoMonto(rs.getBigDecimal("descuentoMonto"));
-                c.setTotal(rs.getBigDecimal("total"));
-                c.setEstado(rs.getString("estado"));
-                // NOTA: Faltaria cargar Cliente y Vendedor
-                lista.add(c);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    String sql = "SELECT * FROM cotizacion ORDER BY fecha DESC"; // O el orden que prefieras
+    
+    // Necesitas los DAOs de las otras entidades para cargar los objetos
+    ClienteDAO clienteDAO = new ClienteDAO(conexion);
+    ProyectoDAO proyectoDAO = new ProyectoDAO(conexion);
+    VendedorDAO vendedorDAO = new VendedorDAO(conexion);
+
+    try (Statement stmt = conexion.createStatement()) {
+        ResultSet rs = stmt.executeQuery(sql);
+        while (rs.next()) {
+            Cotizacion c = new Cotizacion();
+            c.setIdCotizacion(rs.getInt("idCotizacion"));
+            c.setFecha(rs.getDate("fecha"));
+            c.setSubtotal(rs.getBigDecimal("subtotal"));
+            c.setManoObra(rs.getBigDecimal("manoObra"));
+            c.setIva(rs.getBigDecimal("iva"));
+            c.setDescuentoMonto(rs.getBigDecimal("descuentoMonto"));
+            c.setTotal(rs.getBigDecimal("total"));
+            c.setEstado(rs.getString("estado"));
+            
+            // --- ESTO ES LO QUE FALTABA ---
+            // Le decimos que busque el cliente, proyecto y vendedor usando sus IDs
+            c.setCliente(clienteDAO.obtenerPorId(rs.getInt("idCliente")));
+            c.setProyecto(proyectoDAO.obtenerPorId(rs.getInt("idProyecto")));
+            c.setVendedor(vendedorDAO.obtenerPorId(rs.getInt("idVendedor")));
+            // --- FIN DE LA CORRECCIÓN ---
+            
+            lista.add(c);
         }
-        return lista;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return lista;
+}
 
     // ========= METODO CORREGIDO =========
     // Actualizar Cotizacion (Version Completa)
