@@ -4,6 +4,35 @@
  */
 package presentacion;
 
+import dao.MaterialDAO;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import modelo.Material;
+import modelo.PuertaAbatibleDetalle;
+import modelo.TipoPuerta;
+import utils.Conexion;
+
 /**
  *
  * @author User
@@ -13,9 +42,20 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     /**
      * Creates new form frmCrearCotizacion
      */
-    public frmCrearCotizacion() {
+    private List<Material> materialesDisponibles;
+
+    public frmCrearCotizacion() throws SQLException {
         initComponents();
-    }
+        panelDetallesDinamicos.setLayout(new BoxLayout(panelDetallesDinamicos, BoxLayout.Y_AXIS));
+    cargarMaterialesDisponibles(); // <--- Esto es CRÍTICO
+}
+
+// Método para llenarla desde la base de datos
+private void cargarMaterialesDisponibles() throws SQLException {
+    MaterialDAO matDAO = new MaterialDAO(Conexion.getConnection());
+    this.materialesDisponibles = matDAO.obtenerTodos(); // Debes tener este método, devuelve todos los materiales
+}
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -39,21 +79,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         panelSubtitulo = new javax.swing.JPanel();
         ConsultarCotizacion = new javax.swing.JLabel();
         iconoCrear = new javax.swing.JLabel();
-        panelInformacionTrabajo = new javax.swing.JPanel();
-        labelHorizontal = new javax.swing.JLabel();
-        tituloCantidad = new javax.swing.JLabel();
-        txtMetrosHorizontal = new javax.swing.JTextField();
-        labelVertical = new javax.swing.JLabel();
-        txtMetrosVertical = new javax.swing.JTextField();
-        tituloMedidas = new javax.swing.JLabel();
-        cbxCantidad = new javax.swing.JComboBox<>();
-        tituloMosquitero = new javax.swing.JLabel();
-        ckbxMosquiteroSi = new javax.swing.JCheckBox();
-        ckbxMosquiteroNo = new javax.swing.JCheckBox();
-        tituloCristal = new javax.swing.JLabel();
-        cbxTipoCristal = new javax.swing.JComboBox<>();
-        labelNumHojas = new javax.swing.JLabel();
-        cbxNumHojas = new javax.swing.JComboBox<>();
         panelBuscarCliente = new javax.swing.JPanel();
         Buscar = new javax.swing.JLabel();
         txtBuscarCliente = new javax.swing.JTextField();
@@ -69,6 +94,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         btnDescartar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
+        panelDetallesDinamicos = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -108,7 +134,12 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         tituloTipoTrabajo.setForeground(new java.awt.Color(15, 105, 196));
         tituloTipoTrabajo.setText("Tipo de trabajo");
 
-        cbxTipoTrabajo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTipoTrabajo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Puerta", "Ventana", "Item 3", "Item 4" }));
+        cbxTipoTrabajo1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxTipoTrabajo1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelTipoTrabajoLayout = new javax.swing.GroupLayout(panelTipoTrabajo);
         panelTipoTrabajo.setLayout(panelTipoTrabajoLayout);
@@ -223,124 +254,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     .addComponent(iconoCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ConsultarCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(18, Short.MAX_VALUE))
-        );
-
-        panelInformacionTrabajo.setBackground(new java.awt.Color(255, 255, 255));
-
-        labelHorizontal.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        labelHorizontal.setForeground(new java.awt.Color(0, 38, 115));
-        labelHorizontal.setText("Horizontal");
-
-        tituloCantidad.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloCantidad.setForeground(new java.awt.Color(0, 38, 115));
-        tituloCantidad.setText("Cantidad");
-
-        labelVertical.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        labelVertical.setForeground(new java.awt.Color(0, 38, 115));
-        labelVertical.setText("Vertical");
-
-        tituloMedidas.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloMedidas.setForeground(new java.awt.Color(0, 38, 115));
-        tituloMedidas.setText("Medidas");
-
-        cbxCantidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        tituloMosquitero.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloMosquitero.setForeground(new java.awt.Color(0, 38, 115));
-        tituloMosquitero.setText("Mosquitero");
-
-        ckbxMosquiteroSi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxMosquiteroSi.setText("Si");
-        ckbxMosquiteroSi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ckbxMosquiteroSiActionPerformed(evt);
-            }
-        });
-
-        ckbxMosquiteroNo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxMosquiteroNo.setText("No");
-
-        tituloCristal.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloCristal.setForeground(new java.awt.Color(0, 38, 115));
-        tituloCristal.setText("Cristal");
-
-        cbxTipoCristal.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        labelNumHojas.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        labelNumHojas.setForeground(new java.awt.Color(0, 38, 115));
-        labelNumHojas.setText("No. de hojas");
-
-        cbxNumHojas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        javax.swing.GroupLayout panelInformacionTrabajoLayout = new javax.swing.GroupLayout(panelInformacionTrabajo);
-        panelInformacionTrabajo.setLayout(panelInformacionTrabajoLayout);
-        panelInformacionTrabajoLayout.setHorizontalGroup(
-            panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                        .addComponent(labelNumHojas)
-                        .addGap(18, 18, 18)
-                        .addComponent(cbxNumHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(cbxTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tituloCristal)
-                    .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                                .addComponent(labelHorizontal)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtMetrosHorizontal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
-                                .addComponent(labelVertical)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtMetrosVertical, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(tituloMedidas))
-                        .addGap(62, 62, 62)
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tituloCantidad)
-                            .addComponent(cbxCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(52, 52, 52)
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tituloMosquitero)
-                            .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                                .addComponent(ckbxMosquiteroSi)
-                                .addGap(33, 33, 33)
-                                .addComponent(ckbxMosquiteroNo)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        panelInformacionTrabajoLayout.setVerticalGroup(
-            panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                        .addComponent(tituloMosquitero)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ckbxMosquiteroNo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ckbxMosquiteroSi, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tituloCantidad)
-                            .addComponent(tituloMedidas))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(labelHorizontal)
-                                .addComponent(txtMetrosHorizontal, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(labelVertical)
-                                .addComponent(txtMetrosVertical, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cbxCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
-                .addComponent(tituloCristal)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbxTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelNumHojas)
-                    .addComponent(cbxNumHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         panelBuscarCliente.setBackground(new java.awt.Color(255, 255, 255));
@@ -485,6 +398,11 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         btnGuardar.setFocusPainted(false);
         btnGuardar.setRequestFocusEnabled(false);
         btnGuardar.setRolloverEnabled(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -518,7 +436,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelInformacionTrabajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelTituloDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
@@ -526,6 +443,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addComponent(panelDetallesDinamicos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -538,7 +456,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelTipoTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelInformacionTrabajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelDetallesDinamicos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelTituloDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -552,14 +470,46 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+private int contador = 1;
 
-    private void ckbxMosquiteroSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckbxMosquiteroSiActionPerformed
+    private void cbxTipoTrabajo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoTrabajo1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ckbxMosquiteroSiActionPerformed
+        String tipo = (String) cbxTipoTrabajo1.getSelectedItem();
+ if ("Puerta".equals(tipo)) {
+        PanelDetallePuertaAbatible panel = new PanelDetallePuertaAbatible(++contador, ()->{}, materialesDisponibles);
+    panelDetallesDinamicos.add(panel);
+    panelDetallesDinamicos.revalidate();
+    panelDetallesDinamicos.repaint();
+    }    
+    }//GEN-LAST:event_cbxTipoTrabajo1ActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // TODO add your handling code here:
+        
+//           Cotizacion cotizacion = new Cotizacion();
+//    cotizacion.setCliente(getClienteSeleccionado());
+//    cotizacion.setVendedor(getVendedorSeleccionado());
+//    cotizacion.setFecha(new Date());
+//    cotizacion.setEstado("Pendiente");
+//    // ... los demás campos de la UI
+//
+//    ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
+//    ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
+//        for (Component comp : panelDetallesDinamicos.getComponents()) {
+//        if (comp instanceof PanelDetalleVentana) {
+//            detallesVentana.add(((PanelDetalleVentana) comp).getDetalle());
+//        }
+//        if (comp instanceof PanelDetallePuerta) {
+//            detallesPuerta.add(((PanelDetallePuerta) comp).getDetalle());
+//        }
+//        // más tipos...
+//    }
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     /**
      * @param args the command line arguments
      */
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -587,10 +537,176 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmCrearCotizacion().setVisible(true);
+                try {
+                    new frmCrearCotizacion().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(frmCrearCotizacion.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
+    // PanelDetallePuerta.java
+public class PanelDetalleVentana extends javax.swing.JPanel {
+    public PanelDetalleVentana(Runnable onRemove) {
+        initComponents();
+        JButton btnEliminar = new JButton("Quitar");
+        btnEliminar.addActionListener(e -> {
+            Container parent = this.getParent();
+            if (parent != null) {
+                parent.remove(this);
+                parent.revalidate();
+                parent.repaint();
+            }
+            onRemove.run();
+        });
+        add(btnEliminar);
+    }
+    private void initComponents() {
+        // aquí agrega JTextFields, JComboBox, JCheckBox, etc., para la puerta
+        // add(new JLabel("Alto:"));
+        // add(new JTextField(5));
+        // ...
+    }
+}
+
+
+public class PanelDetallePuertaAbatible extends JPanel {
+    // Todos los campos según tu SQL
+    private JTextField txtMedidaH, txtMedidaV, txtCantidad, txtTipoCristal, txtNoHojas,
+                       txtPrecioUnidad, txtSubtotal, txtDescripcion, txtTipoPuerta, txtTipoDuela, txtMedDuela,
+                       txtTipoAdaptador, txtTipoJunquillo, txtTipoCanal, txtTipoPivote, txtCantidadPivote,
+                       txtTipoJaladera, txtCantidadJaladera, txtTipoBarra;
+    private JCheckBox ckMosquitero, ckDuela, ckAdaptador, ckJunquillo, ckCanal, ckPivote, ckJaladera, ckBarra;
+    private JButton btnQuitar;
+
+    // Materiales
+    private JPanel panelMateriales;
+    private DefaultListModel<String> modeloMateriales;
+    private Map<Integer, BigDecimal> materialesSeleccionados = new HashMap<>(); // idMaterial, cantidad
+
+    public PanelDetallePuertaAbatible(int indice, Runnable onRemove, List<Material> materialesDisponibles) {
+        setLayout(new BorderLayout());
+        setBorder(BorderFactory.createTitledBorder("Detalle Puerta Abatible " + indice));
+
+        JPanel datos = new JPanel(new GridLayout(0,4,8,4));
+        datos.add(new JLabel("Medida horizontal:"));      txtMedidaH = new JTextField();      datos.add(txtMedidaH);
+        datos.add(new JLabel("Medida vertical:"));        txtMedidaV = new JTextField();      datos.add(txtMedidaV);
+        datos.add(new JLabel("Cantidad:"));               txtCantidad = new JTextField();     datos.add(txtCantidad);
+        datos.add(new JLabel("Tipo cristal:"));           txtTipoCristal = new JTextField();  datos.add(txtTipoCristal);
+        datos.add(new JLabel("No. hojas:"));              txtNoHojas = new JTextField();      datos.add(txtNoHojas);
+        datos.add(new JLabel("Precio unidad:"));          txtPrecioUnidad = new JTextField(); datos.add(txtPrecioUnidad);
+        datos.add(new JLabel("Subtotal línea:"));         txtSubtotal = new JTextField();      datos.add(txtSubtotal);
+
+        datos.add(new JLabel("Descripción:"));            txtDescripcion = new JTextField();  datos.add(txtDescripcion);
+        datos.add(new JLabel("Tipo puerta:"));            txtTipoPuerta = new JTextField();   datos.add(txtTipoPuerta);
+
+        datos.add(new JLabel("Mosquitero:"));             ckMosquitero = new JCheckBox();     datos.add(ckMosquitero);
+        datos.add(new JLabel("Duela:"));                  ckDuela = new JCheckBox();          datos.add(ckDuela);
+
+        datos.add(new JLabel("Tipo duela:"));             txtTipoDuela = new JTextField();    datos.add(txtTipoDuela);
+        datos.add(new JLabel("Med. duela:"));             txtMedDuela = new JTextField();     datos.add(txtMedDuela);
+
+        datos.add(new JLabel("Adaptador:"));              ckAdaptador = new JCheckBox();      datos.add(ckAdaptador);
+        datos.add(new JLabel("Tipo adaptador:"));         txtTipoAdaptador = new JTextField(); datos.add(txtTipoAdaptador);
+
+        datos.add(new JLabel("Junquillo:"));              ckJunquillo = new JCheckBox();      datos.add(ckJunquillo);
+        datos.add(new JLabel("Tipo junquillo:"));         txtTipoJunquillo = new JTextField(); datos.add(txtTipoJunquillo);
+
+        datos.add(new JLabel("Canal:"));                  ckCanal = new JCheckBox();          datos.add(ckCanal);
+        datos.add(new JLabel("Tipo canal:"));             txtTipoCanal = new JTextField();    datos.add(txtTipoCanal);
+
+        datos.add(new JLabel("Pivote:"));                 ckPivote = new JCheckBox();         datos.add(ckPivote);
+        datos.add(new JLabel("Tipo pivote:"));            txtTipoPivote = new JTextField();   datos.add(txtTipoPivote);
+        datos.add(new JLabel("Cantidad pivote:"));        txtCantidadPivote = new JTextField(); datos.add(txtCantidadPivote);
+
+        datos.add(new JLabel("Jaladera:"));               ckJaladera = new JCheckBox();       datos.add(ckJaladera);
+        datos.add(new JLabel("Tipo jaladera:"));          txtTipoJaladera = new JTextField(); datos.add(txtTipoJaladera);
+        datos.add(new JLabel("Cantidad jaladera:"));      txtCantidadJaladera = new JTextField(); datos.add(txtCantidadJaladera);
+
+        datos.add(new JLabel("Barra:"));                  ckBarra = new JCheckBox();          datos.add(ckBarra);
+        datos.add(new JLabel("Tipo barra:"));             txtTipoBarra = new JTextField();    datos.add(txtTipoBarra);
+
+        add(datos, BorderLayout.NORTH);
+
+        // Panel de materiales
+        panelMateriales = new JPanel(new FlowLayout());
+        panelMateriales.setBorder(BorderFactory.createTitledBorder("Materiales necesarios (Para esta puerta)"));
+        JComboBox<Material> cmbMaterial = new JComboBox<>(materialesDisponibles.toArray(new Material[0]));
+        JTextField txtCantidadMat = new JTextField(5);
+        JButton btnAgregarMat = new JButton("Agregar material");
+        modeloMateriales = new DefaultListModel<>();
+        JList<String> listaMateriales = new JList<>(modeloMateriales);
+
+        btnAgregarMat.addActionListener(e -> {
+            Material m = (Material) cmbMaterial.getSelectedItem();
+            BigDecimal cantidad = new BigDecimal(txtCantidadMat.getText());
+            modeloMateriales.addElement(m.getDescripcion() + " - " + cantidad);
+            materialesSeleccionados.put(m.getIdMaterial(), cantidad);
+        });
+
+        panelMateriales.add(new JLabel("Material:"));
+        panelMateriales.add(cmbMaterial);
+        panelMateriales.add(new JLabel("Cantidad:"));
+        panelMateriales.add(txtCantidadMat);
+        panelMateriales.add(btnAgregarMat);
+        panelMateriales.add(new JScrollPane(listaMateriales));
+        add(panelMateriales, BorderLayout.CENTER);
+
+        // Botón quitar
+        btnQuitar = new JButton("Quitar");
+        btnQuitar.addActionListener(e -> {
+            Container parent = getParent();
+            if (parent != null) {
+                parent.remove(this);
+                parent.revalidate();
+                parent.repaint();
+                onRemove.run();
+            }
+        });
+        add(btnQuitar, BorderLayout.SOUTH);
+    }
+
+    public PuertaAbatibleDetalle getDetalle() {
+        PuertaAbatibleDetalle d = new PuertaAbatibleDetalle();
+        d.setMedidaHorizontal(new BigDecimal(txtMedidaH.getText()));
+        d.setMedidaVertical(new BigDecimal(txtMedidaV.getText()));
+        d.setCantidad(Integer.parseInt(txtCantidad.getText()));
+        d.setTipoCristal(txtTipoCristal.getText());
+        d.setNoHojas(Integer.parseInt(txtNoHojas.getText()));
+        d.setPrecioSoloUnaUnidadCalculado(new BigDecimal(txtPrecioUnidad.getText()));
+        d.setSubtotalLinea(new BigDecimal(txtSubtotal.getText()));
+        d.setDescripcion(txtDescripcion.getText());
+        d.setTipoPuerta(TipoPuerta.valueOf(txtTipoPuerta.getText().toUpperCase())); 
+        d.setMosquitero(ckMosquitero.isSelected());
+        d.setDuela(ckDuela.isSelected());
+        d.setTipoDuela(txtTipoDuela.getText());
+        d.setMedidaDuela(new BigDecimal(txtMedDuela.getText()));
+        d.setAdaptador(ckAdaptador.isSelected());
+        d.setTipoAdaptador(txtTipoAdaptador.getText());
+        d.setJunquillo(ckJunquillo.isSelected());
+        d.setTipoJunquillo(txtTipoJunquillo.getText());
+        d.setCanal(ckCanal.isSelected());
+        d.setTipoCanal(txtTipoCanal.getText());
+        d.setPivote(ckPivote.isSelected());
+        d.setTipoPivote(txtTipoPivote.getText());
+        d.setCantidadPivote(Integer.parseInt(txtCantidadPivote.getText()));
+        d.setJaladera(ckJaladera.isSelected());
+        d.setTipoJaladera(txtTipoJaladera.getText());
+        d.setCantidadJaladera(Integer.parseInt(txtCantidadJaladera.getText()));
+        d.setBarra(ckBarra.isSelected());
+        d.setTipoBarra(txtTipoBarra.getText());
+        return d;
+    }
+
+    public Map<Integer, BigDecimal> getMaterialesSeleccionados() {
+        return materialesSeleccionados;
+    }
+}
+
+
+
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Buscar;
@@ -602,39 +718,25 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnVistaPrevia;
-    private javax.swing.JComboBox<String> cbxCantidad;
-    private javax.swing.JComboBox<String> cbxNumHojas;
     private javax.swing.JComboBox<String> cbxSeleccionarCliente;
-    private javax.swing.JComboBox<String> cbxTipoCristal;
     private javax.swing.JComboBox<String> cbxTipoTrabajo1;
     private javax.swing.JCheckBox ckbxDescuentoNo;
     private javax.swing.JCheckBox ckbxDescuentoSi;
-    private javax.swing.JCheckBox ckbxMosquiteroNo;
-    private javax.swing.JCheckBox ckbxMosquiteroSi;
     private javax.swing.JLabel iconoCrear;
     private javax.swing.JLabel iconoTitulo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel labelHorizontal;
-    private javax.swing.JLabel labelNumHojas;
     private javax.swing.JLabel labelPorsentaje;
-    private javax.swing.JLabel labelVertical;
     private javax.swing.JPanel panelBotones;
     private javax.swing.JPanel panelBuscarCliente;
     private javax.swing.JPanel panelDescuento;
-    private javax.swing.JPanel panelInformacionTrabajo;
+    private javax.swing.JPanel panelDetallesDinamicos;
     private javax.swing.JPanel panelSubtitulo;
     private javax.swing.JPanel panelTipoTrabajo;
     private javax.swing.JPanel panelTitulo;
     private javax.swing.JPanel panelTituloDetalle;
-    private javax.swing.JLabel tituloCantidad;
-    private javax.swing.JLabel tituloCristal;
-    private javax.swing.JLabel tituloMedidas;
-    private javax.swing.JLabel tituloMosquitero;
     private javax.swing.JLabel tituloTipoTrabajo;
     private javax.swing.JTextField txtBuscarCliente;
     private javax.swing.JTextField txtDescuento;
-    private javax.swing.JTextField txtMetrosHorizontal;
-    private javax.swing.JTextField txtMetrosVertical;
     // End of variables declaration//GEN-END:variables
 }
