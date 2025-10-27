@@ -6,10 +6,16 @@ package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import modelo.CanceleriaFijaDetalle;
+import modelo.Cotizacion;
 import modelo.PuertaAbatibleDetalle;
+import modelo.TipoCanceleria;
+import modelo.TipoPuerta;
+import modelo.TipoVentana;
 import modelo.VentanaDetalle;
 
 /**
@@ -194,5 +200,179 @@ public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
         return false;
     }
 }
+
+
+    /**
+     * Obtiene todos los detalles de ventana para un ID de cotización.
+     */
+    public List<VentanaDetalle> obtenerVentanasPorCotizacion(int idCotizacion) throws SQLException {
+        List<VentanaDetalle> lista = new ArrayList<>();
+        String sql = "SELECT * FROM ventanadetalle WHERE id_cotizacion = ?";
+        
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idCotizacion);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapearVentanaDetalle(rs));
+                }
+            }
+        }
+        return lista;
+    }
+
+    /**
+     * Obtiene todos los detalles de cancelería para un ID de cotización.
+     */
+    public List<CanceleriaFijaDetalle> obtenerCanceleriasPorCotizacion(int idCotizacion) throws SQLException {
+        List<CanceleriaFijaDetalle> lista = new ArrayList<>();
+        String sql = "SELECT * FROM canceleriafijadetalle WHERE id_cotizacion = ?";
+        
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idCotizacion);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapearCanceleriaDetalle(rs));
+                }
+            }
+        }
+        return lista;
+    }
+
+    /**
+     * Obtiene todos los detalles de puerta para un ID de cotización.
+     */
+    public List<PuertaAbatibleDetalle> obtenerPuertasPorCotizacion(int idCotizacion) throws SQLException {
+        List<PuertaAbatibleDetalle> lista = new ArrayList<>();
+        String sql = "SELECT * FROM detalle_puertaabatible WHERE id_cotizacion = ?";
+        
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idCotizacion);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapearPuertaAbatible(rs));
+                }
+            }
+        }
+        return lista;
+    }
+
+
+    // METODOS DE MAPEO (Helpers)
+
+    private VentanaDetalle mapearVentanaDetalle(ResultSet rs) throws SQLException {
+        VentanaDetalle d = new VentanaDetalle();
+        
+        d.setIdVentanaDetalle(rs.getInt("idVentanaDetalle"));
+        d.setIdTipoTrabajo(rs.getInt("id_tipo_trabajo"));
+        d.setMedidaHorizontal(rs.getBigDecimal("medidaHorizontal"));
+        d.setMedidaVertical(rs.getBigDecimal("medidaVertical"));
+        d.setCantidad(rs.getInt("cantidad"));
+        d.setTipoCristal(rs.getString("tipoCristal"));
+        d.setNoHojas(rs.getInt("noHojas"));
+        d.setPrecioSoloUnaUnidadCalculado(rs.getBigDecimal("precioSoloUnaUnidadCalculado"));
+        d.setSubtotalLinea(rs.getBigDecimal("subtotalLinea"));
+        d.setDescripcion(rs.getString("descripcion"));
+        
+        // convierte la descripción String de la BD al Enum TipoVentana
+       d.setTipoVentana(TipoVentana.fromDescripcion(rs.getString("tipoVentana")));
+        
+        d.setMosquitero(rs.getBoolean("mosquitero"));
+        d.setArco(rs.getBoolean("arco"));
+        d.setTipoArco(rs.getString("tipoArco"));
+        d.setMedidaArco(rs.getBigDecimal("medidaArco"));
+        d.setTipoCanalillo(rs.getString("tipoCanalillo"));
+        d.setMedidaCanalillo(rs.getBigDecimal("medidaCanalillo"));
+
+        Cotizacion cot = new Cotizacion();
+        cot.setIdCotizacion(rs.getInt("id_cotizacion"));
+        d.setCotizacion(cot);
+
+        return d;
+    }
+
+    private CanceleriaFijaDetalle mapearCanceleriaDetalle(ResultSet rs) throws SQLException {
+        CanceleriaFijaDetalle d = new CanceleriaFijaDetalle();
+
+        d.setIdCanceleriaDetalle(rs.getInt("idCanceleriaDetalle"));
+        d.setIdTipoTrabajo(rs.getInt("id_tipo_trabajo"));
+        d.setMedidaHorizontal(rs.getBigDecimal("medidaHorizontal"));
+        d.setMedidaVertical(rs.getBigDecimal("medidaVertical"));
+        d.setCantidad(rs.getInt("cantidad"));
+        d.setTipoCristal(rs.getString("tipoCristal"));
+        d.setNoHojas(rs.getInt("noHojas"));
+        d.setPrecioSoloUnaUnidadCalculado(rs.getBigDecimal("precioSoloUnaUnidadCalculado"));
+        d.setSubtotalLinea(rs.getBigDecimal("subtotalLinea"));
+        d.setDescripcion(rs.getString("descripcion"));
+        
+        // convierte la descripción String de la BD al Enum TipoCanceleria
+        d.setTipoCanceleria(TipoCanceleria.fromDescripcion(rs.getString("tipoCanceleria")));
+        
+        d.setBolsa(rs.getBoolean("bolsa"));
+        d.setNumFijosVerticales(rs.getInt("numFijosVerticales"));
+        d.setNumFijosHorizontales(rs.getInt("numFijosHorizontales"));
+        d.setTipoTapa(rs.getString("tipoTapa"));
+        d.setCantidadTapa(rs.getInt("cantidadTapa"));
+        d.setZoclo(rs.getBoolean("zoclo"));
+        d.setTipoZoclo(rs.getString("tipoZoclo"));
+        d.setJunquillo(rs.getBoolean("junquillo"));
+        d.setTipoJunquillo(rs.getString("tipoJunquillo"));
+        d.setArco(rs.getBoolean("arco"));
+        d.setTipoArco(rs.getString("tipoArco"));
+        d.setMedidaArco(rs.getBigDecimal("medidaArco"));
+        d.setCanalillo(rs.getBoolean("canalillo"));
+        d.setTipoCanalillo(rs.getString("tipoCanalillo"));
+        d.setMedidaCanalillo(rs.getBigDecimal("medidaCanalillo"));
+
+        Cotizacion cot = new Cotizacion();
+        cot.setIdCotizacion(rs.getInt("id_cotizacion"));
+        d.setCotizacion(cot);
+        
+        return d;
+    }
+
+    private PuertaAbatibleDetalle mapearPuertaAbatible(ResultSet rs) throws SQLException {
+        PuertaAbatibleDetalle d = new PuertaAbatibleDetalle();
+
+        d.setIdDetallePuerta(rs.getInt("id_detalle_puerta"));
+        d.setIdTipoTrabajo(rs.getInt("id_tipo_trabajo"));
+        d.setMedidaHorizontal(rs.getBigDecimal("medidaHorizontal"));
+        d.setMedidaVertical(rs.getBigDecimal("medidaVertical"));
+        d.setCantidad(rs.getInt("cantidad"));
+        d.setTipoCristal(rs.getString("tipoCristal"));
+        d.setNoHojas(rs.getInt("noHojas"));
+        d.setPrecioSoloUnaUnidadCalculado(rs.getBigDecimal("precioSoloUnaUnidadCalculado"));
+        d.setSubtotalLinea(rs.getBigDecimal("subtotalLinea"));
+        d.setDescripcion(rs.getString("descripcion"));
+        
+        // convierte la descripción String de la BD al Enum TipoPuerta
+        d.setTipoPuerta(TipoPuerta.fromDescripcion(rs.getString("tipo_puerta")));
+        
+        d.setMosquitero(rs.getBoolean("mosquitero"));
+        d.setDuela(rs.getBoolean("duela"));
+        d.setTipoDuela(rs.getString("tipo_duela"));
+        d.setMedidaDuela(rs.getBigDecimal("medida_duela"));
+        d.setAdaptador(rs.getBoolean("adaptador"));
+        d.setTipoAdaptador(rs.getString("tipo_adaptador"));
+        d.setJunquillo(rs.getBoolean("junquillo"));
+        d.setTipoJunquillo(rs.getString("tipo_junquillo"));
+        d.setCanal(rs.getBoolean("canal"));
+        d.setTipoCanal(rs.getString("tipo_canal"));
+        d.setPivote(rs.getBoolean("pivote"));
+        d.setTipoPivote(rs.getString("tipo_pivote"));
+        d.setCantidadPivote(rs.getInt("cantidad_pivote"));
+        d.setJaladera(rs.getBoolean("jaladera"));
+        d.setTipoJaladera(rs.getString("tipo_jaladera"));
+        d.setCantidadJaladera(rs.getInt("cantidad_jaladera"));
+        d.setBarra(rs.getBoolean("barra"));
+        d.setTipoBarra(rs.getString("tipo_barra"));
+
+        Cotizacion cot = new Cotizacion();
+        cot.setIdCotizacion(rs.getInt("id_cotizacion"));
+        d.setCotizacion(cot);
+
+        return d;
+    }
+
     
 }
+    

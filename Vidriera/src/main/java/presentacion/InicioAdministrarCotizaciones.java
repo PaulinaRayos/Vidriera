@@ -5,6 +5,7 @@
 package presentacion;
 
 import com.toedter.calendar.JDateChooser;
+import dao.DetalleCotizacionDAO;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -27,15 +28,21 @@ import negocio.CotizacionBO;
  */
 public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
 
+    private CotizacionBO cotizacionBO;
+    private DetalleCotizacionDAO detalleDAO;
+    private DefaultTableModel modeloTablaCotizaciones;
+    private DefaultTableModel modeloTablaDetalles;
+
     /**
      * Creates new form InicioAdministrarCotizaciones
      */
     public InicioAdministrarCotizaciones() {
         initComponents();
-        agregarDateChoosers();
         editarTabla();
         quitarEspaciosEntrePaneles();
-
+        inicializarLogica();
+        cargarTodasLasCotizaciones();
+        agregarDateChoosers();
     }
 
     /**
@@ -76,18 +83,8 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         panelDetalles = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         lblNombreCliente = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        lblTipoTrabajo = new javax.swing.JLabel();
-        lblMedidas = new javax.swing.JLabel();
-        lblCantidad = new javax.swing.JLabel();
-        lblMosquitero = new javax.swing.JLabel();
-        lblCristal = new javax.swing.JLabel();
-        lblNumHojas = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblDetalles = new javax.swing.JTable();
         panelBotones = new javax.swing.JPanel();
         btnVistaPrevia = new javax.swing.JButton();
         btnDescargar = new javax.swing.JButton();
@@ -190,7 +187,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         panelBtnCrearCotizacionLayout.setHorizontalGroup(
             panelBtnCrearCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBtnCrearCotizacionLayout.createSequentialGroup()
-                .addGap(41, 41, 41)
+                .addGap(27, 27, 27)
                 .addComponent(Buscar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCrearCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -257,11 +254,11 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         panelBuscadorLayout.setHorizontalGroup(
             panelBuscadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBuscadorLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
+                .addGap(23, 23, 23)
                 .addGroup(panelBuscadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9)
-                    .addComponent(txtNumeroCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21)
+                    .addComponent(txtNumeroCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addGap(40, 40, 40)
                 .addGroup(panelBuscadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtNombreCliente)
                     .addGroup(panelBuscadorLayout.createSequentialGroup()
@@ -280,18 +277,17 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
             panelBuscadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBuscadorLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(panelBuscadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBuscadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel10)
-                        .addComponent(jLabel11))
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(panelBuscadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel9))
                 .addGap(3, 3, 3)
                 .addGroup(panelBuscadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panelFechas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelBuscadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtNumeroCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15))
         );
 
@@ -306,16 +302,16 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         panelTituloTablaLayout.setHorizontalGroup(
             panelTituloTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTituloTablaLayout.createSequentialGroup()
-                .addGap(35, 35, 35)
+                .addGap(23, 23, 23)
                 .addComponent(Cotizaciones)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelTituloTablaLayout.setVerticalGroup(
             panelTituloTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTituloTablaLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTituloTablaLayout.createSequentialGroup()
+                .addContainerGap(11, Short.MAX_VALUE)
                 .addComponent(Cotizaciones)
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         panelTabla.setBackground(new java.awt.Color(255, 255, 255));
@@ -353,16 +349,13 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         panelTablaLayout.setHorizontalGroup(
             panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTablaLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 815, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(162, Short.MAX_VALUE))
+                .addGap(21, 21, 21)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1010, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         panelTablaLayout.setVerticalGroup(
             panelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTablaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
         );
 
         panelTituloDetalle.setBackground(new java.awt.Color(255, 255, 255));
@@ -376,7 +369,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         panelTituloDetalleLayout.setHorizontalGroup(
             panelTituloDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTituloDetalleLayout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addGap(22, 22, 22)
                 .addComponent(DetallesCotizacionSeleccionada)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -397,83 +390,31 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
 
         lblNombreCliente.setText("Nombre");
 
-        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel3.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 38, 115));
-        jLabel3.setText("Tipo de trabajo");
-
-        jLabel4.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel4.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 38, 115));
-        jLabel4.setText("Medidas");
-
-        jLabel5.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel5.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 38, 115));
-        jLabel5.setText("Mosquitero");
-
-        jLabel6.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel6.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 38, 115));
-        jLabel6.setText("Cristal");
-
-        jLabel7.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel7.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 38, 115));
-        jLabel7.setText("Cantidad");
-
-        jLabel8.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel8.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 38, 115));
-        jLabel8.setText("No. de Hojas");
-
-        lblTipoTrabajo.setText("Tipo de trabajo");
-
-        lblMedidas.setText("Medidas");
-
-        lblCantidad.setText("Cantidad");
-
-        lblMosquitero.setText("Mosquitero");
-
-        lblCristal.setText("Cristal");
-
-        lblNumHojas.setText("Cristal");
+        tblDetalles.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Tipo de trabajo", "Medidas", "Mosquitero", "Cantidad", "Cristal", "No. de Hojas"
+            }
+        ));
+        jScrollPane3.setViewportView(tblDetalles);
 
         javax.swing.GroupLayout panelDetallesLayout = new javax.swing.GroupLayout(panelDetalles);
         panelDetalles.setLayout(panelDetallesLayout);
         panelDetallesLayout.setHorizontalGroup(
             panelDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelDetallesLayout.createSequentialGroup()
-                .addGap(39, 39, 39)
+                .addGap(26, 26, 26)
                 .addGroup(panelDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(lblNombreCliente))
-                .addGap(47, 47, 47)
-                .addGroup(panelDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(lblTipoTrabajo))
-                .addGap(60, 60, 60)
-                .addGroup(panelDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblMedidas)
-                    .addComponent(jLabel4))
-                .addGap(33, 33, 33)
-                .addGroup(panelDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addComponent(lblMosquitero))
-                .addGap(54, 54, 54)
-                .addGroup(panelDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 997, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelDetallesLayout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(77, 77, 77)
-                        .addComponent(jLabel6))
-                    .addGroup(panelDetallesLayout.createSequentialGroup()
-                        .addComponent(lblCantidad)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblCristal)))
-                .addGap(75, 75, 75)
-                .addGroup(panelDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8)
-                    .addComponent(lblNumHojas))
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblNombreCliente)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelDetallesLayout.setVerticalGroup(
@@ -482,22 +423,10 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(panelDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNombreCliente)
-                    .addComponent(lblTipoTrabajo)
-                    .addComponent(lblMedidas)
-                    .addComponent(lblCantidad)
-                    .addComponent(lblMosquitero)
-                    .addComponent(lblCristal)
-                    .addComponent(lblNumHojas))
-                .addContainerGap(12, Short.MAX_VALUE))
+                    .addComponent(lblNombreCliente))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         panelBotones.setBackground(new java.awt.Color(255, 255, 255));
@@ -572,7 +501,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
                 .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(116, 116, 116))
+                .addGap(17, 17, 17))
         );
         panelBotonesLayout.setVerticalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -590,15 +519,15 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelSubtitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelDetalles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelTituloDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelTabla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelTituloTabla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelSubtitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelBtnCrearCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelBuscador, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelTituloTabla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -617,7 +546,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelTituloDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelDetalles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelDetalles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -627,56 +556,52 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-            // 1. Obtén los filtros del usuario
-    String numeroCotización = txtNumeroCotizacion.getText().trim();
-    String nombreCliente = txtNombreCliente.getText().trim();
-    
-    Date fechaInicio = null;
-    Date fechaFin = null;
-    if (panelFechas.getComponentCount() >= 2) {
-        fechaInicio = ((com.toedter.calendar.JDateChooser) panelFechas.getComponent(0)).getDate();
-        fechaFin = ((com.toedter.calendar.JDateChooser) panelFechas.getComponent(1)).getDate();
-    }
+        // 1. Obtén los filtros del usuario
+        String numeroCotización = txtNumeroCotizacion.getText().trim();
+        String nombreCliente = txtNombreCliente.getText().trim();
 
-    List<Cotizacion> cotizaciones = new ArrayList<>();
-    CotizacionBO cotizacionbuscar = new CotizacionBO(); 
-    
-    try {
-        if (!numeroCotización.isEmpty()) {
-            int num = Integer.parseInt(numeroCotización);
-            Cotizacion cot = cotizacionbuscar.obtenerCotizacionesPorNumero(num);
-            if (cot != null) cotizaciones.add(cot);
-        } else if (!nombreCliente.isEmpty()) {
-            cotizaciones = cotizacionbuscar.obtenerCotizacionesPorCliente(nombreCliente);
-        } else if (fechaInicio != null && fechaFin != null) {
-            cotizaciones = cotizacionbuscar.obtenerCotizacionesPorRangoFechas(fechaInicio, fechaFin);
-        } else {
-            // puedes decidir si mostrar todas o dejar la tabla vacía
-            cotizaciones = new ArrayList<>();
+        Date fechaInicio = null;
+        Date fechaFin = null;
+        if (panelFechas.getComponentCount() >= 2) {
+            fechaInicio = ((com.toedter.calendar.JDateChooser) panelFechas.getComponent(0)).getDate();
+            fechaFin = ((com.toedter.calendar.JDateChooser) panelFechas.getComponent(1)).getDate();
         }
-    } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this, "Número de cotización inválido.");
-        return;
-    }
 
-    // 2. Actualiza la tabla
-    DefaultTableModel model = (DefaultTableModel) tblCotizaciones.getModel();
-    model.setRowCount(0);
+        List<Cotizacion> cotizaciones = new ArrayList<>();
 
-    for (Cotizacion c : cotizaciones) {
-        model.addRow(new Object[]{
-            c.getIdCotizacion(),
-            c.getCliente().getNombre(),
-            c.getFecha(),
-            c.getEstado(),
-            c.getTotal()
-        });
-    }
+        try {
+            if (!numeroCotización.isEmpty()) {
+                int num = Integer.parseInt(numeroCotización);
+                Cotizacion cot = cotizacionBO.obtenerCotizacionesPorNumero(num);
+                if (cot != null) {
+                    cotizaciones.add(cot);
+                }
+            } else if (!nombreCliente.isEmpty()) {
+                cotizaciones = cotizacionBO.obtenerCotizacionesPorCliente(nombreCliente); 
+            } else if (fechaInicio != null && fechaFin != null) {
+                cotizaciones = cotizacionBO.obtenerCotizacionesPorRangoFechas(fechaInicio, fechaFin); 
+            } else {
+                cotizaciones = cotizacionBO.obtenerCotizaciones();
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Número de cotización inválido.");
+            return;
+        }
+        llenarTablaCotizaciones(cotizaciones);
+        modeloTablaDetalles.setRowCount(0);
+        lblNombreCliente.setText("");
 
-        
+
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        int filaSeleccionada = tblCotizaciones.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una cotización de la tabla para editar.", "Ninguna cotización seleccionada", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        int idCotizacion = (int) modeloTablaCotizaciones.getValueAt(filaSeleccionada, 0);
+        
         this.dispose();
         frmEditarCotizacion editar = new frmEditarCotizacion();
         editar.setVisible(true);
@@ -689,6 +614,142 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCrearCotizacionActionPerformed
 
     
+    private void inicializarLogica() {
+        this.cotizacionBO = new CotizacionBO();
+        this.detalleDAO = new DetalleCotizacionDAO(cotizacionBO.getConexion());
+
+        this.modeloTablaCotizaciones = (DefaultTableModel) tblCotizaciones.getModel();
+        this.modeloTablaDetalles = (DefaultTableModel) tblDetalles.getModel();
+
+        tblCotizaciones.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                tablaCotizacionesSeleccionada();
+            }
+        });
+    }
+
+    /**
+     * carga todas las cotizaciones 
+     */
+    private void cargarTodasLasCotizaciones() {
+        try {
+            List<Cotizacion> lista = cotizacionBO.obtenerCotizaciones();
+            llenarTablaCotizaciones(lista);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar cotizaciones: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * llena la tabla de cotizaciones
+     *
+     * @param cotizaciones lista de cotizaciones a mostrar.
+     */
+    private void llenarTablaCotizaciones(List<Cotizacion> cotizaciones) {
+        modeloTablaCotizaciones.setRowCount(0);
+
+        // llena la tabla con las cotizaciones
+        for (Cotizacion c : cotizaciones) {
+            modeloTablaCotizaciones.addRow(new Object[]{
+                c.getIdCotizacion(),
+                c.getCliente().getNombre(), 
+                c.getFecha(),
+                c.getEstado(),
+                c.getTotal()
+            });
+        }
+    }
+
+    /**
+     * muestar  los detalles en la tabla cuando se selecciona una fila en la taba de cotizacion
+     */
+    private void tablaCotizacionesSeleccionada() {
+        int filaSeleccionada = tblCotizaciones.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            modeloTablaDetalles.setRowCount(0);
+            lblNombreCliente.setText(""); 
+            return;
+        }
+
+        try {
+            int idCotizacion = (int) modeloTablaCotizaciones.getValueAt(filaSeleccionada, 0);
+            String nombreCliente = (String) modeloTablaCotizaciones.getValueAt(filaSeleccionada, 1);
+            lblNombreCliente.setText(nombreCliente);
+            List<modelo.VentanaDetalle> ventanas = detalleDAO.obtenerVentanasPorCotizacion(idCotizacion);
+            List<modelo.CanceleriaFijaDetalle> cancelerias = detalleDAO.obtenerCanceleriasPorCotizacion(idCotizacion);
+            List<modelo.PuertaAbatibleDetalle> puertas = detalleDAO.obtenerPuertasPorCotizacion(idCotizacion);
+
+            //llena la tabla de detalles
+            llenarTablaDetalles(ventanas, cancelerias, puertas);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar detalles: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * llena la tabla de detalles
+     */
+    private void llenarTablaDetalles(List<modelo.VentanaDetalle> ventanas,
+            List<modelo.CanceleriaFijaDetalle> cancelerias,
+            List<modelo.PuertaAbatibleDetalle> puertas) {
+
+        modeloTablaDetalles.setRowCount(0); 
+
+        // detalles de ventanas
+        for (modelo.VentanaDetalle vd : ventanas) {
+            String tipoVentanaDesc = (vd.getTipoVentana() != null)
+                    ? vd.getTipoVentana().getDescripcion()
+                    : "N/A"; 
+
+            modeloTablaDetalles.addRow(new Object[]{
+                "Ventana " + tipoVentanaDesc,
+                vd.getMedidaHorizontal() + " x " + vd.getMedidaVertical(),
+                vd.isMosquitero() ? "Sí" : "No",
+                vd.getCantidad(),
+                vd.getTipoCristal(),
+                vd.getNoHojas()
+            });
+        }
+
+        // detalles de cancelerias
+        for (modelo.CanceleriaFijaDetalle cd : cancelerias) {
+            // Comprueba si el TipoCanceleria no es nulo
+            String tipoCanceleriaDesc = (cd.getTipoCanceleria() != null)
+                    ? cd.getTipoCanceleria().getDescripcion()
+                    : "N/A";
+
+            modeloTablaDetalles.addRow(new Object[]{
+                "Cancelería " + tipoCanceleriaDesc,
+                cd.getMedidaHorizontal() + " x " + cd.getMedidaVertical(),
+                "N/A", // Mosquitero
+                cd.getCantidad(),
+                cd.getTipoCristal(),
+                cd.getNoHojas()
+            });
+        }
+
+        // detalles de puertas
+        for (modelo.PuertaAbatibleDetalle pd : puertas) {
+            // Comprueba si el TipoPuerta no es nulo
+            String tipoPuertaDesc = (pd.getTipoPuerta() != null)
+                    ? pd.getTipoPuerta().getDescripcion()
+                    : "N/A"; // <-- ¡ESTA ES LA LÍNEA QUE FALLABA!
+
+            modeloTablaDetalles.addRow(new Object[]{
+                "Puerta " + tipoPuertaDesc,
+                pd.getMedidaHorizontal() + " x " + pd.getMedidaVertical(),
+                pd.isMosquitero() ? "Sí" : "No",
+                pd.getCantidad(),
+                pd.getTipoCristal(),
+                pd.getNoHojas()
+            });
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -723,51 +784,64 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
             }
         });
     }
-    
-    
+
     private void agregarDateChoosers() {
-    // Cambiar layout para posicionamiento simple
-    panelFechas.setLayout(new java.awt.FlowLayout(FlowLayout.LEFT, 5, 5));
-    
-    // Crear JDateChooser para fecha inicio
-    JDateChooser fechaInicio = new JDateChooser();
-    fechaInicio.setDateFormatString("yyyy-MM-dd");
-    panelFechas.add(fechaInicio);
+        // Cambiar layout para posicionamiento simple
+        panelFechas.setLayout(new java.awt.FlowLayout(FlowLayout.LEFT, 5, 5));
 
-    // Crear JDateChooser para fecha fin
-    JDateChooser fechaFin = new JDateChooser();
-    fechaFin.setDateFormatString("yyyy-MM-dd");
-    panelFechas.add(fechaFin);
+        // Crear JDateChooser para fecha inicio
+        JDateChooser fechaInicio = new JDateChooser();
+        fechaInicio.setDateFormatString("yyyy-MM-dd");
+        panelFechas.add(fechaInicio);
 
-    // Refrescar panel para que se vea
-    panelFechas.revalidate();
-    panelFechas.repaint();
-}
-    
-    private void editarTabla(){
-        JTableHeader header = tblCotizaciones.getTableHeader();
-header.setDefaultRenderer(new DefaultTableCellRenderer() {
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value,
-            boolean isSelected, boolean hasFocus, int row, int column) {
-        Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        comp.setBackground(new Color(15,105,196)); // Fondo
-        comp.setForeground(Color.WHITE);           // Texto
-        return comp;
+        // Crear JDateChooser para fecha fin
+        JDateChooser fechaFin = new JDateChooser();
+        fechaFin.setDateFormatString("yyyy-MM-dd");
+        panelFechas.add(fechaFin);
+
+        // Refrescar panel para que se vea
+        panelFechas.revalidate();
+        panelFechas.repaint();
     }
-});
+
+    private void editarTabla() {
+        JTableHeader headerCotizaciones = tblCotizaciones.getTableHeader();
+        headerCotizaciones.setDefaultRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                comp.setBackground(new Color(15, 105, 196)); // Fondo azul
+                comp.setForeground(Color.WHITE);             // Texto blanco
+                return comp;
+            }
+        });
+
+        // tabla de Detalles
+        JTableHeader headerDetalles = tblDetalles.getTableHeader(); 
+        headerDetalles.setDefaultRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                comp.setBackground(new Color(15, 105, 196));
+                comp.setForeground(Color.WHITE);             
+                return comp;
+            }
+        });
     }
-private void quitarEspaciosEntrePaneles() {
-    javax.swing.GroupLayout layout = (javax.swing.GroupLayout) getContentPane().getLayout();
 
-    // Desactiva los márgenes automáticos
-    layout.setAutoCreateGaps(false);
-    layout.setAutoCreateContainerGaps(false);
+    private void quitarEspaciosEntrePaneles() {
+        javax.swing.GroupLayout layout = (javax.swing.GroupLayout) getContentPane().getLayout();
 
-    // Vuelve a aplicar el layout para que se eliminen los espacios
-    getContentPane().revalidate();
-    getContentPane().repaint();
-}
+        // Desactiva los márgenes automáticos
+        layout.setAutoCreateGaps(false);
+        layout.setAutoCreateContainerGaps(false);
+
+        // Vuelve a aplicar el layout para que se eliminen los espacios
+        getContentPane().revalidate();
+        getContentPane().repaint();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Buscar;
@@ -786,23 +860,12 @@ private void quitarEspaciosEntrePaneles() {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
-    private javax.swing.JLabel lblCantidad;
-    private javax.swing.JLabel lblCristal;
-    private javax.swing.JLabel lblMedidas;
-    private javax.swing.JLabel lblMosquitero;
     private javax.swing.JLabel lblNombreCliente;
-    private javax.swing.JLabel lblNumHojas;
-    private javax.swing.JLabel lblTipoTrabajo;
     private javax.swing.JPanel panelBotones;
     private javax.swing.JPanel panelBtnCrearCotizacion;
     private javax.swing.JPanel panelBuscador;
@@ -814,6 +877,7 @@ private void quitarEspaciosEntrePaneles() {
     private javax.swing.JPanel panelTituloDetalle;
     private javax.swing.JPanel panelTituloTabla;
     private javax.swing.JTable tblCotizaciones;
+    private javax.swing.JTable tblDetalles;
     private javax.swing.JTextField txtNombreCliente;
     private javax.swing.JTextField txtNumeroCotizacion;
     // End of variables declaration//GEN-END:variables
