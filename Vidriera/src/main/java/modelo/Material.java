@@ -70,6 +70,9 @@ public class Material {
         this.tipo = tipo; 
     }
 
+    public String getDisplayName() {
+    return idMaterial + " - " + descripcion;
+}
    
 }    
 

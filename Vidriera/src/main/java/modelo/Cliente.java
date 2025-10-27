@@ -64,5 +64,8 @@ public class Cliente {
         return "Cliente{" + "idCliente=" + idCliente + ", nombre=" + nombre + ", telefono=" + telefono + ", direccion=" + direccion + ", email=" + email + ", RFC=" + RFC + '}';
     }
     
+    public String getDisplayName() {
+    return idCliente + " - " + nombre;
+}
     
 }

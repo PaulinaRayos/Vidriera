@@ -4,6 +4,16 @@
  */
 package presentacion;
 
+import dao.ClienteDAO;
+import dao.MaterialDAO;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JOptionPane;
+import modelo.Cliente;
+import modelo.Material;
+import utils.Conexion;
+
 /**
  *
  * @author User
@@ -15,6 +25,9 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
      */
     public frmCrearCotizacion() {
         initComponents();
+        cargarClientes();
+        cargarMaterialesVidrio();
+
     }
 
     /**
@@ -51,7 +64,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         ckbxMosquiteroSi = new javax.swing.JCheckBox();
         ckbxMosquiteroNo = new javax.swing.JCheckBox();
         tituloCristal = new javax.swing.JLabel();
-        cbxTipoCristal = new javax.swing.JComboBox<>();
+        cbxMateriales = new javax.swing.JComboBox<>();
         labelNumHojas = new javax.swing.JLabel();
         cbxNumHojas = new javax.swing.JComboBox<>();
         panelBuscarCliente = new javax.swing.JPanel();
@@ -264,7 +277,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         tituloCristal.setForeground(new java.awt.Color(0, 38, 115));
         tituloCristal.setText("Cristal");
 
-        cbxTipoCristal.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxMateriales.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         labelNumHojas.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         labelNumHojas.setForeground(new java.awt.Color(0, 38, 115));
@@ -283,7 +296,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                         .addComponent(labelNumHojas)
                         .addGap(18, 18, 18)
                         .addComponent(cbxNumHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(cbxTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxMateriales, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tituloCristal)
                     .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
                         .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -335,7 +348,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(tituloCristal)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbxTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cbxMateriales, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelNumHojas)
@@ -591,6 +604,40 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             }
         });
     }
+    
+    
+    private void cargarClientes() {
+    try (Connection conexion = Conexion.getConnection()) {
+        // Cargar clientes
+        ClienteDAO clienteDAO = new ClienteDAO(conexion);
+        List<Cliente> clientes = clienteDAO.obtenerTodos();
+        cbxSeleccionarCliente.removeAllItems();
+        for (Cliente c : clientes) {
+            cbxSeleccionarCliente.addItem(c.getDisplayName()); 
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error cargando datos: " + e.getMessage());
+    }
+}
+    
+    private void cargarMaterialesVidrio() {
+    try (Connection conexion = Conexion.getConnection()) {
+        MaterialDAO materialDAO = new MaterialDAO(conexion);
+        List<Material> materiales = materialDAO.obtenerTodos();
+        
+        cbxMateriales.removeAllItems();
+        for (Material m : materiales) {
+            if (m.getTipo() == Material.TipoMaterial.Vidrio) {
+                cbxMateriales.addItem(m.getDisplayName());
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error al cargar materiales: " + e.getMessage());
+    }
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Buscar;
@@ -603,9 +650,9 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnVistaPrevia;
     private javax.swing.JComboBox<String> cbxCantidad;
+    private javax.swing.JComboBox<String> cbxMateriales;
     private javax.swing.JComboBox<String> cbxNumHojas;
     private javax.swing.JComboBox<String> cbxSeleccionarCliente;
-    private javax.swing.JComboBox<String> cbxTipoCristal;
     private javax.swing.JComboBox<String> cbxTipoTrabajo1;
     private javax.swing.JCheckBox ckbxDescuentoNo;
     private javax.swing.JCheckBox ckbxDescuentoSi;
