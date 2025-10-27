@@ -4,18 +4,47 @@
  */
 package presentacion;
 
+import com.toedter.calendar.JDateChooser;
+import java.awt.Component;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import modelo.Cotizacion;
+import modelo.Material;
+import negocio.CotizacionBO;
+
 /**
  *
  * @author User
  */
 public class frmEditarCotizacion extends javax.swing.JFrame {
 
+    private CotizacionBO cotizacionBO;
+    private Cotizacion cotizacionActual;
+    private Object detalleActual = null;
+    private String tipoDetalleActual = null;
+
+    // --- AÑADE ESTAS LÍNEAS ---
+    private List<modelo.VentanaDetalle> detallesOriginalesVentana = new ArrayList<>();
+    private List<modelo.CanceleriaFijaDetalle> detallesOriginalesCanceleria = new ArrayList<>();
+    private List<modelo.PuertaAbatibleDetalle> detallesOriginalesPuerta = new ArrayList<>();
     /**
      * Creates new form frmEditarCotizacion
      */
     public frmEditarCotizacion() {
         initComponents();
     }
+    
+    public frmEditarCotizacion(int idCotizacion) { 
+        initComponents();
+        inicializarLogica(); 
+        cargarDatos(idCotizacion); 
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,7 +58,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         panelSubtitulo = new javax.swing.JPanel();
         EditarCotizacion = new javax.swing.JLabel();
         iconoEditar = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnVolver = new javax.swing.JButton();
         panelTitulo = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         iconoTitulo = new javax.swing.JLabel();
@@ -65,11 +94,15 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         btnDescargar = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
         panelBuscarCliente = new javax.swing.JPanel();
-        labelCliente = new javax.swing.JLabel();
+        detalleCotizacion = new javax.swing.JLabel();
         cbxEstadoCotizacion = new javax.swing.JComboBox<>();
         labelNumCotizacion = new javax.swing.JLabel();
         labelNomCliente = new javax.swing.JLabel();
         labelFechaCotizacion = new javax.swing.JLabel();
+        nomCliente = new javax.swing.JLabel();
+        NumCotizacion1 = new javax.swing.JLabel();
+        estado = new javax.swing.JLabel();
+        fehcCotizacion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Editar cotización");
@@ -82,10 +115,10 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
         iconoEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edit-20.png"))); // NOI18N
 
-        jButton1.setText("Volver");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnVolver.setText("Volver");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnVolverActionPerformed(evt);
             }
         });
 
@@ -99,7 +132,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(EditarCotizacion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnVolver)
                 .addGap(25, 25, 25))
         );
         panelSubtituloLayout.setVerticalGroup(
@@ -110,7 +143,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                     .addComponent(iconoEditar)
                     .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(EditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton1)))
+                        .addComponent(btnVolver)))
                 .addGap(8, 8, 8))
         );
 
@@ -282,7 +315,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                 .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelNumHojas)
                     .addComponent(cbxNumHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         panelTipoTrabajo.setBackground(new java.awt.Color(255, 255, 255));
@@ -307,11 +340,11 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         panelTipoTrabajoLayout.setVerticalGroup(
             panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTipoTrabajoLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addContainerGap(15, Short.MAX_VALUE)
                 .addComponent(tituloTipoTrabajo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         panelDescuento.setBackground(new java.awt.Color(255, 255, 255));
@@ -339,6 +372,11 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         btnGuardar.setFocusPainted(false);
         btnGuardar.setRequestFocusEnabled(false);
         btnGuardar.setRolloverEnabled(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnDescartar.setBackground(new java.awt.Color(202, 50, 0));
         btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
@@ -453,9 +491,9 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
         panelBuscarCliente.setBackground(new java.awt.Color(255, 255, 255));
 
-        labelCliente.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        labelCliente.setForeground(new java.awt.Color(15, 105, 196));
-        labelCliente.setText("Cliente");
+        detalleCotizacion.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        detalleCotizacion.setForeground(new java.awt.Color(15, 105, 196));
+        detalleCotizacion.setText("Detalles de Cotización");
 
         cbxEstadoCotizacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estado", "Item 2", "Item 3", "Item 4" }));
 
@@ -468,6 +506,22 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         labelFechaCotizacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         labelFechaCotizacion.setText("Fecha de cotizacion");
 
+        nomCliente.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        nomCliente.setForeground(new java.awt.Color(0, 38, 115));
+        nomCliente.setText("Nombre del Cliente");
+
+        NumCotizacion1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        NumCotizacion1.setForeground(new java.awt.Color(0, 38, 115));
+        NumCotizacion1.setText("Num. Cotización");
+
+        estado.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        estado.setForeground(new java.awt.Color(0, 38, 115));
+        estado.setText("Estado");
+
+        fehcCotizacion.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        fehcCotizacion.setForeground(new java.awt.Color(0, 38, 115));
+        fehcCotizacion.setText("Fecha de Cotización");
+
         javax.swing.GroupLayout panelBuscarClienteLayout = new javax.swing.GroupLayout(panelBuscarCliente);
         panelBuscarCliente.setLayout(panelBuscarClienteLayout);
         panelBuscarClienteLayout.setHorizontalGroup(
@@ -475,31 +529,43 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
             .addGroup(panelBuscarClienteLayout.createSequentialGroup()
                 .addGap(51, 51, 51)
                 .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(detalleCotizacion)
                     .addGroup(panelBuscarClienteLayout.createSequentialGroup()
-                        .addComponent(labelNumCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelNumCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(NumCotizacion1))
                         .addGap(18, 18, 18)
-                        .addComponent(labelNomCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelNomCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nomCliente))
                         .addGap(18, 18, 18)
-                        .addComponent(labelFechaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxEstadoCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(labelCliente))
+                        .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelFechaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fehcCotizacion))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(estado)
+                            .addComponent(cbxEstadoCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelBuscarClienteLayout.setVerticalGroup(
             panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBuscarClienteLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cbxEstadoCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelBuscarClienteLayout.createSequentialGroup()
-                        .addComponent(labelCliente)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(labelNumCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelNomCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelFechaCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(25, 25, 25))
+                .addComponent(detalleCotizacion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nomCliente)
+                    .addComponent(estado)
+                    .addComponent(fehcCotizacion)
+                    .addComponent(NumCotizacion1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelNumCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelNomCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelFechaCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbxEstadoCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -517,8 +583,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                     .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(panelDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(0, 0, Short.MAX_VALUE))))
             .addComponent(panelInformacionTrabajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
@@ -527,7 +592,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                 .addComponent(panelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelSubtitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelTipoTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -548,12 +613,278 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ckbxMosquiteroSiActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
      this.dispose();
      InicioAdministrarCotizaciones in= new InicioAdministrarCotizaciones();
      in.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnVolverActionPerformed
 
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+     try {
+            if (cotizacionActual == null) { /* ... error ... */ return; }
+             String nuevoEstado = cbxEstadoCotizacion.getSelectedItem().toString();
+             BigDecimal nuevoDescuentoMonto = BigDecimal.ZERO;
+             if (ckbxDescuentoSi.isSelected()) {
+                 try {
+                     nuevoDescuentoMonto = new BigDecimal(txtDescuento.getText());
+                      if (nuevoDescuentoMonto.compareTo(BigDecimal.ZERO) < 0) { /* ... error negativo ... */ return; }
+                 } catch (NumberFormatException e) { /* ... error formato ... */ return; }
+             }
+             cotizacionActual.setEstado(nuevoEstado);
+             cotizacionActual.setDescuentoMonto(nuevoDescuentoMonto);
+         
+            List<modelo.VentanaDetalle> listaFinalVentanas = new ArrayList<>();
+            List<modelo.CanceleriaFijaDetalle> listaFinalCancelerias = new ArrayList<>();
+            List<modelo.PuertaAbatibleDetalle> listaFinalPuertas = new ArrayList<>();
+
+            Object detalleModificado = null; 
+            if (detalleActual != null) {
+                try {
+                    BigDecimal medH = new BigDecimal(txtMetrosHorizontal.getText());
+                    BigDecimal medV = new BigDecimal(txtMetrosVertical.getText());
+                    int cantidad = Integer.parseInt(cbxCantidad.getSelectedItem().toString());
+                    String cristal = cbxTipoCristal.getSelectedItem() != null ? cbxTipoCristal.getSelectedItem().toString() : "";
+                    int numHojas = Integer.parseInt(cbxNumHojas.getSelectedItem().toString());
+                    boolean mosquitero = ckbxMosquiteroSi.isSelected();
+
+                    if (detalleActual instanceof modelo.VentanaDetalle vd) {
+                        vd.setMedidaHorizontal(medH); vd.setMedidaVertical(medV);
+                        vd.setCantidad(cantidad); vd.setTipoCristal(cristal);
+                        vd.setNoHojas(numHojas); vd.setMosquitero(mosquitero);
+                        detalleModificado = vd; 
+                    } else if (detalleActual instanceof modelo.CanceleriaFijaDetalle cd) {
+                        cd.setMedidaHorizontal(medH); cd.setMedidaVertical(medV);
+                        cd.setCantidad(cantidad); cd.setTipoCristal(cristal);
+                        cd.setNoHojas(numHojas);
+                        detalleModificado = cd;
+                    } else if (detalleActual instanceof modelo.PuertaAbatibleDetalle pd) {
+                        pd.setMedidaHorizontal(medH); pd.setMedidaVertical(medV);
+                        pd.setCantidad(cantidad); pd.setTipoCristal(cristal);
+                        pd.setNoHojas(numHojas); pd.setMosquitero(mosquitero);
+                        detalleModificado = pd;
+                    }
+                } catch (NumberFormatException | NullPointerException e) { /* ... error formato detalle ... */ return; }
+            }
+
+            for (var original : detallesOriginalesVentana) {
+                if (original == detalleActual) { 
+                    listaFinalVentanas.add((modelo.VentanaDetalle) detalleModificado); 
+                } else {
+                    listaFinalVentanas.add(original); 
+                }
+            }
+            for (var original : detallesOriginalesCanceleria) {
+                 if (original == detalleActual) {
+                    listaFinalCancelerias.add((modelo.CanceleriaFijaDetalle) detalleModificado);
+                } else {
+                    listaFinalCancelerias.add(original);
+                }
+            }
+            // Hacer lo mismo para puertas
+            for (var original : detallesOriginalesPuerta) {
+                 if (original == detalleActual) {
+                    listaFinalPuertas.add((modelo.PuertaAbatibleDetalle) detalleModificado);
+                } else {
+                    listaFinalPuertas.add(original);
+                }
+            }
+            boolean exito = cotizacionBO.actualizarCotizacionCompleta(
+                cotizacionActual,
+                listaFinalVentanas,
+                listaFinalCancelerias,
+                listaFinalPuertas
+            );
+
+            if (exito) {
+                JOptionPane.showMessageDialog(this, "Cotización actualizada correctamente.", "Guardado", JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
+                InicioAdministrarCotizaciones inicio = new InicioAdministrarCotizaciones();
+                inicio.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al guardar la cotización.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error inesperado al guardar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+  /**
+     * Configura BO, componentes de UI (ComboBoxes) y conecta listeners.
+     */
+    private void inicializarLogica() {
+        this.cotizacionBO = new negocio.CotizacionBO(); 
+
+        cbxEstadoCotizacion.removeAllItems();
+        cbxEstadoCotizacion.addItem("Pendiente");
+        cbxEstadoCotizacion.addItem("Aceptado");
+        cbxEstadoCotizacion.addItem("Cancelada");
+
+        // --- Poblar ComboBox Tipo de Trabajo ---
+        cbxTipoTrabajo1.removeAllItems(); // Limpiar items por defecto
+        cbxTipoTrabajo1.addItem("---"); // Item inicial no seleccionable
+        for (modelo.TipoVentana tv : modelo.TipoVentana.values()) {
+            cbxTipoTrabajo1.addItem("VENTANA - " + tv.getDescripcion());
+        }
+        for (modelo.TipoPuerta tp : modelo.TipoPuerta.values()) {
+            cbxTipoTrabajo1.addItem("PUERTA - " + tp.getDescripcion());
+        }
+        for (modelo.TipoCanceleria tc : modelo.TipoCanceleria.values()) {
+            cbxTipoTrabajo1.addItem("CANCELERIA - " + tc.getDescripcion());
+        }
+        cbxTipoTrabajo1.setEnabled(false);
+
+        // --- Configurar ComboBoxes de Cantidad y NoHojas
+        DefaultComboBoxModel<String> cantidadModel = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<String> hojasModel = new DefaultComboBoxModel<>();
+        for (int i = 1; i <= 100; i++) {
+            cantidadModel.addElement(String.valueOf(i));
+            hojasModel.addElement(String.valueOf(i));
+        }
+        cbxCantidad.setModel(cantidadModel);
+        cbxNumHojas.setModel(hojasModel);
+
+        // --- Poblar ComboBox Tipo Cristal ---
+        try (var conn = utils.Conexion.getConnection()) {
+             var materialDAO = new dao.MaterialDAO(conn);
+             List<Material> vidrios = materialDAO.obtenerPorTipo(Material.TipoMaterial.Vidrio);
+             cbxTipoCristal.removeAllItems();
+             if (vidrios != null && !vidrios.isEmpty()) {
+                 for (Material vidrio : vidrios) {
+                     cbxTipoCristal.addItem(vidrio.getDescripcion());
+                 }
+             } else {
+                 cbxTipoCristal.addItem("No hay vidrios");
+             }
+         } catch (Exception e) {
+             e.printStackTrace();
+             cbxTipoCristal.removeAllItems();
+             cbxTipoCristal.addItem("Error DB");
+         }
+        btnGuardar.addActionListener(this::btnGuardarActionPerformed);
+
+        ckbxDescuentoSi.addActionListener(e -> { ckbxDescuentoNo.setSelected(false); txtDescuento.setEnabled(true); });
+        ckbxDescuentoNo.addActionListener(e -> { ckbxDescuentoSi.setSelected(false); txtDescuento.setEnabled(false); txtDescuento.setText("0"); });
+        txtDescuento.setEnabled(ckbxDescuentoSi.isSelected()); 
+        ckbxMosquiteroSi.addActionListener(e -> ckbxMosquiteroNo.setSelected(false));
+        ckbxMosquiteroNo.addActionListener(e -> ckbxMosquiteroSi.setSelected(false));
+    }
+
+    /**
+     * carga los detalles de las cotizaciones
+     */
+    private void cargarDatos(int idCotizacion) {
+        var detalleDAO = new dao.DetalleCotizacionDAO(cotizacionBO.getConexion()); 
+        try {
+            this.cotizacionActual = cotizacionBO.obtenerCotizacionPorId(idCotizacion);
+
+            if (cotizacionActual == null) {
+                JOptionPane.showMessageDialog(this, "Error: No se encontró la cotización con ID: " + idCotizacion, "Error", JOptionPane.ERROR_MESSAGE);
+                this.dispose();
+                return;
+            }
+
+            labelNumCotizacion.setText(String.valueOf(cotizacionActual.getIdCotizacion()));
+            if (cotizacionActual.getCliente() != null) {
+                labelNomCliente.setText(cotizacionActual.getCliente().getNombre());
+            } else {
+                labelNomCliente.setText("Cliente no encontrado");
+            }
+
+            if (cotizacionActual.getFecha() != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                labelFechaCotizacion.setText(sdf.format(cotizacionActual.getFecha()));
+            } else {
+                labelFechaCotizacion.setText("N/A");
+            }
+
+            cbxEstadoCotizacion.setSelectedItem(cotizacionActual.getEstado());
+
+            // Llenar descuento
+            BigDecimal descuento = cotizacionActual.getDescuentoMonto();
+            if (descuento != null && descuento.compareTo(BigDecimal.ZERO) > 0) {
+                ckbxDescuentoSi.setSelected(true); ckbxDescuentoNo.setSelected(false);
+                txtDescuento.setText(descuento.toPlainString()); txtDescuento.setEnabled(true);
+            } else {
+                ckbxDescuentoSi.setSelected(false); ckbxDescuentoNo.setSelected(true);
+                txtDescuento.setText("0"); txtDescuento.setEnabled(false);
+            }
+
+            tipoDetalleActual = null;
+            if (detallesOriginalesVentana == null) detallesOriginalesVentana = new ArrayList<>(); else detallesOriginalesVentana.clear();
+            if (detallesOriginalesCanceleria == null) detallesOriginalesCanceleria = new ArrayList<>(); else detallesOriginalesCanceleria.clear();
+            if (detallesOriginalesPuerta == null) detallesOriginalesPuerta = new ArrayList<>(); else detallesOriginalesPuerta.clear();
+
+            detallesOriginalesVentana = detalleDAO.obtenerVentanasPorCotizacion(idCotizacion);
+            if (!detallesOriginalesVentana.isEmpty()) {
+                detalleActual = detallesOriginalesVentana.get(0);
+                tipoDetalleActual = "VENTANA";
+            }
+
+            detallesOriginalesCanceleria = detalleDAO.obtenerCanceleriasPorCotizacion(idCotizacion);
+            if (detalleActual == null && !detallesOriginalesCanceleria.isEmpty()) { // Solo si no encontramos ventana
+                detalleActual = detallesOriginalesCanceleria.get(0);
+                tipoDetalleActual = "CANCELERIA";
+            }
+
+            detallesOriginalesPuerta = detalleDAO.obtenerPuertasPorCotizacion(idCotizacion);
+            if (detalleActual == null && !detallesOriginalesPuerta.isEmpty()) { // Solo si no encontramos ni ventana ni cancelería
+                detalleActual = detallesOriginalesPuerta.get(0);
+                tipoDetalleActual = "PUERTA";
+            }
+
+            if (detalleActual != null) {
+                String tipoTrabajoStr = ""; // Para seleccionar
+                // llenar campos segun el tipo
+                if (detalleActual instanceof modelo.VentanaDetalle vd) {
+                    txtMetrosHorizontal.setText(vd.getMedidaHorizontal().toPlainString());
+                    txtMetrosVertical.setText(vd.getMedidaVertical().toPlainString());
+                    cbxCantidad.setSelectedIndex(Math.max(0, vd.getCantidad() - 1)); 
+                    cbxTipoCristal.setSelectedItem(vd.getTipoCristal());
+                    cbxNumHojas.setSelectedIndex(Math.max(0, vd.getNoHojas() - 1));
+                    ckbxMosquiteroSi.setSelected(vd.isMosquitero()); ckbxMosquiteroNo.setSelected(!vd.isMosquitero());
+                    ckbxMosquiteroSi.setEnabled(true); ckbxMosquiteroNo.setEnabled(true);
+                    // Construir el String exacto como está en el ComboBox
+                    tipoTrabajoStr = "VENTANA - " + (vd.getTipoVentana() != null ? vd.getTipoVentana().getDescripcion() : "N/A");
+                } else if (detalleActual instanceof modelo.CanceleriaFijaDetalle cd) {
+                    txtMetrosHorizontal.setText(cd.getMedidaHorizontal().toPlainString());
+                    txtMetrosVertical.setText(cd.getMedidaVertical().toPlainString());
+                    cbxCantidad.setSelectedIndex(Math.max(0, cd.getCantidad() - 1));
+                    cbxTipoCristal.setSelectedItem(cd.getTipoCristal());
+                    cbxNumHojas.setSelectedIndex(Math.max(0, cd.getNoHojas() - 1));
+                    ckbxMosquiteroSi.setSelected(false); ckbxMosquiteroNo.setSelected(true);
+                    ckbxMosquiteroSi.setEnabled(false); ckbxMosquiteroNo.setEnabled(false);
+                    tipoTrabajoStr = "CANCELERIA - " + (cd.getTipoCanceleria() != null ? cd.getTipoCanceleria().getDescripcion() : "N/A");
+                } else if (detalleActual instanceof modelo.PuertaAbatibleDetalle pd) {
+                    txtMetrosHorizontal.setText(pd.getMedidaHorizontal().toPlainString());
+                    txtMetrosVertical.setText(pd.getMedidaVertical().toPlainString());
+                    cbxCantidad.setSelectedIndex(Math.max(0, pd.getCantidad() - 1));
+                    cbxTipoCristal.setSelectedItem(pd.getTipoCristal());
+                    cbxNumHojas.setSelectedIndex(Math.max(0, pd.getNoHojas() - 1));
+                    ckbxMosquiteroSi.setSelected(pd.isMosquitero()); ckbxMosquiteroNo.setSelected(!pd.isMosquitero());
+                    ckbxMosquiteroSi.setEnabled(true); ckbxMosquiteroNo.setEnabled(true);
+                    tipoTrabajoStr = "PUERTA - " + (pd.getTipoPuerta() != null ? pd.getTipoPuerta().getDescripcion() : "N/A");
+                }
+                
+                // aeleccionar tipo de trabajo
+                cbxTipoTrabajo1.setSelectedItem(tipoTrabajoStr);
+
+                panelTipoTrabajo.setVisible(true);
+                panelInformacionTrabajo.setVisible(true);
+            } else {
+                // Ocultar si no hay detalles
+                panelTipoTrabajo.setVisible(false);
+                panelInformacionTrabajo.setVisible(false);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar datos completos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -592,11 +923,13 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Descuento;
     private javax.swing.JLabel EditarCotizacion;
+    private javax.swing.JLabel NumCotizacion1;
     private javax.swing.JButton btnDescargar;
     private javax.swing.JButton btnDescartar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnVistaPrevia;
+    private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> cbxCantidad;
     private javax.swing.JComboBox<String> cbxEstadoCotizacion;
     private javax.swing.JComboBox<String> cbxNumHojas;
@@ -606,11 +939,12 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JCheckBox ckbxDescuentoSi;
     private javax.swing.JCheckBox ckbxMosquiteroNo;
     private javax.swing.JCheckBox ckbxMosquiteroSi;
+    private javax.swing.JLabel detalleCotizacion;
+    private javax.swing.JLabel estado;
+    private javax.swing.JLabel fehcCotizacion;
     private javax.swing.JLabel iconoEditar;
     private javax.swing.JLabel iconoTitulo;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel labelCliente;
     private javax.swing.JLabel labelFechaCotizacion;
     private javax.swing.JLabel labelHorizontal;
     private javax.swing.JLabel labelNomCliente;
@@ -618,6 +952,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JLabel labelNumHojas;
     private javax.swing.JLabel labelPorsentaje;
     private javax.swing.JLabel labelVertical;
+    private javax.swing.JLabel nomCliente;
     private javax.swing.JPanel panelBotones;
     private javax.swing.JPanel panelBuscarCliente;
     private javax.swing.JPanel panelDescuento;
