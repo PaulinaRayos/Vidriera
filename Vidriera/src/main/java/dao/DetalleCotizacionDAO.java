@@ -23,7 +23,7 @@ import modelo.VentanaDetalle;
  * @author Vidrieria
  */
 public class DetalleCotizacionDAO {
-    
+
     private Connection conexion;
 
     public DetalleCotizacionDAO(Connection conexion) {
@@ -33,10 +33,10 @@ public class DetalleCotizacionDAO {
     // Guardar detalles de Ventana
     public boolean crearDetalleVentana(List<VentanaDetalle> detalles) {
         String sql = "INSERT INTO ventanadetalle(id_tipo_trabajo, id_cotizacion, medidaHorizontal, medidaVertical, cantidad, tipoCristal, noHojas, precioSoloUnaUnidadCalculado, subtotalLinea, descripcion, tipoVentana, mosquitero, arco, tipoArco, medidaArco, tipoCanalillo, medidaCanalillo) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            for(VentanaDetalle d : detalles) {
-                ps.setInt(1, d.getIdTipoTrabajo());
+            for (VentanaDetalle d : detalles) {
+                ps.setInt(1, d.getTipoTrabajo().getIdCatalogo()); // CORREGIDO: Usar el objeto CatalogoTrabajo
                 ps.setInt(2, d.getCotizacion().getIdCotizacion());
                 ps.setBigDecimal(3, d.getMedidaHorizontal());
                 ps.setBigDecimal(4, d.getMedidaVertical());
@@ -46,7 +46,7 @@ public class DetalleCotizacionDAO {
                 ps.setBigDecimal(8, d.getPrecioSoloUnaUnidadCalculado());
                 ps.setBigDecimal(9, d.getSubtotalLinea());
                 ps.setString(10, d.getDescripcion());
-                ps.setString(11, d.getTipoVentana() != null ? d.getTipoVentana().getDescripcion() : null);
+                ps.setString(11, d.getTipoVentana() != null ? d.getTipoVentana().name() : null); // Usa .name()
                 ps.setBoolean(12, d.isMosquitero());
                 ps.setBoolean(13, d.isArco());
                 ps.setString(14, d.getTipoArco());
@@ -57,7 +57,7 @@ public class DetalleCotizacionDAO {
             }
             ps.executeBatch();
             return true;
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -66,10 +66,10 @@ public class DetalleCotizacionDAO {
     // Guardar detalles de Cancelería
     public boolean crearDetalleCanceleria(List<CanceleriaFijaDetalle> detalles) {
         String sql = "INSERT INTO canceleriafijadetalle(id_tipo_trabajo, id_cotizacion, medidaHorizontal, medidaVertical, cantidad, tipoCristal, noHojas, precioSoloUnaUnidadCalculado, subtotalLinea, descripcion, tipoCanceleria, bolsa, numFijosVerticales, numFijosHorizontales, tipoTapa, cantidadTapa, zoclo, tipoZoclo, junquillo, tipoJunquillo, arco, tipoArco, medidaArco, canalillo, tipoCanalillo, medidaCanalillo) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            for(CanceleriaFijaDetalle d : detalles) {
-                ps.setInt(1, d.getIdTipoTrabajo());
+            for (CanceleriaFijaDetalle d : detalles) {
+                ps.setInt(1, d.getTipoTrabajo().getIdCatalogo()); // CORREGIDO: Usar el objeto CatalogoTrabajo
                 ps.setInt(2, d.getCotizacion().getIdCotizacion());
                 ps.setBigDecimal(3, d.getMedidaHorizontal());
                 ps.setBigDecimal(4, d.getMedidaVertical());
@@ -79,7 +79,7 @@ public class DetalleCotizacionDAO {
                 ps.setBigDecimal(8, d.getPrecioSoloUnaUnidadCalculado());
                 ps.setBigDecimal(9, d.getSubtotalLinea());
                 ps.setString(10, d.getDescripcion());
-                ps.setString(11, d.getTipoCanceleria() != null ? d.getTipoCanceleria().getDescripcion() : null);
+                ps.setString(11, d.getTipoCanceleria() != null ? d.getTipoCanceleria().name() : null); // Usa .name()
                 ps.setBoolean(12, d.isBolsa());
                 ps.setInt(13, d.getNumFijosVerticales());
                 ps.setInt(14, d.getNumFijosHorizontales());
@@ -99,7 +99,7 @@ public class DetalleCotizacionDAO {
             }
             ps.executeBatch();
             return true;
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -108,10 +108,10 @@ public class DetalleCotizacionDAO {
     // Guardar detalles de Puerta Abatible
     public boolean crearDetallePuerta(List<PuertaAbatibleDetalle> detalles) {
         String sql = "INSERT INTO detalle_puertaabatible(id_tipo_trabajo, id_cotizacion, medidaHorizontal, medidaVertical, cantidad, tipoCristal, noHojas, precioSoloUnaUnidadCalculado, subtotalLinea, descripcion, tipo_puerta, mosquitero, duela, tipo_duela, medida_duela, adaptador, tipo_adaptador, junquillo, tipo_junquillo, canal, tipo_canal, pivote, tipo_pivote, cantidad_pivote, jaladera, tipo_jaladera, cantidad_jaladera, barra, tipo_barra) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            for(PuertaAbatibleDetalle d : detalles) {
-                ps.setInt(1, d.getIdTipoTrabajo());
+            for (PuertaAbatibleDetalle d : detalles) {
+                ps.setInt(1, d.getTipoTrabajo().getIdCatalogo()); // CORREGIDO: Usar el objeto CatalogoTrabajo
                 ps.setInt(2, d.getCotizacion().getIdCotizacion());
                 ps.setBigDecimal(3, d.getMedidaHorizontal());
                 ps.setBigDecimal(4, d.getMedidaVertical());
@@ -121,7 +121,7 @@ public class DetalleCotizacionDAO {
                 ps.setBigDecimal(8, d.getPrecioSoloUnaUnidadCalculado());
                 ps.setBigDecimal(9, d.getSubtotalLinea());
                 ps.setString(10, d.getDescripcion());
-                ps.setString(11, d.getTipoPuerta() != null ? d.getTipoPuerta().getDescripcion() : null);
+                ps.setString(11, d.getTipoPuerta() != null ? d.getTipoPuerta().name() : null); // Usa .name()
                 ps.setBoolean(12, d.isMosquitero());
                 ps.setBoolean(13, d.isDuela());
                 ps.setString(14, d.getTipoDuela());
@@ -144,63 +144,65 @@ public class DetalleCotizacionDAO {
             }
             ps.executeBatch();
             return true;
-        } catch(SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
-/**
- * Elimina todos los detalles de ventana asociados a un ID de cotización.
- * @param idCotizacion El ID de la cotizacio
- * @return true si la operación fue exitosa, false en caso contrario.
- */
-public boolean eliminarDetallesVentanaPorCotizacionId(int idCotizacion) {
-    String sql = "DELETE FROM ventanadetalle WHERE id_cotizacion = ?";
-    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-        ps.setInt(1, idCotizacion);
-        ps.executeUpdate(); 
-        return true;
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
+    /**
+     * Elimina todos los detalles de ventana asociados a un ID de cotización.
+     *
+     * @param idCotizacion El ID de la cotizacio
+     * @return true si la operación fue exitosa, false en caso contrario.
+     */
+    public boolean eliminarDetallesVentanaPorCotizacionId(int idCotizacion) {
+        String sql = "DELETE FROM ventanadetalle WHERE id_cotizacion = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idCotizacion);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
 
-/**
- * Elimina todos los detalles de canceleria asociados a un ID de cotizacion.
- * @param idCotizacion El ID de la cotizacion
- * @return true si la operación fue exitosa, false en caso contrario.
- */
-public boolean eliminarDetallesCanceleriaPorCotizacionId(int idCotizacion) {
-    String sql = "DELETE FROM canceleriafijadetalle WHERE id_cotizacion = ?";
-    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-        ps.setInt(1, idCotizacion);
-        ps.executeUpdate();
-        return true;
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
+    /**
+     * Elimina todos los detalles de canceleria asociados a un ID de cotizacion.
+     *
+     * @param idCotizacion El ID de la cotizacion
+     * @return true si la operación fue exitosa, false en caso contrario.
+     */
+    public boolean eliminarDetallesCanceleriaPorCotizacionId(int idCotizacion) {
+        String sql = "DELETE FROM canceleriafijadetalle WHERE id_cotizacion = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idCotizacion);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
 
-/**
- * Elimina todos los detalles de puerta asociados a un ID de cotización.
- * @param idCotizacion El ID de la cotizacion
- * @return true si la operación fue exitosa, false en caso contrario.
- */
-public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
-    String sql = "DELETE FROM detalle_puertaabatible WHERE id_cotizacion = ?";
-    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-        ps.setInt(1, idCotizacion);
-        ps.executeUpdate();
-        return true;
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
+    /**
+     * Elimina todos los detalles de puerta asociados a un ID de cotización.
+     *
+     * @param idCotizacion El ID de la cotizacion
+     * @return true si la operación fue exitosa, false en caso contrario.
+     */
+    public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
+        String sql = "DELETE FROM detalle_puertaabatible WHERE id_cotizacion = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idCotizacion);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
-
 
     /**
      * Obtiene todos los detalles de ventana para un ID de cotización.
@@ -208,7 +210,7 @@ public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
     public List<VentanaDetalle> obtenerVentanasPorCotizacion(int idCotizacion) throws SQLException {
         List<VentanaDetalle> lista = new ArrayList<>();
         String sql = "SELECT * FROM ventanadetalle WHERE id_cotizacion = ?";
-        
+
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idCotizacion);
             try (ResultSet rs = ps.executeQuery()) {
@@ -226,7 +228,7 @@ public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
     public List<CanceleriaFijaDetalle> obtenerCanceleriasPorCotizacion(int idCotizacion) throws SQLException {
         List<CanceleriaFijaDetalle> lista = new ArrayList<>();
         String sql = "SELECT * FROM canceleriafijadetalle WHERE id_cotizacion = ?";
-        
+
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idCotizacion);
             try (ResultSet rs = ps.executeQuery()) {
@@ -244,7 +246,7 @@ public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
     public List<PuertaAbatibleDetalle> obtenerPuertasPorCotizacion(int idCotizacion) throws SQLException {
         List<PuertaAbatibleDetalle> lista = new ArrayList<>();
         String sql = "SELECT * FROM detalle_puertaabatible WHERE id_cotizacion = ?";
-        
+
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idCotizacion);
             try (ResultSet rs = ps.executeQuery()) {
@@ -256,12 +258,10 @@ public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
         return lista;
     }
 
-
     // METODOS DE MAPEO (Helpers)
-
     private VentanaDetalle mapearVentanaDetalle(ResultSet rs) throws SQLException {
         VentanaDetalle d = new VentanaDetalle();
-        
+
         d.setIdVentanaDetalle(rs.getInt("idVentanaDetalle"));
         d.setIdTipoTrabajo(rs.getInt("id_tipo_trabajo"));
         d.setMedidaHorizontal(rs.getBigDecimal("medidaHorizontal"));
@@ -272,10 +272,8 @@ public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
         d.setPrecioSoloUnaUnidadCalculado(rs.getBigDecimal("precioSoloUnaUnidadCalculado"));
         d.setSubtotalLinea(rs.getBigDecimal("subtotalLinea"));
         d.setDescripcion(rs.getString("descripcion"));
-        
-        // convierte la descripción String de la BD al Enum TipoVentana
-       d.setTipoVentana(TipoVentana.fromDescripcion(rs.getString("tipoVentana")));
-        
+        d.setTipoVentana(TipoVentana.fromDescripcion(rs.getString("tipoVentana")));
+
         d.setMosquitero(rs.getBoolean("mosquitero"));
         d.setArco(rs.getBoolean("arco"));
         d.setTipoArco(rs.getString("tipoArco"));
@@ -303,10 +301,7 @@ public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
         d.setPrecioSoloUnaUnidadCalculado(rs.getBigDecimal("precioSoloUnaUnidadCalculado"));
         d.setSubtotalLinea(rs.getBigDecimal("subtotalLinea"));
         d.setDescripcion(rs.getString("descripcion"));
-        
-        // convierte la descripción String de la BD al Enum TipoCanceleria
         d.setTipoCanceleria(TipoCanceleria.fromDescripcion(rs.getString("tipoCanceleria")));
-        
         d.setBolsa(rs.getBoolean("bolsa"));
         d.setNumFijosVerticales(rs.getInt("numFijosVerticales"));
         d.setNumFijosHorizontales(rs.getInt("numFijosHorizontales"));
@@ -326,7 +321,7 @@ public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
         Cotizacion cot = new Cotizacion();
         cot.setIdCotizacion(rs.getInt("id_cotizacion"));
         d.setCotizacion(cot);
-        
+
         return d;
     }
 
@@ -343,10 +338,7 @@ public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
         d.setPrecioSoloUnaUnidadCalculado(rs.getBigDecimal("precioSoloUnaUnidadCalculado"));
         d.setSubtotalLinea(rs.getBigDecimal("subtotalLinea"));
         d.setDescripcion(rs.getString("descripcion"));
-        
-        // convierte la descripción String de la BD al Enum TipoPuerta
         d.setTipoPuerta(TipoPuerta.fromDescripcion(rs.getString("tipo_puerta")));
-        
         d.setMosquitero(rs.getBoolean("mosquitero"));
         d.setDuela(rs.getBoolean("duela"));
         d.setTipoDuela(rs.getString("tipo_duela"));
@@ -373,6 +365,4 @@ public boolean eliminarDetallesPuertaPorCotizacionId(int idCotizacion) {
         return d;
     }
 
-    
 }
-    

@@ -46,9 +46,13 @@ public class CotizacionDAO {
             ps.setBigDecimal(6, cotizacion.getTotal());
             ps.setString(7, cotizacion.getEstado());
 
-            // Aquí pasamos el id del cliente, no el objeto
             ps.setInt(8, cotizacion.getCliente().getIdCliente());
-            ps.setInt(9, cotizacion.getProyecto().getIdProyecto());
+
+            if (cotizacion.getProyecto() != null) {
+                ps.setInt(9, cotizacion.getProyecto().getIdProyecto());
+            } else {
+                ps.setNull(9, java.sql.Types.INTEGER); // Permite proyectos nulos
+            }
             ps.setInt(10, cotizacion.getVendedor().getIdVendedor());
 
             int filas = ps.executeUpdate();
@@ -68,43 +72,37 @@ public class CotizacionDAO {
     // Leer todas las Cotizaciones
     public List<Cotizacion> obtenerTodas() {
         List<Cotizacion> lista = new ArrayList<>();
-    String sql = "SELECT * FROM cotizacion ORDER BY fecha DESC"; // O el orden que prefieras
-    
-    // Necesitas los DAOs de las otras entidades para cargar los objetos
-    ClienteDAO clienteDAO = new ClienteDAO(conexion);
-    ProyectoDAO proyectoDAO = new ProyectoDAO(conexion);
-    VendedorDAO vendedorDAO = new VendedorDAO(conexion);
+        String sql = "SELECT * FROM cotizacion ORDER BY fecha DESC"; // O el orden que prefieras
 
-    try (Statement stmt = conexion.createStatement()) {
-        ResultSet rs = stmt.executeQuery(sql);
-        while (rs.next()) {
-            Cotizacion c = new Cotizacion();
-            c.setIdCotizacion(rs.getInt("idCotizacion"));
-            c.setFecha(rs.getDate("fecha"));
-            c.setSubtotal(rs.getBigDecimal("subtotal"));
-            c.setManoObra(rs.getBigDecimal("manoObra"));
-            c.setIva(rs.getBigDecimal("iva"));
-            c.setDescuentoMonto(rs.getBigDecimal("descuentoMonto"));
-            c.setTotal(rs.getBigDecimal("total"));
-            c.setEstado(rs.getString("estado"));
-            
-            // --- ESTO ES LO QUE FALTABA ---
-            // Le decimos que busque el cliente, proyecto y vendedor usando sus IDs
-            c.setCliente(clienteDAO.obtenerPorId(rs.getInt("idCliente")));
-            c.setProyecto(proyectoDAO.obtenerPorId(rs.getInt("idProyecto")));
-            c.setVendedor(vendedorDAO.obtenerPorId(rs.getInt("idVendedor")));
-            // --- FIN DE LA CORRECCIÓN ---
-            
-            lista.add(c);
+        // Necesitas los DAOs de las otras entidades para cargar los objetos
+        ClienteDAO clienteDAO = new ClienteDAO(conexion);
+        ProyectoDAO proyectoDAO = new ProyectoDAO(conexion);
+        VendedorDAO vendedorDAO = new VendedorDAO(conexion);
+
+        try (Statement stmt = conexion.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Cotizacion c = new Cotizacion();
+                c.setIdCotizacion(rs.getInt("idCotizacion"));
+                c.setFecha(rs.getDate("fecha"));
+                c.setSubtotal(rs.getBigDecimal("subtotal"));
+                c.setManoObra(rs.getBigDecimal("manoObra"));
+                c.setIva(rs.getBigDecimal("iva"));
+                c.setDescuentoMonto(rs.getBigDecimal("descuentoMonto"));
+                c.setTotal(rs.getBigDecimal("total"));
+                c.setEstado(rs.getString("estado"));
+                c.setCliente(clienteDAO.obtenerPorId(rs.getInt("idCliente")));
+                c.setProyecto(proyectoDAO.obtenerPorId(rs.getInt("idProyecto")));
+                c.setVendedor(vendedorDAO.obtenerPorId(rs.getInt("idVendedor")));
+
+                lista.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return lista;
     }
-    return lista;
-}
 
-    // ========= METODO CORREGIDO =========
-    // Actualizar Cotizacion (Version Completa)
     public boolean actualizarCotizacion(Cotizacion cotizacion) {
         String sql = "UPDATE cotizacion SET fecha=?, subtotal=?, manoObra=?, iva=?, descuentoMonto=?, total=?, estado=?, idCliente=?, idProyecto=?, idVendedor=? "
                 + "WHERE idCotizacion=?";
@@ -146,8 +144,7 @@ public class CotizacionDAO {
         return false;
     }
 
-    // ========= METODO CORRECTO =========
-    // Obtener Cotizacion por ID con datos relacionados
+
     public Cotizacion obtenerPorId(int id) {
         Cotizacion c = null;
         String sql = "SELECT c.*, cl.nombre AS cliente_nombre, v.nombre AS vendedor_nombre "
@@ -227,7 +224,6 @@ public class CotizacionDAO {
         cotizacion.setDescuentoMonto(rs.getBigDecimal("descuentoMonto"));
         cotizacion.setTotal(rs.getBigDecimal("total"));
         cotizacion.setEstado(rs.getString("estado"));
-        // Poblar objetos
 
         ClienteDAO clienteDAO = new ClienteDAO(this.conexion);
         ProyectoDAO proyectoDAO = new ProyectoDAO(this.conexion);

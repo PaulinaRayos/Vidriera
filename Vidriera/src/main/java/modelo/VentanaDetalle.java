@@ -10,7 +10,8 @@ import java.math.BigDecimal;
  *
  * @author Vidrieria
  */
-public class VentanaDetalle extends DetalleCotizacion{
+public class VentanaDetalle extends DetalleCotizacion {
+
     private int idVentanaDetalle;
     private int idTipoTrabajo;
     private Cotizacion cotizacion;
@@ -29,14 +30,12 @@ public class VentanaDetalle extends DetalleCotizacion{
     private BigDecimal medidaArco;
     private String tipoCanalillo;
     private BigDecimal medidaCanalillo;
-
-    
-
+    private CatalogoTrabajo tipoTrabajo;
 
     public VentanaDetalle() {
-        super(); // Llama al constructor de DetalleCotizacion
+        super(); 
     }
-    
+
     //Constructor con id
     public VentanaDetalle(int idVentanaDetalle, int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoVentana tipoVentana, boolean mosquitero, boolean arco, String tipoArco, BigDecimal medidaArco, String tipoCanalillo, BigDecimal medidaCanalillo) {
         this.idVentanaDetalle = idVentanaDetalle;
@@ -58,7 +57,7 @@ public class VentanaDetalle extends DetalleCotizacion{
         this.tipoCanalillo = tipoCanalillo;
         this.medidaCanalillo = medidaCanalillo;
     }
-    
+
     //Constructor sin id
     public VentanaDetalle(int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoVentana tipoVentana, boolean mosquitero, boolean arco, String tipoArco, BigDecimal medidaArco, String tipoCanalillo, BigDecimal medidaCanalillo) {
         this.idTipoTrabajo = idTipoTrabajo;
@@ -79,7 +78,7 @@ public class VentanaDetalle extends DetalleCotizacion{
         this.tipoCanalillo = tipoCanalillo;
         this.medidaCanalillo = medidaCanalillo;
     }
-    
+
     //Getters y setters
     public int getIdVentanaDetalle() {
         return idVentanaDetalle;
@@ -177,7 +176,6 @@ public class VentanaDetalle extends DetalleCotizacion{
         this.tipoVentana = tipoVentana;
     }
 
-    
     public boolean isMosquitero() {
         return mosquitero;
     }
@@ -225,9 +223,12 @@ public class VentanaDetalle extends DetalleCotizacion{
     public void setMedidaCanalillo(BigDecimal medidaCanalillo) {
         this.medidaCanalillo = medidaCanalillo;
     }
-    
-    
-    
-    
-    
+
+    public CatalogoTrabajo getTipoTrabajo() {
+        return tipoTrabajo;
+    }
+
+    public void setTipoTrabajo(CatalogoTrabajo tipoTrabajo) {
+        this.tipoTrabajo = tipoTrabajo;
+    }
 }

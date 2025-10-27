@@ -19,6 +19,7 @@ dao\CotizacionDAO.class
 presentacion\frmCrearCotizacion$1.class
 presentacion\frmCrearCotizacion$4.class
 TestConexion.class
+modelo\CatalogoTrabajo.class
 modelo\Cotizacion.class
 modelo\Proyecto.class
 presentacion\frmCrearCotizacion.class
@@ -39,6 +40,7 @@ dao\ProyectoDAO.class
 modelo\PuertaAbatibleDetalle.class
 presentacion\frmCrearCotizacion$3.class
 modelo\TipoCanceleria.class
+dao\CatalogoTrabajoDAO.class
 dao\VendedorDAO.class
 com\mycompany\vidriera\Test4Cancelar.class
 presentacion\frmCrearCotizacion$PanelDetalleCanceleria.class
