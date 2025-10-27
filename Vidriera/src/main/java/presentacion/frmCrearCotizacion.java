@@ -638,24 +638,16 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void cbxTipoTrabajo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoTrabajo1ActionPerformed
-        // 1. Obtiene el ÍNDICE del elemento seleccionado, no el texto.
         int selectedIndex = cbxTipoTrabajo1.getSelectedIndex();
 
-        // Si es el primer elemento ("Selecciona..."), no hace nada.
         if (selectedIndex <= 0) {
             return;
         }
 
-        // Encuentra el objeto CatalogoTrabajo completo en nuestra lista.
-        // Restamos 1 porque la lista empieza en 0, pero el JComboBox tiene el texto de ayuda en la posición 0.
         CatalogoTrabajo trabajoSeleccionado = catalogoTrabajos.get(selectedIndex - 1);
 
-        // Extrae los datos que necesitamos: el ID y el nombre.
         int idTrabajo = trabajoSeleccionado.getIdCatalogo();
         String nombreTrabajo = trabajoSeleccionado.getNombre();
-
-        // Crea el panel correspondiente, PASÁNDOLE EL ID DEL TRABAJO.
-        // La lógica ahora se basa en el nombre real del catálogo, es más robusto.
         if (nombreTrabajo.toLowerCase().contains("ventana")) {
 
             // El constructor del panel ahora debe aceptar el ID del trabajo.
@@ -675,7 +667,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             PanelExpandible panelExp = new PanelExpandible(nombreTrabajo, pdp);
             panelDetallesDinamicos.add(panelExp);
 
-        } else if (nombreTrabajo.toLowerCase().contains("canceleria")) {
+        } else if (nombreTrabajo.toLowerCase().contains("cancel")) {
 
             PanelDetalleCanceleria pdC = new PanelDetalleCanceleria(idTrabajo, materialesDisponibles, () -> {
                 panelDetallesDinamicos.revalidate();
