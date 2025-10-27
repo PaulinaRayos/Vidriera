@@ -8,12 +8,18 @@ import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.Font;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import modelo.Cotizacion;
+import negocio.CotizacionBO;
 
 /**
  *
@@ -169,14 +175,14 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
 
         Buscar.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         Buscar.setForeground(new java.awt.Color(15, 105, 196));
-        Buscar.setText("Buscar");
+        Buscar.setText("Buscar :         num Cotización                 Nombre cliente:                                 Fecha:");
 
         javax.swing.GroupLayout panelBtnCrearCotizacionLayout = new javax.swing.GroupLayout(panelBtnCrearCotizacion);
         panelBtnCrearCotizacion.setLayout(panelBtnCrearCotizacionLayout);
         panelBtnCrearCotizacionLayout.setHorizontalGroup(
             panelBtnCrearCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBtnCrearCotizacionLayout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addContainerGap()
                 .addComponent(Buscar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCrearCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -220,19 +226,24 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         btnBuscar.setFocusPainted(false);
         btnBuscar.setRequestFocusEnabled(false);
         btnBuscar.setRolloverEnabled(false);
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelBuscadorLayout = new javax.swing.GroupLayout(panelBuscador);
         panelBuscador.setLayout(panelBuscadorLayout);
         panelBuscadorLayout.setHorizontalGroup(
             panelBuscadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBuscadorLayout.createSequentialGroup()
-                .addGap(46, 46, 46)
+                .addGap(86, 86, 86)
                 .addComponent(txtNumeroCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addGap(35, 35, 35)
                 .addComponent(txtNombreCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64)
+                .addGap(18, 18, 18)
                 .addComponent(panelFechas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(185, Short.MAX_VALUE))
             .addGroup(panelBuscadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBuscadorLayout.createSequentialGroup()
                     .addContainerGap(753, Short.MAX_VALUE)
@@ -588,6 +599,57 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+            // 1. Obtén los filtros del usuario
+    String numeroCotización = txtNumeroCotizacion.getText().trim();
+    String nombreCliente = txtNombreCliente.getText().trim();
+    
+    Date fechaInicio = null;
+    Date fechaFin = null;
+    if (panelFechas.getComponentCount() >= 2) {
+        fechaInicio = ((com.toedter.calendar.JDateChooser) panelFechas.getComponent(0)).getDate();
+        fechaFin = ((com.toedter.calendar.JDateChooser) panelFechas.getComponent(1)).getDate();
+    }
+
+    List<Cotizacion> cotizaciones = new ArrayList<>();
+    CotizacionBO cotizacionbuscar = new CotizacionBO(); 
+    
+    try {
+        if (!numeroCotización.isEmpty()) {
+            int num = Integer.parseInt(numeroCotización);
+            Cotizacion cot = cotizacionbuscar.obtenerCotizacionesPorNumero(num);
+            if (cot != null) cotizaciones.add(cot);
+        } else if (!nombreCliente.isEmpty()) {
+            cotizaciones = cotizacionbuscar.obtenerCotizacionesPorCliente(nombreCliente);
+        } else if (fechaInicio != null && fechaFin != null) {
+            cotizaciones = cotizacionbuscar.obtenerCotizacionesPorRangoFechas(fechaInicio, fechaFin);
+        } else {
+            // puedes decidir si mostrar todas o dejar la tabla vacía
+            cotizaciones = new ArrayList<>();
+        }
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Número de cotización inválido.");
+        return;
+    }
+
+    // 2. Actualiza la tabla
+    DefaultTableModel model = (DefaultTableModel) tblCotizaciones.getModel();
+    model.setRowCount(0);
+
+    for (Cotizacion c : cotizaciones) {
+        model.addRow(new Object[]{
+            c.getIdCotizacion(),
+            c.getCliente().getNombre(),
+            c.getFecha(),
+            c.getEstado(),
+            c.getTotal()
+        });
+    }
+
+        
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    
     /**
      * @param args the command line arguments
      */

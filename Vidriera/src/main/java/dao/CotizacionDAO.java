@@ -4,18 +4,18 @@
  */
 package dao;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import modelo.Cliente;
 import modelo.Cotizacion;
+import modelo.Proyecto;
 import modelo.Vendedor;
-import utils.Conexion;
 
 /**
  *
@@ -24,6 +24,8 @@ import utils.Conexion;
 public class CotizacionDAO {
 
     private Connection conexion;
+    
+    
 
     public CotizacionDAO(Connection conexion) {
         this.conexion = conexion;
@@ -175,4 +177,93 @@ public class CotizacionDAO {
         }
         return c;
     }
+    
+   public List<Cotizacion> obtenerCotizacionesCliente(String nombreCliente) {
+    List<Cotizacion> cotizaciones = new ArrayList<>();
+    String sql = "SELECT c.* FROM cotizacion c INNER JOIN cliente cl ON c.idCliente = cl.idCliente WHERE cl.nombre LIKE ?";
+    try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+        stmt.setString(1, "%" + nombreCliente + "%");
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            Cotizacion cotizacion = crearCotizacionDesdeResultSet(rs);
+            cotizaciones.add(cotizacion);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return cotizaciones;
+}
+
+   public Cotizacion obtenerCotizacionPorNumero(int numeroCotizacion) {
+    String sql = "SELECT * FROM cotizacion WHERE idCotizacion = ?";
+    try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+        stmt.setInt(1, numeroCotizacion);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return crearCotizacionDesdeResultSet(rs);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+   
+   private Cotizacion crearCotizacionDesdeResultSet(ResultSet rs) throws SQLException {
+    Cotizacion cotizacion = new Cotizacion();
+    cotizacion.setIdCotizacion(rs.getInt("idCotizacion"));
+    cotizacion.setFecha(rs.getDate("fecha"));
+    cotizacion.setSubtotal(rs.getBigDecimal("subtotal"));
+    cotizacion.setManoObra(rs.getBigDecimal("manoObra"));
+    cotizacion.setIva(rs.getBigDecimal("iva"));
+    cotizacion.setDescuentoMonto(rs.getBigDecimal("descuentoMonto"));
+    cotizacion.setTotal(rs.getBigDecimal("total"));
+    cotizacion.setEstado(rs.getString("estado"));
+    // Poblar objetos
+  
+    ClienteDAO clienteDAO = new ClienteDAO(this.conexion);
+    ProyectoDAO proyectoDAO = new ProyectoDAO(this.conexion);
+    VendedorDAO vendedorDAO = new VendedorDAO(this.conexion);
+    Cliente cliente = clienteDAO.obtenerPorId(rs.getInt("idCliente"));
+   cotizacion.setCliente(cliente);
+
+    Proyecto proyecto = proyectoDAO.obtenerPorId(rs.getInt("idProyecto"));
+    cotizacion.setProyecto(proyecto);
+
+    Vendedor vendedor = vendedorDAO.obtenerPorId(rs.getInt("idVendedor"));
+    cotizacion.setVendedor(vendedor);
+    return cotizacion;
+}
+
+public List<Cotizacion> obtenerCotizacionesPorRangoFechas(Date fechaInicio, Date fechaFin) {
+    List<Cotizacion> cotizaciones = new ArrayList<>();
+    String sql = "SELECT * FROM cotizacion WHERE fecha BETWEEN ? AND ?";
+    try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+        stmt.setDate(1, new java.sql.Date(fechaInicio.getTime()));
+        stmt.setDate(2, new java.sql.Date(fechaFin.getTime()));
+        ResultSet rs = stmt.executeQuery();
+        ClienteDAO clienteDAO = new ClienteDAO(conexion);
+        ProyectoDAO proyectoDAO = new ProyectoDAO(conexion);
+        VendedorDAO vendedorDAO = new VendedorDAO(conexion);
+        while (rs.next()) {
+            Cotizacion cotizacion = new Cotizacion();
+            cotizacion.setIdCotizacion(rs.getInt("idCotizacion"));
+            cotizacion.setFecha(rs.getDate("fecha"));
+            cotizacion.setSubtotal(rs.getBigDecimal("subtotal"));
+            cotizacion.setManoObra(rs.getBigDecimal("manoObra"));
+            cotizacion.setIva(rs.getBigDecimal("iva"));
+            cotizacion.setDescuentoMonto(rs.getBigDecimal("descuentoMonto"));
+            cotizacion.setTotal(rs.getBigDecimal("total"));
+            cotizacion.setEstado(rs.getString("estado"));
+            cotizacion.setCliente(clienteDAO.obtenerPorId(rs.getInt("idCliente")));
+            cotizacion.setProyecto(proyectoDAO.obtenerPorId(rs.getInt("idProyecto")));
+            cotizacion.setVendedor(vendedorDAO.obtenerPorId(rs.getInt("idVendedor")));
+            cotizaciones.add(cotizacion);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return cotizaciones;
+}
+
+
 }
