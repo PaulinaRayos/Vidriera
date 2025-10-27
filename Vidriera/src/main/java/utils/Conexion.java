@@ -17,7 +17,7 @@ public class Conexion {
     //Generalmente este es el usuario, pero si no cambienlo
     private static final String USER = "root";
     //ponga su contraseña de MYSQL
-    private static final String PASS = "root";
+    private static final String PASS = "Chicharo7878";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASS);

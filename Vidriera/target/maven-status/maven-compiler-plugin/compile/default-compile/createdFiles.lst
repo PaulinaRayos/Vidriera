@@ -3,6 +3,7 @@ modelo\MaterialDetalle.class
 presentacion\InicioAdministrarCotizaciones$2.class
 modelo\Vendedor.class
 presentacion\InicioAdministrarCotizaciones$6.class
+presentacion\frmEditarCotizacion$3.class
 dao\ClienteDAO.class
 modelo\TipoVentana.class
 presentacion\frmEditarCotizacion.class
@@ -26,6 +27,7 @@ dao\MaterialDAO.class
 presentacion\InicioAdministrarCotizaciones$7.class
 presentacion\frmCrearCotizacion$2.class
 com\mycompany\vidriera\Test3Editar.class
+presentacion\frmCrearCotizacion$6.class
 presentacion\frmCrearCotizacion$5.class
 presentacion\InicioAdministrarCotizaciones$4.class
 dao\DetalleCotizacionDAO.class

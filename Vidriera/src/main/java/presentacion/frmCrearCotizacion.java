@@ -114,6 +114,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         panelSubtitulo = new javax.swing.JPanel();
         ConsultarCotizacion = new javax.swing.JLabel();
         iconoCrear = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         panelBuscarCliente = new javax.swing.JPanel();
         Buscar = new javax.swing.JLabel();
         txtBuscarCliente = new javax.swing.JTextField();
@@ -396,6 +397,13 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
         iconoCrear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-24.png"))); // NOI18N
 
+        jButton1.setText("Volver");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelSubtituloLayout = new javax.swing.GroupLayout(panelSubtitulo);
         panelSubtitulo.setLayout(panelSubtituloLayout);
         panelSubtituloLayout.setHorizontalGroup(
@@ -405,7 +413,9 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addComponent(iconoCrear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ConsultarCotizacion)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
         panelSubtituloLayout.setVerticalGroup(
             panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -413,7 +423,9 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(iconoCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ConsultarCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ConsultarCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -597,6 +609,13 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
          panelDetallesDinamicos.repaint();
     }
     }//GEN-LAST:event_cbxTipoTrabajo1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+this.dispose();
+InicioAdministrarCotizaciones ini= new InicioAdministrarCotizaciones();
+
+ini.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
      public class PanelDetallePuertaAbatible extends JPanel {
         private JTextField txtMedidaH = new JTextField(8);
@@ -1186,6 +1205,7 @@ public class PanelExpandible extends JPanel {
     private javax.swing.JCheckBox ckbxDescuentoSi;
     private javax.swing.JLabel iconoCrear;
     private javax.swing.JLabel iconoTitulo;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel labelPorsentaje;

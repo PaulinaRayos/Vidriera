@@ -29,6 +29,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         panelSubtitulo = new javax.swing.JPanel();
         EditarCotizacion = new javax.swing.JLabel();
         iconoEditar = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         panelTitulo = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         iconoTitulo = new javax.swing.JLabel();
@@ -81,6 +82,13 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
         iconoEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edit-20.png"))); // NOI18N
 
+        jButton1.setText("Volver");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelSubtituloLayout = new javax.swing.GroupLayout(panelSubtitulo);
         panelSubtitulo.setLayout(panelSubtituloLayout);
         panelSubtituloLayout.setHorizontalGroup(
@@ -90,7 +98,9 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                 .addComponent(iconoEditar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(EditarCotizacion)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(25, 25, 25))
         );
         panelSubtituloLayout.setVerticalGroup(
             panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -98,8 +108,10 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                 .addContainerGap(10, Short.MAX_VALUE)
                 .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(iconoEditar)
-                    .addComponent(EditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10))
+                    .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(EditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton1)))
+                .addGap(8, 8, 8))
         );
 
         panelTitulo.setBackground(new java.awt.Color(0, 19, 90));
@@ -536,6 +548,12 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ckbxMosquiteroSiActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+     this.dispose();
+     InicioAdministrarCotizaciones in= new InicioAdministrarCotizaciones();
+     in.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -590,6 +608,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JCheckBox ckbxMosquiteroSi;
     private javax.swing.JLabel iconoEditar;
     private javax.swing.JLabel iconoTitulo;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel labelCliente;
     private javax.swing.JLabel labelFechaCotizacion;
