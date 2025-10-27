@@ -567,7 +567,11 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
 
         Date fechaInicio = null;
         Date fechaFin = null;
-        if (panelFechas.getComponentCount() >= 2) {
+        // Asegúrate que los JDateChooser existan antes de usarlos
+        if (panelFechas.getComponentCount() >= 2 &&
+            panelFechas.getComponent(0) instanceof com.toedter.calendar.JDateChooser &&
+            panelFechas.getComponent(1) instanceof com.toedter.calendar.JDateChooser)
+        {
             fechaInicio = ((com.toedter.calendar.JDateChooser) panelFechas.getComponent(0)).getDate();
             fechaFin = ((com.toedter.calendar.JDateChooser) panelFechas.getComponent(1)).getDate();
         }
@@ -582,21 +586,29 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
                     cotizaciones.add(cot);
                 }
             } else if (!nombreCliente.isEmpty()) {
-                cotizaciones = cotizacionBO.obtenerCotizacionesPorCliente(nombreCliente); 
+                cotizaciones = cotizacionBO.obtenerCotizacionesPorCliente(nombreCliente);
             } else if (fechaInicio != null && fechaFin != null) {
-                cotizaciones = cotizacionBO.obtenerCotizacionesPorRangoFechas(fechaInicio, fechaFin); 
+                if (fechaInicio.after(fechaFin)) {
+                     JOptionPane.showMessageDialog(this, "La fecha de inicio no puede ser posterior a la fecha de fin.", "Fechas Inválidas", JOptionPane.WARNING_MESSAGE);
+                     return; // No buscar si las fechas son inválidas
+                }
+                cotizaciones = cotizacionBO.obtenerCotizacionesPorRangoFechas(fechaInicio, fechaFin);
             } else {
                 cotizaciones = cotizacionBO.obtenerCotizaciones();
             }
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Número de cotización inválido.");
+            JOptionPane.showMessageDialog(this, "El número de cotización debe ser un número entero válido.");
             return;
+        } catch (Exception e) { 
+            e.printStackTrace();
+             JOptionPane.showMessageDialog(this, "Error al realizar la búsqueda: " + e.getMessage(), "Error de Búsqueda", JOptionPane.ERROR_MESSAGE);
+             return;
         }
+
         llenarTablaCotizaciones(cotizaciones);
+
         modeloTablaDetalles.setRowCount(0);
-        lblNombreCliente.setText("");
-
-
+        lblNombreCliente.setText(""); 
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
@@ -608,7 +620,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         int idCotizacion = (int) modeloTablaCotizaciones.getValueAt(filaSeleccionada, 0);
         
         this.dispose();
-        frmEditarCotizacion editar = new frmEditarCotizacion();
+        frmEditarCotizacion editar = new frmEditarCotizacion(idCotizacion);
         editar.setVisible(true);
     }//GEN-LAST:event_btnEditarActionPerformed
 
@@ -742,8 +754,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
             // Comprueba si el TipoPuerta no es nulo
             String tipoPuertaDesc = (pd.getTipoPuerta() != null)
                     ? pd.getTipoPuerta().getDescripcion()
-                    : "N/A"; // <-- ¡ESTA ES LA LÍNEA QUE FALLABA!
-
+                    : "N/A"; 
             modeloTablaDetalles.addRow(new Object[]{
                 "Puerta " + tipoPuertaDesc,
                 pd.getMedidaHorizontal() + " x " + pd.getMedidaVertical(),

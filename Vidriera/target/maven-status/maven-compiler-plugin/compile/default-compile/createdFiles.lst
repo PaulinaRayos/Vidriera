@@ -49,4 +49,5 @@ modelo\Cliente.class
 presentacion\frmCrearCotizacion$PanelExpandible.class
 modelo\VentanaDetalle.class
 negocio\CotizacionBO.class
+presentacion\frmEditarCotizacion$4.class
 presentacion\InicioAdministrarCotizaciones$5.class
