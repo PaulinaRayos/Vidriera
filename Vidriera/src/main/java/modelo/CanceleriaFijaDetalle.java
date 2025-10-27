@@ -38,6 +38,7 @@ public class CanceleriaFijaDetalle {
     private boolean canalillo;
     private String tipoCanalillo;
     private BigDecimal medidaCanalillo;
+    private CatalogoTrabajo tipoTrabajo;
 
     // Constructor vacío
     public CanceleriaFijaDetalle() {
@@ -318,6 +319,13 @@ public class CanceleriaFijaDetalle {
 
     public void setMedidaCanalillo(BigDecimal medidaCanalillo) {
         this.medidaCanalillo = medidaCanalillo;
+    }
+    public CatalogoTrabajo getTipoTrabajo() {
+        return tipoTrabajo;
+    }
+
+    public void setTipoTrabajo(CatalogoTrabajo tipoTrabajo) {
+        this.tipoTrabajo = tipoTrabajo;
     }
 
     @Override

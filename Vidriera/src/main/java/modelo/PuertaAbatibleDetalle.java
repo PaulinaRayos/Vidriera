@@ -54,6 +54,7 @@ public class PuertaAbatibleDetalle {
     private String tipoSwiggle;
     private int numFijosVerticales;
     private int numFijosHorizontales;
+    private CatalogoTrabajo tipoTrabajo;
 
     
     //Constructor vacío
@@ -496,6 +497,13 @@ public class PuertaAbatibleDetalle {
 
     public void setNumFijosHorizontales(int numFijosHorizontales) {
         this.numFijosHorizontales = numFijosHorizontales;
+    }
+    public CatalogoTrabajo getTipoTrabajo() {
+        return tipoTrabajo;
+    }
+
+    public void setTipoTrabajo(CatalogoTrabajo tipoTrabajo) {
+        this.tipoTrabajo = tipoTrabajo;
     }
 
     @Override

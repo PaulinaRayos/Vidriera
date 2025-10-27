@@ -26,26 +26,24 @@ public class CotizacionBO {
 
     private CotizacionDAO cotizacionDAO;
     private DetalleCotizacionDAO detalleDAO;
-     private MaterialDAO materialDetalleDAO;
-         private Connection conexion;
-
-
-
+    private MaterialDAO materialDetalleDAO;
+    private Connection conexion;
 
     public Connection getConexion() {
         return this.conexion;
     }
-    public CotizacionBO() {
-          try {
-        this.conexion = Conexion.getConnection();
-        this.cotizacionDAO = new CotizacionDAO(conexion);
-        this.detalleDAO = new DetalleCotizacionDAO(conexion);
-        this.materialDetalleDAO = new MaterialDAO(conexion);
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-        throw new RuntimeException("No se pudo inicializar la conexión a la base de datos.");
 
-    }
+    public CotizacionBO() {
+        try {
+            this.conexion = Conexion.getConnection();
+            this.cotizacionDAO = new CotizacionDAO(conexion);
+            this.detalleDAO = new DetalleCotizacionDAO(conexion);
+            this.materialDetalleDAO = new MaterialDAO(conexion);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("No se pudo inicializar la conexión a la base de datos.");
+
+        }
 
     }
 
@@ -91,8 +89,22 @@ public class CotizacionBO {
         if (!ok) {
             return false;
         }
-
-        // Guardar detalles 
+        if (ventanas != null) {
+            for (VentanaDetalle detalle : ventanas) {
+                detalle.setCotizacion(c);
+                
+        }
+        if (cancelerias != null) {
+            for (CanceleriaFijaDetalle detalle : cancelerias) {
+                detalle.setCotizacion(c); 
+            }
+        }
+        if (puertas != null) {
+            for (PuertaAbatibleDetalle detalle : puertas) {
+                detalle.setCotizacion(c);
+            }
+        }
+      
         boolean okVentanas = ventanas != null && !ventanas.isEmpty()
                 ? detalleDAO.crearDetalleVentana(ventanas)
                 : true;
@@ -104,6 +116,9 @@ public class CotizacionBO {
                 : true;
 
         return okVentanas && okCanceleria && okPuertas;
+    }
+        return false;
+    
     }
 
     // Obtener todas las cotizaciones
@@ -144,14 +159,13 @@ public class CotizacionBO {
         Connection conn = this.cotizacionDAO.getConexion(); // Necesitaras un getter para la conexion en tu DAO
 
         try {
-            // --- INICIO DE LA TRANSACCION ---
             conn.setAutoCommit(false);
 
             detalleDAO.eliminarDetallesVentanaPorCotizacionId(c.getIdCotizacion());
             detalleDAO.eliminarDetallesCanceleriaPorCotizacionId(c.getIdCotizacion());
             detalleDAO.eliminarDetallesPuertaPorCotizacionId(c.getIdCotizacion());
 
-            // 2. Recalcular los montos 
+            //Recalcular los montos 
             BigDecimal porcentajeManoObra = new BigDecimal("0.10");
             BigDecimal manoObra = c.getSubtotal().multiply(porcentajeManoObra);
             BigDecimal iva = (c.getSubtotal().add(manoObra)).multiply(new BigDecimal("0.16"));
@@ -162,10 +176,10 @@ public class CotizacionBO {
             c.setIva(iva);
             c.setTotal(total);
 
-            // 3. Actualizar la cotizacion principal
+            //  Actualizar la cotizacion principal
             cotizacionDAO.actualizarCotizacion(c);
 
-            // 4. Insertar los nuevos detalles (si existen)
+            // Insertar los nuevos detalles (si existen)
             if (ventanas != null && !ventanas.isEmpty()) {
                 detalleDAO.crearDetalleVentana(ventanas);
             }
@@ -189,15 +203,16 @@ public class CotizacionBO {
             conn.setAutoCommit(true);
         }
     }
-    
-     public List<Cotizacion> obtenerCotizacionesPorCliente(String nombre) {
+
+    public List<Cotizacion> obtenerCotizacionesPorCliente(String nombre) {
         return cotizacionDAO.obtenerCotizacionesCliente(nombre);
     }
-     
-      public Cotizacion obtenerCotizacionesPorNumero(int numero) {
+
+    public Cotizacion obtenerCotizacionesPorNumero(int numero) {
         return cotizacionDAO.obtenerCotizacionPorNumero(numero);
     }
-       public List<Cotizacion> obtenerCotizacionesPorRangoFechas(Date fechaInicio, Date fechaFin){
-          return cotizacionDAO.obtenerCotizacionesPorRangoFechas(fechaInicio, fechaFin);
+
+    public List<Cotizacion> obtenerCotizacionesPorRangoFechas(Date fechaInicio, Date fechaFin) {
+        return cotizacionDAO.obtenerCotizacionesPorRangoFechas(fechaInicio, fechaFin);
     }
 }

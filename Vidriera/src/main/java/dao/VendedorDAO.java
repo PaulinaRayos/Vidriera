@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import modelo.Vendedor;
 
 /**
@@ -41,4 +43,23 @@ public class VendedorDAO {
     }
 
 
+    public List<Vendedor> obtenerTodos() {
+        List<Vendedor> vendedores = new ArrayList<>();
+        String sql = "SELECT * FROM vendedor ORDER BY nombre"; 
+
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Vendedor vendedor = new Vendedor();
+                vendedor.setIdVendedor(rs.getInt("idVendedor"));
+                vendedor.setNombre(rs.getString("nombre"));
+                vendedor.setTelefono(rs.getString("telefono"));
+                vendedor.setEmail(rs.getString("email"));
+                vendedores.add(vendedor);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return vendedores;
+    }
 }
