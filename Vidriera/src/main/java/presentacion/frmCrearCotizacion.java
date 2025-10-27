@@ -8,6 +8,7 @@ import dao.MaterialDAO;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.math.BigDecimal;
@@ -28,16 +29,23 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import modelo.Material;
 import modelo.PuertaAbatibleDetalle;
 import modelo.TipoPuerta;
 import utils.Conexion;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
 
 /**
  *
  * @author User
  */
 public class frmCrearCotizacion extends javax.swing.JFrame {
+
+    private JPanel panelDetallesDinamicos;
 
     /**
      * Creates new form frmCrearCotizacion
@@ -46,17 +54,16 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
     public frmCrearCotizacion() throws SQLException {
         initComponents();
+        panelDetallesDinamicos = new JPanel();
         panelDetallesDinamicos.setLayout(new BoxLayout(panelDetallesDinamicos, BoxLayout.Y_AXIS));
-    cargarMaterialesDisponibles(); // <--- Esto es CRÍTICO
+        scrollDetallesDinamicos.setViewportView(panelDetallesDinamicos);
+        scrollDetallesDinamicos.setPreferredSize(new Dimension(900, 250));
+     cargarMaterialesDisponibles();
 }
 
 // Método para llenarla desde la base de datos
-private void cargarMaterialesDisponibles() throws SQLException {
-    MaterialDAO matDAO = new MaterialDAO(Conexion.getConnection());
-    this.materialesDisponibles = matDAO.obtenerTodos(); // Debes tener este método, devuelve todos los materiales
-}
     
-
+  
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -72,6 +79,7 @@ private void cargarMaterialesDisponibles() throws SQLException {
         panelTipoTrabajo = new javax.swing.JPanel();
         tituloTipoTrabajo = new javax.swing.JLabel();
         cbxTipoTrabajo1 = new javax.swing.JComboBox<>();
+        scrollDetallesDinamicos = new javax.swing.JScrollPane();
         panelBotones = new javax.swing.JPanel();
         btnVistaPrevia = new javax.swing.JButton();
         btnDescargar = new javax.swing.JButton();
@@ -94,7 +102,6 @@ private void cargarMaterialesDisponibles() throws SQLException {
         jPanel1 = new javax.swing.JPanel();
         btnDescartar = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
-        panelDetallesDinamicos = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -150,7 +157,8 @@ private void cargarMaterialesDisponibles() throws SQLException {
                 .addGroup(panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tituloTipoTrabajo))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(122, Short.MAX_VALUE))
+            .addComponent(scrollDetallesDinamicos)
         );
         panelTipoTrabajoLayout.setVerticalGroup(
             panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,7 +167,9 @@ private void cargarMaterialesDisponibles() throws SQLException {
                 .addComponent(tituloTipoTrabajo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(9, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollDetallesDinamicos, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         panelBotones.setBackground(new java.awt.Color(255, 255, 255));
@@ -443,7 +453,6 @@ private void cargarMaterialesDisponibles() throws SQLException {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addComponent(panelDetallesDinamicos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -455,9 +464,7 @@ private void cargarMaterialesDisponibles() throws SQLException {
                 .addComponent(panelBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelTipoTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelDetallesDinamicos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panelTituloDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -473,15 +480,202 @@ private void cargarMaterialesDisponibles() throws SQLException {
 private int contador = 1;
 
     private void cbxTipoTrabajo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoTrabajo1ActionPerformed
-        // TODO add your handling code here:
         String tipo = (String) cbxTipoTrabajo1.getSelectedItem();
  if ("Puerta".equals(tipo)) {
-        PanelDetallePuertaAbatible panel = new PanelDetallePuertaAbatible(++contador, ()->{}, materialesDisponibles);
-    panelDetallesDinamicos.add(panel);
-    panelDetallesDinamicos.revalidate();
-    panelDetallesDinamicos.repaint();
-    }    
+       PanelDetallePuertaAbatible pd = new PanelDetallePuertaAbatible(materialesDisponibles, () -> {
+                panelDetallesDinamicos.revalidate();
+                panelDetallesDinamicos.repaint();
+            });
+
+            PanelExpandible panelExp = new PanelExpandible("Detalle Puerta Abatible " + (contador++), pd);
+            panelDetallesDinamicos.add(panelExp);
+            panelDetallesDinamicos.revalidate();
+            panelDetallesDinamicos.repaint();
+        }
     }//GEN-LAST:event_cbxTipoTrabajo1ActionPerformed
+
+        public class PanelDetallePuertaAbatible extends JPanel {
+        private JTextField txtMedidaH = new JTextField(8);
+        private JTextField txtMedidaV = new JTextField(8);
+        private JCheckBox ckMosquitero = new JCheckBox();
+        private JTextField txtCantidad = new JTextField(8);
+        private JTextField txtTipoCristal = new JTextField(12);
+        private JTextField txtNoHojas = new JTextField(8);
+        private JTextField txtPrecioUnidad = new JTextField(8);
+        private JTextField txtSubtotal = new JTextField(8);
+        private JTextField txtDescripcion = new JTextField(20);
+private JComboBox<TipoPuerta> cbxTipoPuerta = new JComboBox<>(TipoPuerta.values());
+        private JCheckBox ckDuela = new JCheckBox();
+        private JTextField txtTipoDuela = new JTextField(10);
+        private JTextField txtMedDuela = new JTextField(8);
+
+        private JCheckBox ckAdaptador = new JCheckBox();
+        private JTextField txtTipoAdaptador = new JTextField(10);
+
+        private JCheckBox ckJunquillo = new JCheckBox();
+        private JTextField txtTipoJunquillo = new JTextField(10);
+
+        private JCheckBox ckCanal = new JCheckBox();
+        private JTextField txtTipoCanal = new JTextField(10);
+
+        private JCheckBox ckPivote = new JCheckBox();
+        private JTextField txtTipoPivote = new JTextField(10);
+        private JTextField txtCantidadPivote = new JTextField(5);
+
+        private JCheckBox ckJaladera = new JCheckBox();
+        private JTextField txtTipoJaladera = new JTextField(10);
+        private JTextField txtCantidadJaladera = new JTextField(5);
+
+        private JCheckBox ckBarra = new JCheckBox();
+        private JTextField txtTipoBarra = new JTextField(10);
+        private JButton btnQuitar = new JButton("Quitar");
+
+        private JPanel panelMateriales;
+        private DefaultListModel<String> modeloMateriales = new DefaultListModel<>();
+        private Map<Integer, BigDecimal> materialesSeleccionados = new HashMap<>();
+
+        public PanelDetallePuertaAbatible(List<Material> materialesDisponibles, Runnable onRemove) {
+            setLayout(new BorderLayout());
+
+            // Panel con campos dentro de scroll interno
+            JPanel panelCampos = new JPanel(new GridLayout(0, 2, 5, 5));
+            panelCampos.add(new JLabel("Medida Horizontal:"));
+            panelCampos.add(txtMedidaH);
+            panelCampos.add(new JLabel("Medida Vertical:"));
+            panelCampos.add(txtMedidaV);
+            panelCampos.add(new JLabel("Mosquitero:"));
+            panelCampos.add(ckMosquitero);
+            panelCampos.add(new JLabel("Cantidad:")); 
+            panelCampos.add(txtCantidad);
+            panelCampos.add(new JLabel("Tipo Cristal:")); 
+            panelCampos.add(txtTipoCristal);
+            panelCampos.add(new JLabel("No. hojas:"));
+            panelCampos.add(txtNoHojas);
+            panelCampos.add(new JLabel("Precio unidad:")); 
+            panelCampos.add(txtPrecioUnidad);
+            panelCampos.add(new JLabel("Subtotal línea:"));
+            panelCampos.add(txtSubtotal);
+            panelCampos.add(new JLabel("Descripción:"));
+            panelCampos.add(txtDescripcion);
+            panelCampos.add(new JLabel("Tipo Puerta:")); 
+            panelCampos.add(cbxTipoPuerta);
+
+            panelCampos.add(new JLabel("Duela:")); 
+            panelCampos.add(ckDuela);
+            panelCampos.add(new JLabel("Tipo duela:")); 
+            panelCampos.add(txtTipoDuela);
+            panelCampos.add(new JLabel("Medida duela:"));
+            panelCampos.add(txtMedDuela);
+
+            panelCampos.add(new JLabel("Adaptador:")); panelCampos.add(ckAdaptador);
+            panelCampos.add(new JLabel("Tipo adaptador:")); panelCampos.add(txtTipoAdaptador);
+
+            panelCampos.add(new JLabel("Junquillo:")); panelCampos.add(ckJunquillo);
+            panelCampos.add(new JLabel("Tipo junquillo:")); panelCampos.add(txtTipoJunquillo);
+
+            panelCampos.add(new JLabel("Canal:")); panelCampos.add(ckCanal);
+            panelCampos.add(new JLabel("Tipo canal:")); panelCampos.add(txtTipoCanal);
+
+            panelCampos.add(new JLabel("Pivote:")); panelCampos.add(ckPivote);
+            panelCampos.add(new JLabel("Tipo pivote:")); panelCampos.add(txtTipoPivote);
+            panelCampos.add(new JLabel("Cantidad pivote:")); panelCampos.add(txtCantidadPivote);
+
+            panelCampos.add(new JLabel("Jaladera:")); panelCampos.add(ckJaladera);
+            panelCampos.add(new JLabel("Tipo jaladera:")); panelCampos.add(txtTipoJaladera);
+            panelCampos.add(new JLabel("Cantidad jaladera:")); panelCampos.add(txtCantidadJaladera);
+
+            panelCampos.add(new JLabel("Barra:")); panelCampos.add(ckBarra);
+            panelCampos.add(new JLabel("Tipo barra:")); panelCampos.add(txtTipoBarra);
+
+
+            JScrollPane scrollCampos = new JScrollPane(panelCampos);
+            scrollCampos.setPreferredSize(new Dimension(450, 150));
+            add(scrollCampos, BorderLayout.NORTH);
+
+            // Panel de selección/agregado de materiales
+            panelMateriales = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            panelMateriales.setBorder(BorderFactory.createTitledBorder("Materiales"));
+
+            JComboBox<Material> cmbMaterial = new JComboBox<>(materialesDisponibles.toArray(new Material[0]));
+            JTextField txtCantidad = new JTextField(5);
+            JButton btnAgregar = new JButton("Agregar");
+            JList<String> listaMateriales = new JList<>(modeloMateriales);
+
+            btnAgregar.addActionListener(e -> {
+                Material m = (Material) cmbMaterial.getSelectedItem();
+                BigDecimal cantidad = new BigDecimal(txtCantidad.getText());
+                modeloMateriales.addElement(m.getDescripcion() + " - " + cantidad);
+                materialesSeleccionados.put(m.getIdMaterial(), cantidad);
+                txtCantidad.setText("");
+            });
+
+            panelMateriales.add(new JLabel("Material:"));
+            panelMateriales.add(cmbMaterial);
+            panelMateriales.add(new JLabel("Cantidad:"));
+            panelMateriales.add(txtCantidad);
+            panelMateriales.add(btnAgregar);
+            panelMateriales.add(new JScrollPane(listaMateriales));
+
+            add(panelMateriales, BorderLayout.CENTER);
+
+            // Botón quitar para eliminar este panel
+            btnQuitar.addActionListener(e -> {
+                Container parent = getParent();
+                if(parent != null) {
+                    parent.remove(this);
+                    parent.revalidate();
+                    parent.repaint();
+                    onRemove.run();
+                }
+            });
+            add(btnQuitar, BorderLayout.SOUTH);
+        }
+
+        public PuertaAbatibleDetalle getDetalle() {
+            PuertaAbatibleDetalle detalle = new PuertaAbatibleDetalle();
+            detalle.setMedidaHorizontal(new BigDecimal(txtMedidaH.getText()));
+            detalle.setMedidaVertical(new BigDecimal(txtMedidaV.getText()));
+            detalle.setMosquitero(ckMosquitero.isSelected());
+            detalle.setCantidad(Integer.parseInt(txtCantidad.getText()));
+detalle.setTipoCristal(txtTipoCristal.getText());
+detalle.setNoHojas(Integer.parseInt(txtNoHojas.getText()));
+detalle.setPrecioSoloUnaUnidadCalculado(new BigDecimal(txtPrecioUnidad.getText()));
+detalle.setSubtotalLinea(new BigDecimal(txtSubtotal.getText()));
+detalle.setDescripcion(txtDescripcion.getText());
+TipoPuerta tipoPuerta = (TipoPuerta) cbxTipoPuerta.getSelectedItem();
+detalle.setTipoPuerta(tipoPuerta); 
+detalle.setDuela(ckDuela.isSelected());
+detalle.setTipoDuela(txtTipoDuela.getText());
+detalle.setMedidaDuela(new BigDecimal(txtMedDuela.getText()));
+
+detalle.setAdaptador(ckAdaptador.isSelected());
+detalle.setTipoAdaptador(txtTipoAdaptador.getText());
+
+detalle.setJunquillo(ckJunquillo.isSelected());
+detalle.setTipoJunquillo(txtTipoJunquillo.getText());
+
+detalle.setCanal(ckCanal.isSelected());
+detalle.setTipoCanal(txtTipoCanal.getText());
+
+detalle.setPivote(ckPivote.isSelected());
+detalle.setTipoPivote(txtTipoPivote.getText());
+detalle.setCantidadPivote(Integer.parseInt(txtCantidadPivote.getText()));
+
+detalle.setJaladera(ckJaladera.isSelected());
+detalle.setTipoJaladera(txtTipoJaladera.getText());
+detalle.setCantidadJaladera(Integer.parseInt(txtCantidadJaladera.getText()));
+
+detalle.setBarra(ckBarra.isSelected());
+detalle.setTipoBarra(txtTipoBarra.getText());
+
+            return detalle;
+        }
+
+        public Map<Integer, BigDecimal> getMaterialesSeleccionados() {
+            return materialesSeleccionados;
+        }
+    }
+
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
@@ -505,6 +699,41 @@ private int contador = 1;
 //        // más tipos...
 //    }
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+   private void cargarMaterialesDisponibles() {
+        materialesDisponibles = new ArrayList<>();
+        materialesDisponibles.add(new Material(1, "Vidrio", new BigDecimal("150.5"), 50, Material.TipoMaterial.Vidrio));
+        materialesDisponibles.add(new Material(2, "Aluminio", new BigDecimal("300.0"), 30, Material.TipoMaterial.Aluminio));
+        materialesDisponibles.add(new Material(3, "Accesorio", new BigDecimal("80.0"), 100, Material.TipoMaterial.Accesorio));
+    }
+public class PanelExpandible extends JPanel {
+    private final JPanel contenido;
+    private final JButton btnToggle;
+    private boolean estaVisible = true;
+
+    public PanelExpandible(String titulo, JPanel contenido) {
+        this.contenido = contenido;
+        setLayout(new BorderLayout());
+
+        btnToggle = new JButton("▼ " + titulo);
+        btnToggle.setFocusPainted(false);
+        btnToggle.setBorderPainted(false);
+        btnToggle.setContentAreaFilled(false);
+        btnToggle.setHorizontalAlignment(SwingConstants.LEFT);
+        btnToggle.addActionListener(e -> toggleContenido());
+
+        add(btnToggle, BorderLayout.NORTH);
+        add(contenido, BorderLayout.CENTER);
+    }
+
+    private void toggleContenido() {
+        estaVisible = !estaVisible;
+        contenido.setVisible(estaVisible);
+        btnToggle.setText((estaVisible ? "▼ " : "► ") + btnToggle.getText().substring(2));
+        revalidate();
+        repaint();
+    }
+}
 
     /**
      * @param args the command line arguments
@@ -547,161 +776,13 @@ private int contador = 1;
     }
     // PanelDetallePuerta.java
 public class PanelDetalleVentana extends javax.swing.JPanel {
-    public PanelDetalleVentana(Runnable onRemove) {
-        initComponents();
-        JButton btnEliminar = new JButton("Quitar");
-        btnEliminar.addActionListener(e -> {
-            Container parent = this.getParent();
-            if (parent != null) {
-                parent.remove(this);
-                parent.revalidate();
-                parent.repaint();
-            }
-            onRemove.run();
-        });
-        add(btnEliminar);
-    }
-    private void initComponents() {
-        // aquí agrega JTextFields, JComboBox, JCheckBox, etc., para la puerta
-        // add(new JLabel("Alto:"));
-        // add(new JTextField(5));
-        // ...
-    }
+    
 }
 
 
-public class PanelDetallePuertaAbatible extends JPanel {
-    // Todos los campos según tu SQL
-    private JTextField txtMedidaH, txtMedidaV, txtCantidad, txtTipoCristal, txtNoHojas,
-                       txtPrecioUnidad, txtSubtotal, txtDescripcion, txtTipoPuerta, txtTipoDuela, txtMedDuela,
-                       txtTipoAdaptador, txtTipoJunquillo, txtTipoCanal, txtTipoPivote, txtCantidadPivote,
-                       txtTipoJaladera, txtCantidadJaladera, txtTipoBarra;
-    private JCheckBox ckMosquitero, ckDuela, ckAdaptador, ckJunquillo, ckCanal, ckPivote, ckJaladera, ckBarra;
-    private JButton btnQuitar;
 
-    // Materiales
-    private JPanel panelMateriales;
-    private DefaultListModel<String> modeloMateriales;
-    private Map<Integer, BigDecimal> materialesSeleccionados = new HashMap<>(); // idMaterial, cantidad
+ 
 
-    public PanelDetallePuertaAbatible(int indice, Runnable onRemove, List<Material> materialesDisponibles) {
-        setLayout(new BorderLayout());
-        setBorder(BorderFactory.createTitledBorder("Detalle Puerta Abatible " + indice));
-
-        JPanel datos = new JPanel(new GridLayout(0,4,8,4));
-        datos.add(new JLabel("Medida horizontal:"));      txtMedidaH = new JTextField();      datos.add(txtMedidaH);
-        datos.add(new JLabel("Medida vertical:"));        txtMedidaV = new JTextField();      datos.add(txtMedidaV);
-        datos.add(new JLabel("Cantidad:"));               txtCantidad = new JTextField();     datos.add(txtCantidad);
-        datos.add(new JLabel("Tipo cristal:"));           txtTipoCristal = new JTextField();  datos.add(txtTipoCristal);
-        datos.add(new JLabel("No. hojas:"));              txtNoHojas = new JTextField();      datos.add(txtNoHojas);
-        datos.add(new JLabel("Precio unidad:"));          txtPrecioUnidad = new JTextField(); datos.add(txtPrecioUnidad);
-        datos.add(new JLabel("Subtotal línea:"));         txtSubtotal = new JTextField();      datos.add(txtSubtotal);
-
-        datos.add(new JLabel("Descripción:"));            txtDescripcion = new JTextField();  datos.add(txtDescripcion);
-        datos.add(new JLabel("Tipo puerta:"));            txtTipoPuerta = new JTextField();   datos.add(txtTipoPuerta);
-
-        datos.add(new JLabel("Mosquitero:"));             ckMosquitero = new JCheckBox();     datos.add(ckMosquitero);
-        datos.add(new JLabel("Duela:"));                  ckDuela = new JCheckBox();          datos.add(ckDuela);
-
-        datos.add(new JLabel("Tipo duela:"));             txtTipoDuela = new JTextField();    datos.add(txtTipoDuela);
-        datos.add(new JLabel("Med. duela:"));             txtMedDuela = new JTextField();     datos.add(txtMedDuela);
-
-        datos.add(new JLabel("Adaptador:"));              ckAdaptador = new JCheckBox();      datos.add(ckAdaptador);
-        datos.add(new JLabel("Tipo adaptador:"));         txtTipoAdaptador = new JTextField(); datos.add(txtTipoAdaptador);
-
-        datos.add(new JLabel("Junquillo:"));              ckJunquillo = new JCheckBox();      datos.add(ckJunquillo);
-        datos.add(new JLabel("Tipo junquillo:"));         txtTipoJunquillo = new JTextField(); datos.add(txtTipoJunquillo);
-
-        datos.add(new JLabel("Canal:"));                  ckCanal = new JCheckBox();          datos.add(ckCanal);
-        datos.add(new JLabel("Tipo canal:"));             txtTipoCanal = new JTextField();    datos.add(txtTipoCanal);
-
-        datos.add(new JLabel("Pivote:"));                 ckPivote = new JCheckBox();         datos.add(ckPivote);
-        datos.add(new JLabel("Tipo pivote:"));            txtTipoPivote = new JTextField();   datos.add(txtTipoPivote);
-        datos.add(new JLabel("Cantidad pivote:"));        txtCantidadPivote = new JTextField(); datos.add(txtCantidadPivote);
-
-        datos.add(new JLabel("Jaladera:"));               ckJaladera = new JCheckBox();       datos.add(ckJaladera);
-        datos.add(new JLabel("Tipo jaladera:"));          txtTipoJaladera = new JTextField(); datos.add(txtTipoJaladera);
-        datos.add(new JLabel("Cantidad jaladera:"));      txtCantidadJaladera = new JTextField(); datos.add(txtCantidadJaladera);
-
-        datos.add(new JLabel("Barra:"));                  ckBarra = new JCheckBox();          datos.add(ckBarra);
-        datos.add(new JLabel("Tipo barra:"));             txtTipoBarra = new JTextField();    datos.add(txtTipoBarra);
-
-        add(datos, BorderLayout.NORTH);
-
-        // Panel de materiales
-        panelMateriales = new JPanel(new FlowLayout());
-        panelMateriales.setBorder(BorderFactory.createTitledBorder("Materiales necesarios (Para esta puerta)"));
-        JComboBox<Material> cmbMaterial = new JComboBox<>(materialesDisponibles.toArray(new Material[0]));
-        JTextField txtCantidadMat = new JTextField(5);
-        JButton btnAgregarMat = new JButton("Agregar material");
-        modeloMateriales = new DefaultListModel<>();
-        JList<String> listaMateriales = new JList<>(modeloMateriales);
-
-        btnAgregarMat.addActionListener(e -> {
-            Material m = (Material) cmbMaterial.getSelectedItem();
-            BigDecimal cantidad = new BigDecimal(txtCantidadMat.getText());
-            modeloMateriales.addElement(m.getDescripcion() + " - " + cantidad);
-            materialesSeleccionados.put(m.getIdMaterial(), cantidad);
-        });
-
-        panelMateriales.add(new JLabel("Material:"));
-        panelMateriales.add(cmbMaterial);
-        panelMateriales.add(new JLabel("Cantidad:"));
-        panelMateriales.add(txtCantidadMat);
-        panelMateriales.add(btnAgregarMat);
-        panelMateriales.add(new JScrollPane(listaMateriales));
-        add(panelMateriales, BorderLayout.CENTER);
-
-        // Botón quitar
-        btnQuitar = new JButton("Quitar");
-        btnQuitar.addActionListener(e -> {
-            Container parent = getParent();
-            if (parent != null) {
-                parent.remove(this);
-                parent.revalidate();
-                parent.repaint();
-                onRemove.run();
-            }
-        });
-        add(btnQuitar, BorderLayout.SOUTH);
-    }
-
-    public PuertaAbatibleDetalle getDetalle() {
-        PuertaAbatibleDetalle d = new PuertaAbatibleDetalle();
-        d.setMedidaHorizontal(new BigDecimal(txtMedidaH.getText()));
-        d.setMedidaVertical(new BigDecimal(txtMedidaV.getText()));
-        d.setCantidad(Integer.parseInt(txtCantidad.getText()));
-        d.setTipoCristal(txtTipoCristal.getText());
-        d.setNoHojas(Integer.parseInt(txtNoHojas.getText()));
-        d.setPrecioSoloUnaUnidadCalculado(new BigDecimal(txtPrecioUnidad.getText()));
-        d.setSubtotalLinea(new BigDecimal(txtSubtotal.getText()));
-        d.setDescripcion(txtDescripcion.getText());
-        d.setTipoPuerta(TipoPuerta.valueOf(txtTipoPuerta.getText().toUpperCase())); 
-        d.setMosquitero(ckMosquitero.isSelected());
-        d.setDuela(ckDuela.isSelected());
-        d.setTipoDuela(txtTipoDuela.getText());
-        d.setMedidaDuela(new BigDecimal(txtMedDuela.getText()));
-        d.setAdaptador(ckAdaptador.isSelected());
-        d.setTipoAdaptador(txtTipoAdaptador.getText());
-        d.setJunquillo(ckJunquillo.isSelected());
-        d.setTipoJunquillo(txtTipoJunquillo.getText());
-        d.setCanal(ckCanal.isSelected());
-        d.setTipoCanal(txtTipoCanal.getText());
-        d.setPivote(ckPivote.isSelected());
-        d.setTipoPivote(txtTipoPivote.getText());
-        d.setCantidadPivote(Integer.parseInt(txtCantidadPivote.getText()));
-        d.setJaladera(ckJaladera.isSelected());
-        d.setTipoJaladera(txtTipoJaladera.getText());
-        d.setCantidadJaladera(Integer.parseInt(txtCantidadJaladera.getText()));
-        d.setBarra(ckBarra.isSelected());
-        d.setTipoBarra(txtTipoBarra.getText());
-        return d;
-    }
-
-    public Map<Integer, BigDecimal> getMaterialesSeleccionados() {
-        return materialesSeleccionados;
-    }
-}
 
 
 
@@ -730,11 +811,11 @@ public class PanelDetallePuertaAbatible extends JPanel {
     private javax.swing.JPanel panelBotones;
     private javax.swing.JPanel panelBuscarCliente;
     private javax.swing.JPanel panelDescuento;
-    private javax.swing.JPanel panelDetallesDinamicos;
     private javax.swing.JPanel panelSubtitulo;
     private javax.swing.JPanel panelTipoTrabajo;
     private javax.swing.JPanel panelTitulo;
     private javax.swing.JPanel panelTituloDetalle;
+    private javax.swing.JScrollPane scrollDetallesDinamicos;
     private javax.swing.JLabel tituloTipoTrabajo;
     private javax.swing.JTextField txtBuscarCliente;
     private javax.swing.JTextField txtDescuento;

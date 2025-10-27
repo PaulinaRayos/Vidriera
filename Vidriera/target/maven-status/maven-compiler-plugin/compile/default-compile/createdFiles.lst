@@ -30,5 +30,6 @@ presentacion\frmCrearCotizacion$3.class
 modelo\TipoCanceleria.class
 com\mycompany\vidriera\Test4Cancelar.class
 modelo\Cliente.class
+presentacion\frmCrearCotizacion$PanelExpandible.class
 modelo\VentanaDetalle.class
 negocio\CotizacionBO.class
