@@ -281,3 +281,88 @@ CREATE TABLE PuertaAbatible_Material (
     FOREIGN KEY (id_detalle_puerta) REFERENCES Detalle_PuertaAbatible(id_detalle_puerta) ON DELETE CASCADE,
     FOREIGN KEY (idMaterial) REFERENCES Material(idMaterial) ON DELETE CASCADE
 );
+
+
+
+-- =========================================
+-- Insertar Clientes
+-- =========================================
+INSERT INTO cliente (nombre, telefono, direccion, email, RFC) VALUES
+('Juan Pérez', '5551234567', 'Calle Falsa 123', 'juanperez@mail.com', 'JUAP750101XXX'),
+('María López', '5559876543', 'Av. Siempre Viva 742', 'marialopez@mail.com', 'MALO880202XXX');
+
+-- =========================================
+-- Insertar Vendedores
+-- =========================================
+INSERT INTO vendedor (nombre, telefono, email) VALUES
+('Carlos Gómez', '5551112222', 'carlosg@mail.com'),
+('Ana Torres', '5553334444', 'anatorres@mail.com');
+
+-- =========================================
+-- Insertar Proyectos
+-- =========================================
+INSERT INTO proyecto (estado, fechaInicio, fechaEntregaEstimada, idCliente) VALUES
+('Activo', '2025-10-01', '2025-10-20', 1),
+('Entregado', '2025-09-15', '2025-10-05', 2);
+
+-- =========================================
+-- Insertar Cotizaciones
+-- =========================================
+INSERT INTO cotizacion (fecha, subtotal, manoObra, iva, descuentoMonto, total, estado, idCliente, idProyecto, idVendedor) VALUES
+('2025-10-01', 5000, 1200, 600, 0, 6800, 'Pendiente', 1, 1, 1),
+('2025-09-16', 3000, 800, 480, 100, 4180, 'Aceptado', 2, 2, 2);
+
+-- =========================================
+-- Insertar Catálogo de Trabajos
+-- =========================================
+INSERT INTO catalogotrabajos (codigoInterno, nombre, descripcion, serieBase, precioBase) VALUES
+('V001', 'Ventana Corrediza', 'Ventana de vidrio corrediza', 'SERIE A', 1200),
+('P001', 'Puerta Abatible', 'Puerta abatible de aluminio', 'SERIE B', 1800),
+('C001', 'Cancelaría Fija', 'Cancelaría fija con vidrio templado', 'SERIE C', 1500);
+
+-- =========================================
+-- Insertar Materiales
+-- =========================================
+INSERT INTO material (descripcion, precio, stockActual, tipo) VALUES
+('Vidrio templado 6mm', 300, 50, 'Vidrio'),
+('Aluminio serie A', 200, 100, 'Aluminio'),
+('Jaladera cromada', 50, 30, 'Accesorio');
+
+-- =========================================
+-- Insertar Detalles de Ventana
+-- =========================================
+INSERT INTO ventanadetalle (id_tipo_trabajo, id_cotizacion, medidaHorizontal, medidaVertical, cantidad, tipoCristal, noHojas, precioSoloUnaUnidadCalculado, subtotalLinea, descripcion, tipoVentana, mosquitero, arco, tipoArco, medidaArco, tipoCanalillo, medidaCanalillo) VALUES
+(1, 1, 1.2, 1.5, 2, 'Templado', 2, 1400, 2800, 'Ventana principal sala', '2"', 1, 0, NULL, NULL, 'Aluminio', 1.2);
+
+-- =========================================
+-- Insertar Detalles de Puerta Abatible
+-- =========================================
+INSERT INTO detalle_puertaabatible (id_cotizacion, id_tipo_trabajo, medidaHorizontal, medidaVertical, cantidad, tipoCristal, noHojas, precioSoloUnaUnidadCalculado, subtotalLinea, descripcion, tipo_puerta, mosquitero, duela, tipo_duela, medida_duela, adaptador, tipo_adaptador, junquillo, tipo_junquillo, canal, tipo_canal, pivote, tipo_pivote, cantidad_pivote, jaladera, tipo_jaladera, cantidad_jaladera, barra, tipo_barra) VALUES
+(1, 2, 0.9, 2.0, 1, 'Templado', 1, 1800, 1800, 'Puerta principal', 'SERIE_1751', 0, 0, NULL, NULL, 0, NULL, 0, NULL, 0, NULL, 1, 'Pivote estándar', 2, 1, 'Cromo', 1, 0, NULL);
+
+-- =========================================
+-- Insertar Detalles de Cancelaría Fija
+-- =========================================
+INSERT INTO canceleriafijadetalle (id_tipo_trabajo, id_cotizacion, medidaHorizontal, medidaVertical, cantidad, tipoCristal, noHojas, precioSoloUnaUnidadCalculado, subtotalLinea, descripcion, tipoCanceleria, bolsa, numFijosVerticales, numFijosHorizontales, tipoTapa, cantidadTapa, zoclo, tipoZoclo, junquillo, tipoJunquillo, arco, tipoArco, medidaArco, canalillo, tipoCanalillo, medidaCanalillo) VALUES
+(3, 2, 2.0, 1.5, 1, 'Templado', 1, 1500, 1500, 'Cancelaría ventana cocina', '3"', 0, 1, 2, 'Plástico', 2, 0, NULL, 1, 'PVC', 0, NULL, NULL, 0, NULL, NULL);
+
+-- =========================================
+-- Insertar Materiales usados en Ventanas
+-- =========================================
+INSERT INTO VentanaDetalle_Material (idVentanaDetalle, idMaterial, cantidad) VALUES
+(1, 1, 2), -- vidrio
+(1, 2, 4); -- aluminio
+
+-- =========================================
+-- Insertar Materiales usados en Puertas
+-- =========================================
+INSERT INTO PuertaAbatible_Material (id_detalle_puerta, idMaterial, cantidad) VALUES
+(1, 1, 1), -- vidrio
+(1, 3, 1); -- jaladera
+
+-- =========================================
+-- Insertar Materiales usados en Cancelaría Fija
+-- =========================================
+INSERT INTO CanceleriaFijaDetalle_Material (idCanceleriaDetalle, idMaterial, cantidad) VALUES
+(1, 1, 1), -- vidrio
+(1, 2, 2); -- aluminio

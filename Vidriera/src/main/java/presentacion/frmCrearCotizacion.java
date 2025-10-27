@@ -5,13 +5,27 @@
 package presentacion;
 
 import dao.ClienteDAO;
+import dao.CotizacionDAO;
 import dao.MaterialDAO;
+import java.awt.Component;
+import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import modelo.Cliente;
+import modelo.Cotizacion;
 import modelo.Material;
+import modelo.TipoCanceleria;
+import modelo.TipoPuerta;
+import modelo.TipoVentana;
+import negocio.CotizacionBO;
 import utils.Conexion;
 
 /**
@@ -23,10 +37,22 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     /**
      * Creates new form frmCrearCotizacion
      */
+    private List<Cliente> clientes;
+
     public frmCrearCotizacion() {
         initComponents();
         cargarClientes();
         cargarMaterialesVidrio();
+        cargarTiposTrabajo();
+        cargarCantidadYNHojas();
+        setupCheckboxes();
+
+        txtBuscarCliente.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                filtrarClientes(txtBuscarCliente.getText());
+            }
+        });
 
     }
 
@@ -485,6 +511,11 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         btnDescartar.setFocusPainted(false);
         btnDescartar.setRequestFocusEnabled(false);
         btnDescartar.setRolloverEnabled(false);
+        btnDescartar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescartarActionPerformed(evt);
+            }
+        });
 
         btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
         btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
@@ -498,6 +529,11 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         btnGuardar.setFocusPainted(false);
         btnGuardar.setRequestFocusEnabled(false);
         btnGuardar.setRolloverEnabled(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -570,9 +606,32 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ckbxMosquiteroSiActionPerformed
 
+    private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
+        int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de descartar la cotización?",
+                "Confirmar Cancelación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            // Abrir pantalla de inicio
+            InicioAdministrarCotizaciones inicio = new InicioAdministrarCotizaciones();
+            inicio.setVisible(true);
+            // Cerrar la ventana de cotización actual
+            this.dispose();
+        }
+
+    }//GEN-LAST:event_btnDescartarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+       
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
     /**
-     * @param args the command line arguments
-     */
+         * @param args the command line arguments
+         */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -604,41 +663,89 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             }
         });
     }
-    
-    
+
+    /*private void cargarClientes() {
+        try (Connection conexion = Conexion.getConnection()) {
+            ClienteDAO clienteDAO = new ClienteDAO(conexion);
+            clientes = clienteDAO.obtenerTodos();
+
+            cbxSeleccionarCliente.removeAllItems();
+            for (Cliente c : clientes) {
+                cbxSeleccionarCliente.addItem(c.getNombre());
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar clientes: " + ex.getMessage());
+        }
+    }*/
     private void cargarClientes() {
-    try (Connection conexion = Conexion.getConnection()) {
-        // Cargar clientes
-        ClienteDAO clienteDAO = new ClienteDAO(conexion);
-        List<Cliente> clientes = clienteDAO.obtenerTodos();
+        try (Connection conexion = Conexion.getConnection()) {
+            ClienteDAO clienteDAO = new ClienteDAO(conexion);
+            clientes = clienteDAO.obtenerTodos();
+
+            if (clientes != null && !clientes.isEmpty()) {
+                cbxSeleccionarCliente.setModel(new DefaultComboBoxModel<>(
+                        clientes.stream().map(Cliente::getNombre).toArray(String[]::new)
+                ));
+            } else {
+                cbxSeleccionarCliente.setModel(new DefaultComboBoxModel<>(new String[]{"No hay clientes"}));
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar clientes: " + ex.getMessage());
+        }
+    }
+
+    private void filtrarClientes(String texto) {
         cbxSeleccionarCliente.removeAllItems();
         for (Cliente c : clientes) {
-            cbxSeleccionarCliente.addItem(c.getDisplayName()); 
-        }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error cargando datos: " + e.getMessage());
-    }
-}
-    
-    private void cargarMaterialesVidrio() {
-    try (Connection conexion = Conexion.getConnection()) {
-        MaterialDAO materialDAO = new MaterialDAO(conexion);
-        List<Material> materiales = materialDAO.obtenerTodos();
-        
-        cbxMateriales.removeAllItems();
-        for (Material m : materiales) {
-            if (m.getTipo() == Material.TipoMaterial.Vidrio) {
-                cbxMateriales.addItem(m.getDisplayName());
+            if (c.getNombre().toLowerCase().contains(texto.toLowerCase())) {
+                cbxSeleccionarCliente.addItem(c.getNombre());
             }
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error al cargar materiales: " + e.getMessage());
     }
-}
 
+    private void cargarMaterialesVidrio() {
+        try (Connection conexion = Conexion.getConnection()) {
+            MaterialDAO materialDAO = new MaterialDAO(conexion);
+            List<Material> materiales = materialDAO.obtenerTodos();
+            cbxMateriales.removeAllItems();
+            for (Material m : materiales) {
+                cbxMateriales.addItem(m.getDisplayName());
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar materiales: " + ex.getMessage());
+        }
+    }
+
+    private void cargarTiposTrabajo() {
+        cbxTipoTrabajo1.removeAllItems(); // Ventanas 
+        for (TipoVentana tv : TipoVentana.values()) {
+            cbxTipoTrabajo1.addItem("VENTANA - " + tv.getDescripcion());
+        } // Puertas 
+        for (TipoPuerta tp : TipoPuerta.values()) {
+            cbxTipoTrabajo1.addItem("PUERTA - " + tp.getDescripcion());
+        } // Cancelería 
+        for (TipoCanceleria tc : TipoCanceleria.values()) {
+            cbxTipoTrabajo1.addItem("CANCELERIA - " + tc.getDescripcion());
+        }
+    }
+
+    private void cargarCantidadYNHojas() {
+        cbxCantidad.removeAllItems();
+        cbxNumHojas.removeAllItems();
+        for (int i = 1; i <= 100; i++) {
+            cbxCantidad.addItem(String.valueOf(i));
+            cbxNumHojas.addItem(String.valueOf(i));
+        }
+    }
+
+// checkbox excluyentes
+    private void setupCheckboxes() {
+        ckbxMosquiteroSi.addActionListener(evt -> ckbxMosquiteroNo.setSelected(!ckbxMosquiteroSi.isSelected()));
+        ckbxMosquiteroNo.addActionListener(evt -> ckbxMosquiteroSi.setSelected(!ckbxMosquiteroNo.isSelected()));
+
+        ckbxDescuentoSi.addActionListener(evt -> ckbxDescuentoNo.setSelected(!ckbxDescuentoSi.isSelected()));
+        ckbxDescuentoNo.addActionListener(evt -> ckbxDescuentoSi.setSelected(!ckbxDescuentoNo.isSelected()));
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Buscar;
     private javax.swing.JLabel ConsultarCotizacion;
