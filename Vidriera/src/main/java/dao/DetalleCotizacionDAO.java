@@ -46,7 +46,7 @@ public class DetalleCotizacionDAO {
                 ps.setBigDecimal(8, d.getPrecioSoloUnaUnidadCalculado());
                 ps.setBigDecimal(9, d.getSubtotalLinea());
                 ps.setString(10, d.getDescripcion());
-                ps.setString(11, d.getTipoVentana() != null ? d.getTipoVentana().name() : null); // Usa .name()
+                ps.setString(11, d.getTipoVentana() != null ? d.getTipoVentana().getDescripcion() : null);
                 ps.setBoolean(12, d.isMosquitero());
                 ps.setBoolean(13, d.isArco());
                 ps.setString(14, d.getTipoArco());
@@ -79,7 +79,7 @@ public class DetalleCotizacionDAO {
                 ps.setBigDecimal(8, d.getPrecioSoloUnaUnidadCalculado());
                 ps.setBigDecimal(9, d.getSubtotalLinea());
                 ps.setString(10, d.getDescripcion());
-                ps.setString(11, d.getTipoCanceleria() != null ? d.getTipoCanceleria().name() : null); // Usa .name()
+                ps.setString(11, d.getTipoCanceleria() != null ? d.getTipoCanceleria().getDescripcion() : null);
                 ps.setBoolean(12, d.isBolsa());
                 ps.setInt(13, d.getNumFijosVerticales());
                 ps.setInt(14, d.getNumFijosHorizontales());
