@@ -65,10 +65,10 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         btnImprimir = new javax.swing.JButton();
         panelBuscarCliente = new javax.swing.JPanel();
         labelCliente = new javax.swing.JLabel();
-        txtCliente = new javax.swing.JTextField();
-        cbxSeleccionarCotizacion = new javax.swing.JComboBox<>();
-        panelFecha = new javax.swing.JPanel();
         cbxEstadoCotizacion = new javax.swing.JComboBox<>();
+        labelNumCotizacion = new javax.swing.JLabel();
+        labelNomCliente = new javax.swing.JLabel();
+        labelFechaCotizacion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Editar cotización");
@@ -315,7 +315,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         labelPorsentaje.setForeground(new java.awt.Color(0, 38, 115));
         labelPorsentaje.setText("%");
 
-        btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
+        btnGuardar.setBackground(new java.awt.Color(3, 175, 61));
         btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
@@ -328,7 +328,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         btnGuardar.setRequestFocusEnabled(false);
         btnGuardar.setRolloverEnabled(false);
 
-        btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
+        btnDescartar.setBackground(new java.awt.Color(202, 50, 0));
         btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
         btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
@@ -445,23 +445,16 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         labelCliente.setForeground(new java.awt.Color(15, 105, 196));
         labelCliente.setText("Cliente");
 
-        txtCliente.setText("Cliente");
-        txtCliente.setToolTipText("");
+        cbxEstadoCotizacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estado", "Item 2", "Item 3", "Item 4" }));
 
-        cbxSeleccionarCotizacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        labelNumCotizacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        labelNumCotizacion.setText("Num. Cotizacion");
 
-        javax.swing.GroupLayout panelFechaLayout = new javax.swing.GroupLayout(panelFecha);
-        panelFecha.setLayout(panelFechaLayout);
-        panelFechaLayout.setHorizontalGroup(
-            panelFechaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 206, Short.MAX_VALUE)
-        );
-        panelFechaLayout.setVerticalGroup(
-            panelFechaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        labelNomCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        labelNomCliente.setText("Nombre del Cliente");
 
-        cbxEstadoCotizacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        labelFechaCotizacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        labelFechaCotizacion.setText("Fecha de cotizacion");
 
         javax.swing.GroupLayout panelBuscarClienteLayout = new javax.swing.GroupLayout(panelBuscarCliente);
         panelBuscarCliente.setLayout(panelBuscarClienteLayout);
@@ -471,11 +464,11 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                 .addGap(51, 51, 51)
                 .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelBuscarClienteLayout.createSequentialGroup()
-                        .addComponent(cbxSeleccionarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelFecha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(labelNumCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(labelNomCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(labelFechaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbxEstadoCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(labelCliente))
@@ -490,12 +483,11 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                     .addGroup(panelBuscarClienteLayout.createSequentialGroup()
                         .addComponent(labelCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(cbxSeleccionarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(panelFecha, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(25, Short.MAX_VALUE))
+                        .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelNumCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelNomCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelFechaCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(25, 25, 25))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -590,7 +582,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbxCantidad;
     private javax.swing.JComboBox<String> cbxEstadoCotizacion;
     private javax.swing.JComboBox<String> cbxNumHojas;
-    private javax.swing.JComboBox<String> cbxSeleccionarCotizacion;
     private javax.swing.JComboBox<String> cbxTipoCristal;
     private javax.swing.JComboBox<String> cbxTipoTrabajo1;
     private javax.swing.JCheckBox ckbxDescuentoNo;
@@ -601,14 +592,16 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JLabel iconoTitulo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel labelCliente;
+    private javax.swing.JLabel labelFechaCotizacion;
     private javax.swing.JLabel labelHorizontal;
+    private javax.swing.JLabel labelNomCliente;
+    private javax.swing.JLabel labelNumCotizacion;
     private javax.swing.JLabel labelNumHojas;
     private javax.swing.JLabel labelPorsentaje;
     private javax.swing.JLabel labelVertical;
     private javax.swing.JPanel panelBotones;
     private javax.swing.JPanel panelBuscarCliente;
     private javax.swing.JPanel panelDescuento;
-    private javax.swing.JPanel panelFecha;
     private javax.swing.JPanel panelInformacionTrabajo;
     private javax.swing.JPanel panelSubtitulo;
     private javax.swing.JPanel panelTipoTrabajo;
@@ -619,7 +612,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JLabel tituloMedidas;
     private javax.swing.JLabel tituloMosquitero;
     private javax.swing.JLabel tituloTipoTrabajo;
-    private javax.swing.JTextField txtCliente;
     private javax.swing.JTextField txtDescuento;
     private javax.swing.JTextField txtMetrosHorizontal;
     private javax.swing.JTextField txtMetrosVertical;
