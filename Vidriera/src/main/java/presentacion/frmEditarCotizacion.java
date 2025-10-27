@@ -4,17 +4,60 @@
  */
 package presentacion;
 
+import negocio.CotizacionBO;
+import modelo.Cotizacion;
+import java.util.List;
+
 /**
  *
  * @author User
  */
 public class frmEditarCotizacion extends javax.swing.JFrame {
 
+    private CotizacionBO cotizacionBO;
+    private Cotizacion cotizacionActual;
+
     /**
      * Creates new form frmEditarCotizacion
      */
-    public frmEditarCotizacion() {
+    public frmEditarCotizacion(int idCotizacion) {
         initComponents();
+        this.cotizacionBO = new CotizacionBO();
+
+        // Buscar la cotización completa usando el BO
+        this.cotizacionActual = cotizacionBO.obtenerCotizacionPorId(idCotizacion);
+
+        cargarTiposTrabajo();
+        cargarEstados(); // Llena el combo con los estados
+        cargarDatosCotizacion(); // Llena los campos con la información actual
+    }
+
+    private void cargarEstados() {
+        List<String> estados = cotizacionBO.obtenerEstadosCotizacion();
+        cbxEstadoCotizacion.removeAllItems();
+        for (String estado : estados) {
+            cbxEstadoCotizacion.addItem(estado);
+        }
+    }
+
+    private void cargarDatosCotizacion() {
+        if (cotizacionActual != null) {
+            // Selecciona el estado actual en el combo
+            cbxEstadoCotizacion.setSelectedItem(cotizacionActual.getEstado());
+            // Aquí podrías llenar otros campos, como:
+            labelNumCotizacion.setText(String.valueOf(cotizacionActual.getIdCotizacion()));
+            labelNomCliente.setText(cotizacionActual.getCliente().getNombre());
+            labelFechaCotizacion.setText(String.valueOf(cotizacionActual.getFecha()));
+            txtDescuento.setText(cotizacionActual.getDescuentoMonto().toString());
+        }
+    }
+
+    private void cargarTiposTrabajo() {
+        List<String> tipos = cotizacionBO.obtenerTiposTrabajo();
+        cbxTipoTrabajo1.removeAllItems();
+        for (String tipo : tipos) {
+            cbxTipoTrabajo1.addItem(tipo);
+        }
     }
 
     /**
@@ -292,6 +335,11 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         tituloTipoTrabajo.setText("Tipo de trabajo");
 
         cbxTipoTrabajo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTipoTrabajo1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxTipoTrabajo1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelTipoTrabajoLayout = new javax.swing.GroupLayout(panelTipoTrabajo);
         panelTipoTrabajo.setLayout(panelTipoTrabajoLayout);
@@ -339,6 +387,11 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         btnGuardar.setFocusPainted(false);
         btnGuardar.setRequestFocusEnabled(false);
         btnGuardar.setRolloverEnabled(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
 
         btnDescartar.setBackground(new java.awt.Color(202, 50, 0));
         btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
@@ -458,6 +511,11 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         labelCliente.setText("Cliente");
 
         cbxEstadoCotizacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estado", "Item 2", "Item 3", "Item 4" }));
+        cbxEstadoCotizacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxEstadoCotizacionActionPerformed(evt);
+            }
+        });
 
         labelNumCotizacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         labelNumCotizacion.setText("Num. Cotizacion");
@@ -549,45 +607,74 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     }//GEN-LAST:event_ckbxMosquiteroSiActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-     this.dispose();
-     InicioAdministrarCotizaciones in= new InicioAdministrarCotizaciones();
-     in.setVisible(true);
+        this.dispose();
+        InicioAdministrarCotizaciones in = new InicioAdministrarCotizaciones();
+        in.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void cbxEstadoCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxEstadoCotizacionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxEstadoCotizacionActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        if (cotizacionActual != null) {
+            // Actualizar estado y tipo de trabajo con lo seleccionado en los ComboBox
+            String nuevoEstado = cbxEstadoCotizacion.getSelectedItem().toString();
+            String nuevoTipoTrabajo = cbxTipoTrabajo1.getSelectedItem().toString();
+            cotizacionActual.setEstado(nuevoEstado);
+
+            // Llamar al BO para actualizar la cotización
+            boolean exito = cotizacionBO.actualizarCotizacion(cotizacionActual);
+
+            if (exito) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Cotización actualizada correctamente.");
+                this.dispose(); // cerrar el frame después de guardar
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "Error al actualizar la cotización.");
+            }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "No hay cotización cargada para actualizar.");
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void cbxTipoTrabajo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoTrabajo1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxTipoTrabajo1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmEditarCotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmEditarCotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmEditarCotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmEditarCotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmEditarCotizacion().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(frmEditarCotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(frmEditarCotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(frmEditarCotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(frmEditarCotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new frmEditarCotizacion().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Descuento;

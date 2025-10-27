@@ -24,6 +24,7 @@ modelo\Proyecto.class
 presentacion\frmCrearCotizacion.class
 modelo\Material$TipoMaterial.class
 dao\MaterialDAO.class
+presentacion\frmEditarCotizacion$5.class
 presentacion\InicioAdministrarCotizaciones$7.class
 presentacion\frmCrearCotizacion$2.class
 com\mycompany\vidriera\Test3Editar.class
@@ -47,4 +48,5 @@ modelo\Cliente.class
 presentacion\frmCrearCotizacion$PanelExpandible.class
 modelo\VentanaDetalle.class
 negocio\CotizacionBO.class
+presentacion\frmEditarCotizacion$4.class
 presentacion\InicioAdministrarCotizaciones$5.class

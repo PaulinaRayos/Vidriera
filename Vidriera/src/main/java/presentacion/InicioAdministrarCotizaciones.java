@@ -603,7 +603,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         int idCotizacion = (int) modeloTablaCotizaciones.getValueAt(filaSeleccionada, 0);
         
         this.dispose();
-        frmEditarCotizacion editar = new frmEditarCotizacion();
+        frmEditarCotizacion editar = new frmEditarCotizacion(idCotizacion);
         editar.setVisible(true);
     }//GEN-LAST:event_btnEditarActionPerformed
 

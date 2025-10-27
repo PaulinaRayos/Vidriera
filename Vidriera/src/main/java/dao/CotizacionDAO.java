@@ -274,4 +274,40 @@ public class CotizacionDAO {
         return cotizaciones;
     }
 
+    
+    public List<String> obtenerEstadosCotizacion() {
+    List<String> estados = new ArrayList<>();
+    String sql = "SHOW COLUMNS FROM cotizacion LIKE 'estado'";
+    try (Statement stmt = conexion.createStatement();
+         ResultSet rs = stmt.executeQuery(sql)) {
+        if (rs.next()) {
+            String enumStr = rs.getString("Type");
+            // Extrae los valores del ENUM: enum('Pendiente','Aceptado','Cancelada')
+            enumStr = enumStr.substring(enumStr.indexOf("(") + 1, enumStr.indexOf(")"));
+            String[] valores = enumStr.replace("'", "").split(",");
+            for (String v : valores) {
+                estados.add(v);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return estados;
+}
+    
+    public List<String> obtenerTiposTrabajo() {
+        List<String> tipos = new ArrayList<>();
+        // Suponiendo tabla tipoTrabajo(id, nombre)
+        String sql = "SELECT nombre FROM tipoTrabajo ORDER BY nombre";
+        try (Statement stmt = conexion.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                tipos.add(rs.getString("nombre"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tipos;
+    }
+    
 }

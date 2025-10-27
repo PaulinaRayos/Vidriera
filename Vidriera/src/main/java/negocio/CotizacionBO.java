@@ -26,26 +26,24 @@ public class CotizacionBO {
 
     private CotizacionDAO cotizacionDAO;
     private DetalleCotizacionDAO detalleDAO;
-     private MaterialDAO materialDetalleDAO;
-         private Connection conexion;
-
-
-
+    private MaterialDAO materialDetalleDAO;
+    private Connection conexion;
 
     public Connection getConexion() {
         return this.conexion;
     }
-    public CotizacionBO() {
-          try {
-        this.conexion = Conexion.getConnection();
-        this.cotizacionDAO = new CotizacionDAO(conexion);
-        this.detalleDAO = new DetalleCotizacionDAO(conexion);
-        this.materialDetalleDAO = new MaterialDAO(conexion);
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-        throw new RuntimeException("No se pudo inicializar la conexión a la base de datos.");
 
-    }
+    public CotizacionBO() {
+        try {
+            this.conexion = Conexion.getConnection();
+            this.cotizacionDAO = new CotizacionDAO(conexion);
+            this.detalleDAO = new DetalleCotizacionDAO(conexion);
+            this.materialDetalleDAO = new MaterialDAO(conexion);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("No se pudo inicializar la conexión a la base de datos.");
+
+        }
 
     }
 
@@ -189,15 +187,25 @@ public class CotizacionBO {
             conn.setAutoCommit(true);
         }
     }
-    
-     public List<Cotizacion> obtenerCotizacionesPorCliente(String nombre) {
+
+    public List<Cotizacion> obtenerCotizacionesPorCliente(String nombre) {
         return cotizacionDAO.obtenerCotizacionesCliente(nombre);
     }
-     
-      public Cotizacion obtenerCotizacionesPorNumero(int numero) {
+
+    public Cotizacion obtenerCotizacionesPorNumero(int numero) {
         return cotizacionDAO.obtenerCotizacionPorNumero(numero);
     }
-       public List<Cotizacion> obtenerCotizacionesPorRangoFechas(Date fechaInicio, Date fechaFin){
-          return cotizacionDAO.obtenerCotizacionesPorRangoFechas(fechaInicio, fechaFin);
+
+    public List<Cotizacion> obtenerCotizacionesPorRangoFechas(Date fechaInicio, Date fechaFin) {
+        return cotizacionDAO.obtenerCotizacionesPorRangoFechas(fechaInicio, fechaFin);
     }
+
+    public List<String> obtenerEstadosCotizacion() {
+        return cotizacionDAO.obtenerEstadosCotizacion();
+    }
+
+    public List<String> obtenerTiposTrabajo() {
+        return cotizacionDAO.obtenerTiposTrabajo();
+    }
+
 }
