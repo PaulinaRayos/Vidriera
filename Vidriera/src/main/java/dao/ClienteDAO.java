@@ -123,6 +123,21 @@ public class ClienteDAO {
         return false;
     }
 
+    //obtener id por nombre cliente
+     public int obtenerIdPorNombre(String nombreCliente) throws SQLException {
+        String sql = "SELECT idCliente FROM cliente WHERE nombre = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, nombreCliente);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("idCliente");
+            } else {
+                throw new SQLException("Cliente no encontrado: " + nombreCliente);
+            }
+        }
+    }
+
+    
     // Mapear ResultSet a Cliente
     private Cliente mapearCliente(ResultSet rs) throws SQLException {
         Cliente cliente = new Cliente();
