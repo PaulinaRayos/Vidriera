@@ -7,24 +7,46 @@ package presentacion;
 import dao.ClienteDAO;
 import dao.CotizacionDAO;
 import dao.MaterialDAO;
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import modelo.CanceleriaFijaDetalle;
 import modelo.Cliente;
 import modelo.Cotizacion;
 import modelo.Material;
+import modelo.PuertaAbatibleDetalle;
 import modelo.TipoCanceleria;
 import modelo.TipoPuerta;
 import modelo.TipoVentana;
+import modelo.VentanaDetalle;
 import negocio.CotizacionBO;
 import utils.Conexion;
 
@@ -38,15 +60,18 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
      * Creates new form frmCrearCotizacion
      */
     private List<Cliente> clientes;
+    private JPanel panelDetallesDinamicos;
+    private List<Material> materialesDisponibles;
 
     public frmCrearCotizacion() {
         initComponents();
+         panelDetallesDinamicos = new JPanel();
+        panelDetallesDinamicos.setLayout(new BoxLayout(panelDetallesDinamicos, BoxLayout.Y_AXIS));
+        scrollDetallesDinamicos.setViewportView(panelDetallesDinamicos);
+        scrollDetallesDinamicos.setPreferredSize(new Dimension(900, 250));
         cargarClientes();
-        cargarMaterialesVidrio();
         cargarTiposTrabajo();
-        cargarCantidadYNHojas();
-        setupCheckboxes();
-
+         cargarMaterialesDisponibles();
         txtBuscarCliente.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -71,6 +96,17 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         panelTipoTrabajo = new javax.swing.JPanel();
         tituloTipoTrabajo = new javax.swing.JLabel();
         cbxTipoTrabajo1 = new javax.swing.JComboBox<>();
+        scrollDetallesDinamicos = new javax.swing.JScrollPane();
+        panelTituloDetalle = new javax.swing.JPanel();
+        Descuento = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        btnDescartar = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
+        panelDescuento = new javax.swing.JPanel();
+        ckbxDescuentoSi = new javax.swing.JCheckBox();
+        ckbxDescuentoNo = new javax.swing.JCheckBox();
+        txtDescuento = new javax.swing.JTextField();
+        labelPorsentaje = new javax.swing.JLabel();
         panelBotones = new javax.swing.JPanel();
         btnVistaPrevia = new javax.swing.JButton();
         btnDescargar = new javax.swing.JButton();
@@ -78,36 +114,11 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         panelSubtitulo = new javax.swing.JPanel();
         ConsultarCotizacion = new javax.swing.JLabel();
         iconoCrear = new javax.swing.JLabel();
-        panelInformacionTrabajo = new javax.swing.JPanel();
-        labelHorizontal = new javax.swing.JLabel();
-        tituloCantidad = new javax.swing.JLabel();
-        txtMetrosHorizontal = new javax.swing.JTextField();
-        labelVertical = new javax.swing.JLabel();
-        txtMetrosVertical = new javax.swing.JTextField();
-        tituloMedidas = new javax.swing.JLabel();
-        cbxCantidad = new javax.swing.JComboBox<>();
-        tituloMosquitero = new javax.swing.JLabel();
-        ckbxMosquiteroSi = new javax.swing.JCheckBox();
-        ckbxMosquiteroNo = new javax.swing.JCheckBox();
-        tituloCristal = new javax.swing.JLabel();
-        cbxMateriales = new javax.swing.JComboBox<>();
-        labelNumHojas = new javax.swing.JLabel();
-        cbxNumHojas = new javax.swing.JComboBox<>();
         panelBuscarCliente = new javax.swing.JPanel();
         Buscar = new javax.swing.JLabel();
         txtBuscarCliente = new javax.swing.JTextField();
         btnCrearCliente = new javax.swing.JButton();
         cbxSeleccionarCliente = new javax.swing.JComboBox<>();
-        panelTituloDetalle = new javax.swing.JPanel();
-        Descuento = new javax.swing.JLabel();
-        panelDescuento = new javax.swing.JPanel();
-        ckbxDescuentoSi = new javax.swing.JCheckBox();
-        ckbxDescuentoNo = new javax.swing.JCheckBox();
-        txtDescuento = new javax.swing.JTextField();
-        labelPorsentaje = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        btnDescartar = new javax.swing.JButton();
-        btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -148,26 +159,118 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         tituloTipoTrabajo.setText("Tipo de trabajo");
 
         cbxTipoTrabajo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTipoTrabajo1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxTipoTrabajo1ActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout panelTipoTrabajoLayout = new javax.swing.GroupLayout(panelTipoTrabajo);
-        panelTipoTrabajo.setLayout(panelTipoTrabajoLayout);
-        panelTipoTrabajoLayout.setHorizontalGroup(
-            panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTipoTrabajoLayout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addGroup(panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tituloTipoTrabajo))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        panelTituloDetalle.setBackground(new java.awt.Color(255, 255, 255));
+
+        Descuento.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        Descuento.setForeground(new java.awt.Color(15, 105, 196));
+        Descuento.setText("Descuento");
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
+        btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
+        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
+        btnDescartar.setText("Descartar");
+        btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnDescartar.setBorderPainted(false);
+        btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnDescartar.setDefaultCapable(false);
+        btnDescartar.setFocusPainted(false);
+        btnDescartar.setRequestFocusEnabled(false);
+        btnDescartar.setRolloverEnabled(false);
+        btnDescartar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescartarActionPerformed(evt);
+            }
+        });
+
+        btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
+        btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnGuardar.setBorderPainted(false);
+        btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnGuardar.setDefaultCapable(false);
+        btnGuardar.setFocusPainted(false);
+        btnGuardar.setRequestFocusEnabled(false);
+        btnGuardar.setRolloverEnabled(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+
+        panelDescuento.setBackground(new java.awt.Color(255, 255, 255));
+
+        ckbxDescuentoSi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ckbxDescuentoSi.setSelected(true);
+        ckbxDescuentoSi.setText("Si");
+
+        ckbxDescuentoNo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ckbxDescuentoNo.setText("No");
+
+        labelPorsentaje.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        labelPorsentaje.setForeground(new java.awt.Color(0, 38, 115));
+        labelPorsentaje.setText("%");
+
+        javax.swing.GroupLayout panelDescuentoLayout = new javax.swing.GroupLayout(panelDescuento);
+        panelDescuento.setLayout(panelDescuentoLayout);
+        panelDescuentoLayout.setHorizontalGroup(
+            panelDescuentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDescuentoLayout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(ckbxDescuentoSi)
+                .addGap(18, 18, 18)
+                .addComponent(ckbxDescuentoNo)
+                .addGap(18, 18, 18)
+                .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelPorsentaje)
+                .addContainerGap(394, Short.MAX_VALUE))
         );
-        panelTipoTrabajoLayout.setVerticalGroup(
-            panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTipoTrabajoLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(tituloTipoTrabajo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(9, Short.MAX_VALUE))
+        panelDescuentoLayout.setVerticalGroup(
+            panelDescuentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDescuentoLayout.createSequentialGroup()
+                .addContainerGap(8, Short.MAX_VALUE)
+                .addGroup(panelDescuentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ckbxDescuentoSi)
+                    .addComponent(ckbxDescuentoNo)
+                    .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelPorsentaje))
+                .addGap(14, 14, 14))
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(panelDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(42, 42, 42))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         panelBotones.setBackground(new java.awt.Color(255, 255, 255));
@@ -232,7 +335,57 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout panelTituloDetalleLayout = new javax.swing.GroupLayout(panelTituloDetalle);
+        panelTituloDetalle.setLayout(panelTituloDetalleLayout);
+        panelTituloDetalleLayout.setHorizontalGroup(
+            panelTituloDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTituloDetalleLayout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addComponent(Descuento)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panelTituloDetalleLayout.setVerticalGroup(
+            panelTituloDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTituloDetalleLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Descuento)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35))
+        );
+
+        javax.swing.GroupLayout panelTipoTrabajoLayout = new javax.swing.GroupLayout(panelTipoTrabajo);
+        panelTipoTrabajo.setLayout(panelTipoTrabajoLayout);
+        panelTipoTrabajoLayout.setHorizontalGroup(
+            panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTipoTrabajoLayout.createSequentialGroup()
+                .addGap(47, 47, 47)
+                .addGroup(panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tituloTipoTrabajo))
+                .addContainerGap(122, Short.MAX_VALUE))
+            .addComponent(scrollDetallesDinamicos)
+            .addComponent(panelTituloDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        panelTipoTrabajoLayout.setVerticalGroup(
+            panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTipoTrabajoLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(tituloTipoTrabajo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollDetallesDinamicos, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(panelTituloDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelSubtitulo.setBackground(new java.awt.Color(0, 81, 168));
@@ -262,124 +415,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     .addComponent(iconoCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ConsultarCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(18, Short.MAX_VALUE))
-        );
-
-        panelInformacionTrabajo.setBackground(new java.awt.Color(255, 255, 255));
-
-        labelHorizontal.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        labelHorizontal.setForeground(new java.awt.Color(0, 38, 115));
-        labelHorizontal.setText("Horizontal");
-
-        tituloCantidad.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloCantidad.setForeground(new java.awt.Color(0, 38, 115));
-        tituloCantidad.setText("Cantidad");
-
-        labelVertical.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        labelVertical.setForeground(new java.awt.Color(0, 38, 115));
-        labelVertical.setText("Vertical");
-
-        tituloMedidas.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloMedidas.setForeground(new java.awt.Color(0, 38, 115));
-        tituloMedidas.setText("Medidas");
-
-        cbxCantidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        tituloMosquitero.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloMosquitero.setForeground(new java.awt.Color(0, 38, 115));
-        tituloMosquitero.setText("Mosquitero");
-
-        ckbxMosquiteroSi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxMosquiteroSi.setText("Si");
-        ckbxMosquiteroSi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ckbxMosquiteroSiActionPerformed(evt);
-            }
-        });
-
-        ckbxMosquiteroNo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxMosquiteroNo.setText("No");
-
-        tituloCristal.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloCristal.setForeground(new java.awt.Color(0, 38, 115));
-        tituloCristal.setText("Cristal");
-
-        cbxMateriales.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        labelNumHojas.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        labelNumHojas.setForeground(new java.awt.Color(0, 38, 115));
-        labelNumHojas.setText("No. de hojas");
-
-        cbxNumHojas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        javax.swing.GroupLayout panelInformacionTrabajoLayout = new javax.swing.GroupLayout(panelInformacionTrabajo);
-        panelInformacionTrabajo.setLayout(panelInformacionTrabajoLayout);
-        panelInformacionTrabajoLayout.setHorizontalGroup(
-            panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                        .addComponent(labelNumHojas)
-                        .addGap(18, 18, 18)
-                        .addComponent(cbxNumHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(cbxMateriales, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tituloCristal)
-                    .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                                .addComponent(labelHorizontal)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtMetrosHorizontal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
-                                .addComponent(labelVertical)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtMetrosVertical, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(tituloMedidas))
-                        .addGap(62, 62, 62)
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tituloCantidad)
-                            .addComponent(cbxCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(52, 52, 52)
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tituloMosquitero)
-                            .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                                .addComponent(ckbxMosquiteroSi)
-                                .addGap(33, 33, 33)
-                                .addComponent(ckbxMosquiteroNo)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        panelInformacionTrabajoLayout.setVerticalGroup(
-            panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                        .addComponent(tituloMosquitero)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ckbxMosquiteroNo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ckbxMosquiteroSi, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tituloCantidad)
-                            .addComponent(tituloMedidas))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(labelHorizontal)
-                                .addComponent(txtMetrosHorizontal, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(labelVertical)
-                                .addComponent(txtMetrosVertical, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cbxCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
-                .addComponent(tituloCristal)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbxMateriales, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelNumHojas)
-                    .addComponent(cbxNumHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         panelBuscarCliente.setBackground(new java.awt.Color(255, 255, 255));
@@ -434,128 +469,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelTituloDetalle.setBackground(new java.awt.Color(255, 255, 255));
-
-        Descuento.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        Descuento.setForeground(new java.awt.Color(15, 105, 196));
-        Descuento.setText("Descuento");
-
-        javax.swing.GroupLayout panelTituloDetalleLayout = new javax.swing.GroupLayout(panelTituloDetalle);
-        panelTituloDetalle.setLayout(panelTituloDetalleLayout);
-        panelTituloDetalleLayout.setHorizontalGroup(
-            panelTituloDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTituloDetalleLayout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addComponent(Descuento)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        panelTituloDetalleLayout.setVerticalGroup(
-            panelTituloDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTituloDetalleLayout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
-                .addComponent(Descuento)
-                .addContainerGap())
-        );
-
-        panelDescuento.setBackground(new java.awt.Color(255, 255, 255));
-
-        ckbxDescuentoSi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxDescuentoSi.setSelected(true);
-        ckbxDescuentoSi.setText("Si");
-
-        ckbxDescuentoNo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxDescuentoNo.setText("No");
-
-        labelPorsentaje.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        labelPorsentaje.setForeground(new java.awt.Color(0, 38, 115));
-        labelPorsentaje.setText("%");
-
-        javax.swing.GroupLayout panelDescuentoLayout = new javax.swing.GroupLayout(panelDescuento);
-        panelDescuento.setLayout(panelDescuentoLayout);
-        panelDescuentoLayout.setHorizontalGroup(
-            panelDescuentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelDescuentoLayout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(ckbxDescuentoSi)
-                .addGap(18, 18, 18)
-                .addComponent(ckbxDescuentoNo)
-                .addGap(18, 18, 18)
-                .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelPorsentaje)
-                .addContainerGap(394, Short.MAX_VALUE))
-        );
-        panelDescuentoLayout.setVerticalGroup(
-            panelDescuentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDescuentoLayout.createSequentialGroup()
-                .addContainerGap(8, Short.MAX_VALUE)
-                .addGroup(panelDescuentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ckbxDescuentoSi)
-                    .addComponent(ckbxDescuentoNo)
-                    .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelPorsentaje))
-                .addGap(14, 14, 14))
-        );
-
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
-        btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
-        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
-        btnDescartar.setText("Descartar");
-        btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnDescartar.setBorderPainted(false);
-        btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnDescartar.setDefaultCapable(false);
-        btnDescartar.setFocusPainted(false);
-        btnDescartar.setRequestFocusEnabled(false);
-        btnDescartar.setRolloverEnabled(false);
-        btnDescartar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDescartarActionPerformed(evt);
-            }
-        });
-
-        btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
-        btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
-        btnGuardar.setText("Guardar");
-        btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnGuardar.setBorderPainted(false);
-        btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnGuardar.setDefaultCapable(false);
-        btnGuardar.setFocusPainted(false);
-        btnGuardar.setRequestFocusEnabled(false);
-        btnGuardar.setRolloverEnabled(false);
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(53, Short.MAX_VALUE)
-                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 9, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -564,17 +477,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             .addComponent(panelSubtitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelBuscarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelTipoTrabajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelInformacionTrabajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelTituloDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(panelDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -586,25 +488,11 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addComponent(panelBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelTipoTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelInformacionTrabajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelTituloDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(90, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void ckbxMosquiteroSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckbxMosquiteroSiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ckbxMosquiteroSiActionPerformed
 
     private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
         int opcion = JOptionPane.showConfirmDialog(
@@ -629,6 +517,525 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
        
     }//GEN-LAST:event_btnGuardarActionPerformed
 
+    private void cbxTipoTrabajo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoTrabajo1ActionPerformed
+        // TODO add your handling code here:
+        String tipo = (String) cbxTipoTrabajo1.getSelectedItem();
+        if (tipo == null || tipo.startsWith("Selecciona")) return;
+     if (tipo.startsWith("VENTANA")) {
+        PanelDetalleVentana pdv = new PanelDetalleVentana(materialesDisponibles, () -> {
+            panelDetallesDinamicos.revalidate();
+            panelDetallesDinamicos.repaint();
+        });
+
+        PanelExpandible panelExp = new PanelExpandible(tipo, pdv); // Usa el título completo seleccionado
+        panelDetallesDinamicos.add(panelExp);
+        panelDetallesDinamicos.revalidate();
+        panelDetallesDinamicos.repaint();
+
+    } else if (tipo.startsWith("PUERTA")) {
+        
+        PanelDetallePuertaAbatible pdp = new PanelDetallePuertaAbatible(materialesDisponibles, () -> {
+            panelDetallesDinamicos.revalidate();
+            panelDetallesDinamicos.repaint();
+        });
+
+        PanelExpandible panelExp = new PanelExpandible(tipo, pdp); // Usa el título completo seleccionado
+        panelDetallesDinamicos.add(panelExp);
+        panelDetallesDinamicos.revalidate();
+        panelDetallesDinamicos.repaint();
+
+    } else if (tipo.startsWith("CANCELERIA")) {
+         PanelDetalleCanceleria pdC = new PanelDetalleCanceleria(materialesDisponibles, () -> {
+            panelDetallesDinamicos.revalidate();
+            panelDetallesDinamicos.repaint();
+        });
+
+         PanelExpandible panelExp = new PanelExpandible(tipo, pdC);
+         panelDetallesDinamicos.add(panelExp);
+         panelDetallesDinamicos.revalidate();
+         panelDetallesDinamicos.repaint();
+    }
+    }//GEN-LAST:event_cbxTipoTrabajo1ActionPerformed
+
+     public class PanelDetallePuertaAbatible extends JPanel {
+        private JTextField txtMedidaH = new JTextField(8);
+        private JTextField txtMedidaV = new JTextField(8);
+        private JCheckBox ckMosquitero = new JCheckBox();
+        private JTextField txtCantidad = new JTextField(8);
+        private JTextField txtTipoCristal = new JTextField(12);
+        private JTextField txtNoHojas = new JTextField(8);
+        private JTextField txtPrecioUnidad = new JTextField(8);
+        private JTextField txtSubtotal = new JTextField(8);
+        private JTextField txtDescripcion = new JTextField(20);
+    private JComboBox<TipoPuerta> cbxTipoPuerta = new JComboBox<>(TipoPuerta.values());
+        private JCheckBox ckDuela = new JCheckBox();
+        private JTextField txtTipoDuela = new JTextField(10);
+        private JTextField txtMedDuela = new JTextField(8);
+
+        private JCheckBox ckAdaptador = new JCheckBox();
+        private JTextField txtTipoAdaptador = new JTextField(10);
+
+        private JCheckBox ckJunquillo = new JCheckBox();
+        private JTextField txtTipoJunquillo = new JTextField(10);
+
+        private JCheckBox ckCanal = new JCheckBox();
+        private JTextField txtTipoCanal = new JTextField(10);
+
+        private JCheckBox ckPivote = new JCheckBox();
+        private JTextField txtTipoPivote = new JTextField(10);
+        private JTextField txtCantidadPivote = new JTextField(5);
+
+        private JCheckBox ckJaladera = new JCheckBox();
+        private JTextField txtTipoJaladera = new JTextField(10);
+        private JTextField txtCantidadJaladera = new JTextField(5);
+
+        private JCheckBox ckBarra = new JCheckBox();
+        private JTextField txtTipoBarra = new JTextField(10);
+        private JButton btnQuitar = new JButton("Quitar");
+
+        private JPanel panelMateriales;
+        private DefaultListModel<String> modeloMateriales = new DefaultListModel<>();
+        private Map<Integer, BigDecimal> materialesSeleccionados = new HashMap<>();
+
+        public PanelDetallePuertaAbatible(List<Material> materialesDisponibles, Runnable onRemove) {
+            setLayout(new BorderLayout());
+
+            // Panel con campos dentro de scroll interno
+            JPanel panelCampos = new JPanel(new GridLayout(0, 2, 5, 5));
+            panelCampos.add(new JLabel("Medida Horizontal:"));
+            panelCampos.add(txtMedidaH);
+            panelCampos.add(new JLabel("Medida Vertical:"));
+            panelCampos.add(txtMedidaV);
+            panelCampos.add(new JLabel("Mosquitero:"));
+            panelCampos.add(ckMosquitero);
+            panelCampos.add(new JLabel("Cantidad:")); 
+            panelCampos.add(txtCantidad);
+            panelCampos.add(new JLabel("Tipo Cristal:")); 
+            panelCampos.add(txtTipoCristal);
+            panelCampos.add(new JLabel("No. hojas:"));
+            panelCampos.add(txtNoHojas);
+            panelCampos.add(new JLabel("Precio unidad:")); 
+            panelCampos.add(txtPrecioUnidad);
+            panelCampos.add(new JLabel("Subtotal lÃ­nea:"));
+            panelCampos.add(txtSubtotal);
+            panelCampos.add(new JLabel("DescripciÃ³n:"));
+            panelCampos.add(txtDescripcion);
+            panelCampos.add(new JLabel("Tipo Puerta:")); 
+            panelCampos.add(cbxTipoPuerta);
+
+            panelCampos.add(new JLabel("Duela:")); 
+            panelCampos.add(ckDuela);
+            panelCampos.add(new JLabel("Tipo duela:")); 
+            panelCampos.add(txtTipoDuela);
+            panelCampos.add(new JLabel("Medida duela:"));
+            panelCampos.add(txtMedDuela);
+
+            panelCampos.add(new JLabel("Adaptador:")); panelCampos.add(ckAdaptador);
+            panelCampos.add(new JLabel("Tipo adaptador:")); panelCampos.add(txtTipoAdaptador);
+
+            panelCampos.add(new JLabel("Junquillo:")); panelCampos.add(ckJunquillo);
+            panelCampos.add(new JLabel("Tipo junquillo:")); panelCampos.add(txtTipoJunquillo);
+
+            panelCampos.add(new JLabel("Canal:")); panelCampos.add(ckCanal);
+            panelCampos.add(new JLabel("Tipo canal:")); panelCampos.add(txtTipoCanal);
+
+            panelCampos.add(new JLabel("Pivote:")); panelCampos.add(ckPivote);
+            panelCampos.add(new JLabel("Tipo pivote:")); panelCampos.add(txtTipoPivote);
+            panelCampos.add(new JLabel("Cantidad pivote:")); panelCampos.add(txtCantidadPivote);
+
+            panelCampos.add(new JLabel("Jaladera:")); panelCampos.add(ckJaladera);
+            panelCampos.add(new JLabel("Tipo jaladera:")); panelCampos.add(txtTipoJaladera);
+            panelCampos.add(new JLabel("Cantidad jaladera:")); panelCampos.add(txtCantidadJaladera);
+
+            panelCampos.add(new JLabel("Barra:")); panelCampos.add(ckBarra);
+            panelCampos.add(new JLabel("Tipo barra:")); panelCampos.add(txtTipoBarra);
+
+
+            JScrollPane scrollCampos = new JScrollPane(panelCampos);
+            scrollCampos.setPreferredSize(new Dimension(450, 150));
+            add(scrollCampos, BorderLayout.NORTH);
+
+            // Panel de selecciÃ³n/agregado de materiales
+            panelMateriales = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            panelMateriales.setBorder(BorderFactory.createTitledBorder("Materiales"));
+
+            JComboBox<Material> cmbMaterial = new JComboBox<>(materialesDisponibles.toArray(new Material[0]));
+            JTextField txtCantidad = new JTextField(5);
+            JButton btnAgregar = new JButton("Agregar");
+            JList<String> listaMateriales = new JList<>(modeloMateriales);
+
+            btnAgregar.addActionListener(e -> {
+                Material m = (Material) cmbMaterial.getSelectedItem();
+                BigDecimal cantidad = new BigDecimal(txtCantidad.getText());
+                modeloMateriales.addElement(m.getDescripcion() + " - " + cantidad);
+                materialesSeleccionados.put(m.getIdMaterial(), cantidad);
+                txtCantidad.setText("");
+            });
+
+            panelMateriales.add(new JLabel("Material:"));
+            panelMateriales.add(cmbMaterial);
+            panelMateriales.add(new JLabel("Cantidad:"));
+            panelMateriales.add(txtCantidad);
+            panelMateriales.add(btnAgregar);
+            panelMateriales.add(new JScrollPane(listaMateriales));
+
+            add(panelMateriales, BorderLayout.CENTER);
+
+            // BotÃ³n quitar para eliminar este panel
+            btnQuitar.addActionListener(e -> {
+                Container parent = getParent();
+                if(parent != null) {
+                    parent.remove(this);
+                    parent.revalidate();
+                    parent.repaint();
+                    onRemove.run();
+                }
+            });
+            add(btnQuitar, BorderLayout.SOUTH);
+        }
+         public PuertaAbatibleDetalle getDetalle() {
+            PuertaAbatibleDetalle detalle = new PuertaAbatibleDetalle();
+            detalle.setMedidaHorizontal(new BigDecimal(txtMedidaH.getText()));
+            detalle.setMedidaVertical(new BigDecimal(txtMedidaV.getText()));
+            detalle.setMosquitero(ckMosquitero.isSelected());
+            detalle.setCantidad(Integer.parseInt(txtCantidad.getText()));
+detalle.setTipoCristal(txtTipoCristal.getText());
+detalle.setNoHojas(Integer.parseInt(txtNoHojas.getText()));
+detalle.setPrecioSoloUnaUnidadCalculado(new BigDecimal(txtPrecioUnidad.getText()));
+detalle.setSubtotalLinea(new BigDecimal(txtSubtotal.getText()));
+detalle.setDescripcion(txtDescripcion.getText());
+TipoPuerta tipoPuerta = (TipoPuerta) cbxTipoPuerta.getSelectedItem();
+detalle.setTipoPuerta(tipoPuerta); 
+detalle.setDuela(ckDuela.isSelected());
+detalle.setTipoDuela(txtTipoDuela.getText());
+detalle.setMedidaDuela(new BigDecimal(txtMedDuela.getText()));
+
+detalle.setAdaptador(ckAdaptador.isSelected());
+detalle.setTipoAdaptador(txtTipoAdaptador.getText());
+
+detalle.setJunquillo(ckJunquillo.isSelected());
+detalle.setTipoJunquillo(txtTipoJunquillo.getText());
+
+detalle.setCanal(ckCanal.isSelected());
+detalle.setTipoCanal(txtTipoCanal.getText());
+
+detalle.setPivote(ckPivote.isSelected());
+detalle.setTipoPivote(txtTipoPivote.getText());
+detalle.setCantidadPivote(Integer.parseInt(txtCantidadPivote.getText()));
+
+detalle.setJaladera(ckJaladera.isSelected());
+detalle.setTipoJaladera(txtTipoJaladera.getText());
+detalle.setCantidadJaladera(Integer.parseInt(txtCantidadJaladera.getText()));
+
+detalle.setBarra(ckBarra.isSelected());
+detalle.setTipoBarra(txtTipoBarra.getText());
+
+            return detalle;
+        }
+
+        public Map<Integer, BigDecimal> getMaterialesSeleccionados() {
+            return materialesSeleccionados;
+        }
+    }
+     
+     public class PanelDetalleVentana extends JPanel {
+    // --- Campos de datos del modelo ---
+    private JTextField txtMedidaH = new JTextField(8);
+    private JTextField txtMedidaV = new JTextField(8);
+    private JTextField txtCantidad = new JTextField(5);
+    private JTextField txtTipoCristal = new JTextField(12);
+    private JTextField txtNoHojas = new JTextField(5);
+    private JTextField txtPrecioUnidad = new JTextField(8);
+    private JTextField txtSubtotal = new JTextField(8);
+    private JTextField txtDescripcion = new JTextField(15);
+    private JComboBox<TipoVentana> cmbTipoVentana = new JComboBox<>(TipoVentana.values());
+    private JCheckBox ckMosquitero = new JCheckBox();
+    private JCheckBox ckArco = new JCheckBox();
+    private JTextField txtTipoArco = new JTextField(10);
+    private JTextField txtMedidaArco = new JTextField(8);
+    private JTextField txtTipoCanalillo = new JTextField(12);
+    private JTextField txtMedidaCanalillo = new JTextField(8);
+
+    public PanelDetalleVentana(List<Material> materialesDisponibles, Runnable onRemove) {
+        setLayout(new BorderLayout());
+        
+        JPanel panelCampos = new JPanel(new GridLayout(0, 2, 6, 4));
+        panelCampos.add(new JLabel("Medida horizontal:"));
+        panelCampos.add(txtMedidaH);
+        panelCampos.add(new JLabel("Medida vertical:"));
+        panelCampos.add(txtMedidaV);
+        panelCampos.add(new JLabel("Cantidad:"));
+        panelCampos.add(txtCantidad);
+        panelCampos.add(new JLabel("Tipo cristal:"));
+        panelCampos.add(txtTipoCristal);
+        panelCampos.add(new JLabel("No. hojas:"));
+        panelCampos.add(txtNoHojas);
+        panelCampos.add(new JLabel("Precio unidad:"));
+        panelCampos.add(txtPrecioUnidad);
+        panelCampos.add(new JLabel("Subtotal línea:"));
+        panelCampos.add(txtSubtotal);
+        panelCampos.add(new JLabel("Descripción:"));
+        panelCampos.add(txtDescripcion);
+
+        panelCampos.add(new JLabel("Tipo ventana:"));
+        panelCampos.add(cmbTipoVentana);
+        panelCampos.add(new JLabel("Mosquitero:"));
+        panelCampos.add(ckMosquitero);
+        panelCampos.add(new JLabel("Arco:"));
+        panelCampos.add(ckArco);
+        panelCampos.add(new JLabel("Tipo arco:"));
+        panelCampos.add(txtTipoArco);
+        panelCampos.add(new JLabel("Medida arco:"));
+        panelCampos.add(txtMedidaArco);
+        panelCampos.add(new JLabel("Tipo canalillo:"));
+        panelCampos.add(txtTipoCanalillo);
+        panelCampos.add(new JLabel("Medida canalillo:"));
+        panelCampos.add(txtMedidaCanalillo);
+        
+        JScrollPane scrollCampos = new JScrollPane(panelCampos);
+        scrollCampos.setPreferredSize(new Dimension(500, 200));
+        add(scrollCampos, BorderLayout.CENTER);
+
+        // Botón quitar (opcional, igual que en los otros paneles)
+        JButton btnQuitar = new JButton("Quitar");
+        btnQuitar.addActionListener(e -> {
+            Container parent = getParent();
+            if (parent != null) {
+                parent.remove(this);
+                parent.revalidate();
+                parent.repaint();
+                onRemove.run();
+            }
+        });
+        add(btnQuitar, BorderLayout.SOUTH);
+    }
+
+    // --- Este método construye el objeto VentanaDetalle con todos los datos actuales del panel ---
+    public VentanaDetalle getDetalle() {
+        VentanaDetalle d = new VentanaDetalle();
+        d.setMedidaHorizontal(new BigDecimal(txtMedidaH.getText()));
+        d.setMedidaVertical(new BigDecimal(txtMedidaV.getText()));
+        d.setCantidad(Integer.parseInt(txtCantidad.getText()));
+        d.setTipoCristal(txtTipoCristal.getText());
+        d.setNoHojas(Integer.parseInt(txtNoHojas.getText()));
+        d.setPrecioSoloUnaUnidadCalculado(new BigDecimal(txtPrecioUnidad.getText()));
+        d.setSubtotalLinea(new BigDecimal(txtSubtotal.getText()));
+        d.setDescripcion(txtDescripcion.getText());
+
+        d.setTipoVentana((TipoVentana) cmbTipoVentana.getSelectedItem());
+        d.setMosquitero(ckMosquitero.isSelected());
+
+        d.setArco(ckArco.isSelected());
+        d.setTipoArco(txtTipoArco.getText());
+        d.setMedidaArco(new BigDecimal(txtMedidaArco.getText()));
+        d.setTipoCanalillo(txtTipoCanalillo.getText());
+        d.setMedidaCanalillo(new BigDecimal(txtMedidaCanalillo.getText()));
+
+        return d;
+    }
+}
+
+     public class PanelDetalleCanceleria extends JPanel {
+    // === Campos de cada propiedad ===
+    private JTextField txtMedidaH = new JTextField(8);
+    private JTextField txtMedidaV = new JTextField(8);
+    private JTextField txtCantidad = new JTextField(5);
+    private JTextField txtTipoCristal = new JTextField(12);
+    private JTextField txtNoHojas = new JTextField(5);
+    private JTextField txtPrecioUnidad = new JTextField(8);
+    private JTextField txtSubtotal = new JTextField(8);
+    private JTextField txtDescripcion = new JTextField(15);
+    private JComboBox<TipoCanceleria> cmbTipoCanceleria = new JComboBox<>(TipoCanceleria.values());
+
+    private JCheckBox ckBolsa = new JCheckBox();
+    private JTextField txtNumFijosVerticales = new JTextField(5);
+    private JTextField txtNumFijosHorizontales = new JTextField(5);
+
+    private JTextField txtTipoTapa = new JTextField(10);
+    private JTextField txtCantidadTapa = new JTextField(5);
+
+    private JCheckBox ckZoclo = new JCheckBox();
+    private JTextField txtTipoZoclo = new JTextField(10);
+
+    private JCheckBox ckJunquillo = new JCheckBox();
+    private JTextField txtTipoJunquillo = new JTextField(10);
+
+    private JCheckBox ckArco = new JCheckBox();
+    private JTextField txtTipoArco = new JTextField(10);
+    private JTextField txtMedidaArco = new JTextField(8);
+
+    private JCheckBox ckCanalillo = new JCheckBox();
+    private JTextField txtTipoCanalillo = new JTextField(10);
+    private JTextField txtMedidaCanalillo = new JTextField(8);
+
+    public PanelDetalleCanceleria(List<Material> materialesDisponibles, Runnable onRemove) {
+        setLayout(new BorderLayout());
+
+        JPanel panelCampos = new JPanel(new GridLayout(0, 2, 6, 4));
+
+        panelCampos.add(new JLabel("Medida horizontal:"));
+        panelCampos.add(txtMedidaH);
+
+        panelCampos.add(new JLabel("Medida vertical:"));
+        panelCampos.add(txtMedidaV);
+
+        panelCampos.add(new JLabel("Cantidad:"));
+        panelCampos.add(txtCantidad);
+
+        panelCampos.add(new JLabel("Tipo cristal:"));
+        panelCampos.add(txtTipoCristal);
+
+        panelCampos.add(new JLabel("No. hojas:"));
+        panelCampos.add(txtNoHojas);
+
+        panelCampos.add(new JLabel("Precio unidad:"));
+        panelCampos.add(txtPrecioUnidad);
+
+        panelCampos.add(new JLabel("Subtotal línea:"));
+        panelCampos.add(txtSubtotal);
+
+        panelCampos.add(new JLabel("Descripción:"));
+        panelCampos.add(txtDescripcion);
+
+        panelCampos.add(new JLabel("Tipo cancelería:"));
+        panelCampos.add(cmbTipoCanceleria);
+
+        panelCampos.add(new JLabel("Bolsa:"));
+        panelCampos.add(ckBolsa);
+
+        panelCampos.add(new JLabel("Fijos verticales:"));
+        panelCampos.add(txtNumFijosVerticales);
+
+        panelCampos.add(new JLabel("Fijos horizontales:"));
+        panelCampos.add(txtNumFijosHorizontales);
+
+        panelCampos.add(new JLabel("Tipo tapa:"));
+        panelCampos.add(txtTipoTapa);
+
+        panelCampos.add(new JLabel("Cantidad tapa:"));
+        panelCampos.add(txtCantidadTapa);
+
+        panelCampos.add(new JLabel("Zoclo:"));
+        panelCampos.add(ckZoclo);
+
+        panelCampos.add(new JLabel("Tipo zoclo:"));
+        panelCampos.add(txtTipoZoclo);
+
+        panelCampos.add(new JLabel("Junquillo:"));
+        panelCampos.add(ckJunquillo);
+
+        panelCampos.add(new JLabel("Tipo junquillo:"));
+        panelCampos.add(txtTipoJunquillo);
+
+        panelCampos.add(new JLabel("Arco:"));
+        panelCampos.add(ckArco);
+
+        panelCampos.add(new JLabel("Tipo arco:"));
+        panelCampos.add(txtTipoArco);
+
+        panelCampos.add(new JLabel("Medida arco:"));
+        panelCampos.add(txtMedidaArco);
+
+        panelCampos.add(new JLabel("Canalillo:"));
+        panelCampos.add(ckCanalillo);
+
+        panelCampos.add(new JLabel("Tipo canalillo:"));
+        panelCampos.add(txtTipoCanalillo);
+
+        panelCampos.add(new JLabel("Medida canalillo:"));
+        panelCampos.add(txtMedidaCanalillo);
+
+        JScrollPane scrollCampos = new JScrollPane(panelCampos);
+        scrollCampos.setPreferredSize(new Dimension(500, 250));
+        add(scrollCampos, BorderLayout.CENTER);
+
+        // Botón quitar, igual que otros paneles
+        JButton btnQuitar = new JButton("Quitar");
+        btnQuitar.addActionListener(e -> {
+            Container parent = getParent();
+            if (parent != null) {
+                parent.remove(this);
+                parent.revalidate();
+                parent.repaint();
+                onRemove.run();
+            }
+        });
+        add(btnQuitar, BorderLayout.SOUTH);
+    }
+
+    // --- Crea el objeto CanceleriaFijaDetalle según el modelo ---
+    public CanceleriaFijaDetalle getDetalle() {
+        CanceleriaFijaDetalle d = new CanceleriaFijaDetalle();
+        d.setMedidaHorizontal(new BigDecimal(txtMedidaH.getText()));
+        d.setMedidaVertical(new BigDecimal(txtMedidaV.getText()));
+        d.setCantidad(Integer.parseInt(txtCantidad.getText()));
+        d.setTipoCristal(txtTipoCristal.getText());
+        d.setNoHojas(Integer.parseInt(txtNoHojas.getText()));
+        d.setPrecioSoloUnaUnidadCalculado(new BigDecimal(txtPrecioUnidad.getText()));
+        d.setSubtotalLinea(new BigDecimal(txtSubtotal.getText()));
+        d.setDescripcion(txtDescripcion.getText());
+        d.setTipoCanceleria((TipoCanceleria) cmbTipoCanceleria.getSelectedItem());
+
+        d.setBolsa(ckBolsa.isSelected());
+        d.setNumFijosVerticales(Integer.parseInt(txtNumFijosVerticales.getText()));
+        d.setNumFijosHorizontales(Integer.parseInt(txtNumFijosHorizontales.getText()));
+
+        d.setTipoTapa(txtTipoTapa.getText());
+        d.setCantidadTapa(Integer.parseInt(txtCantidadTapa.getText()));
+
+        d.setZoclo(ckZoclo.isSelected());
+        d.setTipoZoclo(txtTipoZoclo.getText());
+
+        d.setJunquillo(ckJunquillo.isSelected());
+        d.setTipoJunquillo(txtTipoJunquillo.getText());
+
+        d.setArco(ckArco.isSelected());
+        d.setTipoArco(txtTipoArco.getText());
+        d.setMedidaArco(new BigDecimal(txtMedidaArco.getText()));
+
+        d.setCanalillo(ckCanalillo.isSelected());
+        d.setTipoCanalillo(txtTipoCanalillo.getText());
+        d.setMedidaCanalillo(new BigDecimal(txtMedidaCanalillo.getText()));
+
+        return d;
+    }
+}
+
+        
+ private void cargarMaterialesDisponibles() {
+        materialesDisponibles = new ArrayList<>();
+        materialesDisponibles.add(new Material(1, "Vidrio", new BigDecimal("150.5"), 50, Material.TipoMaterial.Vidrio));
+        materialesDisponibles.add(new Material(2, "Aluminio", new BigDecimal("300.0"), 30, Material.TipoMaterial.Aluminio));
+        materialesDisponibles.add(new Material(3, "Accesorio", new BigDecimal("80.0"), 100, Material.TipoMaterial.Accesorio));
+    }
+public class PanelExpandible extends JPanel {
+    private final JPanel contenido;
+    private final JButton btnToggle;
+    private boolean estaVisible = true;
+
+    public PanelExpandible(String titulo, JPanel contenido) {
+        this.contenido = contenido;
+        setLayout(new BorderLayout());
+
+        btnToggle = new JButton("▼ " + titulo);
+        btnToggle.setFocusPainted(false);
+        btnToggle.setBorderPainted(false);
+        btnToggle.setContentAreaFilled(false);
+        btnToggle.setHorizontalAlignment(SwingConstants.LEFT);
+        btnToggle.addActionListener(e -> toggleContenido());
+
+        add(btnToggle, BorderLayout.NORTH);
+        add(contenido, BorderLayout.CENTER);
+    }
+
+    private void toggleContenido() {
+        estaVisible = !estaVisible;
+        contenido.setVisible(estaVisible);
+        btnToggle.setText((estaVisible ?  "▼ " : "► ") + btnToggle.getText().substring(2));
+        revalidate();
+        repaint();
+    }
+}
     /**
          * @param args the command line arguments
          */
@@ -703,21 +1110,11 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         }
     }
 
-    private void cargarMaterialesVidrio() {
-        try (Connection conexion = Conexion.getConnection()) {
-            MaterialDAO materialDAO = new MaterialDAO(conexion);
-            List<Material> materiales = materialDAO.obtenerTodos();
-            cbxMateriales.removeAllItems();
-            for (Material m : materiales) {
-                cbxMateriales.addItem(m.getDisplayName());
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al cargar materiales: " + ex.getMessage());
-        }
-    }
+
 
     private void cargarTiposTrabajo() {
         cbxTipoTrabajo1.removeAllItems(); // Ventanas 
+         cbxTipoTrabajo1.addItem("Selecciona un tipo de trabajo...");
         for (TipoVentana tv : TipoVentana.values()) {
             cbxTipoTrabajo1.addItem("VENTANA - " + tv.getDescripcion());
         } // Puertas 
@@ -729,23 +1126,9 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         }
     }
 
-    private void cargarCantidadYNHojas() {
-        cbxCantidad.removeAllItems();
-        cbxNumHojas.removeAllItems();
-        for (int i = 1; i <= 100; i++) {
-            cbxCantidad.addItem(String.valueOf(i));
-            cbxNumHojas.addItem(String.valueOf(i));
-        }
-    }
+  
 
-// checkbox excluyentes
-    private void setupCheckboxes() {
-        ckbxMosquiteroSi.addActionListener(evt -> ckbxMosquiteroNo.setSelected(!ckbxMosquiteroSi.isSelected()));
-        ckbxMosquiteroNo.addActionListener(evt -> ckbxMosquiteroSi.setSelected(!ckbxMosquiteroNo.isSelected()));
 
-        ckbxDescuentoSi.addActionListener(evt -> ckbxDescuentoNo.setSelected(!ckbxDescuentoSi.isSelected()));
-        ckbxDescuentoNo.addActionListener(evt -> ckbxDescuentoSi.setSelected(!ckbxDescuentoNo.isSelected()));
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Buscar;
     private javax.swing.JLabel ConsultarCotizacion;
@@ -756,39 +1139,25 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnVistaPrevia;
-    private javax.swing.JComboBox<String> cbxCantidad;
-    private javax.swing.JComboBox<String> cbxMateriales;
-    private javax.swing.JComboBox<String> cbxNumHojas;
     private javax.swing.JComboBox<String> cbxSeleccionarCliente;
     private javax.swing.JComboBox<String> cbxTipoTrabajo1;
     private javax.swing.JCheckBox ckbxDescuentoNo;
     private javax.swing.JCheckBox ckbxDescuentoSi;
-    private javax.swing.JCheckBox ckbxMosquiteroNo;
-    private javax.swing.JCheckBox ckbxMosquiteroSi;
     private javax.swing.JLabel iconoCrear;
     private javax.swing.JLabel iconoTitulo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel labelHorizontal;
-    private javax.swing.JLabel labelNumHojas;
     private javax.swing.JLabel labelPorsentaje;
-    private javax.swing.JLabel labelVertical;
     private javax.swing.JPanel panelBotones;
     private javax.swing.JPanel panelBuscarCliente;
     private javax.swing.JPanel panelDescuento;
-    private javax.swing.JPanel panelInformacionTrabajo;
     private javax.swing.JPanel panelSubtitulo;
     private javax.swing.JPanel panelTipoTrabajo;
     private javax.swing.JPanel panelTitulo;
     private javax.swing.JPanel panelTituloDetalle;
-    private javax.swing.JLabel tituloCantidad;
-    private javax.swing.JLabel tituloCristal;
-    private javax.swing.JLabel tituloMedidas;
-    private javax.swing.JLabel tituloMosquitero;
+    private javax.swing.JScrollPane scrollDetallesDinamicos;
     private javax.swing.JLabel tituloTipoTrabajo;
     private javax.swing.JTextField txtBuscarCliente;
     private javax.swing.JTextField txtDescuento;
-    private javax.swing.JTextField txtMetrosHorizontal;
-    private javax.swing.JTextField txtMetrosVertical;
     // End of variables declaration//GEN-END:variables
 }

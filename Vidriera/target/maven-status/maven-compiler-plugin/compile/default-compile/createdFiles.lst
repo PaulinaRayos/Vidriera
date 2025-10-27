@@ -2,12 +2,15 @@ utils\Conexion.class
 modelo\MaterialDetalle.class
 presentacion\InicioAdministrarCotizaciones$2.class
 modelo\Vendedor.class
+presentacion\InicioAdministrarCotizaciones$6.class
 dao\ClienteDAO.class
 modelo\TipoVentana.class
 presentacion\frmEditarCotizacion.class
 com\mycompany\vidriera\Test2Crear.class
 dao\MaterialDetalleDAO.class
+presentacion\frmCrearCotizacion$PanelDetallePuertaAbatible.class
 modelo\TipoPuerta.class
+presentacion\frmCrearCotizacion$PanelDetalleVentana.class
 presentacion\InicioAdministrarCotizaciones$3.class
 presentacion\InicioAdministrarCotizaciones.class
 presentacion\frmEditarCotizacion$2.class
@@ -35,7 +38,10 @@ presentacion\frmCrearCotizacion$3.class
 modelo\TipoCanceleria.class
 dao\VendedorDAO.class
 com\mycompany\vidriera\Test4Cancelar.class
+presentacion\frmCrearCotizacion$PanelDetalleCanceleria.class
 presentacion\frmEditarCotizacion$1.class
 modelo\Cliente.class
+presentacion\frmCrearCotizacion$PanelExpandible.class
 modelo\VentanaDetalle.class
 negocio\CotizacionBO.class
+presentacion\InicioAdministrarCotizaciones$5.class
