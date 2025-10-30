@@ -285,8 +285,17 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
 
         panelTabla.setBackground(new java.awt.Color(255, 255, 255));
 
+        jScrollPane2.setBackground(new java.awt.Color(255, 255, 255));
+
         tblCotizaciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
                 {null, null, null, null, null},
                 {null, null, null, null, null},
                 {null, null, null, null, null},

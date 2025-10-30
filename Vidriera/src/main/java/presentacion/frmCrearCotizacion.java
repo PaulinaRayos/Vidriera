@@ -125,24 +125,15 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         panelTitulo = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         iconoTitulo = new javax.swing.JLabel();
-        panelTipoTrabajo = new javax.swing.JPanel();
-        tituloTipoTrabajo = new javax.swing.JLabel();
-        cbxTipoTrabajo1 = new javax.swing.JComboBox<>();
+        pnlNuevaCotizacion = new javax.swing.JPanel();
+        tituloNuevaCotizacion = new javax.swing.JLabel();
         scrollDetallesDinamicos = new javax.swing.JScrollPane();
-        panelTituloDetalle = new javax.swing.JPanel();
-        Descuento = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        btnDescartar = new javax.swing.JButton();
-        btnGuardar = new javax.swing.JButton();
-        panelDescuento = new javax.swing.JPanel();
-        ckbxDescuentoSi = new javax.swing.JCheckBox();
-        ckbxDescuentoNo = new javax.swing.JCheckBox();
-        txtDescuento = new javax.swing.JTextField();
-        labelPorsentaje = new javax.swing.JLabel();
-        panelBotones = new javax.swing.JPanel();
-        btnVistaPrevia = new javax.swing.JButton();
-        btnDescargar = new javax.swing.JButton();
-        btnImprimir = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblDetallesAgregados = new javax.swing.JTable();
+        btnEliminarCotizacion = new javax.swing.JButton();
+        btnNuevaCotizacion1 = new javax.swing.JButton();
+        btnEditarCotizacion = new javax.swing.JButton();
+        cbxTipoTrabajo1 = new javax.swing.JComboBox<>();
         panelSubtitulo = new javax.swing.JPanel();
         ConsultarCotizacion = new javax.swing.JLabel();
         iconoCrear = new javax.swing.JLabel();
@@ -152,8 +143,32 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         txtBuscarCliente = new javax.swing.JTextField();
         btnCrearCliente = new javax.swing.JButton();
         cbxSeleccionarCliente = new javax.swing.JComboBox<>();
+        panelBotones = new javax.swing.JPanel();
+        btnVistaPrevia = new javax.swing.JButton();
+        btnDescargar = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
+        pnlTotales = new javax.swing.JPanel();
+        ckbxDescuentoSi = new javax.swing.JCheckBox();
+        Descuento = new javax.swing.JLabel();
+        ckbxDescuentoNo = new javax.swing.JCheckBox();
+        txtDescuento = new javax.swing.JTextField();
+        labelPorsentaje = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        btnGuardar = new javax.swing.JButton();
+        btnDescartar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Crear Cotización");
 
         panelTitulo.setBackground(new java.awt.Color(0, 19, 90));
 
@@ -185,125 +200,180 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelTipoTrabajo.setBackground(new java.awt.Color(255, 255, 255));
+        pnlNuevaCotizacion.setBackground(new java.awt.Color(255, 255, 255));
 
-        tituloTipoTrabajo.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloTipoTrabajo.setForeground(new java.awt.Color(15, 105, 196));
-        tituloTipoTrabajo.setText("Tipo de trabajo");
+        tituloNuevaCotizacion.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        tituloNuevaCotizacion.setForeground(new java.awt.Color(15, 105, 196));
+        tituloNuevaCotizacion.setText("Nueva Cotización");
+
+        tblDetallesAgregados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Tipo de trabajo", "Cantidad", "Descripción", "Medidas", "Subtotal"
+            }
+        ));
+        jScrollPane3.setViewportView(tblDetallesAgregados);
+
+        btnEliminarCotizacion.setText("Eliminar");
+        btnEliminarCotizacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarCotizacionActionPerformed(evt);
+            }
+        });
+
+        btnNuevaCotizacion1.setText("Nueva");
+        btnNuevaCotizacion1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaCotizacion1ActionPerformed(evt);
+            }
+        });
+
+        btnEditarCotizacion.setText("Editar");
+        btnEditarCotizacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarCotizacionActionPerformed(evt);
+            }
+        });
 
         cbxTipoTrabajo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cbxTipoTrabajo1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxTipoTrabajo1ActionPerformed(evt);
-            }
-        });
 
-        panelTituloDetalle.setBackground(new java.awt.Color(255, 255, 255));
-
-        Descuento.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        Descuento.setForeground(new java.awt.Color(15, 105, 196));
-        Descuento.setText("Descuento");
-
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
-        btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
-        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
-        btnDescartar.setText("Descartar");
-        btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnDescartar.setBorderPainted(false);
-        btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnDescartar.setDefaultCapable(false);
-        btnDescartar.setFocusPainted(false);
-        btnDescartar.setRequestFocusEnabled(false);
-        btnDescartar.setRolloverEnabled(false);
-        btnDescartar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDescartarActionPerformed(evt);
-            }
-        });
-
-        btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
-        btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
-        btnGuardar.setText("Guardar");
-        btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnGuardar.setBorderPainted(false);
-        btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnGuardar.setDefaultCapable(false);
-        btnGuardar.setFocusPainted(false);
-        btnGuardar.setRequestFocusEnabled(false);
-        btnGuardar.setRolloverEnabled(false);
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-            }
-        });
-
-        panelDescuento.setBackground(new java.awt.Color(255, 255, 255));
-
-        ckbxDescuentoSi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxDescuentoSi.setSelected(true);
-        ckbxDescuentoSi.setText("Si");
-
-        ckbxDescuentoNo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxDescuentoNo.setText("No");
-
-        labelPorsentaje.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        labelPorsentaje.setForeground(new java.awt.Color(0, 38, 115));
-        labelPorsentaje.setText("%");
-
-        javax.swing.GroupLayout panelDescuentoLayout = new javax.swing.GroupLayout(panelDescuento);
-        panelDescuento.setLayout(panelDescuentoLayout);
-        panelDescuentoLayout.setHorizontalGroup(
-            panelDescuentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelDescuentoLayout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(ckbxDescuentoSi)
-                .addGap(18, 18, 18)
-                .addComponent(ckbxDescuentoNo)
-                .addGap(18, 18, 18)
-                .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+        javax.swing.GroupLayout pnlNuevaCotizacionLayout = new javax.swing.GroupLayout(pnlNuevaCotizacion);
+        pnlNuevaCotizacion.setLayout(pnlNuevaCotizacionLayout);
+        pnlNuevaCotizacionLayout.setHorizontalGroup(
+            pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
+                .addGap(47, 47, 47)
+                .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
+                        .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(scrollDetallesDinamicos)
+                    .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
+                        .addComponent(jScrollPane3)
+                        .addContainerGap())
+                    .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
+                        .addComponent(tituloNuevaCotizacion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnNuevaCotizacion1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEliminarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))))
+        );
+        pnlNuevaCotizacionLayout.setVerticalGroup(
+            pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEliminarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevaCotizacion1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tituloNuevaCotizacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelPorsentaje)
-                .addContainerGap(394, Short.MAX_VALUE))
-        );
-        panelDescuentoLayout.setVerticalGroup(
-            panelDescuentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDescuentoLayout.createSequentialGroup()
-                .addContainerGap(8, Short.MAX_VALUE)
-                .addGroup(panelDescuentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ckbxDescuentoSi)
-                    .addComponent(ckbxDescuentoNo)
-                    .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelPorsentaje))
-                .addGap(14, 14, 14))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(10, 10, 10)
+                .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(scrollDetallesDinamicos, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        panelSubtitulo.setBackground(new java.awt.Color(0, 81, 168));
+
+        ConsultarCotizacion.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        ConsultarCotizacion.setForeground(new java.awt.Color(255, 255, 255));
+        ConsultarCotizacion.setText("Crear cotización");
+
+        iconoCrear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-24.png"))); // NOI18N
+
+        jButton1.setText("Volver");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelSubtituloLayout = new javax.swing.GroupLayout(panelSubtitulo);
+        panelSubtitulo.setLayout(panelSubtituloLayout);
+        panelSubtituloLayout.setHorizontalGroup(
+            panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSubtituloLayout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(iconoCrear)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ConsultarCotizacion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(42, 42, 42))
+                .addComponent(jButton1)
+                .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panelSubtituloLayout.setVerticalGroup(
+            panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSubtituloLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(iconoCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ConsultarCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)))
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+
+        panelBuscarCliente.setBackground(new java.awt.Color(255, 255, 255));
+
+        Buscar.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        Buscar.setForeground(new java.awt.Color(15, 105, 196));
+        Buscar.setText("Cliente");
+
+        txtBuscarCliente.setToolTipText("");
+
+        btnCrearCliente.setBackground(new java.awt.Color(0, 81, 168));
+        btnCrearCliente.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnCrearCliente.setForeground(new java.awt.Color(255, 255, 255));
+        btnCrearCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-20.png"))); // NOI18N
+        btnCrearCliente.setText("Cliente nuevo");
+        btnCrearCliente.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnCrearCliente.setBorderPainted(false);
+        btnCrearCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCrearCliente.setDefaultCapable(false);
+        btnCrearCliente.setFocusPainted(false);
+        btnCrearCliente.setRequestFocusEnabled(false);
+        btnCrearCliente.setRolloverEnabled(false);
+
+        cbxSeleccionarCliente.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        javax.swing.GroupLayout panelBuscarClienteLayout = new javax.swing.GroupLayout(panelBuscarCliente);
+        panelBuscarCliente.setLayout(panelBuscarClienteLayout);
+        panelBuscarClienteLayout.setHorizontalGroup(
+            panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelBuscarClienteLayout.createSequentialGroup()
+                .addGap(51, 51, 51)
+                .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelBuscarClienteLayout.createSequentialGroup()
+                        .addComponent(cbxSeleccionarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCrearCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(Buscar)
+                    .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(73, Short.MAX_VALUE))
+        );
+        panelBuscarClienteLayout.setVerticalGroup(
+            panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelBuscarClienteLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Buscar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cbxSeleccionarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                    .addComponent(btnCrearCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         panelBotones.setBackground(new java.awt.Color(255, 255, 255));
@@ -371,146 +441,189 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addContainerGap(28, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout panelTituloDetalleLayout = new javax.swing.GroupLayout(panelTituloDetalle);
-        panelTituloDetalle.setLayout(panelTituloDetalleLayout);
-        panelTituloDetalleLayout.setHorizontalGroup(
-            panelTituloDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTituloDetalleLayout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addComponent(Descuento)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        pnlTotales.setBackground(new java.awt.Color(255, 255, 255));
+
+        ckbxDescuentoSi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ckbxDescuentoSi.setSelected(true);
+        ckbxDescuentoSi.setText("Si");
+
+        Descuento.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        Descuento.setForeground(new java.awt.Color(15, 105, 196));
+        Descuento.setText("Descuento");
+
+        ckbxDescuentoNo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ckbxDescuentoNo.setText("No");
+
+        labelPorsentaje.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        labelPorsentaje.setForeground(new java.awt.Color(0, 38, 115));
+        labelPorsentaje.setText("%");
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 204, 255)));
+        jPanel2.setForeground(new java.awt.Color(153, 204, 255));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setText("Subtotal");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel3.setText("Mano de Obra");
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setText("TOTAL");
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel5.setText("IVA");
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel6.setText("Descuento");
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel7.setText("$0.00");
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel8.setText("$0.00");
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel9.setText("-$0.00");
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel10.setText("$0.00");
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel11.setText("$0.00");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel2)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addGap(58, 58, 58)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel9))))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
-        panelTituloDetalleLayout.setVerticalGroup(
-            panelTituloDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTituloDetalleLayout.createSequentialGroup()
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Descuento)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel10)))
         );
 
-        javax.swing.GroupLayout panelTipoTrabajoLayout = new javax.swing.GroupLayout(panelTipoTrabajo);
-        panelTipoTrabajo.setLayout(panelTipoTrabajoLayout);
-        panelTipoTrabajoLayout.setHorizontalGroup(
-            panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTipoTrabajoLayout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addGroup(panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tituloTipoTrabajo))
-                .addContainerGap(122, Short.MAX_VALUE))
-            .addComponent(scrollDetallesDinamicos)
-            .addComponent(panelTituloDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        panelTipoTrabajoLayout.setVerticalGroup(
-            panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTipoTrabajoLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(tituloTipoTrabajo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollDetallesDinamicos, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(panelTituloDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        panelSubtitulo.setBackground(new java.awt.Color(0, 81, 168));
-
-        ConsultarCotizacion.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        ConsultarCotizacion.setForeground(new java.awt.Color(255, 255, 255));
-        ConsultarCotizacion.setText("Crear cotización");
-
-        iconoCrear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-24.png"))); // NOI18N
-
-        jButton1.setText("Volver");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
+        btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnGuardar.setBorderPainted(false);
+        btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnGuardar.setDefaultCapable(false);
+        btnGuardar.setFocusPainted(false);
+        btnGuardar.setRequestFocusEnabled(false);
+        btnGuardar.setRolloverEnabled(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnGuardarActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout panelSubtituloLayout = new javax.swing.GroupLayout(panelSubtitulo);
-        panelSubtitulo.setLayout(panelSubtituloLayout);
-        panelSubtituloLayout.setHorizontalGroup(
-            panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelSubtituloLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(iconoCrear)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ConsultarCotizacion)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addContainerGap())
+        btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
+        btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
+        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
+        btnDescartar.setText("Descartar");
+        btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnDescartar.setBorderPainted(false);
+        btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnDescartar.setDefaultCapable(false);
+        btnDescartar.setFocusPainted(false);
+        btnDescartar.setRequestFocusEnabled(false);
+        btnDescartar.setRolloverEnabled(false);
+        btnDescartar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescartarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlTotalesLayout = new javax.swing.GroupLayout(pnlTotales);
+        pnlTotales.setLayout(pnlTotalesLayout);
+        pnlTotalesLayout.setHorizontalGroup(
+            pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTotalesLayout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlTotalesLayout.createSequentialGroup()
+                        .addComponent(Descuento)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(pnlTotalesLayout.createSequentialGroup()
+                        .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlTotalesLayout.createSequentialGroup()
+                                .addComponent(ckbxDescuentoSi)
+                                .addGap(18, 18, 18)
+                                .addComponent(ckbxDescuentoNo)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelPorsentaje))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(81, 81, 81))))
         );
-        panelSubtituloLayout.setVerticalGroup(
-            panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelSubtituloLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(iconoCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ConsultarCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
-
-        panelBuscarCliente.setBackground(new java.awt.Color(255, 255, 255));
-
-        Buscar.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        Buscar.setForeground(new java.awt.Color(15, 105, 196));
-        Buscar.setText("Cliente");
-
-        txtBuscarCliente.setToolTipText("");
-
-        btnCrearCliente.setBackground(new java.awt.Color(0, 81, 168));
-        btnCrearCliente.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnCrearCliente.setForeground(new java.awt.Color(255, 255, 255));
-        btnCrearCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-20.png"))); // NOI18N
-        btnCrearCliente.setText("Cliente nuevo");
-        btnCrearCliente.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnCrearCliente.setBorderPainted(false);
-        btnCrearCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnCrearCliente.setDefaultCapable(false);
-        btnCrearCliente.setFocusPainted(false);
-        btnCrearCliente.setRequestFocusEnabled(false);
-        btnCrearCliente.setRolloverEnabled(false);
-
-        cbxSeleccionarCliente.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        javax.swing.GroupLayout panelBuscarClienteLayout = new javax.swing.GroupLayout(panelBuscarCliente);
-        panelBuscarCliente.setLayout(panelBuscarClienteLayout);
-        panelBuscarClienteLayout.setHorizontalGroup(
-            panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBuscarClienteLayout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelBuscarClienteLayout.createSequentialGroup()
-                        .addComponent(cbxSeleccionarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCrearCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(Buscar)
-                    .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        panelBuscarClienteLayout.setVerticalGroup(
-            panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBuscarClienteLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Buscar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cbxSeleccionarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                    .addComponent(btnCrearCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        pnlTotalesLayout.setVerticalGroup(
+            pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTotalesLayout.createSequentialGroup()
+                .addGap(45, 45, 45)
+                .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTotalesLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Descuento)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ckbxDescuentoSi)
+                    .addComponent(ckbxDescuentoNo)
+                    .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelPorsentaje))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -520,7 +633,12 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             .addComponent(panelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelSubtitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelBuscarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelTipoTrabajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnlNuevaCotizacion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlTotales, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelBotones, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -531,35 +649,27 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelTipoTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(90, Short.MAX_VALUE))
+                .addComponent(pnlNuevaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlTotales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
-        int opcion = JOptionPane.showConfirmDialog(
-                this,
-                "¿Está seguro de descartar la cotización?",
-                "Confirmar Cancelación",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE
-        );
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.dispose();
+        InicioAdministrarCotizaciones ini = new InicioAdministrarCotizaciones();
 
-        if (opcion == JOptionPane.YES_OPTION) {
-            // Abrir pantalla de inicio
-            InicioAdministrarCotizaciones inicio = new InicioAdministrarCotizaciones();
-            inicio.setVisible(true);
-            // Cerrar la ventana de cotización actual
-            this.dispose();
-        }
-
-    }//GEN-LAST:event_btnDescartarActionPerformed
+        ini.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
 
-           if (cbxSeleccionarCliente.getSelectedIndex() == -1 || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
+        if (cbxSeleccionarCliente.getSelectedIndex() == -1 || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente.", "Error de validación", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -634,60 +744,37 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(), "Error General", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-    private void cbxTipoTrabajo1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoTrabajo1ActionPerformed
-        int selectedIndex = cbxTipoTrabajo1.getSelectedIndex();
+    private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
+        int opcion = JOptionPane.showConfirmDialog(
+            this,
+            "¿Está seguro de descartar la cotización?",
+            "Confirmar Cancelación",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
 
-        if (selectedIndex <= 0) {
-            return;
+        if (opcion == JOptionPane.YES_OPTION) {
+            // Abrir pantalla de inicio
+            InicioAdministrarCotizaciones inicio = new InicioAdministrarCotizaciones();
+            inicio.setVisible(true);
+            // Cerrar la ventana de cotización actual
+            this.dispose();
         }
+    }//GEN-LAST:event_btnDescartarActionPerformed
 
-        CatalogoTrabajo trabajoSeleccionado = catalogoTrabajos.get(selectedIndex - 1);
+    private void btnEliminarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCotizacionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEliminarCotizacionActionPerformed
 
-        int idTrabajo = trabajoSeleccionado.getIdCatalogo();
-        String nombreTrabajo = trabajoSeleccionado.getNombre();
-        if (nombreTrabajo.toLowerCase().contains("ventana")) {
+    private void btnNuevaCotizacion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCotizacion1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnNuevaCotizacion1ActionPerformed
 
-            // El constructor del panel ahora debe aceptar el ID del trabajo.
-            PanelDetalleVentana pdv = new PanelDetalleVentana(idTrabajo, materialesDisponibles, () -> {
-                panelDetallesDinamicos.revalidate();
-                panelDetallesDinamicos.repaint();
-            });
-            PanelExpandible panelExp = new PanelExpandible(nombreTrabajo, pdv);
-            panelDetallesDinamicos.add(panelExp);
-
-        } else if (nombreTrabajo.toLowerCase().contains("puerta")) {
-
-            PanelDetallePuertaAbatible pdp = new PanelDetallePuertaAbatible(idTrabajo, materialesDisponibles, () -> {
-                panelDetallesDinamicos.revalidate();
-                panelDetallesDinamicos.repaint();
-            });
-            PanelExpandible panelExp = new PanelExpandible(nombreTrabajo, pdp);
-            panelDetallesDinamicos.add(panelExp);
-
-        } else if (nombreTrabajo.toLowerCase().contains("cancel")) {
-
-            PanelDetalleCanceleria pdC = new PanelDetalleCanceleria(idTrabajo, materialesDisponibles, () -> {
-                panelDetallesDinamicos.revalidate();
-                panelDetallesDinamicos.repaint();
-            });
-            PanelExpandible panelExp = new PanelExpandible(nombreTrabajo, pdC);
-            panelDetallesDinamicos.add(panelExp);
-        }
-
-        panelDetallesDinamicos.revalidate();
-        panelDetallesDinamicos.repaint();
-
-    }//GEN-LAST:event_cbxTipoTrabajo1ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.dispose();
-        InicioAdministrarCotizaciones ini = new InicioAdministrarCotizaciones();
-
-        ini.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnEditarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCotizacionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnEditarCotizacionActionPerformed
 
     public class PanelDetallePuertaAbatible extends JPanel {
 
@@ -1234,8 +1321,11 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JButton btnCrearCliente;
     private javax.swing.JButton btnDescargar;
     private javax.swing.JButton btnDescartar;
+    private javax.swing.JButton btnEditarCotizacion;
+    private javax.swing.JButton btnEliminarCotizacion;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnImprimir;
+    private javax.swing.JButton btnNuevaCotizacion1;
     private javax.swing.JButton btnVistaPrevia;
     private javax.swing.JComboBox<String> cbxSeleccionarCliente;
     private javax.swing.JComboBox<String> cbxTipoTrabajo1;
@@ -1245,17 +1335,28 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JLabel iconoTitulo;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel labelPorsentaje;
     private javax.swing.JPanel panelBotones;
     private javax.swing.JPanel panelBuscarCliente;
-    private javax.swing.JPanel panelDescuento;
     private javax.swing.JPanel panelSubtitulo;
-    private javax.swing.JPanel panelTipoTrabajo;
     private javax.swing.JPanel panelTitulo;
-    private javax.swing.JPanel panelTituloDetalle;
+    private javax.swing.JPanel pnlNuevaCotizacion;
+    private javax.swing.JPanel pnlTotales;
     private javax.swing.JScrollPane scrollDetallesDinamicos;
-    private javax.swing.JLabel tituloTipoTrabajo;
+    private javax.swing.JTable tblDetallesAgregados;
+    private javax.swing.JLabel tituloNuevaCotizacion;
     private javax.swing.JTextField txtBuscarCliente;
     private javax.swing.JTextField txtDescuento;
     // End of variables declaration//GEN-END:variables
