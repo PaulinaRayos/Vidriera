@@ -40,4 +40,36 @@ public class CatalogoTrabajoDAO {
         }
         return catalogo;
     }
+    
+    /**
+     * Busca un trabajo del catalogo por su ID.
+     * @param idCatalogo El ID a buscar.
+     * @return El objeto CatalogoTrabajo completo, o null si no se encuentra.
+     */
+    public CatalogoTrabajo obtenerPorId(int idCatalogo) {
+        // Si el ID es 0, devuelve null
+        if (idCatalogo == 0) {
+            return null;
+        }
+        
+        String sql = "SELECT * FROM catalogotrabajos WHERE idCatalogo = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idCatalogo);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    CatalogoTrabajo trabajo = new CatalogoTrabajo();
+                    trabajo.setIdCatalogo(rs.getInt("idCatalogo"));
+                    trabajo.setCodigoInterno(rs.getString("codigoInterno"));
+                    trabajo.setNombre(rs.getString("nombre"));
+                    trabajo.setDescripcion(rs.getString("descripcion"));
+                    trabajo.setSerieBase(rs.getString("serieBase"));
+                    trabajo.setPrecioBase(rs.getBigDecimal("precioBase"));
+                    return trabajo;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

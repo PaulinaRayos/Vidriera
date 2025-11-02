@@ -35,6 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 import modelo.CanceleriaFijaDetalle;
 import modelo.CatalogoTrabajo;
 import modelo.Cliente;
@@ -65,16 +66,16 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
     private List<Material> materialesDisponibles;
 
+    private DefaultTableModel modeloTablaDetalles;
+    private List<Object> detallesEnMemoria = new ArrayList<>();
+
     public frmCrearCotizacion() {
         initComponents();
         cargarVendedorPorDefecto();
         panelDetallesDinamicos = new JPanel();
         panelDetallesDinamicos.setLayout(new BoxLayout(panelDetallesDinamicos, BoxLayout.Y_AXIS));
-        scrollDetallesDinamicos.setViewportView(panelDetallesDinamicos);
-        scrollDetallesDinamicos.setPreferredSize(new Dimension(900, 250));
         cargarClientes();
         cargarCatalogo();
-        cargarTiposTrabajo();
         cargarMaterialesDisponibles();
         txtBuscarCliente.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
@@ -83,6 +84,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             }
         });
 
+        inicializarLogica();
     }
 
     private void cargarCatalogo() {
@@ -98,14 +100,12 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private void cargarVendedorPorDefecto() {
         try (Connection conexion = Conexion.getConnection()) {
             VendedorDAO vendedorDAO = new VendedorDAO(conexion);
-            // Simplemente obtenemos el primer vendedor de la lista
             List<Vendedor> todos = vendedorDAO.obtenerTodos();
             if (todos != null && !todos.isEmpty()) {
-                vendedorPorDefecto = todos.get(0); // Guarda el primer vendedor encontrado
+                vendedorPorDefecto = todos.get(0); 
             } else {
-                // Esto es crucial. Si no hay vendedores, el programa no podrá guardar.
                 JOptionPane.showMessageDialog(this, "Error crítico: No hay vendedores registrados en la base de datos.", "Error de Configuración", JOptionPane.ERROR_MESSAGE);
-                btnGuardar.setEnabled(false); // Deshabilita el botón de guardar
+                btnGuardar.setEnabled(false);
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar el vendedor por defecto: " + ex.getMessage());
@@ -127,17 +127,15 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         iconoTitulo = new javax.swing.JLabel();
         pnlNuevaCotizacion = new javax.swing.JPanel();
         tituloNuevaCotizacion = new javax.swing.JLabel();
-        scrollDetallesDinamicos = new javax.swing.JScrollPane();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblDetallesAgregados = new javax.swing.JTable();
         btnEliminarCotizacion = new javax.swing.JButton();
-        btnNuevaCotizacion1 = new javax.swing.JButton();
+        btnNuevaCotizacion = new javax.swing.JButton();
         btnEditarCotizacion = new javax.swing.JButton();
-        cbxTipoTrabajo1 = new javax.swing.JComboBox<>();
         panelSubtitulo = new javax.swing.JPanel();
         ConsultarCotizacion = new javax.swing.JLabel();
         iconoCrear = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnVolver = new javax.swing.JButton();
         panelBuscarCliente = new javax.swing.JPanel();
         Buscar = new javax.swing.JLabel();
         txtBuscarCliente = new javax.swing.JTextField();
@@ -226,10 +224,10 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             }
         });
 
-        btnNuevaCotizacion1.setText("Nueva");
-        btnNuevaCotizacion1.addActionListener(new java.awt.event.ActionListener() {
+        btnNuevaCotizacion.setText("Nueva");
+        btnNuevaCotizacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevaCotizacion1ActionPerformed(evt);
+                btnNuevaCotizacionActionPerformed(evt);
             }
         });
 
@@ -240,8 +238,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             }
         });
 
-        cbxTipoTrabajo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         javax.swing.GroupLayout pnlNuevaCotizacionLayout = new javax.swing.GroupLayout(pnlNuevaCotizacion);
         pnlNuevaCotizacion.setLayout(pnlNuevaCotizacionLayout);
         pnlNuevaCotizacionLayout.setHorizontalGroup(
@@ -250,16 +246,12 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addGap(47, 47, 47)
                 .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
-                        .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(scrollDetallesDinamicos)
-                    .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
                         .addComponent(jScrollPane3)
                         .addContainerGap())
                     .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
                         .addComponent(tituloNuevaCotizacion)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnNuevaCotizacion1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 536, Short.MAX_VALUE)
+                        .addComponent(btnNuevaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -272,16 +264,12 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEliminarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNuevaCotizacion1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tituloNuevaCotizacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(scrollDetallesDinamicos, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(93, Short.MAX_VALUE))
         );
 
         panelSubtitulo.setBackground(new java.awt.Color(0, 81, 168));
@@ -292,10 +280,10 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
         iconoCrear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-24.png"))); // NOI18N
 
-        jButton1.setText("Volver");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnVolver.setText("Volver");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnVolverActionPerformed(evt);
             }
         });
 
@@ -309,7 +297,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ConsultarCotizacion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnVolver)
                 .addContainerGap())
         );
         panelSubtituloLayout.setVerticalGroup(
@@ -320,7 +308,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     .addComponent(iconoCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ConsultarCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
+                        .addComponent(btnVolver)))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
@@ -360,7 +348,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                         .addComponent(btnCrearCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(Buscar)
                     .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         panelBuscarClienteLayout.setVerticalGroup(
             panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -660,12 +648,12 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         this.dispose();
         InicioAdministrarCotizaciones ini = new InicioAdministrarCotizaciones();
 
         ini.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnVolverActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
 
@@ -678,7 +666,11 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             return;
         }
 
-        // Obtiene el cliente seleccionado del JComboBox
+        if (detallesEnMemoria.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe agregar al menos un detalle a la cotización.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
 
         try {
@@ -687,29 +679,20 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
             BigDecimal subtotal = BigDecimal.ZERO;
 
-            for (Component comp : panelDetallesDinamicos.getComponents()) {
-                if (comp instanceof PanelExpandible) {
-                    JPanel detallePanel = ((PanelExpandible) comp).getContenido(); // Asumiendo que tienes el getter
+            for (Object detalleObj : detallesEnMemoria) { 
 
-                    if (detallePanel instanceof PanelDetalleVentana) {
-                        VentanaDetalle detalle = ((PanelDetalleVentana) detallePanel).getDetalle();
-                        detallesVentana.add(detalle);
-                        subtotal = subtotal.add(detalle.getSubtotalLinea());
-                    } else if (detallePanel instanceof PanelDetallePuertaAbatible) {
-                        PuertaAbatibleDetalle detalle = ((PanelDetallePuertaAbatible) detallePanel).getDetalle();
-                        detallesPuerta.add(detalle);
-                        subtotal = subtotal.add(detalle.getSubtotalLinea());
-                    } else if (detallePanel instanceof PanelDetalleCanceleria) {
-                        CanceleriaFijaDetalle detalle = ((PanelDetalleCanceleria) detallePanel).getDetalle();
-                        detallesCanceleria.add(detalle);
-                        subtotal = subtotal.add(detalle.getSubtotalLinea());
-                    }
+                if (detalleObj instanceof VentanaDetalle vd) {
+                    detallesVentana.add(vd);
+                    subtotal = subtotal.add(vd.getSubtotalLinea()); 
+
+                } else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
+                    detallesPuerta.add(pd);
+                    subtotal = subtotal.add(pd.getSubtotalLinea());
+
+                } else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
+                    detallesCanceleria.add(cd);
+                    subtotal = subtotal.add(cd.getSubtotalLinea());
                 }
-            }
-
-            if (subtotal.compareTo(BigDecimal.ZERO) == 0) {
-                JOptionPane.showMessageDialog(this, "Debe agregar al menos un producto a la cotización.", "Error de validación", JOptionPane.ERROR_MESSAGE);
-                return;
             }
 
             BigDecimal descuentoMonto = BigDecimal.ZERO;
@@ -717,21 +700,26 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 BigDecimal descuentoPorcentaje = new BigDecimal(txtDescuento.getText().trim());
                 descuentoMonto = subtotal.multiply(descuentoPorcentaje.divide(new BigDecimal("100")));
             }
-
+            
             Cotizacion cotizacion = new Cotizacion();
             cotizacion.setCliente(clienteSeleccionado);
-            cotizacion.setVendedor(vendedorPorDefecto); // ¡Aquí se usa el vendedor por defecto!
+            cotizacion.setVendedor(vendedorPorDefecto);
             cotizacion.setProyecto(null);
             cotizacion.setFecha(new Date());
             cotizacion.setEstado("Pendiente");
             cotizacion.setSubtotal(subtotal);
-            cotizacion.setDescuentoMonto(descuentoMonto);
-
+            cotizacion.setDescuentoMonto(descuentoMonto); 
+            
             CotizacionBO bo = new CotizacionBO();
-            boolean exito = bo.crearCotizacionCompleta(cotizacion, detallesVentana, detallesCanceleria, detallesPuerta);
+            boolean exito = bo.crearCotizacionCompleta(
+                    cotizacion,
+                    detallesVentana,
+                    detallesCanceleria, 
+                    detallesPuerta
+            );
 
             if (exito) {
-                JOptionPane.showMessageDialog(this, "Cotización guardada con éxito. Folio: " + cotizacion.getIdCotizacion(), "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Cotización guardada con éxito. Num. Cotización: " + cotizacion.getIdCotizacion(), "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
                 new InicioAdministrarCotizaciones().setVisible(true);
             } else {
@@ -748,487 +736,193 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
     private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
         int opcion = JOptionPane.showConfirmDialog(
-            this,
-            "¿Está seguro de descartar la cotización?",
-            "Confirmar Cancelación",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.WARNING_MESSAGE
+                this,
+                "¿Está seguro de descartar la cotización?",
+                "Confirmar Cancelación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
         );
 
         if (opcion == JOptionPane.YES_OPTION) {
-            // Abrir pantalla de inicio
             InicioAdministrarCotizaciones inicio = new InicioAdministrarCotizaciones();
             inicio.setVisible(true);
-            // Cerrar la ventana de cotización actual
             this.dispose();
         }
     }//GEN-LAST:event_btnDescartarActionPerformed
 
+    /**
+     * Configura la tabla, los listeners y el estado inicial de los botones.
+     */
+    private void inicializarLogica() {
+        this.modeloTablaDetalles = (DefaultTableModel) tblDetallesAgregados.getModel();
+
+        modeloTablaDetalles.setRowCount(0);
+        
+        tblDetallesAgregados.getSelectionModel().addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    actualizarEstadoBotones();
+                }
+            }
+        });
+        actualizarEstadoBotones();
+    }
+
+    /**
+     * Habilita o deshabilita los botones editar y eliminar basado en si la
+     * tabla tiene filas.
+     */
+    private void actualizarEstadoBotones() {
+        boolean filaSeleccionada = tblDetallesAgregados.getSelectedRow() != -1;
+
+        btnEditarCotizacion.setEnabled(filaSeleccionada);
+        btnEliminarCotizacion.setEnabled(filaSeleccionada);
+    }
+
+    private void actualizarTablaDetalles() {
+        modeloTablaDetalles.setRowCount(0); 
+
+        for (Object detalle : detallesEnMemoria) {
+
+            if (detalle instanceof VentanaDetalle vd) {
+                modeloTablaDetalles.addRow(new Object[]{
+                    "Ventana", 
+                    vd.getCantidad(),
+                    vd.getDescripcion(),
+                    vd.getMedidaHorizontal() + " x " + vd.getMedidaVertical(),
+                    vd.getSubtotalLinea()
+                });
+            } 
+            else if (detalle instanceof PuertaAbatibleDetalle pd) {
+                modeloTablaDetalles.addRow(new Object[]{
+                    "Puerta", 
+                    pd.getCantidad(),
+                    pd.getDescripcion(),
+                    pd.getMedidaHorizontal() + " x " + pd.getMedidaVertical(),
+                    pd.getSubtotalLinea()
+                });
+            } 
+            else if (detalle instanceof CanceleriaFijaDetalle cd) {
+                modeloTablaDetalles.addRow(new Object[]{
+                    "Cancelería",
+                    cd.getCantidad(),
+                    cd.getDescripcion(),
+                    cd.getMedidaHorizontal() + " x " + cd.getMedidaVertical(),
+                    cd.getSubtotalLinea()
+                });
+            }
+
+        }
+
+        actualizarEstadoBotones();
+    }
+
+    /**
+     * (PENDIENTE) Recorre la lista 'detallesEnMemoria' y actualiza los JLabels
+     * de totales.
+     */
+    private void recalcularTotales() {
+        // pendiente 
+        // Aquí iría la lógica para sumar los subtotales de 'detallesEnMemoria'
+        // y actualizar los JLabels (lblSubtotal, lblTotal, etc.)
+    }
+
+    /**
+     * Filtra la lista de materiales para obtener solo los vidrios.
+     */
+    private List<Material> getMaterialesVidrio() {
+        List<Material> vidrios = new ArrayList<>();
+        if (this.materialesDisponibles != null) {
+            for (Material m : this.materialesDisponibles) {
+                if (m.getTipo() == Material.TipoMaterial.Vidrio) {
+                    vidrios.add(m);
+                }
+            }
+        }
+        return vidrios;
+    }
+
     private void btnEliminarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCotizacionActionPerformed
-        // TODO add your handling code here:
+        int filaSeleccionada = tblDetallesAgregados.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una corización para eliminarla.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "¿Seguro que deseas eliminar esta cotización de la lista?",
+                "Confirmar", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            detallesEnMemoria.remove(filaSeleccionada);
+
+            actualizarTablaDetalles();
+            recalcularTotales();
+        }
     }//GEN-LAST:event_btnEliminarCotizacionActionPerformed
 
-    private void btnNuevaCotizacion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCotizacion1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnNuevaCotizacion1ActionPerformed
+    private void btnNuevaCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCotizacionActionPerformed
+
+        List<Material> materiales = this.materialesDisponibles;
+
+        if (materiales == null || materiales.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Error: No se pudieron cargar los materiales. Revisa la base de datos.");
+            return;
+        }
+        DetalleEditorDialog dialog = new DetalleEditorDialog(this, true, materiales);
+        dialog.setVisible(true);
+
+        Object nuevoDetalle = dialog.getDetalleResultado();
+
+        if (nuevoDetalle != null) {
+            detallesEnMemoria.add(nuevoDetalle);
+            actualizarTablaDetalles();
+            recalcularTotales();
+        }
+    }//GEN-LAST:event_btnNuevaCotizacionActionPerformed
 
     private void btnEditarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCotizacionActionPerformed
-        // TODO add your handling code here:
+        int filaSeleccionada = tblDetallesAgregados.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una cotización de la tabla para editar.");
+            return;
+        }
+
+        Object detalleAEditar = detallesEnMemoria.get(filaSeleccionada);
+        List<Material> materiales = materialesDisponibles;
+
+        DetalleEditorDialog dialog = null;
+
+        if (detalleAEditar instanceof VentanaDetalle vd) {
+            dialog = new DetalleEditorDialog(this, true, getMaterialesVidrio(), vd);
+
+        } else if (detalleAEditar instanceof PuertaAbatibleDetalle pd) {
+            dialog = new DetalleEditorDialog(this, true, materiales, pd);
+
+        } else if (detalleAEditar instanceof CanceleriaFijaDetalle cd) {
+            dialog = new DetalleEditorDialog(this, true, materiales, cd);
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Error desconocido en la corización.");
+            return;
+        }
+
+        dialog.setVisible(true);
+        Object detalleResultado = dialog.getDetalleResultado();
+
+        if (detalleResultado != null) {
+            detallesEnMemoria.set(filaSeleccionada, detalleResultado);
+            actualizarTablaDetalles();
+            recalcularTotales();
+        }
     }//GEN-LAST:event_btnEditarCotizacionActionPerformed
-
-    public class PanelDetallePuertaAbatible extends JPanel {
-
-        private int idTipoTrabajo;
-
-        private JTextField txtMedidaH = new JTextField(8);
-        private JTextField txtMedidaV = new JTextField(8);
-        private JCheckBox ckMosquitero = new JCheckBox();
-        private JTextField txtCantidad = new JTextField(8);
-        private JTextField txtTipoCristal = new JTextField(12);
-        private JTextField txtNoHojas = new JTextField(8);
-        private JTextField txtPrecioUnidad = new JTextField(8);
-        private JTextField txtSubtotal = new JTextField(8);
-        private JTextField txtDescripcion = new JTextField(20);
-        private JComboBox<TipoPuerta> cbxTipoPuerta = new JComboBox<>(TipoPuerta.values());
-        private JCheckBox ckDuela = new JCheckBox();
-        private JTextField txtTipoDuela = new JTextField(10);
-        private JTextField txtMedDuela = new JTextField(8);
-        private JCheckBox ckAdaptador = new JCheckBox();
-        private JTextField txtTipoAdaptador = new JTextField(10);
-        private JCheckBox ckJunquillo = new JCheckBox();
-        private JTextField txtTipoJunquillo = new JTextField(10);
-        private JCheckBox ckCanal = new JCheckBox();
-        private JTextField txtTipoCanal = new JTextField(10);
-        private JCheckBox ckPivote = new JCheckBox();
-        private JTextField txtTipoPivote = new JTextField(10);
-        private JTextField txtCantidadPivote = new JTextField(5);
-        private JCheckBox ckJaladera = new JCheckBox();
-        private JTextField txtTipoJaladera = new JTextField(10);
-        private JTextField txtCantidadJaladera = new JTextField(5);
-        private JCheckBox ckBarra = new JCheckBox();
-        private JTextField txtTipoBarra = new JTextField(10);
-        private JButton btnQuitar = new JButton("Quitar");
-        private JPanel panelMateriales;
-        private DefaultListModel<String> modeloMateriales = new DefaultListModel<>();
-        private Map<Integer, BigDecimal> materialesSeleccionados = new HashMap<>();
-
-        public PanelDetallePuertaAbatible(int idTrabajo, List<Material> materialesDisponibles, Runnable onRemove) {
-            this.idTipoTrabajo = idTrabajo;
-            setLayout(new BorderLayout());
-
-            JPanel panelCampos = new JPanel(new GridLayout(0, 2, 5, 5));
-            panelCampos.add(new JLabel("Medida Horizontal:"));
-            panelCampos.add(txtMedidaH);
-            panelCampos.add(new JLabel("Medida Vertical:"));
-            panelCampos.add(txtMedidaV);
-            panelCampos.add(new JLabel("Mosquitero:"));
-            panelCampos.add(ckMosquitero);
-            panelCampos.add(new JLabel("Cantidad:"));
-            panelCampos.add(txtCantidad);
-            panelCampos.add(new JLabel("Tipo Cristal:"));
-            panelCampos.add(txtTipoCristal);
-            panelCampos.add(new JLabel("No. hojas:"));
-            panelCampos.add(txtNoHojas);
-            panelCampos.add(new JLabel("Precio unidad:"));
-            panelCampos.add(txtPrecioUnidad);
-            panelCampos.add(new JLabel("Subtotal línea:"));
-            panelCampos.add(txtSubtotal);
-            panelCampos.add(new JLabel("Descripción:"));
-            panelCampos.add(txtDescripcion);
-            panelCampos.add(new JLabel("Tipo Puerta:"));
-            panelCampos.add(cbxTipoPuerta);
-            panelCampos.add(new JLabel("Duela:"));
-            panelCampos.add(ckDuela);
-            panelCampos.add(new JLabel("Tipo duela:"));
-            panelCampos.add(txtTipoDuela);
-            panelCampos.add(new JLabel("Medida duela:"));
-            panelCampos.add(txtMedDuela);
-            panelCampos.add(new JLabel("Adaptador:"));
-            panelCampos.add(ckAdaptador);
-            panelCampos.add(new JLabel("Tipo adaptador:"));
-            panelCampos.add(txtTipoAdaptador);
-            panelCampos.add(new JLabel("Junquillo:"));
-            panelCampos.add(ckJunquillo);
-            panelCampos.add(new JLabel("Tipo junquillo:"));
-            panelCampos.add(txtTipoJunquillo);
-            panelCampos.add(new JLabel("Canal:"));
-            panelCampos.add(ckCanal);
-            panelCampos.add(new JLabel("Tipo canal:"));
-            panelCampos.add(txtTipoCanal);
-            panelCampos.add(new JLabel("Pivote:"));
-            panelCampos.add(ckPivote);
-            panelCampos.add(new JLabel("Tipo pivote:"));
-            panelCampos.add(txtTipoPivote);
-            panelCampos.add(new JLabel("Cantidad pivote:"));
-            panelCampos.add(txtCantidadPivote);
-            panelCampos.add(new JLabel("Jaladera:"));
-            panelCampos.add(ckJaladera);
-            panelCampos.add(new JLabel("Tipo jaladera:"));
-            panelCampos.add(txtTipoJaladera);
-            panelCampos.add(new JLabel("Cantidad jaladera:"));
-            panelCampos.add(txtCantidadJaladera);
-            panelCampos.add(new JLabel("Barra:"));
-            panelCampos.add(ckBarra);
-            panelCampos.add(new JLabel("Tipo barra:"));
-            panelCampos.add(txtTipoBarra);
-
-            JScrollPane scrollCampos = new JScrollPane(panelCampos);
-            scrollCampos.setPreferredSize(new Dimension(450, 150));
-            add(scrollCampos, BorderLayout.NORTH);
-
-            panelMateriales = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            panelMateriales.setBorder(BorderFactory.createTitledBorder("Materiales"));
-            JComboBox<Material> cmbMaterial = new JComboBox<>(materialesDisponibles.toArray(new Material[0]));
-            JTextField txtCantidadMaterial = new JTextField(5);
-            JButton btnAgregar = new JButton("Agregar");
-            JList<String> listaMateriales = new JList<>(modeloMateriales);
-            btnAgregar.addActionListener(e -> {
-                Material m = (Material) cmbMaterial.getSelectedItem();
-                BigDecimal cantidad = new BigDecimal(txtCantidadMaterial.getText());
-                modeloMateriales.addElement(m.getDescripcion() + " - " + cantidad);
-                materialesSeleccionados.put(m.getIdMaterial(), cantidad);
-                txtCantidadMaterial.setText("");
-            });
-            panelMateriales.add(new JLabel("Material:"));
-            panelMateriales.add(cmbMaterial);
-            panelMateriales.add(new JLabel("Cantidad:"));
-            panelMateriales.add(txtCantidadMaterial);
-            panelMateriales.add(btnAgregar);
-            panelMateriales.add(new JScrollPane(listaMateriales));
-            add(panelMateriales, BorderLayout.CENTER);
-
-            btnQuitar.addActionListener(e -> {
-                Container parent = getParent();
-                if (parent != null) {
-                    parent.remove(this);
-                    parent.revalidate();
-                    parent.repaint();
-                    onRemove.run();
-                }
-            });
-            add(btnQuitar, BorderLayout.SOUTH);
-        }
-
-        // === SE MODIFICA EL MÉTODO getDetalle() ===
-        public PuertaAbatibleDetalle getDetalle() {
-            PuertaAbatibleDetalle detalle = new PuertaAbatibleDetalle();
-            detalle.setMedidaHorizontal(new BigDecimal(txtMedidaH.getText()));
-            detalle.setMedidaVertical(new BigDecimal(txtMedidaV.getText()));
-            detalle.setMosquitero(ckMosquitero.isSelected());
-            detalle.setCantidad(Integer.parseInt(txtCantidad.getText()));
-            detalle.setTipoCristal(txtTipoCristal.getText());
-            detalle.setNoHojas(Integer.parseInt(txtNoHojas.getText()));
-            detalle.setPrecioSoloUnaUnidadCalculado(new BigDecimal(txtPrecioUnidad.getText()));
-            detalle.setSubtotalLinea(new BigDecimal(txtSubtotal.getText()));
-            detalle.setDescripcion(txtDescripcion.getText());
-            TipoPuerta tipoPuerta = (TipoPuerta) cbxTipoPuerta.getSelectedItem();
-            detalle.setTipoPuerta(tipoPuerta);
-            detalle.setDuela(ckDuela.isSelected());
-            detalle.setTipoDuela(txtTipoDuela.getText());
-            detalle.setMedidaDuela(new BigDecimal(txtMedDuela.getText()));
-            detalle.setAdaptador(ckAdaptador.isSelected());
-            detalle.setTipoAdaptador(txtTipoAdaptador.getText());
-            detalle.setJunquillo(ckJunquillo.isSelected());
-            detalle.setTipoJunquillo(txtTipoJunquillo.getText());
-            detalle.setCanal(ckCanal.isSelected());
-            detalle.setTipoCanal(txtTipoCanal.getText());
-            detalle.setPivote(ckPivote.isSelected());
-            detalle.setTipoPivote(txtTipoPivote.getText());
-            detalle.setCantidadPivote(Integer.parseInt(txtCantidadPivote.getText()));
-            detalle.setJaladera(ckJaladera.isSelected());
-            detalle.setTipoJaladera(txtTipoJaladera.getText());
-            detalle.setCantidadJaladera(Integer.parseInt(txtCantidadJaladera.getText()));
-            detalle.setBarra(ckBarra.isSelected());
-            detalle.setTipoBarra(txtTipoBarra.getText());
-
-            CatalogoTrabajo c = new CatalogoTrabajo();
-            c.setIdCatalogo(this.idTipoTrabajo);
-            detalle.setTipoTrabajo(c);
-
-            return detalle;
-        }
-
-        public Map<Integer, BigDecimal> getMaterialesSeleccionados() {
-            return materialesSeleccionados;
-        }
-    }
-
-    public class PanelDetalleVentana extends JPanel {
-
-        private int idTipoTrabajo;
-
-        private JTextField txtMedidaH = new JTextField(8);
-        private JTextField txtMedidaV = new JTextField(8);
-        private JTextField txtCantidad = new JTextField(5);
-        private JTextField txtTipoCristal = new JTextField(12);
-        private JTextField txtNoHojas = new JTextField(5);
-        private JTextField txtPrecioUnidad = new JTextField(8);
-        private JTextField txtSubtotal = new JTextField(8);
-        private JTextField txtDescripcion = new JTextField(15);
-        private JComboBox<TipoVentana> cmbTipoVentana = new JComboBox<>(TipoVentana.values());
-        private JCheckBox ckMosquitero = new JCheckBox();
-        private JCheckBox ckArco = new JCheckBox();
-        private JTextField txtTipoArco = new JTextField(10);
-        private JTextField txtMedidaArco = new JTextField(8);
-        private JTextField txtTipoCanalillo = new JTextField(12);
-        private JTextField txtMedidaCanalillo = new JTextField(8);
-
-        public PanelDetalleVentana(int idTrabajo, List<Material> materialesDisponibles, Runnable onRemove) {
-            this.idTipoTrabajo = idTrabajo; // Se guarda el ID del trabajo
-            setLayout(new BorderLayout());
-
-            JPanel panelCampos = new JPanel(new GridLayout(0, 2, 6, 4));
-            panelCampos.add(new JLabel("Medida horizontal:"));
-            panelCampos.add(txtMedidaH);
-            panelCampos.add(new JLabel("Medida vertical:"));
-            panelCampos.add(txtMedidaV);
-            panelCampos.add(new JLabel("Cantidad:"));
-            panelCampos.add(txtCantidad);
-            panelCampos.add(new JLabel("Tipo cristal:"));
-            panelCampos.add(txtTipoCristal);
-            panelCampos.add(new JLabel("No. hojas:"));
-            panelCampos.add(txtNoHojas);
-            panelCampos.add(new JLabel("Precio unidad:"));
-            panelCampos.add(txtPrecioUnidad);
-            panelCampos.add(new JLabel("Subtotal línea:"));
-            panelCampos.add(txtSubtotal);
-            panelCampos.add(new JLabel("Descripción:"));
-            panelCampos.add(txtDescripcion);
-            panelCampos.add(new JLabel("Tipo ventana:"));
-            panelCampos.add(cmbTipoVentana);
-            panelCampos.add(new JLabel("Mosquitero:"));
-            panelCampos.add(ckMosquitero);
-            panelCampos.add(new JLabel("Arco:"));
-            panelCampos.add(ckArco);
-            panelCampos.add(new JLabel("Tipo arco:"));
-            panelCampos.add(txtTipoArco);
-            panelCampos.add(new JLabel("Medida arco:"));
-            panelCampos.add(txtMedidaArco);
-            panelCampos.add(new JLabel("Tipo canalillo:"));
-            panelCampos.add(txtTipoCanalillo);
-            panelCampos.add(new JLabel("Medida canalillo:"));
-            panelCampos.add(txtMedidaCanalillo);
-
-            JScrollPane scrollCampos = new JScrollPane(panelCampos);
-            scrollCampos.setPreferredSize(new Dimension(500, 200));
-            add(scrollCampos, BorderLayout.CENTER);
-
-            JButton btnQuitar = new JButton("Quitar");
-            btnQuitar.addActionListener(e -> {
-                Container parent = getParent();
-                if (parent != null) {
-                    parent.remove(this);
-                    parent.revalidate();
-                    parent.repaint();
-                    onRemove.run();
-                }
-            });
-            add(btnQuitar, BorderLayout.SOUTH);
-        }
-
-        public VentanaDetalle getDetalle() {
-            VentanaDetalle d = new VentanaDetalle();
-            d.setMedidaHorizontal(new BigDecimal(txtMedidaH.getText()));
-            d.setMedidaVertical(new BigDecimal(txtMedidaV.getText()));
-            d.setCantidad(Integer.parseInt(txtCantidad.getText()));
-            d.setTipoCristal(txtTipoCristal.getText());
-            d.setNoHojas(Integer.parseInt(txtNoHojas.getText()));
-            d.setPrecioSoloUnaUnidadCalculado(new BigDecimal(txtPrecioUnidad.getText()));
-            d.setSubtotalLinea(new BigDecimal(txtSubtotal.getText()));
-            d.setDescripcion(txtDescripcion.getText());
-            d.setTipoVentana((TipoVentana) cmbTipoVentana.getSelectedItem());
-            d.setMosquitero(ckMosquitero.isSelected());
-            d.setArco(ckArco.isSelected());
-            d.setTipoArco(txtTipoArco.getText());
-            d.setMedidaArco(new BigDecimal(txtMedidaArco.getText()));
-            d.setTipoCanalillo(txtTipoCanalillo.getText());
-            d.setMedidaCanalillo(new BigDecimal(txtMedidaCanalillo.getText()));
-
-            // Se crea un objeto CatalogoTrabajo solo con el ID para la relación
-            CatalogoTrabajo c = new CatalogoTrabajo();
-            c.setIdCatalogo(this.idTipoTrabajo);
-            d.setTipoTrabajo(c); // Asume que VentanaDetalle tiene un setTipoTrabajo()
-
-            return d;
-        }
-    }
-
-    public class PanelDetalleCanceleria extends JPanel {
-
-        private int idTipoTrabajo;
-
-        private JTextField txtMedidaH = new JTextField(8);
-        private JTextField txtMedidaV = new JTextField(8);
-        private JTextField txtCantidad = new JTextField(5);
-        private JTextField txtTipoCristal = new JTextField(12);
-        private JTextField txtNoHojas = new JTextField(5);
-        private JTextField txtPrecioUnidad = new JTextField(8);
-        private JTextField txtSubtotal = new JTextField(8);
-        private JTextField txtDescripcion = new JTextField(15);
-        private JComboBox<TipoCanceleria> cmbTipoCanceleria = new JComboBox<>(TipoCanceleria.values());
-        private JCheckBox ckBolsa = new JCheckBox();
-        private JTextField txtNumFijosVerticales = new JTextField(5);
-        private JTextField txtNumFijosHorizontales = new JTextField(5);
-        private JTextField txtTipoTapa = new JTextField(10);
-        private JTextField txtCantidadTapa = new JTextField(5);
-        private JCheckBox ckZoclo = new JCheckBox();
-        private JTextField txtTipoZoclo = new JTextField(10);
-        private JCheckBox ckJunquillo = new JCheckBox();
-        private JTextField txtTipoJunquillo = new JTextField(10);
-        private JCheckBox ckArco = new JCheckBox();
-        private JTextField txtTipoArco = new JTextField(10);
-        private JTextField txtMedidaArco = new JTextField(8);
-        private JCheckBox ckCanalillo = new JCheckBox();
-        private JTextField txtTipoCanalillo = new JTextField(10);
-        private JTextField txtMedidaCanalillo = new JTextField(8);
-
-        public PanelDetalleCanceleria(int idTrabajo, List<Material> materialesDisponibles, Runnable onRemove) {
-            this.idTipoTrabajo = idTrabajo;
-            setLayout(new BorderLayout());
-
-            JPanel panelCampos = new JPanel(new GridLayout(0, 2, 6, 4));
-            panelCampos.add(new JLabel("Medida horizontal:"));
-            panelCampos.add(txtMedidaH);
-            panelCampos.add(new JLabel("Medida vertical:"));
-            panelCampos.add(txtMedidaV);
-            panelCampos.add(new JLabel("Cantidad:"));
-            panelCampos.add(txtCantidad);
-            panelCampos.add(new JLabel("Tipo cristal:"));
-            panelCampos.add(txtTipoCristal);
-            panelCampos.add(new JLabel("No. hojas:"));
-            panelCampos.add(txtNoHojas);
-            panelCampos.add(new JLabel("Precio unidad:"));
-            panelCampos.add(txtPrecioUnidad);
-            panelCampos.add(new JLabel("Subtotal línea:"));
-            panelCampos.add(txtSubtotal);
-            panelCampos.add(new JLabel("Descripción:"));
-            panelCampos.add(txtDescripcion);
-            panelCampos.add(new JLabel("Tipo cancelería:"));
-            panelCampos.add(cmbTipoCanceleria);
-            panelCampos.add(new JLabel("Bolsa:"));
-            panelCampos.add(ckBolsa);
-            panelCampos.add(new JLabel("Fijos verticales:"));
-            panelCampos.add(txtNumFijosVerticales);
-            panelCampos.add(new JLabel("Fijos horizontales:"));
-            panelCampos.add(txtNumFijosHorizontales);
-            panelCampos.add(new JLabel("Tipo tapa:"));
-            panelCampos.add(txtTipoTapa);
-            panelCampos.add(new JLabel("Cantidad tapa:"));
-            panelCampos.add(txtCantidadTapa);
-            panelCampos.add(new JLabel("Zoclo:"));
-            panelCampos.add(ckZoclo);
-            panelCampos.add(new JLabel("Tipo zoclo:"));
-            panelCampos.add(txtTipoZoclo);
-            panelCampos.add(new JLabel("Junquillo:"));
-            panelCampos.add(ckJunquillo);
-            panelCampos.add(new JLabel("Tipo junquillo:"));
-            panelCampos.add(txtTipoJunquillo);
-            panelCampos.add(new JLabel("Arco:"));
-            panelCampos.add(ckArco);
-            panelCampos.add(new JLabel("Tipo arco:"));
-            panelCampos.add(txtTipoArco);
-            panelCampos.add(new JLabel("Medida arco:"));
-            panelCampos.add(txtMedidaArco);
-            panelCampos.add(new JLabel("Canalillo:"));
-            panelCampos.add(ckCanalillo);
-            panelCampos.add(new JLabel("Tipo canalillo:"));
-            panelCampos.add(txtTipoCanalillo);
-            panelCampos.add(new JLabel("Medida canalillo:"));
-            panelCampos.add(txtMedidaCanalillo);
-
-            JScrollPane scrollCampos = new JScrollPane(panelCampos);
-            scrollCampos.setPreferredSize(new Dimension(500, 250));
-            add(scrollCampos, BorderLayout.CENTER);
-
-            JButton btnQuitar = new JButton("Quitar");
-            btnQuitar.addActionListener(e -> {
-                Container parent = getParent();
-                if (parent != null) {
-                    parent.remove(this);
-                    parent.revalidate();
-                    parent.repaint();
-                    onRemove.run();
-                }
-            });
-            add(btnQuitar, BorderLayout.SOUTH);
-        }
-
-        // === SE MODIFICA EL MÉTODO getDetalle() ===
-        public CanceleriaFijaDetalle getDetalle() {
-            CanceleriaFijaDetalle d = new CanceleriaFijaDetalle();
-            d.setMedidaHorizontal(new BigDecimal(txtMedidaH.getText()));
-            d.setMedidaVertical(new BigDecimal(txtMedidaV.getText()));
-            d.setCantidad(Integer.parseInt(txtCantidad.getText()));
-            d.setTipoCristal(txtTipoCristal.getText());
-            d.setNoHojas(Integer.parseInt(txtNoHojas.getText()));
-            d.setPrecioSoloUnaUnidadCalculado(new BigDecimal(txtPrecioUnidad.getText()));
-            d.setSubtotalLinea(new BigDecimal(txtSubtotal.getText()));
-            d.setDescripcion(txtDescripcion.getText());
-            d.setTipoCanceleria((TipoCanceleria) cmbTipoCanceleria.getSelectedItem());
-            d.setBolsa(ckBolsa.isSelected());
-            d.setNumFijosVerticales(Integer.parseInt(txtNumFijosVerticales.getText()));
-            d.setNumFijosHorizontales(Integer.parseInt(txtNumFijosHorizontales.getText()));
-            d.setTipoTapa(txtTipoTapa.getText());
-            d.setCantidadTapa(Integer.parseInt(txtCantidadTapa.getText()));
-            d.setZoclo(ckZoclo.isSelected());
-            d.setTipoZoclo(txtTipoZoclo.getText());
-            d.setJunquillo(ckJunquillo.isSelected());
-            d.setTipoJunquillo(txtTipoJunquillo.getText());
-            d.setArco(ckArco.isSelected());
-            d.setTipoArco(txtTipoArco.getText());
-            d.setMedidaArco(new BigDecimal(txtMedidaArco.getText()));
-            d.setCanalillo(ckCanalillo.isSelected());
-            d.setTipoCanalillo(txtTipoCanalillo.getText());
-            d.setMedidaCanalillo(new BigDecimal(txtMedidaCanalillo.getText()));
-
-            // Se crea un objeto CatalogoTrabajo solo con el ID para la relación
-            CatalogoTrabajo c = new CatalogoTrabajo();
-            c.setIdCatalogo(this.idTipoTrabajo);
-            d.setTipoTrabajo(c); // Asume que CanceleriaFijaDetalle tiene un setTipoTrabajo()
-
-            return d;
-        }
-    }
 
     private void cargarMaterialesDisponibles() {
         materialesDisponibles = new ArrayList<>();
         materialesDisponibles.add(new Material(1, "Vidrio", new BigDecimal("150.5"), 50, Material.TipoMaterial.Vidrio));
         materialesDisponibles.add(new Material(2, "Aluminio", new BigDecimal("300.0"), 30, Material.TipoMaterial.Aluminio));
         materialesDisponibles.add(new Material(3, "Accesorio", new BigDecimal("80.0"), 100, Material.TipoMaterial.Accesorio));
-    }
-
-    public class PanelExpandible extends JPanel {
-
-        private final JPanel contenido;
-        private final JButton btnToggle;
-        private boolean estaVisible = true;
-
-        public PanelExpandible(String titulo, JPanel contenido) {
-            this.contenido = contenido;
-            setLayout(new BorderLayout());
-
-            btnToggle = new JButton("▼ " + titulo);
-            btnToggle.setFocusPainted(false);
-            btnToggle.setBorderPainted(false);
-            btnToggle.setContentAreaFilled(false);
-            btnToggle.setHorizontalAlignment(SwingConstants.LEFT);
-            btnToggle.addActionListener(e -> toggleContenido());
-
-            add(btnToggle, BorderLayout.NORTH);
-            add(contenido, BorderLayout.CENTER);
-        }
-
-        private void toggleContenido() {
-            estaVisible = !estaVisible;
-            contenido.setVisible(estaVisible);
-            btnToggle.setText((estaVisible ? "▼ " : "► ") + btnToggle.getText().substring(2));
-            revalidate();
-            repaint();
-        }
-
-        public JPanel getContenido() {
-            return contenido;
-        }
     }
 
     /**
@@ -1266,19 +960,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         });
     }
 
-    /*private void cargarClientes() {
-        try (Connection conexion = Conexion.getConnection()) {
-            ClienteDAO clienteDAO = new ClienteDAO(conexion);
-            clientes = clienteDAO.obtenerTodos();
-
-            cbxSeleccionarCliente.removeAllItems();
-            for (Cliente c : clientes) {
-                cbxSeleccionarCliente.addItem(c.getNombre());
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al cargar clientes: " + ex.getMessage());
-        }
-    }*/
     private void cargarClientes() {
         try (Connection conexion = Conexion.getConnection()) {
             ClienteDAO clienteDAO = new ClienteDAO(conexion);
@@ -1305,14 +986,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         }
     }
 
-    private void cargarTiposTrabajo() {
-        cbxTipoTrabajo1.removeAllItems();
-        cbxTipoTrabajo1.addItem("Selecciona un tipo de trabajo...");
-        for (CatalogoTrabajo trabajo : catalogoTrabajos) {
-            cbxTipoTrabajo1.addItem(trabajo.getNombre());
-        }
-    }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Buscar;
@@ -1325,15 +998,14 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminarCotizacion;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnImprimir;
-    private javax.swing.JButton btnNuevaCotizacion1;
+    private javax.swing.JButton btnNuevaCotizacion;
     private javax.swing.JButton btnVistaPrevia;
+    private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> cbxSeleccionarCliente;
-    private javax.swing.JComboBox<String> cbxTipoTrabajo1;
     private javax.swing.JCheckBox ckbxDescuentoNo;
     private javax.swing.JCheckBox ckbxDescuentoSi;
     private javax.swing.JLabel iconoCrear;
     private javax.swing.JLabel iconoTitulo;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1354,7 +1026,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JPanel panelTitulo;
     private javax.swing.JPanel pnlNuevaCotizacion;
     private javax.swing.JPanel pnlTotales;
-    private javax.swing.JScrollPane scrollDetallesDinamicos;
     private javax.swing.JTable tblDetallesAgregados;
     private javax.swing.JLabel tituloNuevaCotizacion;
     private javax.swing.JTextField txtBuscarCliente;

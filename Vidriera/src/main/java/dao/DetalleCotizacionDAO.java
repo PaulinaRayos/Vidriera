@@ -26,9 +26,11 @@ import modelo.VentanaDetalle;
 public class DetalleCotizacionDAO {
 
     private Connection conexion;
+    private CatalogoTrabajoDAO catalogoTrabajoDAO;  
 
     public DetalleCotizacionDAO(Connection conexion) {
         this.conexion = conexion;
+        this.catalogoTrabajoDAO = new CatalogoTrabajoDAO(conexion);
     }
 
     // Guardar detalles de Ventana

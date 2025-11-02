@@ -1,6 +1,6 @@
-
 package presentacion;
 
+import dao.CatalogoTrabajoDAO;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -13,6 +13,8 @@ import modelo.Material;
 public class PanelDetalleVentana extends javax.swing.JPanel {
 
     private List<Material> materialesDisponibles;
+    private CatalogoTrabajoDAO catalogoDAO;
+
     /**
      * Creates new form PanelDetalleVentana
      */
@@ -20,19 +22,26 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         initComponents();
         configurarListeners();
     }
-    
-    
+
     /**
-     * Prepara el panel. Debes llamar a este método justo después de crear el panel.
-     * @param materialesVidrio La lista de materiales tipo "Vidrio" de tu BD.
+     * Prepara el panel.
+     *
+     * @param materialesVidrio La lista de materiales
      */
     public void inicializarDatos(List<Material> materialesVidrio) {
         this.materialesDisponibles = materialesVidrio;
-        // this.catalogoDAO = new CatalogoTrabajoDAO(utils.Conexion.getConnection()); // Descomenta cuando lo necesites
-        
+
+        // Inicializa el DAO
+        try {
+            this.catalogoDAO = new CatalogoTrabajoDAO(utils.Conexion.getConnection());
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al conectar con BD para Catálogo", "Error DB", JOptionPane.ERROR_MESSAGE);
+        }
+
         cargarDatosComboBox();
-        
-        // Configurar los Spinners (de 1 a 100, con valor inicial 1)
+
+        // Configurar los Spinners de 1 a 100, con valor inicial 1
         spnCantidad.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
         spnNoHojas.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
     }
@@ -70,12 +79,11 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         medidaArcco = new javax.swing.JLabel();
         txtMedidaArco = new javax.swing.JTextField();
         tipoCanalillo = new javax.swing.JLabel();
-        TipoCanalillo = new javax.swing.JComboBox<>();
+        cbxTipoCanalillo = new javax.swing.JComboBox<>();
         medidaCanalillo = new javax.swing.JLabel();
         txtMedidaCanalillo = new javax.swing.JTextField();
         descripcion = new javax.swing.JLabel();
-        spllDescripcion = new javax.swing.JScrollPane();
-        txaDescripcion = new javax.swing.JTextArea();
+        txtDescripcion = new javax.swing.JTextField();
 
         panelDetalleVentana.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -185,11 +193,11 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         tipoCanalillo.setForeground(new java.awt.Color(0, 38, 115));
         tipoCanalillo.setText("Tipo canalillo:");
 
-        TipoCanalillo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        TipoCanalillo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        TipoCanalillo.addActionListener(new java.awt.event.ActionListener() {
+        cbxTipoCanalillo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbxTipoCanalillo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTipoCanalillo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TipoCanalilloActionPerformed(evt);
+                cbxTipoCanalilloActionPerformed(evt);
             }
         });
 
@@ -203,9 +211,12 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         descripcion.setForeground(new java.awt.Color(0, 38, 115));
         descripcion.setText("Descripción:");
 
-        txaDescripcion.setColumns(20);
-        txaDescripcion.setRows(5);
-        spllDescripcion.setViewportView(txaDescripcion);
+        txtDescripcion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtDescripcion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDescripcionActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelDetalleVentanaLayout = new javax.swing.GroupLayout(panelDetalleVentana);
         panelDetalleVentana.setLayout(panelDetalleVentanaLayout);
@@ -223,54 +234,50 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                             .addComponent(tipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(medidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(14, 14, 14)
+                        .addGap(10, 10, 10)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbTipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbTipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtMedidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtMedidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtMedidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtMedidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(108, 108, 108)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addComponent(medidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtMedidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(68, 68, 68))
+                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(medidaArcco, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                        .addGap(34, 34, 34)
+                                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(arco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(tipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(10, 10, 10)
                                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDetalleVentanaLayout.createSequentialGroup()
-                                                        .addComponent(medidaCanalillo)
-                                                        .addGap(18, 18, 18)
-                                                        .addComponent(txtMedidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDetalleVentanaLayout.createSequentialGroup()
-                                                        .addComponent(tipoCanalillo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addGap(44, 44, 44)
-                                                        .addComponent(TipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addGap(110, 110, 110))
-                                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(medidaArcco, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                            .addComponent(arco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                            .addComponent(tipoArco, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE))
-                                                        .addGap(18, 18, 18)
-                                                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(cmbTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                            .addComponent(ckArco)
-                                                            .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                    .addComponent(descripcion))
-                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                        .addGap(205, 205, 205)
-                                        .addComponent(spllDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))))))
+                                            .addComponent(cmbTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(ckArco)
+                                            .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(70, 70, 70))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDetalleVentanaLayout.createSequentialGroup()
+                                .addComponent(tipoCanalillo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(10, 10, 10)
+                                .addComponent(cbxTipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(66, 66, 66))))
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
                         .addComponent(mosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
+                        .addGap(10, 10, 10)
                         .addComponent(ckMosquitero)
-                        .addContainerGap())))
+                        .addGap(66, 66, 66))))
         );
         panelDetalleVentanaLayout.setVerticalGroup(
             panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -291,18 +298,18 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                             .addComponent(tipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cmbTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(12, 12, 12)
-                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(medidaArcco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(medidaArcco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(12, 12, 12)
                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbTipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(TipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxTipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -310,18 +317,16 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                     .addComponent(medidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtMedidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
-                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(noHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(mosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ckMosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(spllDescripcion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(noHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(mosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ckMosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -332,9 +337,7 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(panelDetalleVentana, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(panelDetalleVentana, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -342,9 +345,9 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbTipoCristalActionPerformed
 
-    private void TipoCanalilloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TipoCanalilloActionPerformed
+    private void cbxTipoCanalilloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoCanalilloActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_TipoCanalilloActionPerformed
+    }//GEN-LAST:event_cbxTipoCanalilloActionPerformed
 
     private void cmbTipoArcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoArcoActionPerformed
         // TODO add your handling code here:
@@ -358,156 +361,155 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_ckMosquiteroActionPerformed
 
-    
-    /**
-     * NUEVO MÉTODO: Configura todos los listeners del panel.
-     */
-    private void configurarListeners() {
-        // Estado inicial (deshabilitados al empezar)
-        cmbTipoArco.setEnabled(false);
-        txtMedidaArco.setEnabled(false);
-
-        // Acción para el CheckBox 'Arco'
-        ckArco.addActionListener(e -> {
-            // 1. Comprueba si el checkbox está seleccionado
-            boolean seleccionado = ckArco.isSelected();
-            
-            // 2. Habilita o deshabilita los otros campos
-            cmbTipoArco.setEnabled(seleccionado);
-            txtMedidaArco.setEnabled(seleccionado);
-            
-            // 3. Opcional: Si se deselecciona, limpiar los campos
-            if (!seleccionado) {
-                cmbTipoArco.setSelectedIndex(0); // Asume que el índice 0 es "Ninguno"
-                txtMedidaArco.setText("");
-            }
-        });  
-    }
+    private void txtDescripcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescripcionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDescripcionActionPerformed
 
     /**
      * Carga los ComboBoxes con datos (Tipos de Ventana y Cristales).
      */
     private void cargarDatosComboBox() {
         // Cargar los tipos de ventana desde el Enum
-        // (Asumiendo que tu cmbTipoVentana es JComboBox<String>)
         cmbTipoVentana.removeAllItems();
         for (modelo.TipoVentana tv : modelo.TipoVentana.values()) {
             cmbTipoVentana.addItem(tv.getDescripcion());
         }
 
-        // Cargar los tipos de cristal (vidrios) desde la lista de materiales
-        // (Asumiendo que tu cmbTipoCristal es JComboBox<String>)
+        // cargar los tipos de cristal desde la lista de materiales
         cmbTipoCristal.removeAllItems();
         if (materialesDisponibles != null && !materialesDisponibles.isEmpty()) {
             for (modelo.Material vidrio : materialesDisponibles) {
-                cmbTipoCristal.addItem(vidrio.getDescripcion()); // O getNombre()
+                cmbTipoCristal.addItem(vidrio.getDescripcion());
             }
         } else {
             cmbTipoCristal.addItem("Error al cargar vidrios");
         }
-        
-        // tipo de arco
+
+        // cargar el tipo de arco
         cmbTipoArco.removeAllItems();
         cmbTipoArco.addItem("Ninguno");
         cmbTipoArco.addItem("Medio Punto");
         cmbTipoArco.addItem("Rebajado");
-        // (Añade más si los tienes)
 
-        // tipo canalillo
-        TipoCanalillo.removeAllItems();
-        TipoCanalillo.addItem("Ninguno");
-        TipoCanalillo.addItem("Aluminio");
-        TipoCanalillo.addItem("PVC");
+        // cargar los tipo de canalillo 
+        cbxTipoCanalillo.removeAllItems();
+        cbxTipoCanalillo.addItem("Ninguno");
+        cbxTipoCanalillo.addItem("Aluminio");
+        cbxTipoCanalillo.addItem("PVC");
     }
 
     /**
-     * Lee todos los campos del panel y crea un objeto VentanaDetalle.
+     * Configura los listeners para la lógica (ej. habilitar/deshabilitar
+     * campos).
+     */
+    private void configurarListeners() {
+        cmbTipoArco.setEnabled(false);
+        txtMedidaArco.setEnabled(false);
+
+        ckArco.addActionListener(e -> {
+            boolean seleccionado = ckArco.isSelected();
+            cmbTipoArco.setEnabled(seleccionado);
+            txtMedidaArco.setEnabled(seleccionado);
+            if (!seleccionado) {
+                cmbTipoArco.setSelectedIndex(0);
+                txtMedidaArco.setText("");
+            }
+        });
+
+        // (Puedes añadir más listeners aquí)
+    }
+
+    /**
+     * lee todos los campos del panel y crea un objeto VentanaDetalle.
+     *
      * @return El objeto VentanaDetalle con los datos del formulario.
      */
     public modelo.VentanaDetalle getDetalle() {
         modelo.VentanaDetalle d = new modelo.VentanaDetalle();
-        
+
         try {
+            if (catalogoDAO != null) {
+                d.setTipoTrabajo(catalogoDAO.obtenerPorId(1));
+            } else {
+                throw new RuntimeException("CatalogoDAO no inicializado.");
+            }
+
             // Leer valores
             d.setMedidaHorizontal(new BigDecimal(txtMedidaH.getText().isEmpty() ? "0" : txtMedidaH.getText()));
             d.setMedidaVertical(new BigDecimal(txtMedidaV.getText().isEmpty() ? "0" : txtMedidaV.getText()));
             d.setCantidad((Integer) spnCantidad.getValue());
             d.setTipoCristal((String) cmbTipoCristal.getSelectedItem());
             d.setNoHojas((Integer) spnNoHojas.getValue());
-            
-            // ¡OJO! No vi txtPrecioUnidad ni txtSubtotal en tus variables, así que los pongo en 0.
-            // Si los añades, reemplaza esto:
-//            d.setPrecioSoloUnaUnidadCalculado(BigDecimal.ZERO);
-//            d.setSubtotalLinea(BigDecimal.ZERO);
-            
-            d.setDescripcion(txaDescripcion.getText()); // Usando tu JTextArea
 
-            // Convertir la descripción (String) de vuelta al Enum
+            // Asigna 0 si no tienes estos campos
+            d.setPrecioSoloUnaUnidadCalculado(BigDecimal.ZERO);
+            d.setSubtotalLinea(BigDecimal.ZERO);
+
+            d.setDescripcion(txtDescripcion.getText());
+
             String descVentana = (String) cmbTipoVentana.getSelectedItem();
-            d.setTipoVentana(modelo.TipoVentana.fromDescripcion(descVentana)); 
+            d.setTipoVentana(modelo.TipoVentana.fromDescripcion(descVentana));
 
             d.setMosquitero(ckMosquitero.isSelected());
             d.setArco(ckArco.isSelected());
-            
+
             d.setTipoArco((String) cmbTipoArco.getSelectedItem());
             d.setMedidaArco(new BigDecimal(txtMedidaArco.getText().isEmpty() ? "0" : txtMedidaArco.getText()));
-            
-            d.setTipoCanalillo((String) TipoCanalillo.getSelectedItem());
-            d.setMedidaCanalillo(new BigDecimal(txtMedidaCanalillo.getText().isEmpty() ? "0" : txtMedidaCanalillo.getText()));
 
-            // --- ¡¡¡ MUY IMPORTANTE !!! ---
-            // Esto causará el error NullPointerException que tuviste al guardar.
-            // Necesitas asignar el objeto CatalogoTrabajo.
-            // d.setTipoTrabajo(catalogoDAO.obtenerPorId(1)); // (Ejemplo: ID 1 = Ventana)
-            // O, si tu modelo lo permite:
-            d.setIdTipoTrabajo(1); // Asigna el ID del catálogo (ej: 1 para Ventana)
+            d.setTipoCanalillo((String) cbxTipoCanalillo.getSelectedItem());
+            d.setMedidaCanalillo(new BigDecimal(txtMedidaCanalillo.getText().isEmpty() ? "0" : txtMedidaCanalillo.getText()));
 
         } catch (Exception e) {
             System.err.println("Error al leer datos del panel: " + e.getMessage());
-            JOptionPane.showMessageDialog(this, "Error en los datos: " + e.getMessage(), "Error de Formato", JOptionPane.ERROR_MESSAGE);
-            return null; // Devuelve null si falla la validación
+            JOptionPane.showMessageDialog(this, "Error en los datos: " + "Ocurrió un error al leer los campos. Verifique los números.\n" + e.getMessage(), "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            return null;
         }
         return d;
     }
-    
+
     /**
-     * (Para Editar) Llena los campos del panel con datos de un detalle existente.
+     * para editar llena los campos del panel con datos de un detalle existente.
+     *
      * @param detalle El detalle a cargar en el formulario.
      */
     public void setDetalle(modelo.VentanaDetalle detalle) {
-        if (detalle == null) return; 
-        
+        if (detalle == null) {
+            return;
+        }
+
         txtMedidaH.setText(detalle.getMedidaHorizontal().toPlainString());
         txtMedidaV.setText(detalle.getMedidaVertical().toPlainString());
         spnCantidad.setValue(detalle.getCantidad());
         cmbTipoCristal.setSelectedItem(detalle.getTipoCristal());
         spnNoHojas.setValue(detalle.getNoHojas());
-        
-        // No vi txtPrecioUnidad ni txtSubtotal en tus variables
+
         // txtPrecioUnidad.setText(detalle.getPrecioSoloUnaUnidadCalculado().toPlainString());
         // txtSubtotal.setText(detalle.getSubtotalLinea().toPlainString());
-        
-        txaDescripcion.setText(detalle.getDescripcion());
-        
+        txtDescripcion.setText(detalle.getDescripcion());
+
         if (detalle.getTipoVentana() != null) {
             cmbTipoVentana.setSelectedItem(detalle.getTipoVentana().getDescripcion());
         }
-        
+
         ckMosquitero.setSelected(detalle.isMosquitero());
         ckArco.setSelected(detalle.isArco());
-        
+
+        boolean arcoSeleccionado = detalle.isArco();
+        cmbTipoArco.setEnabled(arcoSeleccionado);
+        txtMedidaArco.setEnabled(arcoSeleccionado);
+
         cmbTipoArco.setSelectedItem(detalle.getTipoArco());
         txtMedidaArco.setText(detalle.getMedidaArco() != null ? detalle.getMedidaArco().toPlainString() : "");
-        
-        TipoCanalillo.setSelectedItem(detalle.getTipoCanalillo());
+
+        cbxTipoCanalillo.setSelectedItem(detalle.getTipoCanalillo());
         txtMedidaCanalillo.setText(detalle.getMedidaCanalillo() != null ? detalle.getMedidaCanalillo().toPlainString() : "");
     }
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> TipoCanalillo;
     private javax.swing.JLabel arco;
     private javax.swing.JLabel cantidad;
+    private javax.swing.JComboBox<String> cbxTipoCanalillo;
     private javax.swing.JCheckBox ckArco;
     private javax.swing.JCheckBox ckMosquitero;
     private javax.swing.JComboBox<String> cmbTipoArco;
@@ -522,7 +524,6 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
     private javax.swing.JLabel noHojas;
     private javax.swing.JPanel panelDetalleVentana;
     private javax.swing.JPanel panelTitulo;
-    private javax.swing.JScrollPane spllDescripcion;
     private javax.swing.JSpinner spnCantidad;
     private javax.swing.JSpinner spnNoHojas;
     private javax.swing.JLabel tipoArco;
@@ -530,7 +531,7 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
     private javax.swing.JLabel tipoCristal;
     private javax.swing.JLabel tipoVentana;
     private javax.swing.JLabel titulo;
-    private javax.swing.JTextArea txaDescripcion;
+    private javax.swing.JTextField txtDescripcion;
     private javax.swing.JTextField txtMedidaArco;
     private javax.swing.JTextField txtMedidaCanalillo;
     private javax.swing.JTextField txtMedidaH;

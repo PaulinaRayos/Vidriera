@@ -178,6 +178,22 @@ public class CotizacionBO {
 
             //  Actualizar la cotizacion principal
             cotizacionDAO.actualizarCotizacion(c);
+            
+            if (ventanas != null) {
+    for (VentanaDetalle detalle : ventanas) {
+        detalle.setCotizacion(c);
+    }
+}
+if (cancelerias != null) {
+    for (CanceleriaFijaDetalle detalle : cancelerias) {
+        detalle.setCotizacion(c);
+    }
+}
+if (puertas != null) {
+    for (PuertaAbatibleDetalle detalle : puertas) {
+        detalle.setCotizacion(c);
+    }
+}
 
             // Insertar los nuevos detalles (si existen)
             if (ventanas != null && !ventanas.isEmpty()) {
