@@ -8,36 +8,19 @@ import dao.CatalogoTrabajoDAO;
 import dao.ClienteDAO;
 import dao.MaterialDAO;
 import dao.VendedorDAO;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import modelo.CanceleriaFijaDetalle;
 import modelo.CatalogoTrabajo;
@@ -45,9 +28,6 @@ import modelo.Cliente;
 import modelo.Cotizacion;
 import modelo.Material;
 import modelo.PuertaAbatibleDetalle;
-import modelo.TipoCanceleria;
-import modelo.TipoPuerta;
-import modelo.TipoVentana;
 import modelo.Vendedor;
 import modelo.VentanaDetalle;
 import negocio.CotizacionBO;
@@ -59,9 +39,6 @@ import utils.Conexion;
  */
 public class frmCrearCotizacion extends javax.swing.JFrame {
 
-    /**
-     * Creates new form frmCrearCotizacion
-     */
     private List<CatalogoTrabajo> catalogoTrabajos;
     private List<Cliente> clientes;
     private Vendedor vendedorPorDefecto;
@@ -77,6 +54,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
     public frmCrearCotizacion() {
         initComponents();
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         cargarVendedorPorDefecto();
         panelDetallesDinamicos = new JPanel();
         panelDetallesDinamicos.setLayout(new BoxLayout(panelDetallesDinamicos, BoxLayout.Y_AXIS));
@@ -202,12 +180,12 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(iconoTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(469, Short.MAX_VALUE))
+                .addContainerGap(519, Short.MAX_VALUE))
         );
         panelTituloLayout.setVerticalGroup(
             panelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTituloLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addGap(17, 17, 17)
                 .addGroup(panelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(iconoTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -234,13 +212,13 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         panelSubtituloLayout.setHorizontalGroup(
             panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelSubtituloLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
+                .addGap(24, 24, 24)
                 .addComponent(iconoCrear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ConsultarCotizacion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnVolver)
-                .addContainerGap())
+                .addGap(24, 24, 24))
         );
         panelSubtituloLayout.setVerticalGroup(
             panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -251,7 +229,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ConsultarCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnVolver)))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         panelBuscarCliente.setBackground(new java.awt.Color(255, 255, 255));
@@ -282,7 +260,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         panelBuscarClienteLayout.setHorizontalGroup(
             panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBuscarClienteLayout.createSequentialGroup()
-                .addGap(51, 51, 51)
+                .addGap(24, 24, 24)
                 .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelBuscarClienteLayout.createSequentialGroup()
                         .addComponent(cbxSeleccionarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -290,7 +268,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                         .addComponent(btnCrearCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(Buscar)
                     .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(110, Short.MAX_VALUE))
         );
         panelBuscarClienteLayout.setVerticalGroup(
             panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -303,7 +281,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(cbxSeleccionarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
                     .addComponent(btnCrearCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         panelBotones.setBackground(new java.awt.Color(255, 255, 255));
@@ -357,7 +335,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         panelBotonesLayout.setHorizontalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBotonesLayout.createSequentialGroup()
-                .addGap(61, 61, 61)
+                .addGap(24, 24, 24)
                 .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37)
                 .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -367,13 +345,13 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         );
         panelBotonesLayout.setVerticalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBotonesLayout.createSequentialGroup()
-                .addGap(35, 35, 35)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBotonesLayout.createSequentialGroup()
+                .addContainerGap(23, Short.MAX_VALUE)
                 .addGroup(panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(42, Short.MAX_VALUE))
+                .addGap(30, 30, 30))
         );
 
         pnlTotales.setBackground(new java.awt.Color(255, 255, 255));
@@ -473,13 +451,10 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel6))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel5))))
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblSubtotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -492,7 +467,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(lblSubtotal))
@@ -519,28 +494,27 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         pnlTotalesLayout.setHorizontalGroup(
             pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlTotalesLayout.createSequentialGroup()
-                .addGap(49, 49, 49)
+                .addGap(24, 24, 24)
                 .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlTotalesLayout.createSequentialGroup()
                         .addComponent(Descuento)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(pnlTotalesLayout.createSequentialGroup()
-                        .addComponent(ckbxDescuentoSi)
-                        .addGap(18, 18, 18)
-                        .addComponent(ckbxDescuentoNo)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(labelPorsentaje)
+                        .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlTotalesLayout.createSequentialGroup()
+                                .addComponent(ckbxDescuentoSi)
+                                .addGap(18, 18, 18)
+                                .addComponent(ckbxDescuentoNo)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelPorsentaje))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(45, 45, 45)
                         .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(42, 42, 42))))
-            .addGroup(pnlTotalesLayout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(24, 24, 24))))
         );
         pnlTotalesLayout.setVerticalGroup(
             pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -551,7 +525,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTotalesLayout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(Descuento)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -559,9 +533,9 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     .addComponent(ckbxDescuentoNo)
                     .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelPorsentaje))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12))
+                .addGap(18, 18, 18))
         );
 
         pnlNuevaCotizacion.setBackground(new java.awt.Color(255, 255, 255));
@@ -609,11 +583,11 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         pnlNuevaCotizacionLayout.setHorizontalGroup(
             pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addGap(24, 24, 24)
                 .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
                         .addComponent(jScrollPane3)
-                        .addContainerGap())
+                        .addGap(24, 24, 24))
                     .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
                         .addComponent(tituloNuevaCotizacion)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -622,7 +596,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                         .addComponent(btnEditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEliminarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))))
+                        .addGap(24, 24, 24))))
         );
         pnlNuevaCotizacionLayout.setVerticalGroup(
             pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -634,8 +608,8 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     .addComponent(btnEditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tituloNuevaCotizacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout PanelPrincipalLayout = new javax.swing.GroupLayout(PanelPrincipal);
@@ -645,39 +619,33 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             .addGroup(PanelPrincipalLayout.createSequentialGroup()
                 .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnlNuevaCotizacion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panelBuscarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(panelSubtitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(pnlTotales, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelSubtitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelBuscarCliente, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                    .addContainerGap()
                     .addComponent(panelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         PanelPrincipalLayout.setVerticalGroup(
             PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                .addGap(118, 118, 118)
+                .addGap(72, 72, 72)
                 .addComponent(panelSubtitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnlNuevaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlTotales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnlNuevaCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(pnlTotales, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(PanelPrincipalLayout.createSequentialGroup()
-                    .addGap(13, 13, 13)
                     .addComponent(panelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(775, Short.MAX_VALUE)))
+                    .addGap(0, 683, Short.MAX_VALUE)))
         );
 
         jScrollPane1.setViewportView(PanelPrincipal);
@@ -687,25 +655,108 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1037, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 837, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane1)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        this.dispose();
-        InicioAdministrarCotizaciones ini = new InicioAdministrarCotizaciones();
+    private void btnEditarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCotizacionActionPerformed
+        int filaSeleccionada = tblDetallesAgregados.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una cotización de la tabla para editar.");
+            return;
+        }
 
-        ini.setVisible(true);
-    }//GEN-LAST:event_btnVolverActionPerformed
+        Object detalleAEditar = detallesEnMemoria.get(filaSeleccionada);
+        List<Material> materiales = materialesDisponibles;
+
+        DetalleEditorDialog dialog = null;
+
+        if (detalleAEditar instanceof VentanaDetalle vd) {
+            dialog = new DetalleEditorDialog(this, true, materiales, vd);
+
+        } else if (detalleAEditar instanceof PuertaAbatibleDetalle pd) {
+            dialog = new DetalleEditorDialog(this, true, materiales, pd);
+
+        } else if (detalleAEditar instanceof CanceleriaFijaDetalle cd) {
+            dialog = new DetalleEditorDialog(this, true, materiales, cd);
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Error desconocido en la corización.");
+            return;
+        }
+
+        dialog.setVisible(true);
+        Object detalleResultado = dialog.getDetalleResultado();
+
+        if (detalleResultado != null) {
+            detallesEnMemoria.set(filaSeleccionada, detalleResultado);
+            actualizarTablaDetalles();
+            recalcularTotales();
+        }
+    }//GEN-LAST:event_btnEditarCotizacionActionPerformed
+
+    private void btnNuevaCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCotizacionActionPerformed
+
+        List<Material> materiales = this.materialesDisponibles;
+
+        if (materiales == null || materiales.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Error: No se pudieron cargar los materiales. Revisa la base de datos.");
+            return;
+        }
+        DetalleEditorDialog dialog = new DetalleEditorDialog(this, true, materiales);
+        dialog.setVisible(true);
+
+        Object nuevoDetalle = dialog.getDetalleResultado();
+
+        if (nuevoDetalle != null) {
+            detallesEnMemoria.add(nuevoDetalle);
+            actualizarTablaDetalles();
+            recalcularTotales();
+        }
+    }//GEN-LAST:event_btnNuevaCotizacionActionPerformed
+
+    private void btnEliminarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCotizacionActionPerformed
+        int filaSeleccionada = tblDetallesAgregados.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una corización para eliminarla.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "¿Seguro que deseas eliminar esta cotización de la lista?",
+            "Confirmar", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            detallesEnMemoria.remove(filaSeleccionada);
+
+            actualizarTablaDetalles();
+            recalcularTotales();
+        }
+    }//GEN-LAST:event_btnEliminarCotizacionActionPerformed
+
+    private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
+        int opcion = JOptionPane.showConfirmDialog(
+            this,
+            "¿Está seguro de descartar la cotización?",
+            "Confirmar Cancelación",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            InicioAdministrarCotizaciones inicio = new InicioAdministrarCotizaciones();
+            inicio.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnDescartarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
 
@@ -764,10 +815,10 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
             CotizacionBO bo = new CotizacionBO();
             boolean exito = bo.crearCotizacionCompleta(
-                    cotizacion,
-                    detallesVentana,
-                    detallesCanceleria,
-                    detallesPuerta
+                cotizacion,
+                detallesVentana,
+                detallesCanceleria,
+                detallesPuerta
             );
 
             if (exito) {
@@ -786,21 +837,71 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-    private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
-        int opcion = JOptionPane.showConfirmDialog(
-                this,
-                "¿Está seguro de descartar la cotización?",
-                "Confirmar Cancelación",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE
-        );
-
-        if (opcion == JOptionPane.YES_OPTION) {
-            InicioAdministrarCotizaciones inicio = new InicioAdministrarCotizaciones();
-            inicio.setVisible(true);
-            this.dispose();
+    private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
+        if (cbxSeleccionarCliente.getSelectedIndex() == -1 || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    }//GEN-LAST:event_btnDescartarActionPerformed
+        if (vendedorPorDefecto == null) {
+            JOptionPane.showMessageDialog(this, "No se cargó un vendedor por defecto.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (detallesEnMemoria.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe agregar al menos un detalle.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
+
+        ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
+        ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
+        ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
+        BigDecimal subtotal = BigDecimal.ZERO;
+
+        for (Object detalleObj : detallesEnMemoria) {
+            if (detalleObj instanceof VentanaDetalle vd) {
+                detallesVentana.add(vd);
+                subtotal = subtotal.add(vd.getSubtotalLinea());
+            } else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
+                detallesPuerta.add(pd);
+                subtotal = subtotal.add(pd.getSubtotalLinea());
+            } else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
+                detallesCanceleria.add(cd);
+                subtotal = subtotal.add(cd.getSubtotalLinea());
+            }
+        }
+
+        BigDecimal descuentoMonto = BigDecimal.ZERO;
+        if (ckbxDescuentoSi.isSelected() && !txtDescuento.getText().trim().isEmpty()) {
+            BigDecimal descuentoPorcentaje = new BigDecimal(txtDescuento.getText().trim());
+            descuentoMonto = subtotal.multiply(descuentoPorcentaje.divide(new BigDecimal("100")));
+        }
+
+        Cotizacion cotizacion = new Cotizacion();
+        cotizacion.setCliente(clienteSeleccionado);
+        cotizacion.setVendedor(vendedorPorDefecto);
+        cotizacion.setProyecto(null);
+        cotizacion.setFecha(new Date());
+        cotizacion.setEstado("Pendiente");
+        cotizacion.setSubtotal(subtotal);
+        cotizacion.setDescuentoMonto(descuentoMonto);
+        // Si tu Cotizacion tiene setters para detalles, úsalos:
+        cotizacion.setVentanaDetalles(detallesVentana);
+        cotizacion.setPuertaAbatibleDetalles(detallesPuerta);
+        cotizacion.setCanceleriaFijaDetalles(detallesCanceleria);
+
+        // Ahora llama al diálogo de previsualización y pásale la cotización
+        DialogoPrevisualizacionCotizacion previsualizar
+        = new DialogoPrevisualizacionCotizacion(this, cotizacion);
+        previsualizar.setVisible(true);
+    }//GEN-LAST:event_btnVistaPreviaActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        this.dispose();
+        InicioAdministrarCotizaciones ini = new InicioAdministrarCotizaciones();
+
+        ini.setVisible(true);
+    }//GEN-LAST:event_btnVolverActionPerformed
 
     /**
      * Configura la tabla, los listeners y el estado inicial de los botones.
@@ -917,145 +1018,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         lblIVA.setText("$ " + iva.setScale(2, BigDecimal.ROUND_HALF_UP));
         lblTotal.setText("$ " + total.setScale(2, BigDecimal.ROUND_HALF_UP));
     }
-
-    private void btnEliminarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCotizacionActionPerformed
-        int filaSeleccionada = tblDetallesAgregados.getSelectedRow();
-
-        if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona una corización para eliminarla.", "Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "¿Seguro que deseas eliminar esta cotización de la lista?",
-                "Confirmar", JOptionPane.YES_NO_OPTION);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            detallesEnMemoria.remove(filaSeleccionada);
-
-            actualizarTablaDetalles();
-            recalcularTotales();
-        }
-    }//GEN-LAST:event_btnEliminarCotizacionActionPerformed
-
-    private void btnNuevaCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCotizacionActionPerformed
-
-        List<Material> materiales = this.materialesDisponibles;
-
-        if (materiales == null || materiales.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Error: No se pudieron cargar los materiales. Revisa la base de datos.");
-            return;
-        }
-        DetalleEditorDialog dialog = new DetalleEditorDialog(this, true, materiales);
-        dialog.setVisible(true);
-
-        Object nuevoDetalle = dialog.getDetalleResultado();
-
-       
-        if (nuevoDetalle != null) 
-        { 
-            detallesEnMemoria.add(nuevoDetalle); 
-            actualizarTablaDetalles(); 
-            recalcularTotales(); 
-        }
-        
-    }//GEN-LAST:event_btnNuevaCotizacionActionPerformed
-
-    private void btnEditarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCotizacionActionPerformed
-        int filaSeleccionada = tblDetallesAgregados.getSelectedRow();
-        if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona una cotización de la tabla para editar.");
-            return;
-        }
-
-        Object detalleAEditar = detallesEnMemoria.get(filaSeleccionada);
-        List<Material> materiales = materialesDisponibles;
-
-        DetalleEditorDialog dialog = null;
-
-        if (detalleAEditar instanceof VentanaDetalle vd) {
-            dialog = new DetalleEditorDialog(this, true, materiales, vd);
-
-        } else if (detalleAEditar instanceof PuertaAbatibleDetalle pd) {
-            dialog = new DetalleEditorDialog(this, true, materiales, pd);
-
-        } else if (detalleAEditar instanceof CanceleriaFijaDetalle cd) {
-            dialog = new DetalleEditorDialog(this, true, materiales, cd);
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Error desconocido en la corización.");
-            return;
-        }
-
-        dialog.setVisible(true);
-        Object detalleResultado = dialog.getDetalleResultado();
-
-        if (detalleResultado != null) {
-            detallesEnMemoria.set(filaSeleccionada, detalleResultado);
-            actualizarTablaDetalles();
-            recalcularTotales();
-        }
-    }//GEN-LAST:event_btnEditarCotizacionActionPerformed
-
-    private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
-      if (cbxSeleccionarCliente.getSelectedIndex() == -1 || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
-        JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente.", "Error de validación", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    if (vendedorPorDefecto == null) {
-        JOptionPane.showMessageDialog(this, "No se cargó un vendedor por defecto.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    if (detallesEnMemoria.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Debe agregar al menos un detalle.", "Error de validación", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
-
-    ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
-    ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
-    ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
-    BigDecimal subtotal = BigDecimal.ZERO;
-
-    for (Object detalleObj : detallesEnMemoria) {
-        if (detalleObj instanceof VentanaDetalle vd) {
-            detallesVentana.add(vd);
-            subtotal = subtotal.add(vd.getSubtotalLinea());
-        } else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
-            detallesPuerta.add(pd);
-            subtotal = subtotal.add(pd.getSubtotalLinea());
-        } else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
-            detallesCanceleria.add(cd);
-            subtotal = subtotal.add(cd.getSubtotalLinea());
-        }
-    }
-
-    BigDecimal descuentoMonto = BigDecimal.ZERO;
-    if (ckbxDescuentoSi.isSelected() && !txtDescuento.getText().trim().isEmpty()) {
-        BigDecimal descuentoPorcentaje = new BigDecimal(txtDescuento.getText().trim());
-        descuentoMonto = subtotal.multiply(descuentoPorcentaje.divide(new BigDecimal("100")));
-    }
-
-    Cotizacion cotizacion = new Cotizacion();
-    cotizacion.setCliente(clienteSeleccionado);
-    cotizacion.setVendedor(vendedorPorDefecto);
-    cotizacion.setProyecto(null);
-    cotizacion.setFecha(new Date());
-    cotizacion.setEstado("Pendiente");
-    cotizacion.setSubtotal(subtotal);
-    cotizacion.setDescuentoMonto(descuentoMonto);
-    // Si tu Cotizacion tiene setters para detalles, úsalos:
-    cotizacion.setVentanaDetalles(detallesVentana);
-    cotizacion.setPuertaAbatibleDetalles(detallesPuerta);
-    cotizacion.setCanceleriaFijaDetalles(detallesCanceleria);
-
-    // Ahora llama al diálogo de previsualización y pásale la cotización
-    DialogoPrevisualizacionCotizacion previsualizar =
-        new DialogoPrevisualizacionCotizacion(this, cotizacion);
-    previsualizar.setVisible(true);
-
-    }//GEN-LAST:event_btnVistaPreviaActionPerformed
 
     private void cargarMaterialesDisponibles() {
         try {

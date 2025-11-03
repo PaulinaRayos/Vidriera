@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.*;
@@ -42,6 +43,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
      */
     public frmEditarCotizacion() {
         initComponents();
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     /**
@@ -49,6 +51,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
      */
     public frmEditarCotizacion(int idCotizacion) {
         initComponents();
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         try {
             this.cotizacionBO = new CotizacionBO();
             this.detalleDAO = new DetalleCotizacionDAO(cotizacionBO.getConexion());
@@ -148,13 +151,13 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         panelSubtituloLayout.setHorizontalGroup(
             panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelSubtituloLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
+                .addGap(24, 24, 24)
                 .addComponent(iconoEditar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(EditarCotizacion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnVolver)
-                .addGap(25, 25, 25))
+                .addGap(24, 24, 24))
         );
         panelSubtituloLayout.setVerticalGroup(
             panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -275,21 +278,19 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         pnlNuevaCotizacion.setLayout(pnlNuevaCotizacionLayout);
         pnlNuevaCotizacionLayout.setHorizontalGroup(
             pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
-                .addGap(47, 47, 47)
-                .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
-                        .addComponent(jScrollPane3)
-                        .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlNuevaCotizacionLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane3)
                     .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
                         .addComponent(tituloEditarCotizacion)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 521, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnNuevaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEliminarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))))
+                        .addComponent(btnEliminarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(24, 24, 24))
         );
         pnlNuevaCotizacionLayout.setVerticalGroup(
             pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -301,8 +302,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                     .addComponent(btnEditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tituloEditarCotizacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE))
         );
 
         panelBotones.setBackground(new java.awt.Color(255, 255, 255));
@@ -351,23 +351,23 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         panelBotonesLayout.setHorizontalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBotonesLayout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addGap(23, 23, 23)
                 .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(63, 63, 63)
+                .addGap(40, 40, 40)
                 .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelBotonesLayout.setVerticalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBotonesLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
+                .addGap(28, 28, 28)
                 .addGroup(panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         pnlTotales2.setBackground(new java.awt.Color(255, 255, 255));
@@ -510,7 +510,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         pnlTotales2Layout.setHorizontalGroup(
             pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlTotales2Layout.createSequentialGroup()
-                .addGap(49, 49, 49)
+                .addGap(24, 24, 24)
                 .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlTotales2Layout.createSequentialGroup()
                         .addComponent(descuento)
@@ -526,11 +526,11 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(labelPorsentaje2))
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 346, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
+                        .addGap(18, 18, 18)
                         .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(81, 81, 81))))
+                        .addGap(24, 24, 24))))
         );
         pnlTotales2Layout.setVerticalGroup(
             pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -559,7 +559,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         panelBuscarClienteLayout.setHorizontalGroup(
             panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBuscarClienteLayout.createSequentialGroup()
-                .addGap(51, 51, 51)
+                .addGap(24, 24, 24)
                 .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(detalleCotizacion)
                     .addGroup(panelBuscarClienteLayout.createSequentialGroup()
@@ -578,14 +578,15 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                         .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(estado)
                             .addComponent(cbxEstadoCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(66, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBuscarClienteLayout.createSequentialGroup()
+                .addContainerGap(101, Short.MAX_VALUE))
+            .addGroup(panelBuscarClienteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnlNuevaCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlTotales2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addGroup(panelBuscarClienteLayout.createSequentialGroup()
+                        .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addComponent(pnlTotales2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         panelBuscarClienteLayout.setVerticalGroup(
             panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -606,9 +607,9 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                     .addComponent(cbxEstadoCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addComponent(pnlNuevaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(pnlTotales2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlTotales2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -985,8 +986,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Descuento;
-    private javax.swing.JLabel Descuento1;
     private javax.swing.JLabel EditarCotizacion;
     private javax.swing.JLabel NumCotizacion1;
     private javax.swing.JButton btnDescargar;
@@ -999,11 +998,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JButton btnVistaPrevia;
     private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> cbxEstadoCotizacion;
-    private javax.swing.JCheckBox ckbxDescuentoNo;
-    private javax.swing.JCheckBox ckbxDescuentoNo1;
     private javax.swing.JCheckBox ckbxDescuentoNo2;
-    private javax.swing.JCheckBox ckbxDescuentoSi;
-    private javax.swing.JCheckBox ckbxDescuentoSi1;
     private javax.swing.JCheckBox ckbxDescuentoSi2;
     private javax.swing.JLabel descuento;
     private javax.swing.JLabel detalleCotizacion;
@@ -1012,45 +1007,21 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JLabel iconoEditar;
     private javax.swing.JLabel iconoTitulo;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel labelFechaCotizacion;
     private javax.swing.JLabel labelNomCliente;
     private javax.swing.JLabel labelNumCotizacion;
-    private javax.swing.JLabel labelPorsentaje;
-    private javax.swing.JLabel labelPorsentaje1;
     private javax.swing.JLabel labelPorsentaje2;
-    private javax.swing.JLabel lblDescuento;
-    private javax.swing.JLabel lblDescuento1;
     private javax.swing.JLabel lblDescuento2;
-    private javax.swing.JLabel lblIVA;
-    private javax.swing.JLabel lblIVA1;
     private javax.swing.JLabel lblIVA2;
-    private javax.swing.JLabel lblManoObra;
-    private javax.swing.JLabel lblManoObra1;
     private javax.swing.JLabel lblManoObra2;
-    private javax.swing.JLabel lblSubtotal;
-    private javax.swing.JLabel lblSubtotal1;
     private javax.swing.JLabel lblSubtotal2;
-    private javax.swing.JLabel lblTotal;
-    private javax.swing.JLabel lblTotal1;
     private javax.swing.JLabel lblTotal2;
     private javax.swing.JLabel nomCliente;
     private javax.swing.JPanel panelBotones;
@@ -1058,13 +1029,9 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JPanel panelSubtitulo;
     private javax.swing.JPanel panelTitulo;
     private javax.swing.JPanel pnlNuevaCotizacion;
-    private javax.swing.JPanel pnlTotales;
-    private javax.swing.JPanel pnlTotales1;
     private javax.swing.JPanel pnlTotales2;
     private javax.swing.JTable tblDetallesAgregados;
     private javax.swing.JLabel tituloEditarCotizacion;
-    private javax.swing.JTextField txtDescuento;
-    private javax.swing.JTextField txtDescuento1;
     private javax.swing.JTextField txtDescuento2;
     // End of variables declaration//GEN-END:variables
 }
