@@ -255,81 +255,83 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                             .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(108, 108, 108)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                .addComponent(medidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtMedidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(68, 68, 68))
+                            .addComponent(medidaCanalillo)
+                            .addComponent(descripcion)
+                            .addComponent(medidaArcco, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(medidaArcco, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(arco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(tipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(tipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(10, 10, 10)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(arco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(tipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(10, 10, 10)
                                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtMedidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addContainerGap(42, Short.MAX_VALUE))
+                                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cbxTipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(cbxTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(ckArco)
-                                            .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(70, 70, 70))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDetalleVentanaLayout.createSequentialGroup()
-                                .addComponent(tipoCanalillo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(10, 10, 10)
-                                .addComponent(cbxTipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(66, 66, 66))))
+                                            .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(0, 0, Short.MAX_VALUE))))))
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
                         .addComponent(mosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
                         .addComponent(ckMosquitero)
-                        .addGap(66, 66, 66))))
+                        .addContainerGap())))
         );
         panelDetalleVentanaLayout.setVerticalGroup(
             panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                .addComponent(panelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ckArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(medidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMedidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(arco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(panelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ckArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(medidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtMedidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(arco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(medidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtMedidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(12, 12, 12)
+                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(medidaArcco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(12, 12, 12)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(medidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMedidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(12, 12, 12)
-                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(medidaArcco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(12, 12, 12)
-                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbTipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbxTipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmbTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(medidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtMedidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(noHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbTipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(medidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(noHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                        .addComponent(cbxTipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(txtMedidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(7, 7, 7)
                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(mosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -438,8 +440,6 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         modelo.VentanaDetalle d = new modelo.VentanaDetalle();
 
         try {
-            
-            // ---- VALIDACIONES BÁSICAS ----
 
             // 1. Campos numéricos obligatorios: medida H y V
             if (txtMedidaH.getText().trim().isEmpty() || txtMedidaV.getText().trim().isEmpty()) {
@@ -476,27 +476,59 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                 return null;
             }
 
-            // 3. Campos condicionales según checkbox arco
-            BigDecimal medidaArcoBD = BigDecimal.ZERO;
-            if (ckArco.isSelected()) {
+            d.setArco(ckArco.isSelected());
+            if (d.isArco()) {
+                if (cbxTipoArco.getSelectedIndex() <= 0) {
+                    /*...error tipo arco...*/ return null;
+                }
                 if (txtMedidaArco.getText().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Debe ingresar la medida del arco.",
-                            "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                    /*...error medida arco vacía...*/ return null;
+                }
+
+                BigDecimal medidaArcoBD = new BigDecimal(txtMedidaArco.getText());
+                if (medidaArcoBD.compareTo(BigDecimal.ZERO) <= 0) {
+                    JOptionPane.showMessageDialog(this, "La 'Medida arco' debe ser mayor que 0.", "Valor inválido", JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+                d.setTipoArco((String) cbxTipoArco.getSelectedItem());
+                d.setMedidaArco(medidaArcoBD);
+            } else {
+                d.setMedidaArco(null);
+                d.setTipoArco(null);
+            }
+
+            if (txtMedidaCanalillo.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "La medida del canalillo es oblogatoria.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                txtMedidaCanalillo.requestFocus();
+                return null;
+            }
+
+            BigDecimal medidaCanalilloBD = BigDecimal.ZERO;
+            // (Asumo que el índice 0 de tu JComboBox 'txtTipoCanalillo' es "Ninguno")
+            if (cbxTipoCanalillo.getSelectedIndex() > 0) {
+                if (txtMedidaCanalillo.getText().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Si selecciona un tipo de canalillo, la 'Medida' es obligatoria.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                    txtMedidaCanalillo.requestFocus();
                     return null;
                 }
                 try {
-                    medidaArcoBD = new BigDecimal(txtMedidaArco.getText());
+                    medidaCanalilloBD = new BigDecimal(txtMedidaCanalillo.getText());
+                    // Validación para que sea mayor que 0 (permite 0.1)
+                    if (medidaCanalilloBD.compareTo(BigDecimal.ZERO) <= 0) {
+                        JOptionPane.showMessageDialog(this, "La medida canalillo' debe ser mayor que 0.", "Valor inválido", JOptionPane.WARNING_MESSAGE);
+                        txtMedidaCanalillo.requestFocus();
+                        return null;
+                    }
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "La medida del arco debe ser numérica.",
-                            "Error de formato", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "La medida canalillo debe ser numérica.", "Error de formato", JOptionPane.ERROR_MESSAGE);
                     return null;
                 }
             }
 
-            // 4. Validar longitud de descripción
-            if (txtDescripcion.getText().length() > 255) {
-                JOptionPane.showMessageDialog(this, "La descripción no debe superar los 255 caracteres.",
-                        "Texto demasiado largo", JOptionPane.WARNING_MESSAGE);
+            if (txtDescripcion.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "La Descripción es obligatoria.",
+                        "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                txtDescripcion.requestFocus();
                 return null;
             }
 
@@ -521,12 +553,12 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
             d.setMosquitero(ckMosquitero.isSelected());
             d.setArco(ckArco.isSelected());
             d.setTipoArco(ckArco.isSelected() ? (String) cbxTipoArco.getSelectedItem() : null);
-            d.setMedidaArco(medidaArcoBD);
+            // d.setMedidaArco(medidaArcoBD);
 
             // Canalillo siempre se lee del combo, no hay checkbox
             d.setTipoCanalillo((String) cbxTipoCanalillo.getSelectedItem());
             d.setMedidaCanalillo(new BigDecimal(txtMedidaCanalillo.getText().isEmpty() ? "0" : txtMedidaCanalillo.getText()));
-            
+
             BigDecimal precioUnidad = BigDecimal.ZERO;
             try (Connection conn = utils.Conexion.getConnection()) {
                 VentanaDetalleDAO ventanaDAO = new VentanaDetalleDAO(conn);
@@ -543,8 +575,8 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "Error al obtener precio desde la BD", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
-        d.setPrecioSoloUnaUnidadCalculado(precioUnidad);
-        d.setSubtotalLinea(precioUnidad.multiply(new BigDecimal(d.getCantidad())));
+            d.setPrecioSoloUnaUnidadCalculado(precioUnidad);
+            d.setSubtotalLinea(precioUnidad.multiply(new BigDecimal(d.getCantidad())));
 
         } catch (Exception e) {
             System.err.println("Error al leer datos del panel de ventana: " + e.getMessage());

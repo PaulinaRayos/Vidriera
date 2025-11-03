@@ -60,39 +60,36 @@
                           </Group>
                           <EmptySpace min="-2" pref="108" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="medidaCanalillo" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="descripcion" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="medidaArcco" min="-2" pref="170" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="medidaCanalillo" min="-2" pref="170" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="txtDescripcion" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
-                                      <Component id="txtMedidaCanalillo" min="-2" pref="160" max="-2" attributes="0"/>
+                                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="arco" max="32767" attributes="0"/>
+                                          <Component id="tipoArco" min="-2" pref="170" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="tipoCanalillo" alignment="0" min="-2" pref="134" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="medidaArcco" min="-2" pref="170" max="-2" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
-                                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                              <Component id="arco" max="32767" attributes="0"/>
-                                              <Component id="tipoArco" min="-2" pref="170" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="txtDescripcion" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
+                                              <Component id="txtMedidaCanalillo" min="-2" pref="160" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace pref="42" max="32767" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="cbxTipoCanalillo" min="-2" pref="160" max="-2" attributes="0"/>
                                               <Component id="cbxTipoArco" min="-2" pref="160" max="-2" attributes="0"/>
                                               <Component id="ckArco" min="-2" max="-2" attributes="0"/>
                                               <Component id="txtMedidaArco" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
                                           </Group>
+                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       </Group>
-                                      <Component id="descripcion" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="tipoCanalillo" max="32767" attributes="0"/>
-                                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                                  <Component id="cbxTipoCanalillo" min="-2" pref="160" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -100,7 +97,7 @@
                           <Component id="mosquitero" min="-2" pref="170" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                           <Component id="ckMosquitero" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -109,54 +106,62 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="panelTitulo" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="ckArco" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="medidaH" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="txtMedidaH" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="arco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                          <Component id="panelTitulo" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="ckArco" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="medidaH" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="txtMedidaH" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="arco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="medidaV" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="txtMedidaV" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="tipoArco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="cbxTipoArco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="medidaArcco" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="txtMedidaArco" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="cantidad" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  <Component id="spnCantidad" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="medidaV" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="txtMedidaV" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="tipoArco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="cbxTipoArco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="tipoVentana" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="cmbTipoVentana" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="tipoCanalillo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tipoCristal" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="cmbTipoCristal" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="medidaCanalillo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="noHojas" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="spnNoHojas" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="descripcion" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                  </Group>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="medidaArcco" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="txtMedidaArco" min="-2" pref="26" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="cantidad" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                          <Component id="spnCantidad" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="cbxTipoCanalillo" min="-2" pref="26" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                          <Component id="txtMedidaCanalillo" min="-2" pref="26" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                          <Component id="txtDescripcion" min="-2" pref="27" max="-2" attributes="0"/>
                       </Group>
-                  </Group>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="tipoVentana" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="cmbTipoVentana" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="tipoCanalillo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="cbxTipoCanalillo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="tipoCristal" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="cmbTipoCristal" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="medidaCanalillo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="txtMedidaCanalillo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="noHojas" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="spnNoHojas" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="descripcion" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                      <Component id="txtDescripcion" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
