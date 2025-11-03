@@ -17,6 +17,7 @@ presentacion\PanelDetallePuertaAbatible$12.class
 com\mycompany\vidriera\Test2Crear.class
 presentacion\PanelDetalleVentana.class
 presentacion\PanelDetalleVentana$6.class
+presentacion\frmEditarCotizacion$6.class
 modelo\TipoPuerta.class
 presentacion\PanelDetalleVentana$3.class
 presentacion\InicioAdministrarCotizaciones$3.class
@@ -26,6 +27,7 @@ dao\CanceleriaFijaDetalleDAO.class
 modelo\CatalogoTrabajo.class
 modelo\Cotizacion.class
 presentacion\frmCrearCotizacion.class
+presentacion\frmEditarCotizacion$5.class
 presentacion\InicioAdministrarCotizaciones$7.class
 presentacion\PanelDetallePuertaAbatible$10.class
 com\mycompany\vidriera\Test3Editar.class
@@ -97,6 +99,7 @@ presentacion\PanelDetalleVentana$4.class
 presentacion\frmEditarCotizacion$1.class
 presentacion\PanelDetalleCanceleria$11.class
 modelo\Cliente.class
+presentacion\frmEditarCotizacion$7.class
 presentacion\DetalleEditorDialog.class
 presentacion\InicioAdministrarCotizaciones$5.class
 presentacion\PanelDetalleCanceleria$5.class

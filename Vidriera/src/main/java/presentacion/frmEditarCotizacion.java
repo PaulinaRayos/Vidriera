@@ -4,18 +4,21 @@
  */
 package presentacion;
 
-import com.toedter.calendar.JDateChooser;
-import java.awt.Component;
+import dao.CatalogoTrabajoDAO;
+import dao.DetalleCotizacionDAO;
+import dao.MaterialDAO;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
-import modelo.Cotizacion;
-import modelo.Material;
+import javax.swing.table.DefaultTableModel;
+import modelo.*;
 import negocio.CotizacionBO;
+import utils.Conexion;
 
 /**
  *
@@ -23,28 +26,47 @@ import negocio.CotizacionBO;
  */
 public class frmEditarCotizacion extends javax.swing.JFrame {
 
-    private CotizacionBO cotizacionBO;
-    private Cotizacion cotizacionActual;
-    private Object detalleActual = null;
-    private String tipoDetalleActual = null;
+    private List<CatalogoTrabajo> catalogoTrabajos;
+    private Vendedor vendedorPorDefecto;
+    private List<Material> materialesDisponibles;
 
-    // --- AÑADE ESTAS LÍNEAS ---
-    private List<modelo.VentanaDetalle> detallesOriginalesVentana = new ArrayList<>();
-    private List<modelo.CanceleriaFijaDetalle> detallesOriginalesCanceleria = new ArrayList<>();
-    private List<modelo.PuertaAbatibleDetalle> detallesOriginalesPuerta = new ArrayList<>();
+    private DefaultTableModel modeloTablaDetalles;
+    private List<Object> detallesEnMemoria = new ArrayList<>();
+
+    private CotizacionBO cotizacionBO;
+    private DetalleCotizacionDAO detalleDAO;
+    private Cotizacion cotizacionActual;
+
     /**
      * Creates new form frmEditarCotizacion
      */
     public frmEditarCotizacion() {
         initComponents();
     }
-    
-    public frmEditarCotizacion(int idCotizacion) { 
+
+    /**
+     * Constructor para editar
+     */
+    public frmEditarCotizacion(int idCotizacion) {
         initComponents();
-        inicializarLogica(); 
-        cargarDatos(idCotizacion); 
+        try {
+            this.cotizacionBO = new CotizacionBO();
+            this.detalleDAO = new DetalleCotizacionDAO(cotizacionBO.getConexion());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al inicializar la conexión: " + e.getMessage());
+            this.dispose();
+            return;
+        }
+
+        cargarMaterialesDisponibles(); // carga materiales para el cuadro de dialogo
+        cargarCatalogo();
+        inicializarLogica();
+        cargarDatosCotizacion(idCotizacion);
+
+        ButtonGroup grupoDescuento = new ButtonGroup();
+        grupoDescuento.add(ckbxDescuentoSi2);
+        grupoDescuento.add(ckbxDescuentoNo2);
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -62,37 +84,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         panelTitulo = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         iconoTitulo = new javax.swing.JLabel();
-        panelTituloDetalle = new javax.swing.JPanel();
-        Descuento = new javax.swing.JLabel();
-        panelInformacionTrabajo = new javax.swing.JPanel();
-        labelHorizontal = new javax.swing.JLabel();
-        tituloCantidad = new javax.swing.JLabel();
-        txtMetrosHorizontal = new javax.swing.JTextField();
-        labelVertical = new javax.swing.JLabel();
-        txtMetrosVertical = new javax.swing.JTextField();
-        tituloMedidas = new javax.swing.JLabel();
-        cbxCantidad = new javax.swing.JComboBox<>();
-        tituloMosquitero = new javax.swing.JLabel();
-        ckbxMosquiteroSi = new javax.swing.JCheckBox();
-        ckbxMosquiteroNo = new javax.swing.JCheckBox();
-        tituloCristal = new javax.swing.JLabel();
-        cbxTipoCristal = new javax.swing.JComboBox<>();
-        labelNumHojas = new javax.swing.JLabel();
-        cbxNumHojas = new javax.swing.JComboBox<>();
-        panelTipoTrabajo = new javax.swing.JPanel();
-        tituloTipoTrabajo = new javax.swing.JLabel();
-        cbxTipoTrabajo1 = new javax.swing.JComboBox<>();
-        panelDescuento = new javax.swing.JPanel();
-        ckbxDescuentoSi = new javax.swing.JCheckBox();
-        ckbxDescuentoNo = new javax.swing.JCheckBox();
-        txtDescuento = new javax.swing.JTextField();
-        labelPorsentaje = new javax.swing.JLabel();
-        btnGuardar = new javax.swing.JButton();
-        btnDescartar = new javax.swing.JButton();
-        panelBotones = new javax.swing.JPanel();
-        btnVistaPrevia = new javax.swing.JButton();
-        btnDescargar = new javax.swing.JButton();
-        btnImprimir = new javax.swing.JButton();
         panelBuscarCliente = new javax.swing.JPanel();
         detalleCotizacion = new javax.swing.JLabel();
         cbxEstadoCotizacion = new javax.swing.JComboBox<>();
@@ -103,6 +94,36 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         NumCotizacion1 = new javax.swing.JLabel();
         estado = new javax.swing.JLabel();
         fehcCotizacion = new javax.swing.JLabel();
+        pnlNuevaCotizacion = new javax.swing.JPanel();
+        tituloEditarCotizacion = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblDetallesAgregados = new javax.swing.JTable();
+        btnEliminarCotizacion = new javax.swing.JButton();
+        btnNuevaCotizacion = new javax.swing.JButton();
+        btnEditarCotizacion = new javax.swing.JButton();
+        panelBotones = new javax.swing.JPanel();
+        btnVistaPrevia = new javax.swing.JButton();
+        btnDescargar = new javax.swing.JButton();
+        btnImprimir = new javax.swing.JButton();
+        pnlTotales2 = new javax.swing.JPanel();
+        ckbxDescuentoSi2 = new javax.swing.JCheckBox();
+        descuento = new javax.swing.JLabel();
+        ckbxDescuentoNo2 = new javax.swing.JCheckBox();
+        txtDescuento2 = new javax.swing.JTextField();
+        labelPorsentaje2 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        lblManoObra2 = new javax.swing.JLabel();
+        lblSubtotal2 = new javax.swing.JLabel();
+        lblDescuento2 = new javax.swing.JLabel();
+        lblTotal2 = new javax.swing.JLabel();
+        lblIVA2 = new javax.swing.JLabel();
+        btnGuardar = new javax.swing.JButton();
+        btnDescartar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Editar cotización");
@@ -177,251 +198,111 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelTituloDetalle.setBackground(new java.awt.Color(255, 255, 255));
+        panelBuscarCliente.setBackground(new java.awt.Color(255, 255, 255));
 
-        Descuento.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        Descuento.setForeground(new java.awt.Color(15, 105, 196));
-        Descuento.setText("Descuento");
+        detalleCotizacion.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        detalleCotizacion.setForeground(new java.awt.Color(15, 105, 196));
+        detalleCotizacion.setText("Detalles de Cotización");
 
-        javax.swing.GroupLayout panelTituloDetalleLayout = new javax.swing.GroupLayout(panelTituloDetalle);
-        panelTituloDetalle.setLayout(panelTituloDetalleLayout);
-        panelTituloDetalleLayout.setHorizontalGroup(
-            panelTituloDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTituloDetalleLayout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addComponent(Descuento)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        panelTituloDetalleLayout.setVerticalGroup(
-            panelTituloDetalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTituloDetalleLayout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
-                .addComponent(Descuento)
-                .addContainerGap())
-        );
+        cbxEstadoCotizacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estado", "Item 2", "Item 3", "Item 4" }));
 
-        panelInformacionTrabajo.setBackground(new java.awt.Color(255, 255, 255));
+        labelNumCotizacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        labelNumCotizacion.setText("Num. Cotizacion");
 
-        labelHorizontal.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        labelHorizontal.setForeground(new java.awt.Color(0, 38, 115));
-        labelHorizontal.setText("Horizontal");
+        labelNomCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        labelNomCliente.setText("Nombre del Cliente");
 
-        tituloCantidad.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloCantidad.setForeground(new java.awt.Color(0, 38, 115));
-        tituloCantidad.setText("Cantidad");
+        labelFechaCotizacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        labelFechaCotizacion.setText("Fecha de cotizacion");
 
-        labelVertical.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        labelVertical.setForeground(new java.awt.Color(0, 38, 115));
-        labelVertical.setText("Vertical");
+        nomCliente.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        nomCliente.setForeground(new java.awt.Color(0, 38, 115));
+        nomCliente.setText("Nombre del Cliente");
 
-        tituloMedidas.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloMedidas.setForeground(new java.awt.Color(0, 38, 115));
-        tituloMedidas.setText("Medidas");
+        NumCotizacion1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        NumCotizacion1.setForeground(new java.awt.Color(0, 38, 115));
+        NumCotizacion1.setText("Num. Cotización");
 
-        cbxCantidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        estado.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        estado.setForeground(new java.awt.Color(0, 38, 115));
+        estado.setText("Estado");
 
-        tituloMosquitero.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloMosquitero.setForeground(new java.awt.Color(0, 38, 115));
-        tituloMosquitero.setText("Mosquitero");
+        fehcCotizacion.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        fehcCotizacion.setForeground(new java.awt.Color(0, 38, 115));
+        fehcCotizacion.setText("Fecha de Cotización");
 
-        ckbxMosquiteroSi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxMosquiteroSi.setText("Si");
-        ckbxMosquiteroSi.addActionListener(new java.awt.event.ActionListener() {
+        pnlNuevaCotizacion.setBackground(new java.awt.Color(255, 255, 255));
+
+        tituloEditarCotizacion.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        tituloEditarCotizacion.setForeground(new java.awt.Color(15, 105, 196));
+        tituloEditarCotizacion.setText("Editar Cotización");
+
+        tblDetallesAgregados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Tipo de trabajo", "Cantidad", "Descripción", "Medidas", "Subtotal"
+            }
+        ));
+        jScrollPane3.setViewportView(tblDetallesAgregados);
+
+        btnEliminarCotizacion.setText("Eliminar");
+        btnEliminarCotizacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ckbxMosquiteroSiActionPerformed(evt);
+                btnEliminarCotizacionActionPerformed(evt);
             }
         });
 
-        ckbxMosquiteroNo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxMosquiteroNo.setText("No");
+        btnNuevaCotizacion.setText("Agregar");
+        btnNuevaCotizacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaCotizacionActionPerformed(evt);
+            }
+        });
 
-        tituloCristal.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloCristal.setForeground(new java.awt.Color(0, 38, 115));
-        tituloCristal.setText("Cristal");
+        btnEditarCotizacion.setText("Editar");
+        btnEditarCotizacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarCotizacionActionPerformed(evt);
+            }
+        });
 
-        cbxTipoCristal.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        labelNumHojas.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        labelNumHojas.setForeground(new java.awt.Color(0, 38, 115));
-        labelNumHojas.setText("No. de hojas");
-
-        cbxNumHojas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        javax.swing.GroupLayout panelInformacionTrabajoLayout = new javax.swing.GroupLayout(panelInformacionTrabajo);
-        panelInformacionTrabajo.setLayout(panelInformacionTrabajoLayout);
-        panelInformacionTrabajoLayout.setHorizontalGroup(
-            panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                        .addComponent(labelNumHojas)
-                        .addGap(18, 18, 18)
-                        .addComponent(cbxNumHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(cbxTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tituloCristal)
-                    .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                                .addComponent(labelHorizontal)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtMetrosHorizontal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
-                                .addComponent(labelVertical)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtMetrosVertical, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(tituloMedidas))
-                        .addGap(62, 62, 62)
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tituloCantidad)
-                            .addComponent(cbxCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(52, 52, 52)
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tituloMosquitero)
-                            .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                                .addComponent(ckbxMosquiteroSi)
-                                .addGap(33, 33, 33)
-                                .addComponent(ckbxMosquiteroNo)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        panelInformacionTrabajoLayout.setVerticalGroup(
-            panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                        .addComponent(tituloMosquitero)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ckbxMosquiteroNo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ckbxMosquiteroSi, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelInformacionTrabajoLayout.createSequentialGroup()
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tituloCantidad)
-                            .addComponent(tituloMedidas))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(labelHorizontal)
-                                .addComponent(txtMetrosHorizontal, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(labelVertical)
-                                .addComponent(txtMetrosVertical, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cbxCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
-                .addComponent(tituloCristal)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbxTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(panelInformacionTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelNumHojas)
-                    .addComponent(cbxNumHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(8, Short.MAX_VALUE))
-        );
-
-        panelTipoTrabajo.setBackground(new java.awt.Color(255, 255, 255));
-
-        tituloTipoTrabajo.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        tituloTipoTrabajo.setForeground(new java.awt.Color(15, 105, 196));
-        tituloTipoTrabajo.setText("Tipo de trabajo");
-
-        cbxTipoTrabajo1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        javax.swing.GroupLayout panelTipoTrabajoLayout = new javax.swing.GroupLayout(panelTipoTrabajo);
-        panelTipoTrabajo.setLayout(panelTipoTrabajoLayout);
-        panelTipoTrabajoLayout.setHorizontalGroup(
-            panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTipoTrabajoLayout.createSequentialGroup()
+        javax.swing.GroupLayout pnlNuevaCotizacionLayout = new javax.swing.GroupLayout(pnlNuevaCotizacion);
+        pnlNuevaCotizacion.setLayout(pnlNuevaCotizacionLayout);
+        pnlNuevaCotizacionLayout.setHorizontalGroup(
+            pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
                 .addGap(47, 47, 47)
-                .addGroup(panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tituloTipoTrabajo))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
+                        .addComponent(jScrollPane3)
+                        .addContainerGap())
+                    .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
+                        .addComponent(tituloEditarCotizacion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 521, Short.MAX_VALUE)
+                        .addComponent(btnNuevaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEliminarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))))
         );
-        panelTipoTrabajoLayout.setVerticalGroup(
-            panelTipoTrabajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTipoTrabajoLayout.createSequentialGroup()
-                .addContainerGap(15, Short.MAX_VALUE)
-                .addComponent(tituloTipoTrabajo)
+        pnlNuevaCotizacionLayout.setVerticalGroup(
+            pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEliminarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tituloEditarCotizacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbxTipoTrabajo1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        panelDescuento.setBackground(new java.awt.Color(255, 255, 255));
-
-        ckbxDescuentoSi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxDescuentoSi.setSelected(true);
-        ckbxDescuentoSi.setText("Si");
-
-        ckbxDescuentoNo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxDescuentoNo.setText("No");
-
-        labelPorsentaje.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        labelPorsentaje.setForeground(new java.awt.Color(0, 38, 115));
-        labelPorsentaje.setText("%");
-
-        btnGuardar.setBackground(new java.awt.Color(3, 175, 61));
-        btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
-        btnGuardar.setText("Guardar");
-        btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnGuardar.setBorderPainted(false);
-        btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnGuardar.setDefaultCapable(false);
-        btnGuardar.setFocusPainted(false);
-        btnGuardar.setRequestFocusEnabled(false);
-        btnGuardar.setRolloverEnabled(false);
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-            }
-        });
-
-        btnDescartar.setBackground(new java.awt.Color(202, 50, 0));
-        btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
-        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
-        btnDescartar.setText("Descartar");
-        btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnDescartar.setBorderPainted(false);
-        btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnDescartar.setDefaultCapable(false);
-        btnDescartar.setFocusPainted(false);
-        btnDescartar.setRequestFocusEnabled(false);
-        btnDescartar.setRolloverEnabled(false);
-
-        javax.swing.GroupLayout panelDescuentoLayout = new javax.swing.GroupLayout(panelDescuento);
-        panelDescuento.setLayout(panelDescuentoLayout);
-        panelDescuentoLayout.setHorizontalGroup(
-            panelDescuentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelDescuentoLayout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(ckbxDescuentoSi)
-                .addGap(18, 18, 18)
-                .addComponent(ckbxDescuentoNo)
-                .addGap(18, 18, 18)
-                .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelPorsentaje)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 390, Short.MAX_VALUE)
-                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
-                .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(60, 60, 60))
-        );
-        panelDescuentoLayout.setVerticalGroup(
-            panelDescuentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDescuentoLayout.createSequentialGroup()
-                .addContainerGap(8, Short.MAX_VALUE)
-                .addGroup(panelDescuentoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ckbxDescuentoSi)
-                    .addComponent(ckbxDescuentoNo)
-                    .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelPorsentaje)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(10, 10, 10))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         panelBotones.setBackground(new java.awt.Color(255, 255, 255));
@@ -486,41 +367,192 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                     .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
-        panelBuscarCliente.setBackground(new java.awt.Color(255, 255, 255));
+        pnlTotales2.setBackground(new java.awt.Color(255, 255, 255));
 
-        detalleCotizacion.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        detalleCotizacion.setForeground(new java.awt.Color(15, 105, 196));
-        detalleCotizacion.setText("Detalles de Cotización");
+        ckbxDescuentoSi2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ckbxDescuentoSi2.setSelected(true);
+        ckbxDescuentoSi2.setText("Si");
 
-        cbxEstadoCotizacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estado", "Item 2", "Item 3", "Item 4" }));
+        descuento.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        descuento.setForeground(new java.awt.Color(15, 105, 196));
+        descuento.setText("Descuento");
 
-        labelNumCotizacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        labelNumCotizacion.setText("Num. Cotizacion");
+        ckbxDescuentoNo2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ckbxDescuentoNo2.setText("No");
 
-        labelNomCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        labelNomCliente.setText("Nombre del Cliente");
+        labelPorsentaje2.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        labelPorsentaje2.setForeground(new java.awt.Color(0, 38, 115));
+        labelPorsentaje2.setText("%");
 
-        labelFechaCotizacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        labelFechaCotizacion.setText("Fecha de cotizacion");
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 204, 255)));
+        jPanel4.setForeground(new java.awt.Color(153, 204, 255));
 
-        nomCliente.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        nomCliente.setForeground(new java.awt.Color(0, 38, 115));
-        nomCliente.setText("Nombre del Cliente");
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel12.setText("Subtotal");
 
-        NumCotizacion1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        NumCotizacion1.setForeground(new java.awt.Color(0, 38, 115));
-        NumCotizacion1.setText("Num. Cotización");
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel13.setText("Mano de Obra");
 
-        estado.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        estado.setForeground(new java.awt.Color(0, 38, 115));
-        estado.setText("Estado");
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel14.setText("TOTAL");
 
-        fehcCotizacion.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        fehcCotizacion.setForeground(new java.awt.Color(0, 38, 115));
-        fehcCotizacion.setText("Fecha de Cotización");
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel15.setText("IVA");
+
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel16.setText("Descuento");
+
+        lblManoObra2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblManoObra2.setText("$0.00");
+
+        lblSubtotal2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblSubtotal2.setText("$0.00");
+
+        lblDescuento2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDescuento2.setText("-$0.00");
+
+        lblTotal2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTotal2.setText("$0.00");
+
+        lblIVA2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblIVA2.setText("$0.00");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel12)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel16))
+                        .addGap(58, 58, 58)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblSubtotal2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblManoObra2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblIVA2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblDescuento2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblTotal2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(lblSubtotal2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(lblManoObra2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(lblIVA2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(lblDescuento2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(lblTotal2)))
+        );
+
+        btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
+        btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnGuardar.setBorderPainted(false);
+        btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnGuardar.setDefaultCapable(false);
+        btnGuardar.setFocusPainted(false);
+        btnGuardar.setRequestFocusEnabled(false);
+        btnGuardar.setRolloverEnabled(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+
+        btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
+        btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
+        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
+        btnDescartar.setText("Descartar");
+        btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnDescartar.setBorderPainted(false);
+        btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnDescartar.setDefaultCapable(false);
+        btnDescartar.setFocusPainted(false);
+        btnDescartar.setRequestFocusEnabled(false);
+        btnDescartar.setRolloverEnabled(false);
+        btnDescartar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescartarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlTotales2Layout = new javax.swing.GroupLayout(pnlTotales2);
+        pnlTotales2.setLayout(pnlTotales2Layout);
+        pnlTotales2Layout.setHorizontalGroup(
+            pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTotales2Layout.createSequentialGroup()
+                .addGap(49, 49, 49)
+                .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlTotales2Layout.createSequentialGroup()
+                        .addComponent(descuento)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(pnlTotales2Layout.createSequentialGroup()
+                        .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(pnlTotales2Layout.createSequentialGroup()
+                                .addComponent(ckbxDescuentoSi2)
+                                .addGap(18, 18, 18)
+                                .addComponent(ckbxDescuentoNo2)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtDescuento2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelPorsentaje2))
+                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 346, Short.MAX_VALUE)
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(81, 81, 81))))
+        );
+        pnlTotales2Layout.setVerticalGroup(
+            pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTotales2Layout.createSequentialGroup()
+                .addGap(45, 45, 45)
+                .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTotales2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(descuento)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ckbxDescuentoSi2)
+                    .addComponent(ckbxDescuentoNo2)
+                    .addComponent(txtDescuento2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelPorsentaje2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
+        );
 
         javax.swing.GroupLayout panelBuscarClienteLayout = new javax.swing.GroupLayout(panelBuscarCliente);
         panelBuscarCliente.setLayout(panelBuscarClienteLayout);
@@ -546,7 +578,14 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                         .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(estado)
                             .addComponent(cbxEstadoCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBuscarClienteLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlNuevaCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlTotales2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panelBuscarClienteLayout.setVerticalGroup(
             panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -565,7 +604,13 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                     .addComponent(labelNomCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelFechaCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cbxEstadoCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addComponent(pnlNuevaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addComponent(pnlTotales2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -575,16 +620,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
             .addComponent(panelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelSubtitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelBuscarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelTipoTrabajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelTituloDetalle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(panelDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
-            .addComponent(panelInformacionTrabajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -594,380 +629,442 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                 .addComponent(panelSubtitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelTipoTrabajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelInformacionTrabajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelTituloDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ckbxMosquiteroSiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckbxMosquiteroSiActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ckbxMosquiteroSiActionPerformed
-
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-     this.dispose();
-     InicioAdministrarCotizaciones in= new InicioAdministrarCotizaciones();
-     in.setVisible(true);
+        this.dispose();
+        InicioAdministrarCotizaciones in = new InicioAdministrarCotizaciones();
+        in.setVisible(true);
     }//GEN-LAST:event_btnVolverActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-     try {
-            if (cotizacionActual == null) { /* ... error ... */ return; }
-             String nuevoEstado = cbxEstadoCotizacion.getSelectedItem().toString();
-             BigDecimal nuevoDescuentoMonto = BigDecimal.ZERO;
-             if (ckbxDescuentoSi.isSelected()) {
-                 try {
-                     nuevoDescuentoMonto = new BigDecimal(txtDescuento.getText());
-                      if (nuevoDescuentoMonto.compareTo(BigDecimal.ZERO) < 0) { /* ... error negativo ... */ return; }
-                 } catch (NumberFormatException e) { /* ... error formato ... */ return; }
-             }
-             cotizacionActual.setEstado(nuevoEstado);
-             cotizacionActual.setDescuentoMonto(nuevoDescuentoMonto);
-         
-            List<modelo.VentanaDetalle> listaFinalVentanas = new ArrayList<>();
-            List<modelo.CanceleriaFijaDetalle> listaFinalCancelerias = new ArrayList<>();
-            List<modelo.PuertaAbatibleDetalle> listaFinalPuertas = new ArrayList<>();
+        if (cotizacionActual == null) {
+            JOptionPane.showMessageDialog(this, "No hay cotización cargada para guardar.");
+            return;
+        }
+        if (detallesEnMemoria.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe agregar al menos un detalle a la cotización.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-            Object detalleModificado = null; 
-            if (detalleActual != null) {
-                try {
-                    BigDecimal medH = new BigDecimal(txtMetrosHorizontal.getText());
-                    BigDecimal medV = new BigDecimal(txtMetrosVertical.getText());
-                    int cantidad = Integer.parseInt(cbxCantidad.getSelectedItem().toString());
-                    String cristal = cbxTipoCristal.getSelectedItem() != null ? cbxTipoCristal.getSelectedItem().toString() : "";
-                    int numHojas = Integer.parseInt(cbxNumHojas.getSelectedItem().toString());
-                    boolean mosquitero = ckbxMosquiteroSi.isSelected();
+        try {
+            ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
+            ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
+            ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
+            BigDecimal subtotal = BigDecimal.ZERO;
 
-                    if (detalleActual instanceof modelo.VentanaDetalle vd) {
-                        vd.setMedidaHorizontal(medH); vd.setMedidaVertical(medV);
-                        vd.setCantidad(cantidad); vd.setTipoCristal(cristal);
-                        vd.setNoHojas(numHojas); vd.setMosquitero(mosquitero);
-                        detalleModificado = vd; 
-                    } else if (detalleActual instanceof modelo.CanceleriaFijaDetalle cd) {
-                        cd.setMedidaHorizontal(medH); cd.setMedidaVertical(medV);
-                        cd.setCantidad(cantidad); cd.setTipoCristal(cristal);
-                        cd.setNoHojas(numHojas);
-                        detalleModificado = cd;
-                    } else if (detalleActual instanceof modelo.PuertaAbatibleDetalle pd) {
-                        pd.setMedidaHorizontal(medH); pd.setMedidaVertical(medV);
-                        pd.setCantidad(cantidad); pd.setTipoCristal(cristal);
-                        pd.setNoHojas(numHojas); pd.setMosquitero(mosquitero);
-                        detalleModificado = pd;
-                    }
-                } catch (NumberFormatException | NullPointerException e) { /* ... error formato detalle ... */ return; }
-            }
-
-            for (var original : detallesOriginalesVentana) {
-                if (original == detalleActual) { 
-                    listaFinalVentanas.add((modelo.VentanaDetalle) detalleModificado); 
-                } else {
-                    listaFinalVentanas.add(original); 
+            for (Object detalleObj : detallesEnMemoria) {
+                if (detalleObj instanceof VentanaDetalle vd) {
+                    detallesVentana.add(vd);
+                    subtotal = subtotal.add(vd.getSubtotalLinea());
+                } else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
+                    detallesPuerta.add(pd);
+                    subtotal = subtotal.add(pd.getSubtotalLinea());
+                } else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
+                    detallesCanceleria.add(cd);
+                    subtotal = subtotal.add(cd.getSubtotalLinea());
                 }
             }
-            for (var original : detallesOriginalesCanceleria) {
-                 if (original == detalleActual) {
-                    listaFinalCancelerias.add((modelo.CanceleriaFijaDetalle) detalleModificado);
-                } else {
-                    listaFinalCancelerias.add(original);
-                }
+
+            // calcula el descuento
+            BigDecimal descuentoMonto = BigDecimal.ZERO;
+            if (ckbxDescuentoSi2.isSelected() && !txtDescuento2.getText().trim().isEmpty()) {
+                BigDecimal descuentoPorcentaje = new BigDecimal(txtDescuento2.getText().trim());
+                descuentoMonto = subtotal.multiply(descuentoPorcentaje.divide(new BigDecimal("100")));
             }
-            // Hacer lo mismo para puertas
-            for (var original : detallesOriginalesPuerta) {
-                 if (original == detalleActual) {
-                    listaFinalPuertas.add((modelo.PuertaAbatibleDetalle) detalleModificado);
-                } else {
-                    listaFinalPuertas.add(original);
-                }
-            }
+
+            cotizacionActual.setEstado(cbxEstadoCotizacion.getSelectedItem().toString());
+            cotizacionActual.setSubtotal(subtotal);
+            cotizacionActual.setDescuentoMonto(descuentoMonto);
+
             boolean exito = cotizacionBO.actualizarCotizacionCompleta(
-                cotizacionActual,
-                listaFinalVentanas,
-                listaFinalCancelerias,
-                listaFinalPuertas
+                    cotizacionActual,
+                    detallesVentana,
+                    detallesCanceleria,
+                    detallesPuerta
             );
 
             if (exito) {
-                JOptionPane.showMessageDialog(this, "Cotización actualizada correctamente.", "Guardado", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Cotización " + cotizacionActual.getIdCotizacion() + " actualizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 this.dispose();
-                InicioAdministrarCotizaciones inicio = new InicioAdministrarCotizaciones();
-                inicio.setVisible(true);
+                new InicioAdministrarCotizaciones().setVisible(true);
             } else {
-                JOptionPane.showMessageDialog(this, "Error al guardar la cotización.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Ocurrió un error al actualizar la cotización.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Error de formato numérico. Verifique el campo de descuento.", "Error de Datos", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error inesperado al guardar: " + e.getMessage(), "Error General", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error inesperado al guardar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-  /**
-     * Configura BO, componentes de UI (ComboBoxes) y conecta listeners.
-     */
+    private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
+        int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de descartar los cambios?",
+                "Confirmar Cancelación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            this.dispose();
+            new InicioAdministrarCotizaciones().setVisible(true);
+        }
+    }//GEN-LAST:event_btnDescartarActionPerformed
+
+    private void btnEliminarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCotizacionActionPerformed
+        int filaSeleccionada = tblDetallesAgregados.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un detalle para eliminarlo.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "¿Seguro que deseas eliminar esta cotización de la lista?",
+                "Confirmar", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            detallesEnMemoria.remove(filaSeleccionada);
+            actualizarTablaDetalles();
+            recalcularTotales();
+        }
+    }//GEN-LAST:event_btnEliminarCotizacionActionPerformed
+
+    private void btnNuevaCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCotizacionActionPerformed
+        List<Material> materiales = this.materialesDisponibles;
+        if (materiales == null || materiales.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Error: No se pudieron cargar los materiales.");
+            return;
+        }
+
+        DetalleEditorDialog dialog = new DetalleEditorDialog(this, true, materiales);
+        dialog.setVisible(true);
+
+        Object nuevoDetalle = dialog.getDetalleResultado();
+
+        if (nuevoDetalle != null) {
+            detallesEnMemoria.add(nuevoDetalle);
+            actualizarTablaDetalles();
+            recalcularTotales();
+        }
+
+    }//GEN-LAST:event_btnNuevaCotizacionActionPerformed
+
+    private void btnEditarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCotizacionActionPerformed
+        int filaSeleccionada = tblDetallesAgregados.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una cotización de la tabla para editar.");
+            return;
+        }
+
+        Object detalleAEditar = detallesEnMemoria.get(filaSeleccionada);
+        List<Material> materiales = materialesDisponibles;
+
+        DetalleEditorDialog dialog = null;
+
+        if (detalleAEditar instanceof VentanaDetalle vd) {
+            dialog = new DetalleEditorDialog(this, true, materiales, vd);
+        } else if (detalleAEditar instanceof PuertaAbatibleDetalle pd) {
+            dialog = new DetalleEditorDialog(this, true, materiales, pd);
+        } else if (detalleAEditar instanceof CanceleriaFijaDetalle cd) {
+            dialog = new DetalleEditorDialog(this, true, materiales, cd);
+        } else {
+            JOptionPane.showMessageDialog(this, "Error desconocido en el detalle.");
+            return;
+        }
+
+        dialog.setVisible(true);
+        Object detalleResultado = dialog.getDetalleResultado();
+
+        if (detalleResultado != null) {
+            detallesEnMemoria.set(filaSeleccionada, detalleResultado);
+            actualizarTablaDetalles();
+            recalcularTotales();
+        }
+    }//GEN-LAST:event_btnEditarCotizacionActionPerformed
+
+    // --- carga el catalogo
+    private void cargarCatalogo() {
+        this.catalogoTrabajos = new ArrayList<>();
+        try (Connection con = Conexion.getConnection()) {
+            CatalogoTrabajoDAO dao = new CatalogoTrabajoDAO(con);
+            this.catalogoTrabajos = dao.obtenerTodos();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar el catálogo de trabajos.");
+        }
+    }
+
+    // (Copiado de frmCrearCotizacion - Asegúrate de que tu MaterialDAO esté completo)
+    private void cargarMaterialesDisponibles() {
+        try {
+            MaterialDAO materialDAO = new MaterialDAO(utils.Conexion.getConnection());
+            materialesDisponibles = materialDAO.obtenerTodos();
+
+            if (materialesDisponibles == null || materialesDisponibles.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "No se encontraron materiales en la base de datos.",
+                        "Advertencia",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "Error al conectar con la base de datos: " + e.getMessage(),
+                    "Error de conexión",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // (Copiado de frmCrearCotizacion)
     private void inicializarLogica() {
-        this.cotizacionBO = new negocio.CotizacionBO(); 
+        this.modeloTablaDetalles = (DefaultTableModel) tblDetallesAgregados.getModel();
+        modeloTablaDetalles.setRowCount(0);
 
-        cbxEstadoCotizacion.removeAllItems();
-        cbxEstadoCotizacion.addItem("Pendiente");
-        cbxEstadoCotizacion.addItem("Aceptado");
-        cbxEstadoCotizacion.addItem("Cancelada");
+        tblDetallesAgregados.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                actualizarEstadoBotones();
+            }
+        });
+        actualizarEstadoBotones();
+    }
 
-        // --- Poblar ComboBox Tipo de Trabajo ---
-        cbxTipoTrabajo1.removeAllItems(); // Limpiar items por defecto
-        cbxTipoTrabajo1.addItem("---"); // Item inicial no seleccionable
-        for (modelo.TipoVentana tv : modelo.TipoVentana.values()) {
-            cbxTipoTrabajo1.addItem("VENTANA - " + tv.getDescripcion());
+    // actuliza los estados de los botones
+    private void actualizarEstadoBotones() {
+        boolean filaSeleccionada = tblDetallesAgregados.getSelectedRow() != -1;
+        btnEditarCotizacion.setEnabled(filaSeleccionada);
+        btnEliminarCotizacion.setEnabled(filaSeleccionada);
+    }
+
+    // actualiza la tablla de las cotizaiones
+    private void actualizarTablaDetalles() {
+        modeloTablaDetalles.setRowCount(0);
+
+        for (Object detalle : detallesEnMemoria) {
+            if (detalle instanceof VentanaDetalle vd) {
+                modeloTablaDetalles.addRow(new Object[]{
+                    "Ventana", vd.getCantidad(), vd.getDescripcion(),
+                    vd.getMedidaHorizontal() + " x " + vd.getMedidaVertical(), vd.getSubtotalLinea()
+                });
+            } else if (detalle instanceof PuertaAbatibleDetalle pd) {
+                modeloTablaDetalles.addRow(new Object[]{
+                    "Puerta", pd.getCantidad(), pd.getDescripcion(),
+                    pd.getMedidaHorizontal() + " x " + pd.getMedidaVertical(), pd.getSubtotalLinea()
+                });
+            } else if (detalle instanceof CanceleriaFijaDetalle cd) {
+                modeloTablaDetalles.addRow(new Object[]{
+                    "Cancelería", cd.getCantidad(), cd.getDescripcion(),
+                    cd.getMedidaHorizontal() + " x " + cd.getMedidaVertical(), cd.getSubtotalLinea()
+                });
+            }
         }
-        for (modelo.TipoPuerta tp : modelo.TipoPuerta.values()) {
-            cbxTipoTrabajo1.addItem("PUERTA - " + tp.getDescripcion());
-        }
-        for (modelo.TipoCanceleria tc : modelo.TipoCanceleria.values()) {
-            cbxTipoTrabajo1.addItem("CANCELERIA - " + tc.getDescripcion());
-        }
-        cbxTipoTrabajo1.setEnabled(false);
+        actualizarEstadoBotones();
+    }
 
-        // --- Configurar ComboBoxes de Cantidad y NoHojas
-        DefaultComboBoxModel<String> cantidadModel = new DefaultComboBoxModel<>();
-        DefaultComboBoxModel<String> hojasModel = new DefaultComboBoxModel<>();
-        for (int i = 1; i <= 100; i++) {
-            cantidadModel.addElement(String.valueOf(i));
-            hojasModel.addElement(String.valueOf(i));
+    // calcula los totales
+    private void recalcularTotales() {
+        BigDecimal subtotal = BigDecimal.ZERO;
+
+        for (Object detalle : detallesEnMemoria) {
+            if (detalle instanceof VentanaDetalle vd) {
+                subtotal = subtotal.add(vd.getSubtotalLinea());
+            } else if (detalle instanceof PuertaAbatibleDetalle pd) {
+                subtotal = subtotal.add(pd.getSubtotalLinea());
+            } else if (detalle instanceof CanceleriaFijaDetalle cd) {
+                subtotal = subtotal.add(cd.getSubtotalLinea());
+            }
         }
-        cbxCantidad.setModel(cantidadModel);
-        cbxNumHojas.setModel(hojasModel);
 
-        // --- Poblar ComboBox Tipo Cristal ---
-        try (var conn = utils.Conexion.getConnection()) {
-             var materialDAO = new dao.MaterialDAO(conn);
-             List<Material> vidrios = materialDAO.obtenerPorTipo(Material.TipoMaterial.Vidrio);
-             cbxTipoCristal.removeAllItems();
-             if (vidrios != null && !vidrios.isEmpty()) {
-                 for (Material vidrio : vidrios) {
-                     cbxTipoCristal.addItem(vidrio.getDescripcion());
-                 }
-             } else {
-                 cbxTipoCristal.addItem("No hay vidrios");
-             }
-         } catch (Exception e) {
-             e.printStackTrace();
-             cbxTipoCristal.removeAllItems();
-             cbxTipoCristal.addItem("Error DB");
-         }
-        btnGuardar.addActionListener(this::btnGuardarActionPerformed);
+        BigDecimal descuento = BigDecimal.ZERO;
+        if (ckbxDescuentoSi2.isSelected() && !txtDescuento2.getText().trim().isEmpty()) { // Usa nombres de Editar
+            try {
+                BigDecimal porcentaje = new BigDecimal(txtDescuento2.getText().trim()); // Usa nombres de Editar
+                descuento = subtotal.multiply(porcentaje.divide(new BigDecimal("100")));
+            } catch (NumberFormatException e) {
+                descuento = BigDecimal.ZERO;
+            }
+        }
 
-        ckbxDescuentoSi.addActionListener(e -> { ckbxDescuentoNo.setSelected(false); txtDescuento.setEnabled(true); });
-        ckbxDescuentoNo.addActionListener(e -> { ckbxDescuentoSi.setSelected(false); txtDescuento.setEnabled(false); txtDescuento.setText("0"); });
-        txtDescuento.setEnabled(ckbxDescuentoSi.isSelected()); 
-        ckbxMosquiteroSi.addActionListener(e -> ckbxMosquiteroNo.setSelected(false));
-        ckbxMosquiteroNo.addActionListener(e -> ckbxMosquiteroSi.setSelected(false));
+        BigDecimal porcentajeManoObra = new BigDecimal("0.45");
+        BigDecimal manoObra = subtotal.multiply(porcentajeManoObra);
+        BigDecimal baseImponible = subtotal.add(manoObra).subtract(descuento);
+        BigDecimal iva = baseImponible.multiply(new BigDecimal("0.16"));
+        BigDecimal total = baseImponible.add(iva);
+
+        //actualiza los costos
+        lblSubtotal2.setText(String.format("$%.2f", subtotal));
+        lblManoObra2.setText(String.format("$%.2f", manoObra));
+        lblDescuento2.setText(String.format("-$%.2f", descuento));
+        lblIVA2.setText(String.format("$%.2f", iva));
+        lblTotal2.setText(String.format("$%.2f", total));
+    }
+
+    private List<Material> getMaterialesVidrio() {
+        List<Material> vidrios = new ArrayList<>();
+        if (this.materialesDisponibles != null) {
+            for (Material m : this.materialesDisponibles) {
+                if (m.getTipo() == Material.TipoMaterial.Vidrio) {
+                    vidrios.add(m);
+                }
+            }
+        }
+        return vidrios;
     }
 
     /**
-     * carga los detalles de las cotizaciones
+     * Carga la cotización existente y sus detalles en el formulario.
      */
-    private void cargarDatos(int idCotizacion) {
-        var detalleDAO = new dao.DetalleCotizacionDAO(cotizacionBO.getConexion()); 
+    private void cargarDatosCotizacion(int idCotizacion) {
         try {
             this.cotizacionActual = cotizacionBO.obtenerCotizacionPorId(idCotizacion);
-
             if (cotizacionActual == null) {
-                JOptionPane.showMessageDialog(this, "Error: No se encontró la cotización con ID: " + idCotizacion, "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error: No se encontró la cotización con ID: " + idCotizacion);
                 this.dispose();
                 return;
             }
 
             labelNumCotizacion.setText(String.valueOf(cotizacionActual.getIdCotizacion()));
-            if (cotizacionActual.getCliente() != null) {
-                labelNomCliente.setText(cotizacionActual.getCliente().getNombre());
-            } else {
-                labelNomCliente.setText("Cliente no encontrado");
-            }
+            labelNomCliente.setText(cotizacionActual.getCliente().getNombre());
+            labelFechaCotizacion.setText(new SimpleDateFormat("yyyy-MM-dd").format(cotizacionActual.getFecha()));
 
-            if (cotizacionActual.getFecha() != null) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                labelFechaCotizacion.setText(sdf.format(cotizacionActual.getFecha()));
-            } else {
-                labelFechaCotizacion.setText("N/A");
-            }
-
+            cbxEstadoCotizacion.removeAllItems();
+            cbxEstadoCotizacion.addItem("Pendiente");
+            cbxEstadoCotizacion.addItem("Aceptado");
+            cbxEstadoCotizacion.addItem("Cancelada");
             cbxEstadoCotizacion.setSelectedItem(cotizacionActual.getEstado());
 
             // Llenar descuento
-            BigDecimal descuento = cotizacionActual.getDescuentoMonto();
-            if (descuento != null && descuento.compareTo(BigDecimal.ZERO) > 0) {
-                ckbxDescuentoSi.setSelected(true); ckbxDescuentoNo.setSelected(false);
-                txtDescuento.setText(descuento.toPlainString()); txtDescuento.setEnabled(true);
+            BigDecimal descuentoMonto = cotizacionActual.getDescuentoMonto();
+            BigDecimal subtotal = cotizacionActual.getSubtotal();
+
+            // Calcula el porcentaje si es posible
+            if (descuentoMonto != null && subtotal != null && subtotal.compareTo(BigDecimal.ZERO) > 0) {
+                BigDecimal porcentaje = descuentoMonto.multiply(new BigDecimal("100")).divide(subtotal, 2, BigDecimal.ROUND_HALF_UP);
+                txtDescuento2.setText(porcentaje.toPlainString());
+                ckbxDescuentoSi2.setSelected(true);
+                ckbxDescuentoNo2.setSelected(false);
             } else {
-                ckbxDescuentoSi.setSelected(false); ckbxDescuentoNo.setSelected(true);
-                txtDescuento.setText("0"); txtDescuento.setEnabled(false);
+                txtDescuento2.setText("0");
+                ckbxDescuentoSi2.setSelected(false);
+                ckbxDescuentoNo2.setSelected(true);
             }
 
-            tipoDetalleActual = null;
-            if (detallesOriginalesVentana == null) detallesOriginalesVentana = new ArrayList<>(); else detallesOriginalesVentana.clear();
-            if (detallesOriginalesCanceleria == null) detallesOriginalesCanceleria = new ArrayList<>(); else detallesOriginalesCanceleria.clear();
-            if (detallesOriginalesPuerta == null) detallesOriginalesPuerta = new ArrayList<>(); else detallesOriginalesPuerta.clear();
+            //Llenar la lista 
+            detallesEnMemoria.clear();
 
-            detallesOriginalesVentana = detalleDAO.obtenerVentanasPorCotizacion(idCotizacion);
-            if (!detallesOriginalesVentana.isEmpty()) {
-                detalleActual = detallesOriginalesVentana.get(0);
-                tipoDetalleActual = "VENTANA";
+            List<VentanaDetalle> ventanas = detalleDAO.obtenerVentanasPorCotizacion(idCotizacion);
+            if (ventanas != null) {
+                detallesEnMemoria.addAll(ventanas);
             }
 
-            detallesOriginalesCanceleria = detalleDAO.obtenerCanceleriasPorCotizacion(idCotizacion);
-            if (detalleActual == null && !detallesOriginalesCanceleria.isEmpty()) { // Solo si no encontramos ventana
-                detalleActual = detallesOriginalesCanceleria.get(0);
-                tipoDetalleActual = "CANCELERIA";
+            List<PuertaAbatibleDetalle> puertas = detalleDAO.obtenerPuertasPorCotizacion(idCotizacion);
+            if (puertas != null) {
+                detallesEnMemoria.addAll(puertas);
             }
 
-            detallesOriginalesPuerta = detalleDAO.obtenerPuertasPorCotizacion(idCotizacion);
-            if (detalleActual == null && !detallesOriginalesPuerta.isEmpty()) { // Solo si no encontramos ni ventana ni cancelería
-                detalleActual = detallesOriginalesPuerta.get(0);
-                tipoDetalleActual = "PUERTA";
+            List<CanceleriaFijaDetalle> cancelerias = detalleDAO.obtenerCanceleriasPorCotizacion(idCotizacion);
+            if (cancelerias != null) {
+                detallesEnMemoria.addAll(cancelerias);
             }
 
-            if (detalleActual != null) {
-                String tipoTrabajoStr = ""; // Para seleccionar
-                // llenar campos segun el tipo
-                if (detalleActual instanceof modelo.VentanaDetalle vd) {
-                    txtMetrosHorizontal.setText(vd.getMedidaHorizontal().toPlainString());
-                    txtMetrosVertical.setText(vd.getMedidaVertical().toPlainString());
-                    cbxCantidad.setSelectedIndex(Math.max(0, vd.getCantidad() - 1)); 
-                    cbxTipoCristal.setSelectedItem(vd.getTipoCristal());
-                    cbxNumHojas.setSelectedIndex(Math.max(0, vd.getNoHojas() - 1));
-                    ckbxMosquiteroSi.setSelected(vd.isMosquitero()); ckbxMosquiteroNo.setSelected(!vd.isMosquitero());
-                    ckbxMosquiteroSi.setEnabled(true); ckbxMosquiteroNo.setEnabled(true);
-                    // Construir el String exacto como está en el ComboBox
-                    tipoTrabajoStr = "VENTANA - " + (vd.getTipoVentana() != null ? vd.getTipoVentana().getDescripcion() : "N/A");
-                } else if (detalleActual instanceof modelo.CanceleriaFijaDetalle cd) {
-                    txtMetrosHorizontal.setText(cd.getMedidaHorizontal().toPlainString());
-                    txtMetrosVertical.setText(cd.getMedidaVertical().toPlainString());
-                    cbxCantidad.setSelectedIndex(Math.max(0, cd.getCantidad() - 1));
-                    cbxTipoCristal.setSelectedItem(cd.getTipoCristal());
-                    cbxNumHojas.setSelectedIndex(Math.max(0, cd.getNoHojas() - 1));
-                    ckbxMosquiteroSi.setSelected(false); ckbxMosquiteroNo.setSelected(true);
-                    ckbxMosquiteroSi.setEnabled(false); ckbxMosquiteroNo.setEnabled(false);
-                    tipoTrabajoStr = "CANCELERIA - " + (cd.getTipoCanceleria() != null ? cd.getTipoCanceleria().getDescripcion() : "N/A");
-                } else if (detalleActual instanceof modelo.PuertaAbatibleDetalle pd) {
-                    txtMetrosHorizontal.setText(pd.getMedidaHorizontal().toPlainString());
-                    txtMetrosVertical.setText(pd.getMedidaVertical().toPlainString());
-                    cbxCantidad.setSelectedIndex(Math.max(0, pd.getCantidad() - 1));
-                    cbxTipoCristal.setSelectedItem(pd.getTipoCristal());
-                    cbxNumHojas.setSelectedIndex(Math.max(0, pd.getNoHojas() - 1));
-                    ckbxMosquiteroSi.setSelected(pd.isMosquitero()); ckbxMosquiteroNo.setSelected(!pd.isMosquitero());
-                    ckbxMosquiteroSi.setEnabled(true); ckbxMosquiteroNo.setEnabled(true);
-                    tipoTrabajoStr = "PUERTA - " + (pd.getTipoPuerta() != null ? pd.getTipoPuerta().getDescripcion() : "N/A");
-                }
-                
-                // aeleccionar tipo de trabajo
-                cbxTipoTrabajo1.setSelectedItem(tipoTrabajoStr);
-
-                panelTipoTrabajo.setVisible(true);
-                panelInformacionTrabajo.setVisible(true);
-            } else {
-                // Ocultar si no hay detalles
-                panelTipoTrabajo.setVisible(false);
-                panelInformacionTrabajo.setVisible(false);
-            }
+            // 4. Actualizar la JTable y los Totales
+            actualizarTablaDetalles();
+            recalcularTotales();
 
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error al cargar datos completos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error al cargar la cotización: " + e.getMessage());
         }
     }
-    
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmEditarCotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmEditarCotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmEditarCotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmEditarCotizacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new frmEditarCotizacion().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Descuento;
+    private javax.swing.JLabel Descuento1;
     private javax.swing.JLabel EditarCotizacion;
     private javax.swing.JLabel NumCotizacion1;
     private javax.swing.JButton btnDescargar;
     private javax.swing.JButton btnDescartar;
+    private javax.swing.JButton btnEditarCotizacion;
+    private javax.swing.JButton btnEliminarCotizacion;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnImprimir;
+    private javax.swing.JButton btnNuevaCotizacion;
     private javax.swing.JButton btnVistaPrevia;
     private javax.swing.JButton btnVolver;
-    private javax.swing.JComboBox<String> cbxCantidad;
     private javax.swing.JComboBox<String> cbxEstadoCotizacion;
-    private javax.swing.JComboBox<String> cbxNumHojas;
-    private javax.swing.JComboBox<String> cbxTipoCristal;
-    private javax.swing.JComboBox<String> cbxTipoTrabajo1;
     private javax.swing.JCheckBox ckbxDescuentoNo;
+    private javax.swing.JCheckBox ckbxDescuentoNo1;
+    private javax.swing.JCheckBox ckbxDescuentoNo2;
     private javax.swing.JCheckBox ckbxDescuentoSi;
-    private javax.swing.JCheckBox ckbxMosquiteroNo;
-    private javax.swing.JCheckBox ckbxMosquiteroSi;
+    private javax.swing.JCheckBox ckbxDescuentoSi1;
+    private javax.swing.JCheckBox ckbxDescuentoSi2;
+    private javax.swing.JLabel descuento;
     private javax.swing.JLabel detalleCotizacion;
     private javax.swing.JLabel estado;
     private javax.swing.JLabel fehcCotizacion;
     private javax.swing.JLabel iconoEditar;
     private javax.swing.JLabel iconoTitulo;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel labelFechaCotizacion;
-    private javax.swing.JLabel labelHorizontal;
     private javax.swing.JLabel labelNomCliente;
     private javax.swing.JLabel labelNumCotizacion;
-    private javax.swing.JLabel labelNumHojas;
     private javax.swing.JLabel labelPorsentaje;
-    private javax.swing.JLabel labelVertical;
+    private javax.swing.JLabel labelPorsentaje1;
+    private javax.swing.JLabel labelPorsentaje2;
+    private javax.swing.JLabel lblDescuento;
+    private javax.swing.JLabel lblDescuento1;
+    private javax.swing.JLabel lblDescuento2;
+    private javax.swing.JLabel lblIVA;
+    private javax.swing.JLabel lblIVA1;
+    private javax.swing.JLabel lblIVA2;
+    private javax.swing.JLabel lblManoObra;
+    private javax.swing.JLabel lblManoObra1;
+    private javax.swing.JLabel lblManoObra2;
+    private javax.swing.JLabel lblSubtotal;
+    private javax.swing.JLabel lblSubtotal1;
+    private javax.swing.JLabel lblSubtotal2;
+    private javax.swing.JLabel lblTotal;
+    private javax.swing.JLabel lblTotal1;
+    private javax.swing.JLabel lblTotal2;
     private javax.swing.JLabel nomCliente;
     private javax.swing.JPanel panelBotones;
     private javax.swing.JPanel panelBuscarCliente;
-    private javax.swing.JPanel panelDescuento;
-    private javax.swing.JPanel panelInformacionTrabajo;
     private javax.swing.JPanel panelSubtitulo;
-    private javax.swing.JPanel panelTipoTrabajo;
     private javax.swing.JPanel panelTitulo;
-    private javax.swing.JPanel panelTituloDetalle;
-    private javax.swing.JLabel tituloCantidad;
-    private javax.swing.JLabel tituloCristal;
-    private javax.swing.JLabel tituloMedidas;
-    private javax.swing.JLabel tituloMosquitero;
-    private javax.swing.JLabel tituloTipoTrabajo;
+    private javax.swing.JPanel pnlNuevaCotizacion;
+    private javax.swing.JPanel pnlTotales;
+    private javax.swing.JPanel pnlTotales1;
+    private javax.swing.JPanel pnlTotales2;
+    private javax.swing.JTable tblDetallesAgregados;
+    private javax.swing.JLabel tituloEditarCotizacion;
     private javax.swing.JTextField txtDescuento;
-    private javax.swing.JTextField txtMetrosHorizontal;
-    private javax.swing.JTextField txtMetrosVertical;
+    private javax.swing.JTextField txtDescuento1;
+    private javax.swing.JTextField txtDescuento2;
     // End of variables declaration//GEN-END:variables
 }
