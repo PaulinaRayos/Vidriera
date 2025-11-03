@@ -134,8 +134,8 @@ public class CotizacionBO {
 
     // Actualizar cotizacion (solo la tabla principal)
     public boolean actualizarCotizacion(Cotizacion c) {
-        if (c.getEstado().equalsIgnoreCase("Aceptado") || c.getEstado().equalsIgnoreCase("Rechazada")) {
-            System.out.println("No se puede modificar cotizacion aceptada o rechazada");
+        if (c.getEstado().equalsIgnoreCase("Aceptado") || c.getEstado().equalsIgnoreCase("Cancelada")) {
+            System.out.println("No se puede modificar cotizacion aceptada o Cancelada");
             return false;
         }
         return cotizacionDAO.actualizarCotizacion(c);

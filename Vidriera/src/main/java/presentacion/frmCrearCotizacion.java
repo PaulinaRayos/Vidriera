@@ -838,62 +838,80 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
-        if (cbxSeleccionarCliente.getSelectedIndex() == -1 || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente.", "Error de validación", JOptionPane.ERROR_MESSAGE);
-            return;
+         // Validaciones básicas
+    if (cbxSeleccionarCliente.getSelectedIndex() == -1 || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
+        JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    if (vendedorPorDefecto == null) {
+        JOptionPane.showMessageDialog(this, "No se cargó un vendedor por defecto.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    if (detallesEnMemoria.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Debe agregar al menos un detalle.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    // Obtenemos cliente seleccionado
+    Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
+
+    // Inicializamos listas de detalle
+    ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
+    ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
+    ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
+    BigDecimal subtotal = BigDecimal.ZERO;
+
+    // Clasificamos detalles y calculamos subtotal
+    for (Object detalleObj : detallesEnMemoria) {
+        if (detalleObj instanceof VentanaDetalle vd) {
+            detallesVentana.add(vd);
+            subtotal = subtotal.add(vd.getSubtotalLinea());
+        } else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
+            detallesPuerta.add(pd);
+            subtotal = subtotal.add(pd.getSubtotalLinea());
+        } else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
+            detallesCanceleria.add(cd);
+            subtotal = subtotal.add(cd.getSubtotalLinea());
         }
-        if (vendedorPorDefecto == null) {
-            JOptionPane.showMessageDialog(this, "No se cargó un vendedor por defecto.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (detallesEnMemoria.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Debe agregar al menos un detalle.", "Error de validación", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+    }
 
-        Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
+    // Calculamos mano de obra (10%)
+    BigDecimal porcentajeManoObra = new BigDecimal("0.10");
+    BigDecimal manoObra = subtotal.multiply(porcentajeManoObra);
 
-        ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
-        ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
-        ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
-        BigDecimal subtotal = BigDecimal.ZERO;
+    // Calculamos IVA (16%)
+    BigDecimal iva = (subtotal.add(manoObra)).multiply(new BigDecimal("0.16"));
 
-        for (Object detalleObj : detallesEnMemoria) {
-            if (detalleObj instanceof VentanaDetalle vd) {
-                detallesVentana.add(vd);
-                subtotal = subtotal.add(vd.getSubtotalLinea());
-            } else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
-                detallesPuerta.add(pd);
-                subtotal = subtotal.add(pd.getSubtotalLinea());
-            } else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
-                detallesCanceleria.add(cd);
-                subtotal = subtotal.add(cd.getSubtotalLinea());
-            }
-        }
+    // Calculamos descuento
+    BigDecimal descuentoMonto = BigDecimal.ZERO;
+    if (ckbxDescuentoSi.isSelected() && !txtDescuento.getText().trim().isEmpty()) {
+        BigDecimal descuentoPorcentaje = new BigDecimal(txtDescuento.getText().trim());
+        descuentoMonto = subtotal.multiply(descuentoPorcentaje.divide(new BigDecimal("100")));
+    }
 
-        BigDecimal descuentoMonto = BigDecimal.ZERO;
-        if (ckbxDescuentoSi.isSelected() && !txtDescuento.getText().trim().isEmpty()) {
-            BigDecimal descuentoPorcentaje = new BigDecimal(txtDescuento.getText().trim());
-            descuentoMonto = subtotal.multiply(descuentoPorcentaje.divide(new BigDecimal("100")));
-        }
+    // Calculamos total
+    BigDecimal total = subtotal.add(manoObra).add(iva).subtract(descuentoMonto);
 
-        Cotizacion cotizacion = new Cotizacion();
-        cotizacion.setCliente(clienteSeleccionado);
-        cotizacion.setVendedor(vendedorPorDefecto);
-        cotizacion.setProyecto(null);
-        cotizacion.setFecha(new Date());
-        cotizacion.setEstado("Pendiente");
-        cotizacion.setSubtotal(subtotal);
-        cotizacion.setDescuentoMonto(descuentoMonto);
-        // Si tu Cotizacion tiene setters para detalles, úsalos:
-        cotizacion.setVentanaDetalles(detallesVentana);
-        cotizacion.setPuertaAbatibleDetalles(detallesPuerta);
-        cotizacion.setCanceleriaFijaDetalles(detallesCanceleria);
+    // Creamos objeto cotización y seteamos todos los datos
+    Cotizacion cotizacion = new Cotizacion();
+    cotizacion.setCliente(clienteSeleccionado);
+    cotizacion.setVendedor(vendedorPorDefecto);
+    cotizacion.setProyecto(null); // o según corresponda
+    cotizacion.setFecha(new Date());
+    cotizacion.setEstado("Pendiente");
+    cotizacion.setSubtotal(subtotal);
+    cotizacion.setManoObra(manoObra);
+    cotizacion.setIva(iva);
+    cotizacion.setDescuentoMonto(descuentoMonto);
+    cotizacion.setTotal(total);
 
-        // Ahora llama al diálogo de previsualización y pásale la cotización
-        DialogoPrevisualizacionCotizacion previsualizar
-        = new DialogoPrevisualizacionCotizacion(this, cotizacion);
-        previsualizar.setVisible(true);
+    cotizacion.setVentanaDetalles(detallesVentana);
+    cotizacion.setPuertaAbatibleDetalles(detallesPuerta);
+    cotizacion.setCanceleriaFijaDetalles(detallesCanceleria);
+
+    // Llama al diálogo de visualización pasándole la cotización completa
+    DialogoPrevisualizacionCotizacion previsualizar = new DialogoPrevisualizacionCotizacion(this, cotizacion);
+    previsualizar.setVisible(true);
     }//GEN-LAST:event_btnVistaPreviaActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
