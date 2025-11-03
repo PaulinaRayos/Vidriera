@@ -8,10 +8,18 @@ import java.math.BigDecimal;
 import java.util.List;
 import javax.swing.JOptionPane;
 import modelo.Material;
-import modelo.TipoPuerta; 
-import modelo.PuertaAbatibleDetalle; 
-import dao.CatalogoTrabajoDAO; 
-import javax.swing.SpinnerNumberModel; 
+import modelo.TipoPuerta;
+import modelo.PuertaAbatibleDetalle;
+import dao.CatalogoTrabajoDAO;
+import dao.MaterialDetalleDAO;
+import dao.PuertaAbatibleDetalleDAO;
+import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JComboBox;
+import javax.swing.SpinnerNumberModel;
+import utils.Conexion;
 
 /**
  *
@@ -21,6 +29,7 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
 
     private List<Material> materialesDisponibles; // Para cristales, accesorios
     private CatalogoTrabajoDAO catalogoDAO;
+
     /**
      * Creates new form PanelDetallePuertaAbatible
      */
@@ -28,28 +37,34 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         initComponents();
         configurarListeners();
     }
-    
+
     /**
      * Prepara el panel
+     *
      * @param materiales La lista de materiales
      */
     public void inicializarDatos(List<Material> materiales) {
         this.materialesDisponibles = materiales;
         try {
-             this.catalogoDAO = new CatalogoTrabajoDAO(utils.Conexion.getConnection());
+            this.catalogoDAO = new CatalogoTrabajoDAO(utils.Conexion.getConnection());
         } catch (java.sql.SQLException e) {
-             e.printStackTrace();
-             JOptionPane.showMessageDialog(this, "Error al conectar con BD para Catálogo", "Error DB", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al conectar con BD para Catálogo", "Error DB", JOptionPane.ERROR_MESSAGE);
         }
-        
+
         cargarDatosComboBox();
-        
+
         // Configurar los Spinners (de 1 a 100)
         spnCantidad.setModel(new SpinnerNumberModel(1, 1, 100, 1));
         spnNoHojas.setModel(new SpinnerNumberModel(1, 1, 100, 1));
         // Spinners para accesorios (permiten 0)
         spnCantidadPivote.setModel(new SpinnerNumberModel(0, 0, 10, 1));
         spnCantidadJaladera.setModel(new SpinnerNumberModel(0, 0, 10, 1));
+
+        // Validar campos de texto
+        permitirSoloNumeros(txtMedidaH);
+        permitirSoloNumeros(txtMedidaV);
+
     }
 
     /**
@@ -99,7 +114,7 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         pivote = new javax.swing.JLabel();
         ckPivote = new javax.swing.JCheckBox();
         tipoPivote = new javax.swing.JLabel();
-        txtTipoPivote = new javax.swing.JComboBox<>();
+        cbxTipoPivote = new javax.swing.JComboBox<>();
         cantidadPivote = new javax.swing.JLabel();
         spnCantidadPivote = new javax.swing.JSpinner();
         jaladera = new javax.swing.JLabel();
@@ -308,11 +323,11 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         tipoPivote.setForeground(new java.awt.Color(0, 38, 115));
         tipoPivote.setText("Tipo pivote:");
 
-        txtTipoPivote.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtTipoPivote.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        txtTipoPivote.addActionListener(new java.awt.event.ActionListener() {
+        cbxTipoPivote.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbxTipoPivote.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTipoPivote.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTipoPivoteActionPerformed(evt);
+                cbxTipoPivoteActionPerformed(evt);
             }
         });
 
@@ -482,7 +497,7 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
                             .addComponent(cbxTipoBarra, 0, 160, Short.MAX_VALUE)
                             .addComponent(ckBarra)
                             .addComponent(ckPivote)
-                            .addComponent(txtTipoPivote, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(cbxTipoPivote, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(30, 30, 30))
         );
         panelDetalleVentanaLayout.setVerticalGroup(
@@ -512,9 +527,9 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
                                     .addComponent(ckPivote, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(pivote, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tipoPivote, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtTipoPivote, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbxTipoPivote, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tipoPivote, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(12, 12, 12)
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(cantidadPivote, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -553,9 +568,9 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
                                     .addComponent(ckJaladera, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jaladera, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(12, 12, 12)
-                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tipoJaladera, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbxTipoJaladera, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbxTipoJaladera, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tipoJaladera, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(12, 12, 12)
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(cantidadJaladera, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -565,9 +580,9 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
                                     .addComponent(ckBarra, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(barra, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tipoBarra, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbxTipoBarra, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbxTipoBarra, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tipoBarra, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(mosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -582,29 +597,26 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
                                 .addComponent(ckAdaptador, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cbxTipoAdaptador, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(12, 12, 12)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(12, 12, 12)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ckJunquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(juanquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tipoJuanquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxTipoJunquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbxTipoJunquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tipoJuanquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(12, 12, 12)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ckCanal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(canal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tipoCanal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxTipoCanal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbxTipoCanal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tipoCanal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -664,9 +676,9 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_ckPivoteActionPerformed
 
-    private void txtTipoPivoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTipoPivoteActionPerformed
+    private void cbxTipoPivoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoPivoteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtTipoPivoteActionPerformed
+    }//GEN-LAST:event_cbxTipoPivoteActionPerformed
 
     private void txtMedidaDuelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMedidaDuelaActionPerformed
         // TODO add your handling code here:
@@ -713,38 +725,29 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         } else {
             cmbTipoCristal.addItem("Error al cargar");
         }
-        
-        // Cargar los ComboBoxes de accesorios
-        // desde la base de datos 
-        // datos de prueba
-        cbxTipoDuela.removeAllItems();
-        cbxTipoDuela.addItem("Duela Lisa");
-        cbxTipoDuela.addItem("Duela Ranurada");
-        
-        cbxTipoAdaptador.removeAllItems();
-        cbxTipoAdaptador.addItem("Adaptador Tipo A");
-        
-        cbxTipoJunquillo.removeAllItems();
-        cbxTipoJunquillo.addItem("Junquillo Redondo");
-        
-        cbxTipoCanal.removeAllItems();
-        cbxTipoCanal.addItem("Canal de Aluminio");
 
-        txtTipoPivote.removeAllItems(); 
-        txtTipoPivote.addItem("Pivote Sencillo");
-        
-        cbxTipoJaladera.removeAllItems();
-        cbxTipoJaladera.addItem("Jaladera de Lujo");
-        
-        cbxTipoBarra.removeAllItems();
-        cbxTipoBarra.addItem("Barra de Acero Inox.");
+        try (Connection conn = utils.Conexion.getConnection()) {
+            MaterialDetalleDAO dao = new MaterialDetalleDAO(conn);
+
+            cargarCombo(cbxTipoDuela, dao.obtenerValoresDistinctPuerta("tipo_duela"));
+            cargarCombo(cbxTipoAdaptador, dao.obtenerValoresDistinctPuerta("tipo_adaptador"));
+            cargarCombo(cbxTipoJunquillo, dao.obtenerValoresDistinctPuerta("tipo_junquillo"));
+            cargarCombo(cbxTipoCanal, dao.obtenerValoresDistinctPuerta("tipo_canal"));
+            cargarCombo(cbxTipoJaladera, dao.obtenerValoresDistinctPuerta("tipo_jaladera"));
+            cargarCombo(cbxTipoBarra, dao.obtenerValoresDistinctPuerta("tipo_barra"));
+            cargarCombo(cbxTipoPivote, dao.obtenerValoresDistinctPuerta("tipo_pivote"));
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar datos desde la BD: " + ex.getMessage());
+        }
+
     }
 
     /**
      * Configura los listeners para habilitar/deshabilitar campos.
      */
     private void configurarListeners() {
-        
+
         // Duela
         cbxTipoDuela.setEnabled(false);
         txtMedidaDuela.setEnabled(false);
@@ -752,7 +755,10 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
             boolean sel = ckDuela.isSelected();
             cbxTipoDuela.setEnabled(sel);
             txtMedidaDuela.setEnabled(sel);
-            if (!sel) { cbxTipoDuela.setSelectedIndex(0); txtMedidaDuela.setText(""); }
+            if (!sel) {
+                cbxTipoDuela.setSelectedIndex(0);
+                txtMedidaDuela.setText("");
+            }
         });
 
         //Adaptador
@@ -760,7 +766,9 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         ckAdaptador.addActionListener(e -> {
             boolean sel = ckAdaptador.isSelected();
             cbxTipoAdaptador.setEnabled(sel);
-            if (!sel) { cbxTipoAdaptador.setSelectedIndex(0); }
+            if (!sel) {
+                cbxTipoAdaptador.setSelectedIndex(0);
+            }
         });
 
         // Junquillo
@@ -768,7 +776,9 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         ckJunquillo.addActionListener(e -> {
             boolean sel = ckJunquillo.isSelected();
             cbxTipoJunquillo.setEnabled(sel);
-            if (!sel) { cbxTipoJunquillo.setSelectedIndex(0); }
+            if (!sel) {
+                cbxTipoJunquillo.setSelectedIndex(0);
+            }
         });
 
         // Canal 
@@ -776,17 +786,22 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         ckCanal.addActionListener(e -> {
             boolean sel = ckCanal.isSelected();
             cbxTipoCanal.setEnabled(sel);
-            if (!sel) { cbxTipoCanal.setSelectedIndex(0); }
+            if (!sel) {
+                cbxTipoCanal.setSelectedIndex(0);
+            }
         });
 
         // Pivote
-        txtTipoPivote.setEnabled(false); 
+        cbxTipoPivote.setEnabled(false);
         spnCantidadPivote.setEnabled(false);
         ckPivote.addActionListener(e -> {
             boolean sel = ckPivote.isSelected();
-            txtTipoPivote.setEnabled(sel);
+            cbxTipoPivote.setEnabled(sel);
             spnCantidadPivote.setEnabled(sel);
-            if (!sel) { txtTipoPivote.setSelectedIndex(0); spnCantidadPivote.setValue(0); }
+            if (!sel) {
+                cbxTipoPivote.setSelectedIndex(0);
+                spnCantidadPivote.setValue(0);
+            }
         });
 
         // Jaladera
@@ -796,7 +811,10 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
             boolean sel = ckJaladera.isSelected();
             cbxTipoJaladera.setEnabled(sel);
             spnCantidadJaladera.setEnabled(sel);
-            if (!sel) { cbxTipoJaladera.setSelectedIndex(0); spnCantidadJaladera.setValue(0); }
+            if (!sel) {
+                cbxTipoJaladera.setSelectedIndex(0);
+                spnCantidadJaladera.setValue(0);
+            }
         });
 
         // Barra 
@@ -804,98 +822,198 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         ckBarra.addActionListener(e -> {
             boolean sel = ckBarra.isSelected();
             cbxTipoBarra.setEnabled(sel);
-            if (!sel) { cbxTipoBarra.setSelectedIndex(0); }
+            if (!sel) {
+                cbxTipoBarra.setSelectedIndex(0);
+            }
         });
     }
 
     /**
      * Lee todos los campos del panel y crea un objeto PuertaAbatibleDetalle.
+     *
      * @return El objeto PuertaAbatibleDetalle con los datos del formulario.
      */
     public modelo.PuertaAbatibleDetalle getDetalle() {
         modelo.PuertaAbatibleDetalle d = new modelo.PuertaAbatibleDetalle();
-        
+
         try {
+            // ---- VALIDACIONES BÁSICAS ----
+
+            // 1. Validar que catalogoDAO esté inicializado
             if (catalogoDAO != null) {
-                d.setTipoTrabajo(catalogoDAO.obtenerPorId(2)); // <-- ASIGNA EL OBJETO
+                d.setTipoTrabajo(catalogoDAO.obtenerPorId(2));
             } else {
                 throw new RuntimeException("CatalogoDAO no inicializado.");
             }
-    
-            // Leer valores
-            d.setMedidaHorizontal(new BigDecimal(txtMedidaH.getText().isEmpty() ? "0" : txtMedidaH.getText()));
-            d.setMedidaVertical(new BigDecimal(txtMedidaV.getText().isEmpty() ? "0" : txtMedidaV.getText()));
+
+            // 2. Validar medidas obligatorias
+            if (txtMedidaH.getText().trim().isEmpty() || txtMedidaV.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Debe ingresar las medidas horizontal y vertical.",
+                        "Campos obligatorios", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+            BigDecimal medidaH, medidaV;
+            try {
+                medidaH = new BigDecimal(txtMedidaH.getText());
+                medidaV = new BigDecimal(txtMedidaV.getText());
+                if (medidaH.compareTo(BigDecimal.ZERO) <= 0 || medidaV.compareTo(BigDecimal.ZERO) <= 0) {
+                    JOptionPane.showMessageDialog(this, "Las medidas deben ser mayores que cero.",
+                            "Valor inválido", JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Las medidas deben ser numéricas válidas.",
+                        "Error de formato", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+
+            // 3. Validar combos obligatorios
+            if (cmbTipoPuerta.getSelectedIndex() < 0) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de puerta.",
+                        "Falta selección", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+            if (cmbTipoCristal.getSelectedIndex() < 0 || "Error al cargar".equals(cmbTipoCristal.getSelectedItem())) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de cristal válido.",
+                        "Falta selección", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+            // 4. Validar campos condicionales por checkbox
+            if (ckDuela.isSelected()) {
+                if (cbxTipoDuela.getSelectedIndex() < 0) {
+                    JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de duela.",
+                            "Falta selección", JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+                try {
+                    new BigDecimal(txtMedidaDuela.getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "La medida de la duela debe ser numérica.",
+                            "Error de formato", JOptionPane.ERROR_MESSAGE);
+                    return null;
+                }
+            }
+
+            if (ckPivote.isSelected()) {
+                if (cbxTipoPivote.getSelectedIndex() < 0) {
+                    JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de pivote.",
+                            "Falta selección", JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+            }
+
+            if (ckJaladera.isSelected()) {
+                if (cbxTipoJaladera.getSelectedIndex() < 0) {
+                    JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de jaladera.",
+                            "Falta selección", JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+            }
+
+            // ---- CONSTRUCCIÓN DEL OBJETO ----
+            d.setMedidaHorizontal(medidaH);
+            d.setMedidaVertical(medidaV);
             d.setCantidad((Integer) spnCantidad.getValue());
             d.setTipoCristal((String) cmbTipoCristal.getSelectedItem());
             d.setNoHojas((Integer) spnNoHojas.getValue());
-            
-            // Asigna 0 si no porque no esta los campos
-            d.setPrecioSoloUnaUnidadCalculado(BigDecimal.ZERO); 
-            d.setSubtotalLinea(BigDecimal.ZERO); 
-
-            d.setDescripcion(txtDescripcion.getText()); 
+            d.setDescripcion(txtDescripcion.getText());
 
             String descPuerta = (String) cmbTipoPuerta.getSelectedItem();
-            d.setTipoPuerta(modelo.TipoPuerta.fromDescripcion(descPuerta)); 
-
+            d.setTipoPuerta(modelo.TipoPuerta.fromDescripcion(descPuerta));
             d.setMosquitero(ckMosquitero.isSelected());
 
+            // Duela
             d.setDuela(ckDuela.isSelected());
             d.setTipoDuela(ckDuela.isSelected() ? (String) cbxTipoDuela.getSelectedItem() : null);
             d.setMedidaDuela(new BigDecimal(txtMedidaDuela.getText().isEmpty() ? "0" : txtMedidaDuela.getText()));
 
+            // Adaptador
             d.setAdaptador(ckAdaptador.isSelected());
             d.setTipoAdaptador(ckAdaptador.isSelected() ? (String) cbxTipoAdaptador.getSelectedItem() : null);
 
+            // Junquillo
             d.setJunquillo(ckJunquillo.isSelected());
             d.setTipoJunquillo(ckJunquillo.isSelected() ? (String) cbxTipoJunquillo.getSelectedItem() : null);
 
+            // Canal
             d.setCanal(ckCanal.isSelected());
             d.setTipoCanal(ckCanal.isSelected() ? (String) cbxTipoCanal.getSelectedItem() : null);
 
+            // Pivote
             d.setPivote(ckPivote.isSelected());
-            d.setTipoPivote(ckPivote.isSelected() ? (String) txtTipoPivote.getSelectedItem() : null);
+            d.setTipoPivote(ckPivote.isSelected() ? (String) cbxTipoPivote.getSelectedItem() : null);
             d.setCantidadPivote((Integer) spnCantidadPivote.getValue());
 
+            // Jaladera
             d.setJaladera(ckJaladera.isSelected());
             d.setTipoJaladera(ckJaladera.isSelected() ? (String) cbxTipoJaladera.getSelectedItem() : null);
             d.setCantidadJaladera((Integer) spnCantidadJaladera.getValue());
 
+            // Barra
             d.setBarra(ckBarra.isSelected());
             d.setTipoBarra(ckBarra.isSelected() ? (String) cbxTipoBarra.getSelectedItem() : null);
             
+            BigDecimal precioUnidad = BigDecimal.ZERO;
+            try (Connection conn = utils.Conexion.getConnection()) {
+                PuertaAbatibleDetalleDAO puertaDAO = new PuertaAbatibleDetalleDAO(conn);
+
+                precioUnidad = puertaDAO.obtenerPrecio(descPuerta, (String) cmbTipoCristal.getSelectedItem(),
+                        (Integer) spnNoHojas.getValue());
+
+                if (precioUnidad == null) {
+                    precioUnidad = BigDecimal.ZERO;
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error al obtener precio desde la BD", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            d.setPrecioSoloUnaUnidadCalculado(precioUnidad);
+            d.setSubtotalLinea(precioUnidad.multiply(new BigDecimal(d.getCantidad())));
+            
+
         } catch (Exception e) {
             System.err.println("Error al leer datos del panel de puerta: " + e.getMessage());
-            JOptionPane.showMessageDialog(this, "Error en los datos: Ocurrió un error al leer los campos. Verifique los números.\n" + e.getMessage(), "Error de Formato", JOptionPane.ERROR_MESSAGE);
-            return null; 
+            JOptionPane.showMessageDialog(this, "Error en los datos: Ocurrió un error al leer los campos. Verifique los números.\n"
+                    + e.getMessage(), "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            return null;
         }
+        
+        
+        
+
         return d;
     }
-    
+
     /**
      * llena los campos del panel con datos de un detalle existente para editar.
+     *
      * @param detalle El detalle a cargar en el formulario.
      */
     public void setDetalle(modelo.PuertaAbatibleDetalle detalle) {
-        if (detalle == null) return; 
-        
+        if (detalle == null) {
+            return;
+        }
+
         txtMedidaH.setText(detalle.getMedidaHorizontal().toPlainString());
         txtMedidaV.setText(detalle.getMedidaVertical().toPlainString());
         spnCantidad.setValue(detalle.getCantidad());
         cmbTipoCristal.setSelectedItem(detalle.getTipoCristal());
         spnNoHojas.setValue(detalle.getNoHojas());
-        
+
         // txtPrecioUnidad.setText(detalle.getPrecioSoloUnaUnidadCalculado().toPlainString());
         // txtSubtotal.setText(detalle.getSubtotalLinea().toPlainString());
-        
         txtDescripcion.setText(detalle.getDescripcion());
-        
+
         if (detalle.getTipoPuerta() != null) {
             cmbTipoPuerta.setSelectedItem(detalle.getTipoPuerta().getDescripcion());
         }
-        
+
         ckMosquitero.setSelected(detalle.isMosquitero());
-        
+
         // Cargar datos y habilitar/deshabilitar campos
         ckDuela.setSelected(detalle.isDuela());
         cbxTipoDuela.setSelectedItem(detalle.getTipoDuela());
@@ -906,19 +1024,19 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         ckAdaptador.setSelected(detalle.isAdaptador());
         cbxTipoAdaptador.setSelectedItem(detalle.getTipoAdaptador());
         cbxTipoAdaptador.setEnabled(detalle.isAdaptador());
-        
+
         ckJunquillo.setSelected(detalle.isJunquillo());
         cbxTipoJunquillo.setSelectedItem(detalle.getTipoJunquillo());
         cbxTipoJunquillo.setEnabled(detalle.isJunquillo());
-        
+
         ckCanal.setSelected(detalle.isCanal());
         cbxTipoCanal.setSelectedItem(detalle.getTipoCanal());
         cbxTipoCanal.setEnabled(detalle.isCanal());
 
         ckPivote.setSelected(detalle.isPivote());
-        txtTipoPivote.setSelectedItem(detalle.getTipoPivote()); 
+        cbxTipoPivote.setSelectedItem(detalle.getTipoPivote());
         spnCantidadPivote.setValue(detalle.getCantidadPivote());
-        txtTipoPivote.setEnabled(detalle.isPivote());
+        cbxTipoPivote.setEnabled(detalle.isPivote());
         spnCantidadPivote.setEnabled(detalle.isPivote());
 
         ckJaladera.setSelected(detalle.isJaladera());
@@ -931,6 +1049,27 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         cbxTipoBarra.setSelectedItem(detalle.getTipoBarra());
         cbxTipoBarra.setEnabled(detalle.isBarra());
     }
+
+    private void cargarCombo(JComboBox<String> combo, List<String> valores) {
+        combo.removeAllItems();
+        for (String valor : valores) {
+            combo.addItem(valor);
+        }
+    }
+
+    private void permitirSoloNumeros(javax.swing.JTextField campo) {
+        campo.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent e) {
+                char c = e.getKeyChar();
+                // Permitir solo dígitos, punto decimal o borrar
+                if (!Character.isDigit(c) && c != '.' && c != KeyEvent.VK_BACK_SPACE) {
+                    e.consume();
+                }
+            }
+        });
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel adaptador;
@@ -945,6 +1084,7 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> cbxTipoDuela;
     private javax.swing.JComboBox<String> cbxTipoJaladera;
     private javax.swing.JComboBox<String> cbxTipoJunquillo;
+    private javax.swing.JComboBox<String> cbxTipoPivote;
     private javax.swing.JCheckBox ckAdaptador;
     private javax.swing.JCheckBox ckBarra;
     private javax.swing.JCheckBox ckCanal;
@@ -985,6 +1125,5 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
     private javax.swing.JTextField txtMedidaDuela;
     private javax.swing.JTextField txtMedidaH;
     private javax.swing.JTextField txtMedidaV;
-    private javax.swing.JComboBox<String> txtTipoPivote;
     // End of variables declaration//GEN-END:variables
 }

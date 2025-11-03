@@ -5,6 +5,7 @@
 package modelo;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *
@@ -33,7 +34,7 @@ public class VentanaDetalle extends DetalleCotizacion {
     private CatalogoTrabajo tipoTrabajo;
 
     public VentanaDetalle() {
-        super(); 
+        super();
     }
 
     //Constructor con id
@@ -230,5 +231,24 @@ public class VentanaDetalle extends DetalleCotizacion {
 
     public void setTipoTrabajo(CatalogoTrabajo tipoTrabajo) {
         this.tipoTrabajo = tipoTrabajo;
+    }
+
+    public void calcularSubtotal(List<MaterialDetalle> materialesDelDetalle) {
+        BigDecimal subtotal = BigDecimal.ZERO;
+
+        // Recorremos los materiales asignados a esta ventana
+        for (MaterialDetalle md : materialesDelDetalle) {
+            if (md.getMaterial() != null && md.getCantidad() != null) {
+                subtotal = subtotal.add(md.getMaterial().getPrecio().multiply(md.getCantidad()));
+            }
+        }
+
+        this.subtotalLinea = subtotal;
+
+        if (this.cantidad > 0) {
+            this.precioSoloUnaUnidadCalculado = subtotal.divide(new BigDecimal(this.cantidad), BigDecimal.ROUND_HALF_UP);
+        } else {
+            this.precioSoloUnaUnidadCalculado = BigDecimal.ZERO;
+        }
     }
 }

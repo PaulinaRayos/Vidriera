@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import modelo.CanceleriaFijaDetalle; 
+import modelo.CanceleriaFijaDetalle;
 import modelo.Material;
-import modelo.PuertaAbatibleDetalle; 
+import modelo.PuertaAbatibleDetalle;
 import modelo.VentanaDetalle;
 
 /**
@@ -328,7 +328,7 @@ public class DetalleEditorDialog extends javax.swing.JDialog {
         btnAceptar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnAceptar.setForeground(new java.awt.Color(255, 255, 255));
         btnAceptar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
-        btnAceptar.setText("Acepatar");
+        btnAceptar.setText("Aceptar");
         btnAceptar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnAceptar.setBorderPainted(false);
         btnAceptar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));

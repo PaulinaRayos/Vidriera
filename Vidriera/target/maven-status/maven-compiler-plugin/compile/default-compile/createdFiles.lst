@@ -1,5 +1,6 @@
 utils\Conexion.class
 presentacion\PanelDetallePuertaAbatible$15.class
+presentacion\PanelDetalleCanceleria$13.class
 presentacion\PanelDetallePuertaAbatible$5.class
 presentacion\PanelDetalleCanceleria$3.class
 modelo\Vendedor.class
@@ -10,6 +11,7 @@ presentacion\InicioAdministrarCotizaciones$6.class
 presentacion\PanelDetalleCanceleria$6.class
 presentacion\frmEditarCotizacion$3.class
 presentacion\frmCrearCotizacion$8.class
+dao\VentanaDetalleDAO.class
 modelo\TipoVentana.class
 presentacion\PanelDetallePuertaAbatible$12.class
 com\mycompany\vidriera\Test2Crear.class
@@ -20,6 +22,7 @@ presentacion\PanelDetalleVentana$3.class
 presentacion\InicioAdministrarCotizaciones$3.class
 dao\CotizacionDAO.class
 TestConexion.class
+dao\CanceleriaFijaDetalleDAO.class
 modelo\CatalogoTrabajo.class
 modelo\Cotizacion.class
 presentacion\frmCrearCotizacion.class
@@ -27,6 +30,7 @@ presentacion\InicioAdministrarCotizaciones$7.class
 presentacion\PanelDetallePuertaAbatible$10.class
 com\mycompany\vidriera\Test3Editar.class
 presentacion\frmCrearCotizacion$6.class
+presentacion\PanelDetalleVentana$7.class
 presentacion\PanelDetallePuertaAbatible$17.class
 presentacion\PanelDetalleCanceleria$1.class
 presentacion\PanelDetallePuertaAbatible.class
@@ -35,10 +39,12 @@ presentacion\PanelDetalleCanceleria$9.class
 dao\DetalleCotizacionDAO.class
 presentacion\InicioAdministrarCotizaciones$1.class
 presentacion\PanelDetallePuertaAbatible$4.class
+presentacion\InicioAdministrarCotizaciones$8.class
 modelo\CanceleriaFijaDetalle.class
 presentacion\PanelDetalleVentana$1.class
 dao\ProyectoDAO.class
 modelo\TipoCanceleria.class
+dao\PuertaAbatibleDetalleDAO.class
 dao\VendedorDAO.class
 presentacion\PanelDetallePuertaAbatible$18.class
 presentacion\PanelDetalleCanceleria$2.class
@@ -58,6 +64,7 @@ presentacion\PanelDetalleVentana$5.class
 presentacion\frmEditarCotizacion.class
 dao\MaterialDetalleDAO.class
 presentacion\PanelDetalleCanceleria$4.class
+presentacion\PanelDetallePuertaAbatible$19.class
 presentacion\PanelDetalleCanceleria$12.class
 presentacion\PanelDetallePuertaAbatible$6.class
 presentacion\InicioAdministrarCotizaciones.class

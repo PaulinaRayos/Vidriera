@@ -4,23 +4,34 @@
  */
 package presentacion;
 
+import dao.CanceleriaFijaDetalleDAO;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.swing.JOptionPane;
 import modelo.Material;
-import modelo.TipoCanceleria; 
-import modelo.CanceleriaFijaDetalle; 
-import dao.CatalogoTrabajoDAO; 
+import modelo.TipoCanceleria;
+import modelo.CanceleriaFijaDetalle;
+import dao.CatalogoTrabajoDAO;
+import dao.MaterialDetalleDAO;
+import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JComboBox;
 import javax.swing.SpinnerNumberModel;
+
 /**
  *
  * @author User
  */
 public class PanelDetalleCanceleria extends javax.swing.JPanel {
 
-    private List<Material> materialesDisponibles; 
+    private List<Material> materialesDisponibles;
     private CatalogoTrabajoDAO catalogoDAO;
     
+    
+
     /**
      * Creates new form PanelDetalleCanceleria
      */
@@ -28,28 +39,36 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
         initComponents();
         configurarListeners();
     }
-    
+
     /**
-     * Prepara el panel. 
+     * Prepara el panel.
+     *
      * @param materiales La lista COMPLETA de materiales.
      */
     public void inicializarDatos(List<Material> materiales) {
         this.materialesDisponibles = materiales;
         try {
-             this.catalogoDAO = new CatalogoTrabajoDAO(utils.Conexion.getConnection());
+            this.catalogoDAO = new CatalogoTrabajoDAO(utils.Conexion.getConnection());
         } catch (java.sql.SQLException e) {
-             e.printStackTrace();
-             JOptionPane.showMessageDialog(this, "Error al conectar con BD para Catálogo", "Error DB", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al conectar con BD para Catálogo", "Error DB", JOptionPane.ERROR_MESSAGE);
         }
-        
+
         cargarDatosComboBox();
-        
+
         // Configurar los Spinners
         spnCantidad.setModel(new SpinnerNumberModel(1, 1, 100, 1));
         spnNoHojas.setModel(new SpinnerNumberModel(1, 1, 100, 1));
         spnNumFijosVerticales1.setModel(new SpinnerNumberModel(0, 0, 10, 1)); // Usa el nombre correcto
         spnNumFijosHorizontales1.setModel(new SpinnerNumberModel(0, 0, 10, 1)); // Usa el nombre correcto
         spnCantidadTapa.setModel(new SpinnerNumberModel(0, 0, 50, 1));
+
+        // Validar campos de texto
+        permitirSoloNumeros(txtMedidaH);
+        permitirSoloNumeros(txtMedidaV);
+        permitirSoloNumeros(txtMedidaArco);
+        permitirSoloNumeros(txtMedidaCanalillo);
+
     }
 
     /**
@@ -73,26 +92,21 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
         } else {
             cmbTipoCristal.addItem("Error al cargar");
         }
-        
-        // TODO: Cargar ComboBoxes de accesorios (Tapa, Zoclo, Junquillo, etc.)
-        // desde la BD
-        // daros de prueba
-        cbxTipoTapa.removeAllItems();
-        cbxTipoTapa.addItem("Tapa Lisa");
-        
-        cbxTipoZoclo.removeAllItems();
-        cbxTipoZoclo.addItem("Zoclo Estándar");
-        
-        cbxTipoJunquillo.removeAllItems();
-        cbxTipoJunquillo.addItem("Junquillo Redondo");
-        
-        cbxTipoArco.removeAllItems();
-        cbxTipoArco.addItem("Ninguno");
-        cbxTipoArco.addItem("Medio Punto");
 
-        cbxTipoCanalillo.removeAllItems();
-        cbxTipoCanalillo.addItem("Ninguno");
-        cbxTipoCanalillo.addItem("Aluminio");
+        // Cargar ComboBoxes de accesorios desde BD usando el DAO
+        try (Connection conn = utils.Conexion.getConnection()) {
+            MaterialDetalleDAO dao = new MaterialDetalleDAO(conn);
+
+            cargarCombo(cbxTipoTapa, dao.obtenerValoresDistinctCanceleria("tipoTapa"));
+            cargarCombo(cbxTipoZoclo, dao.obtenerValoresDistinctCanceleria("tipoZoclo"));
+            cargarCombo(cbxTipoJunquillo, dao.obtenerValoresDistinctCanceleria("tipoJunquillo"));
+            cargarCombo(cbxTipoArco, dao.obtenerValoresDistinctCanceleria("tipoArco"));
+            cargarCombo(cbxTipoCanalillo, dao.obtenerValoresDistinctCanceleria("tipoCanalillo"));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar tipos de cancelería desde la BD", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -652,7 +666,9 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
         ckZoclo.addActionListener(e -> {
             boolean sel = ckZoclo.isSelected();
             cbxTipoZoclo.setEnabled(sel);
-            if (!sel) { cbxTipoZoclo.setSelectedIndex(0); }
+            if (!sel) {
+                cbxTipoZoclo.setSelectedIndex(0);
+            }
         });
 
         // Junquillo
@@ -660,7 +676,9 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
         ckJunquillo.addActionListener(e -> {
             boolean sel = ckJunquillo.isSelected();
             cbxTipoJunquillo.setEnabled(sel);
-            if (!sel) { cbxTipoJunquillo.setSelectedIndex(0); }
+            if (!sel) {
+                cbxTipoJunquillo.setSelectedIndex(0);
+            }
         });
 
         // Arco
@@ -670,7 +688,10 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
             boolean sel = ckArco.isSelected();
             cbxTipoArco.setEnabled(sel);
             txtMedidaArco.setEnabled(sel);
-            if (!sel) { cbxTipoArco.setSelectedIndex(0); txtMedidaArco.setText(""); }
+            if (!sel) {
+                cbxTipoArco.setSelectedIndex(0);
+                txtMedidaArco.setText("");
+            }
         });
 
         // Canalillo
@@ -680,50 +701,111 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
             boolean sel = ckCanalillo.isSelected();
             cbxTipoCanalillo.setEnabled(sel);
             txtMedidaCanalillo.setEnabled(sel);
-            if (!sel) { cbxTipoCanalillo.setSelectedIndex(0); txtMedidaCanalillo.setText(""); }
+            if (!sel) {
+                cbxTipoCanalillo.setSelectedIndex(0);
+                txtMedidaCanalillo.setText("");
+            }
         });
-        
+
         // (Bolsa, Tapa, Fijos no tienen lógica condicional por ahora)
     }
 
-    /**
-     * Lee todos los campos del panel y crea un objeto CanceleriaFijaDetalle.
-     * @return El objeto CanceleriaFijaDetalle con los datos del formulario.
-     */
     public modelo.CanceleriaFijaDetalle getDetalle() {
         modelo.CanceleriaFijaDetalle d = new modelo.CanceleriaFijaDetalle();
-        
+
         try {
+            // ---- VALIDACIONES BÁSICAS ----
+
+            // 1. Campos numéricos obligatorios
+            if (txtMedidaH.getText().trim().isEmpty() || txtMedidaV.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Debe ingresar las medidas horizontal y vertical.", "Campos obligatorios", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+            BigDecimal medidaH, medidaV;
+            try {
+                medidaH = new BigDecimal(txtMedidaH.getText());
+                medidaV = new BigDecimal(txtMedidaV.getText());
+                if (medidaH.compareTo(BigDecimal.ZERO) <= 0 || medidaV.compareTo(BigDecimal.ZERO) <= 0) {
+                    JOptionPane.showMessageDialog(this, "Las medidas deben ser mayores que cero.", "Valor inválido", JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Las medidas deben ser numéricas válidas.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+
+            // 2. Combos obligatorios
+            if (cmbTipoCanceleria.getSelectedIndex() < 0) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de cancelería.", "Falta selección", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+            if (cmbTipoCristal.getSelectedIndex() < 0 || "Error al cargar".equals(cmbTipoCristal.getSelectedItem())) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de cristal válido.", "Falta selección", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+            // 3. Campos condicionales (según los checkboxes)
+            if (ckArco.isSelected()) {
+                if (txtMedidaArco.getText().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Debe ingresar la medida del arco.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+                try {
+                    new BigDecimal(txtMedidaArco.getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "La medida del arco debe ser numérica.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+                    return null;
+                }
+            }
+
+            if (ckCanalillo.isSelected()) {
+                if (txtMedidaCanalillo.getText().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Debe ingresar la medida del canalillo.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+                try {
+                    new BigDecimal(txtMedidaCanalillo.getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "La medida del canalillo debe ser numérica.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+                    return null;
+                }
+            }
+
+            // 4. Descripción opcional, pero validamos longitud
+            if (txtDescripcion.getText().length() > 255) {
+                JOptionPane.showMessageDialog(this, "La descripción no debe superar los 255 caracteres.", "Texto demasiado largo", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+            // ---- SI TODO ESTÁ BIEN, CONSTRUYE EL OBJETO ----
             if (catalogoDAO != null) {
-                d.setTipoTrabajo(catalogoDAO.obtenerPorId(3)); 
+                d.setTipoTrabajo(catalogoDAO.obtenerPorId(3));
             } else {
                 throw new RuntimeException("CatalogoDAO no inicializado.");
             }
-            
-            d.setMedidaHorizontal(new BigDecimal(txtMedidaH.getText().isEmpty() ? "0" : txtMedidaH.getText()));
-            d.setMedidaVertical(new BigDecimal(txtMedidaV.getText().isEmpty() ? "0" : txtMedidaV.getText()));
+
+            d.setMedidaHorizontal(medidaH);
+            d.setMedidaVertical(medidaV);
             d.setCantidad((Integer) spnCantidad.getValue());
             d.setTipoCristal((String) cmbTipoCristal.getSelectedItem());
             d.setNoHojas((Integer) spnNoHojas.getValue());
-            
-            d.setPrecioSoloUnaUnidadCalculado(BigDecimal.ZERO); 
-            d.setSubtotalLinea(BigDecimal.ZERO); 
-
-            d.setDescripcion(txtDescripcion.getText()); 
+            d.setPrecioSoloUnaUnidadCalculado(BigDecimal.ZERO);
+            d.setSubtotalLinea(BigDecimal.ZERO);
+            d.setDescripcion(txtDescripcion.getText());
 
             String descCanceleria = (String) cmbTipoCanceleria.getSelectedItem();
-            d.setTipoCanceleria(modelo.TipoCanceleria.fromDescripcion(descCanceleria)); 
+            d.setTipoCanceleria(modelo.TipoCanceleria.fromDescripcion(descCanceleria));
 
             d.setBolsa(ckBolsa.isSelected());
             d.setNumFijosVerticales((Integer) spnNumFijosVerticales1.getValue());
             d.setNumFijosHorizontales((Integer) spnNumFijosHorizontales1.getValue());
-            
             d.setTipoTapa((String) cbxTipoTapa.getSelectedItem());
             d.setCantidadTapa((Integer) spnCantidadTapa.getValue());
 
             d.setZoclo(ckZoclo.isSelected());
             d.setTipoZoclo(ckZoclo.isSelected() ? (String) cbxTipoZoclo.getSelectedItem() : null);
-
             d.setJunquillo(ckJunquillo.isSelected());
             d.setTipoJunquillo(ckJunquillo.isSelected() ? (String) cbxTipoJunquillo.getSelectedItem() : null);
 
@@ -735,52 +817,70 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
             d.setTipoCanalillo(ckCanalillo.isSelected() ? (String) cbxTipoCanalillo.getSelectedItem() : null);
             d.setMedidaCanalillo(new BigDecimal(txtMedidaCanalillo.getText().isEmpty() ? "0" : txtMedidaCanalillo.getText()));
             
+            try (Connection conn = utils.Conexion.getConnection()) {
+                CanceleriaFijaDetalleDAO dao = new CanceleriaFijaDetalleDAO(conn);
+                String tipoCanc = (String) cmbTipoCanceleria.getSelectedItem();
+                String tipoCristalSel = (String) cmbTipoCristal.getSelectedItem();
+                int hojas = (Integer) spnNoHojas.getValue();
+
+                BigDecimal precioUnidad = dao.obtenerPrecio(tipoCanc, tipoCristalSel, hojas);
+                d.setPrecioSoloUnaUnidadCalculado(precioUnidad);
+                d.setSubtotalLinea(precioUnidad.multiply(new BigDecimal(d.getCantidad())));
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error al obtener precio desde la BD", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+
         } catch (Exception e) {
             System.err.println("Error al leer datos del panel de cancelería: " + e.getMessage());
-            JOptionPane.showMessageDialog(this, "Error en los datos: Ocurrió un error al leer los campos. Verifique los números.\n" + e.getMessage(), "Error de Formato", JOptionPane.ERROR_MESSAGE);
-            return null; 
+            JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
         }
+
         return d;
     }
-    
+
     /**
      * llena los campos del panel con datos de un detalle existente para editar.
+     *
      * @param detalle El detalle a cargar en el formulario.
      */
     public void setDetalle(modelo.CanceleriaFijaDetalle detalle) {
-        if (detalle == null) return; 
-        
+        if (detalle == null) {
+            return;
+        }
+
         txtMedidaH.setText(detalle.getMedidaHorizontal().toPlainString());
         txtMedidaV.setText(detalle.getMedidaVertical().toPlainString());
         spnCantidad.setValue(detalle.getCantidad());
         cmbTipoCristal.setSelectedItem(detalle.getTipoCristal());
         spnNoHojas.setValue(detalle.getNoHojas());
-        
+
         // txtPrecioUnidad.setText(detalle.getPrecioSoloUnaUnidadCalculado().toPlainString());
         // txtSubtotal.setText(detalle.getSubtotalLinea().toPlainString());
-        
         txtDescripcion.setText(detalle.getDescripcion());
-        
+
         if (detalle.getTipoCanceleria() != null) {
             cmbTipoCanceleria.setSelectedItem(detalle.getTipoCanceleria().getDescripcion());
         }
-        
+
         // Cargar datos y habilitar/deshabilitar campos
         ckBolsa.setSelected(detalle.isBolsa());
         spnNumFijosVerticales1.setValue(detalle.getNumFijosVerticales());
         spnNumFijosHorizontales1.setValue(detalle.getNumFijosHorizontales());
-        
+
         cbxTipoTapa.setSelectedItem(detalle.getTipoTapa());
         spnCantidadTapa.setValue(detalle.getCantidadTapa());
 
         ckZoclo.setSelected(detalle.isZoclo());
         cbxTipoZoclo.setSelectedItem(detalle.getTipoZoclo());
         cbxTipoZoclo.setEnabled(detalle.isZoclo());
-        
+
         ckJunquillo.setSelected(detalle.isJunquillo());
         cbxTipoJunquillo.setSelectedItem(detalle.getTipoJunquillo());
         cbxTipoJunquillo.setEnabled(detalle.isJunquillo());
-        
+
         ckArco.setSelected(detalle.isArco());
         cbxTipoArco.setSelectedItem(detalle.getTipoArco());
         txtMedidaArco.setText(detalle.getMedidaArco() != null ? detalle.getMedidaArco().toPlainString() : "");
@@ -793,6 +893,29 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
         cbxTipoCanalillo.setEnabled(detalle.isCanalillo());
         txtMedidaCanalillo.setEnabled(detalle.isCanalillo());
     }
+
+
+    private void permitirSoloNumeros(javax.swing.JTextField campo) {
+        campo.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent e) {
+                char c = e.getKeyChar();
+                // Permitir solo dígitos, punto decimal o borrar
+                if (!Character.isDigit(c) && c != '.' && c != KeyEvent.VK_BACK_SPACE) {
+                    e.consume();
+                }
+            }
+        });
+    }
+
+    private void cargarCombo(JComboBox<String> combo, List<String> valores) {
+        combo.removeAllItems();
+        for (String valor : valores) {
+            combo.addItem(valor);
+        }
+    }
+    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arco;

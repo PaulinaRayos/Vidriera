@@ -1,8 +1,14 @@
 package presentacion;
 
 import dao.CatalogoTrabajoDAO;
+import dao.MaterialDetalleDAO;
+import dao.VentanaDetalleDAO;
+import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import modelo.Material;
 
@@ -44,6 +50,11 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         // Configurar los Spinners de 1 a 100, con valor inicial 1
         spnCantidad.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
         spnNoHojas.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
+        // Validar campos de texto
+        permitirSoloNumeros(txtMedidaH);
+        permitirSoloNumeros(txtMedidaV);
+        permitirSoloNumeros(txtMedidaCanalillo);
+
     }
 
     /**
@@ -75,7 +86,7 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         arco = new javax.swing.JLabel();
         ckArco = new javax.swing.JCheckBox();
         tipoArco = new javax.swing.JLabel();
-        cmbTipoArco = new javax.swing.JComboBox<>();
+        cbxTipoArco = new javax.swing.JComboBox<>();
         medidaArcco = new javax.swing.JLabel();
         txtMedidaArco = new javax.swing.JTextField();
         tipoCanalillo = new javax.swing.JLabel();
@@ -175,11 +186,11 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         tipoArco.setForeground(new java.awt.Color(0, 38, 115));
         tipoArco.setText("Tipo arco:");
 
-        cmbTipoArco.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cmbTipoArco.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cmbTipoArco.addActionListener(new java.awt.event.ActionListener() {
+        cbxTipoArco.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbxTipoArco.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTipoArco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbTipoArcoActionPerformed(evt);
+                cbxTipoArcoActionPerformed(evt);
             }
         });
 
@@ -239,13 +250,10 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                             .addComponent(cmbTipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cmbTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtMedidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtMedidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(108, 108, 108)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtMedidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtMedidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(108, 108, 108)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
                                 .addComponent(medidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -263,7 +271,7 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                                             .addComponent(tipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGap(10, 10, 10)
                                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(cmbTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(cbxTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(ckArco)
                                             .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -296,7 +304,7 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                             .addComponent(medidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtMedidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(cbxTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(12, 12, 12)
                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(medidaArcco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -349,9 +357,9 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbxTipoCanalilloActionPerformed
 
-    private void cmbTipoArcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoArcoActionPerformed
+    private void cbxTipoArcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoArcoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cmbTipoArcoActionPerformed
+    }//GEN-LAST:event_cbxTipoArcoActionPerformed
 
     private void ckArcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckArcoActionPerformed
         // TODO add your handling code here:
@@ -375,27 +383,29 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
             cmbTipoVentana.addItem(tv.getDescripcion());
         }
 
-        // cargar los tipos de cristal desde la lista de materiales
+        // Cargar los tipos de cristal (vidrios)
         cmbTipoCristal.removeAllItems();
         if (materialesDisponibles != null && !materialesDisponibles.isEmpty()) {
-            for (modelo.Material vidrio : materialesDisponibles) {
-                cmbTipoCristal.addItem(vidrio.getDescripcion());
+            for (modelo.Material m : materialesDisponibles) {
+                if (m.getTipo() == Material.TipoMaterial.Vidrio) {
+                    cmbTipoCristal.addItem(m.getDescripcion());
+                }
             }
         } else {
             cmbTipoCristal.addItem("Error al cargar vidrios");
         }
 
-        // cargar el tipo de arco
-        cmbTipoArco.removeAllItems();
-        cmbTipoArco.addItem("Ninguno");
-        cmbTipoArco.addItem("Medio Punto");
-        cmbTipoArco.addItem("Rebajado");
+        // Cargar ComboBoxes desde BD usando el DAO
+        try (Connection conn = utils.Conexion.getConnection()) {
+            MaterialDetalleDAO dao = new MaterialDetalleDAO(conn);
 
-        // cargar los tipo de canalillo 
-        cbxTipoCanalillo.removeAllItems();
-        cbxTipoCanalillo.addItem("Ninguno");
-        cbxTipoCanalillo.addItem("Aluminio");
-        cbxTipoCanalillo.addItem("PVC");
+            cargarCombo(cbxTipoArco, dao.obtenerValoresDistinctVentana("tipoArco"));
+            cargarCombo(cbxTipoCanalillo, dao.obtenerValoresDistinctVentana("tipoCanalillo"));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar tipos de ventana desde la BD", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -403,15 +413,15 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
      * campos).
      */
     private void configurarListeners() {
-        cmbTipoArco.setEnabled(false);
+        cbxTipoArco.setEnabled(false);
         txtMedidaArco.setEnabled(false);
 
         ckArco.addActionListener(e -> {
             boolean seleccionado = ckArco.isSelected();
-            cmbTipoArco.setEnabled(seleccionado);
+            cbxTipoArco.setEnabled(seleccionado);
             txtMedidaArco.setEnabled(seleccionado);
             if (!seleccionado) {
-                cmbTipoArco.setSelectedIndex(0);
+                cbxTipoArco.setSelectedIndex(0);
                 txtMedidaArco.setText("");
             }
         });
@@ -428,22 +438,80 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         modelo.VentanaDetalle d = new modelo.VentanaDetalle();
 
         try {
+            
+            // ---- VALIDACIONES BÁSICAS ----
+
+            // 1. Campos numéricos obligatorios: medida H y V
+            if (txtMedidaH.getText().trim().isEmpty() || txtMedidaV.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Debe ingresar las medidas horizontal y vertical.",
+                        "Campos obligatorios", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+            BigDecimal medidaH, medidaV;
+            try {
+                medidaH = new BigDecimal(txtMedidaH.getText());
+                medidaV = new BigDecimal(txtMedidaV.getText());
+                if (medidaH.compareTo(BigDecimal.ZERO) <= 0 || medidaV.compareTo(BigDecimal.ZERO) <= 0) {
+                    JOptionPane.showMessageDialog(this, "Las medidas deben ser mayores que cero.",
+                            "Valor inválido", JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Las medidas deben ser numéricas válidas.",
+                        "Error de formato", JOptionPane.ERROR_MESSAGE);
+                return null;
+            }
+
+            // 2. Combos obligatorios
+            if (cmbTipoVentana.getSelectedIndex() < 0) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de ventana.",
+                        "Falta selección", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+            if (cmbTipoCristal.getSelectedIndex() < 0 || "Error al cargar".equals(cmbTipoCristal.getSelectedItem())) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de cristal válido.",
+                        "Falta selección", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+            // 3. Campos condicionales según checkbox arco
+            BigDecimal medidaArcoBD = BigDecimal.ZERO;
+            if (ckArco.isSelected()) {
+                if (txtMedidaArco.getText().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Debe ingresar la medida del arco.",
+                            "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+                try {
+                    medidaArcoBD = new BigDecimal(txtMedidaArco.getText());
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "La medida del arco debe ser numérica.",
+                            "Error de formato", JOptionPane.ERROR_MESSAGE);
+                    return null;
+                }
+            }
+
+            // 4. Validar longitud de descripción
+            if (txtDescripcion.getText().length() > 255) {
+                JOptionPane.showMessageDialog(this, "La descripción no debe superar los 255 caracteres.",
+                        "Texto demasiado largo", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+            // ---- CONSTRUCCIÓN DEL OBJETO ----
             if (catalogoDAO != null) {
-                d.setTipoTrabajo(catalogoDAO.obtenerPorId(1));
+                d.setTipoTrabajo(catalogoDAO.obtenerPorId(1)); // id del catálogo para ventanas
             } else {
                 throw new RuntimeException("CatalogoDAO no inicializado.");
             }
 
-            // Leer valores
-            d.setMedidaHorizontal(new BigDecimal(txtMedidaH.getText().isEmpty() ? "0" : txtMedidaH.getText()));
-            d.setMedidaVertical(new BigDecimal(txtMedidaV.getText().isEmpty() ? "0" : txtMedidaV.getText()));
+            d.setMedidaHorizontal(medidaH);
+            d.setMedidaVertical(medidaV);
             d.setCantidad((Integer) spnCantidad.getValue());
             d.setTipoCristal((String) cmbTipoCristal.getSelectedItem());
             d.setNoHojas((Integer) spnNoHojas.getValue());
-
-            // Asigna 0 si no tienes estos campos
-            d.setPrecioSoloUnaUnidadCalculado(BigDecimal.ZERO);
-            d.setSubtotalLinea(BigDecimal.ZERO);
 
             d.setDescripcion(txtDescripcion.getText());
 
@@ -452,18 +520,39 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
 
             d.setMosquitero(ckMosquitero.isSelected());
             d.setArco(ckArco.isSelected());
+            d.setTipoArco(ckArco.isSelected() ? (String) cbxTipoArco.getSelectedItem() : null);
+            d.setMedidaArco(medidaArcoBD);
 
-            d.setTipoArco((String) cmbTipoArco.getSelectedItem());
-            d.setMedidaArco(new BigDecimal(txtMedidaArco.getText().isEmpty() ? "0" : txtMedidaArco.getText()));
-
+            // Canalillo siempre se lee del combo, no hay checkbox
             d.setTipoCanalillo((String) cbxTipoCanalillo.getSelectedItem());
             d.setMedidaCanalillo(new BigDecimal(txtMedidaCanalillo.getText().isEmpty() ? "0" : txtMedidaCanalillo.getText()));
+            
+            BigDecimal precioUnidad = BigDecimal.ZERO;
+            try (Connection conn = utils.Conexion.getConnection()) {
+                VentanaDetalleDAO ventanaDAO = new VentanaDetalleDAO(conn);
+
+                precioUnidad = ventanaDAO.obtenerPrecio(descVentana, (String) cmbTipoCristal.getSelectedItem(),
+                        (Integer) spnNoHojas.getValue());
+
+                if (precioUnidad == null) {
+                    precioUnidad = BigDecimal.ZERO;
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error al obtener precio desde la BD", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        d.setPrecioSoloUnaUnidadCalculado(precioUnidad);
+        d.setSubtotalLinea(precioUnidad.multiply(new BigDecimal(d.getCantidad())));
 
         } catch (Exception e) {
-            System.err.println("Error al leer datos del panel: " + e.getMessage());
-            JOptionPane.showMessageDialog(this, "Error en los datos: " + "Ocurrió un error al leer los campos. Verifique los números.\n" + e.getMessage(), "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            System.err.println("Error al leer datos del panel de ventana: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
             return null;
         }
+
         return d;
     }
 
@@ -495,24 +584,45 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         ckArco.setSelected(detalle.isArco());
 
         boolean arcoSeleccionado = detalle.isArco();
-        cmbTipoArco.setEnabled(arcoSeleccionado);
+        cbxTipoArco.setEnabled(arcoSeleccionado);
         txtMedidaArco.setEnabled(arcoSeleccionado);
 
-        cmbTipoArco.setSelectedItem(detalle.getTipoArco());
+        cbxTipoArco.setSelectedItem(detalle.getTipoArco());
         txtMedidaArco.setText(detalle.getMedidaArco() != null ? detalle.getMedidaArco().toPlainString() : "");
 
         cbxTipoCanalillo.setSelectedItem(detalle.getTipoCanalillo());
         txtMedidaCanalillo.setText(detalle.getMedidaCanalillo() != null ? detalle.getMedidaCanalillo().toPlainString() : "");
     }
 
+    // Método auxiliar para llenar los combos
+    private void cargarCombo(JComboBox<String> combo, List<String> valores) {
+        combo.removeAllItems();
+        for (String valor : valores) {
+            combo.addItem(valor);
+        }
+    }
+
+    private void permitirSoloNumeros(javax.swing.JTextField campo) {
+        campo.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent e) {
+                char c = e.getKeyChar();
+                // Permitir solo dígitos, punto decimal o borrar
+                if (!Character.isDigit(c) && c != '.' && c != KeyEvent.VK_BACK_SPACE) {
+                    e.consume();
+                }
+            }
+        });
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arco;
     private javax.swing.JLabel cantidad;
+    private javax.swing.JComboBox<String> cbxTipoArco;
     private javax.swing.JComboBox<String> cbxTipoCanalillo;
     private javax.swing.JCheckBox ckArco;
     private javax.swing.JCheckBox ckMosquitero;
-    private javax.swing.JComboBox<String> cmbTipoArco;
     private javax.swing.JComboBox<String> cmbTipoCristal;
     private javax.swing.JComboBox<String> cmbTipoVentana;
     private javax.swing.JLabel descripcion;

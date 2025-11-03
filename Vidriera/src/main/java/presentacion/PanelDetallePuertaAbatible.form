@@ -161,7 +161,7 @@
                               <Component id="cbxTipoBarra" alignment="0" pref="160" max="32767" attributes="0"/>
                               <Component id="ckBarra" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="ckPivote" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtTipoPivote" alignment="0" max="32767" attributes="0"/>
+                              <Component id="cbxTipoPivote" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -202,9 +202,9 @@
                                       <Component id="pivote" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="tipoPivote" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                      <Component id="txtTipoPivote" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="cbxTipoPivote" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="tipoPivote" min="-2" pref="26" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
@@ -257,9 +257,9 @@
                                       <Component id="jaladera" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="tipoJaladera" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="cbxTipoJaladera" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="tipoJaladera" min="-2" pref="26" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
@@ -272,9 +272,9 @@
                                       <Component id="barra" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="tipoBarra" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="cbxTipoBarra" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="tipoBarra" min="-2" pref="26" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -297,15 +297,10 @@
                                   <Component id="cbxTipoAdaptador" min="-2" pref="26" max="-2" attributes="0"/>
                               </Group>
                           </Group>
+                          <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                                  <Component id="descripcion" min="-2" pref="26" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                                  <Component id="txtDescripcion" min="-2" pref="26" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="descripcion" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="txtDescripcion" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -313,9 +308,9 @@
                               <Component id="juanquillo" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="tipoJuanquillo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="cbxTipoJunquillo" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="tipoJuanquillo" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -323,9 +318,9 @@
                               <Component id="canal" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="tipoCanal" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="cbxTipoCanal" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="tipoCanal" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -785,7 +780,7 @@
             <Property name="text" type="java.lang.String" value="Tipo pivote:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="txtTipoPivote">
+        <Component class="javax.swing.JComboBox" name="cbxTipoPivote">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Segoe UI" size="14" style="0"/>
@@ -800,7 +795,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtTipoPivoteActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxTipoPivoteActionPerformed"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>

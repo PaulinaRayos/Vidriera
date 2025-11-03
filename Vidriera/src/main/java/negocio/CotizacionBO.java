@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import modelo.CanceleriaFijaDetalle;
 import modelo.Cotizacion;
 import modelo.PuertaAbatibleDetalle;
@@ -92,33 +93,33 @@ public class CotizacionBO {
         if (ventanas != null) {
             for (VentanaDetalle detalle : ventanas) {
                 detalle.setCotizacion(c);
-                
-        }
-        if (cancelerias != null) {
-            for (CanceleriaFijaDetalle detalle : cancelerias) {
-                detalle.setCotizacion(c); 
-            }
-        }
-        if (puertas != null) {
-            for (PuertaAbatibleDetalle detalle : puertas) {
-                detalle.setCotizacion(c);
-            }
-        }
-      
-        boolean okVentanas = ventanas != null && !ventanas.isEmpty()
-                ? detalleDAO.crearDetalleVentana(ventanas)
-                : true;
-        boolean okCanceleria = cancelerias != null && !cancelerias.isEmpty()
-                ? detalleDAO.crearDetalleCanceleria(cancelerias)
-                : true;
-        boolean okPuertas = puertas != null && !puertas.isEmpty()
-                ? detalleDAO.crearDetallePuerta(puertas)
-                : true;
 
-        return okVentanas && okCanceleria && okPuertas;
-    }
+            }
+            if (cancelerias != null) {
+                for (CanceleriaFijaDetalle detalle : cancelerias) {
+                    detalle.setCotizacion(c);
+                }
+            }
+            if (puertas != null) {
+                for (PuertaAbatibleDetalle detalle : puertas) {
+                    detalle.setCotizacion(c);
+                }
+            }
+
+            boolean okVentanas = ventanas != null && !ventanas.isEmpty()
+                    ? detalleDAO.crearDetalleVentana(ventanas)
+                    : true;
+            boolean okCanceleria = cancelerias != null && !cancelerias.isEmpty()
+                    ? detalleDAO.crearDetalleCanceleria(cancelerias)
+                    : true;
+            boolean okPuertas = puertas != null && !puertas.isEmpty()
+                    ? detalleDAO.crearDetallePuerta(puertas)
+                    : true;
+
+            return okVentanas && okCanceleria && okPuertas;
+        }
         return false;
-    
+
     }
 
     // Obtener todas las cotizaciones
@@ -178,22 +179,22 @@ public class CotizacionBO {
 
             //  Actualizar la cotizacion principal
             cotizacionDAO.actualizarCotizacion(c);
-            
+
             if (ventanas != null) {
-    for (VentanaDetalle detalle : ventanas) {
-        detalle.setCotizacion(c);
-    }
-}
-if (cancelerias != null) {
-    for (CanceleriaFijaDetalle detalle : cancelerias) {
-        detalle.setCotizacion(c);
-    }
-}
-if (puertas != null) {
-    for (PuertaAbatibleDetalle detalle : puertas) {
-        detalle.setCotizacion(c);
-    }
-}
+                for (VentanaDetalle detalle : ventanas) {
+                    detalle.setCotizacion(c);
+                }
+            }
+            if (cancelerias != null) {
+                for (CanceleriaFijaDetalle detalle : cancelerias) {
+                    detalle.setCotizacion(c);
+                }
+            }
+            if (puertas != null) {
+                for (PuertaAbatibleDetalle detalle : puertas) {
+                    detalle.setCotizacion(c);
+                }
+            }
 
             // Insertar los nuevos detalles (si existen)
             if (ventanas != null && !ventanas.isEmpty()) {
@@ -230,5 +231,23 @@ if (puertas != null) {
 
     public List<Cotizacion> obtenerCotizacionesPorRangoFechas(Date fechaInicio, Date fechaFin) {
         return cotizacionDAO.obtenerCotizacionesPorRangoFechas(fechaInicio, fechaFin);
+    }
+
+    public List<Cotizacion> filtrarPorNumero(List<Cotizacion> lista, int numero) {
+        return lista.stream()
+                .filter(c -> c.getIdCotizacion() == numero)
+                .collect(Collectors.toList());
+    }
+
+    public List<Cotizacion> filtrarPorCliente(List<Cotizacion> lista, String nombre) {
+        return lista.stream()
+                .filter(c -> c.getCliente().getNombre().toLowerCase().contains(nombre.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Cotizacion> filtrarPorFechas(List<Cotizacion> lista, Date inicio, Date fin) {
+        return lista.stream()
+                .filter(c -> !c.getFecha().before(inicio) && !c.getFecha().after(fin))
+                .collect(Collectors.toList());
     }
 }
