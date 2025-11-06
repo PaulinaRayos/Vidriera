@@ -8,36 +8,19 @@ import dao.CatalogoTrabajoDAO;
 import dao.ClienteDAO;
 import dao.MaterialDAO;
 import dao.VendedorDAO;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import modelo.CanceleriaFijaDetalle;
 import modelo.CatalogoTrabajo;
@@ -45,9 +28,6 @@ import modelo.Cliente;
 import modelo.Cotizacion;
 import modelo.Material;
 import modelo.PuertaAbatibleDetalle;
-import modelo.TipoCanceleria;
-import modelo.TipoPuerta;
-import modelo.TipoVentana;
 import modelo.Vendedor;
 import modelo.VentanaDetalle;
 import negocio.CotizacionBO;
@@ -59,9 +39,6 @@ import utils.Conexion;
  */
 public class frmCrearCotizacion extends javax.swing.JFrame {
 
-    /**
-     * Creates new form frmCrearCotizacion
-     */
     private List<CatalogoTrabajo> catalogoTrabajos;
     private List<Cliente> clientes;
     private Vendedor vendedorPorDefecto;
@@ -77,6 +54,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
     public frmCrearCotizacion() {
         initComponents();
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         cargarVendedorPorDefecto();
         panelDetallesDinamicos = new JPanel();
         panelDetallesDinamicos.setLayout(new BoxLayout(panelDetallesDinamicos, BoxLayout.Y_AXIS));
@@ -136,16 +114,10 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        PanelPrincipal = new javax.swing.JPanel();
         panelTitulo = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         iconoTitulo = new javax.swing.JLabel();
-        pnlNuevaCotizacion = new javax.swing.JPanel();
-        tituloNuevaCotizacion = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        tblDetallesAgregados = new javax.swing.JTable();
-        btnEliminarCotizacion = new javax.swing.JButton();
-        btnNuevaCotizacion = new javax.swing.JButton();
-        btnEditarCotizacion = new javax.swing.JButton();
         panelSubtitulo = new javax.swing.JPanel();
         ConsultarCotizacion = new javax.swing.JLabel();
         iconoCrear = new javax.swing.JLabel();
@@ -156,15 +128,17 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         btnCrearCliente = new javax.swing.JButton();
         cbxSeleccionarCliente = new javax.swing.JComboBox<>();
         panelBotones = new javax.swing.JPanel();
-        btnVistaPrevia = new javax.swing.JButton();
-        btnDescargar = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
+        btnDescargar = new javax.swing.JButton();
+        btnVistaPrevia = new javax.swing.JButton();
         pnlTotales = new javax.swing.JPanel();
         ckbxDescuentoSi = new javax.swing.JCheckBox();
         Descuento = new javax.swing.JLabel();
         ckbxDescuentoNo = new javax.swing.JCheckBox();
         txtDescuento = new javax.swing.JTextField();
         labelPorsentaje = new javax.swing.JLabel();
+        btnGuardar = new javax.swing.JButton();
+        btnDescartar = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -176,11 +150,18 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         lblDescuento = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
         lblIVA = new javax.swing.JLabel();
-        btnGuardar = new javax.swing.JButton();
-        btnDescartar = new javax.swing.JButton();
+        pnlNuevaCotizacion = new javax.swing.JPanel();
+        tituloNuevaCotizacion = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblDetallesAgregados = new javax.swing.JTable();
+        btnEliminarCotizacion = new javax.swing.JButton();
+        btnNuevaCotizacion = new javax.swing.JButton();
+        btnEditarCotizacion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Crear Cotización");
+
+        PanelPrincipal.setBackground(new java.awt.Color(255, 255, 255));
 
         panelTitulo.setBackground(new java.awt.Color(0, 19, 90));
 
@@ -196,20 +177,366 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         panelTituloLayout.setHorizontalGroup(
             panelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTituloLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(29, 29, 29)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(iconoTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(1030, Short.MAX_VALUE))
         );
         panelTituloLayout.setVerticalGroup(
             panelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTituloLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addGap(12, 12, 12)
                 .addGroup(panelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(iconoTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+
+        panelSubtitulo.setBackground(new java.awt.Color(0, 81, 168));
+
+        ConsultarCotizacion.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        ConsultarCotizacion.setForeground(new java.awt.Color(255, 255, 255));
+        ConsultarCotizacion.setText("Crear cotización");
+
+        iconoCrear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-24.png"))); // NOI18N
+
+        btnVolver.setText("Volver");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelSubtituloLayout = new javax.swing.GroupLayout(panelSubtitulo);
+        panelSubtitulo.setLayout(panelSubtituloLayout);
+        panelSubtituloLayout.setHorizontalGroup(
+            panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSubtituloLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(iconoCrear)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ConsultarCotizacion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnVolver)
+                .addGap(24, 24, 24))
+        );
+        panelSubtituloLayout.setVerticalGroup(
+            panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSubtituloLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(iconoCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ConsultarCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVolver)))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+
+        panelBuscarCliente.setBackground(new java.awt.Color(255, 255, 255));
+
+        Buscar.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        Buscar.setForeground(new java.awt.Color(15, 105, 196));
+        Buscar.setText("Cliente");
+
+        txtBuscarCliente.setToolTipText("");
+
+        btnCrearCliente.setBackground(new java.awt.Color(0, 81, 168));
+        btnCrearCliente.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnCrearCliente.setForeground(new java.awt.Color(255, 255, 255));
+        btnCrearCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-20.png"))); // NOI18N
+        btnCrearCliente.setText("Cliente nuevo");
+        btnCrearCliente.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnCrearCliente.setBorderPainted(false);
+        btnCrearCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCrearCliente.setDefaultCapable(false);
+        btnCrearCliente.setFocusPainted(false);
+        btnCrearCliente.setRequestFocusEnabled(false);
+        btnCrearCliente.setRolloverEnabled(false);
+
+        cbxSeleccionarCliente.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        javax.swing.GroupLayout panelBuscarClienteLayout = new javax.swing.GroupLayout(panelBuscarCliente);
+        panelBuscarCliente.setLayout(panelBuscarClienteLayout);
+        panelBuscarClienteLayout.setHorizontalGroup(
+            panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelBuscarClienteLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelBuscarClienteLayout.createSequentialGroup()
+                        .addComponent(cbxSeleccionarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCrearCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(Buscar)
+                    .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(647, Short.MAX_VALUE))
+        );
+        panelBuscarClienteLayout.setVerticalGroup(
+            panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelBuscarClienteLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Buscar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cbxSeleccionarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                    .addComponent(btnCrearCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
+        );
+
+        panelBotones.setBackground(new java.awt.Color(255, 255, 255));
+
+        btnImprimir.setBackground(new java.awt.Color(0, 81, 168));
+        btnImprimir.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnImprimir.setForeground(new java.awt.Color(255, 255, 255));
+        btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/print-20.png"))); // NOI18N
+        btnImprimir.setText("Imprimir");
+        btnImprimir.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnImprimir.setBorderPainted(false);
+        btnImprimir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnImprimir.setDefaultCapable(false);
+        btnImprimir.setFocusPainted(false);
+        btnImprimir.setRequestFocusEnabled(false);
+        btnImprimir.setRolloverEnabled(false);
+
+        btnDescargar.setBackground(new java.awt.Color(0, 81, 168));
+        btnDescargar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnDescargar.setForeground(new java.awt.Color(255, 255, 255));
+        btnDescargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/download-updates-20.png"))); // NOI18N
+        btnDescargar.setText("Descargar");
+        btnDescargar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnDescargar.setBorderPainted(false);
+        btnDescargar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnDescargar.setDefaultCapable(false);
+        btnDescargar.setFocusPainted(false);
+        btnDescargar.setRequestFocusEnabled(false);
+        btnDescargar.setRolloverEnabled(false);
+
+        btnVistaPrevia.setBackground(new java.awt.Color(254, 188, 47));
+        btnVistaPrevia.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnVistaPrevia.setForeground(new java.awt.Color(255, 255, 255));
+        btnVistaPrevia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vistaprevia-20.png"))); // NOI18N
+        btnVistaPrevia.setText("Vista Previa");
+        btnVistaPrevia.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnVistaPrevia.setBorderPainted(false);
+        btnVistaPrevia.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnVistaPrevia.setDefaultCapable(false);
+        btnVistaPrevia.setFocusPainted(false);
+        btnVistaPrevia.setRequestFocusEnabled(false);
+        btnVistaPrevia.setRolloverEnabled(false);
+        btnVistaPrevia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVistaPreviaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelBotonesLayout = new javax.swing.GroupLayout(panelBotones);
+        panelBotones.setLayout(panelBotonesLayout);
+        panelBotonesLayout.setHorizontalGroup(
+            panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelBotonesLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
+                .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelBotonesLayout.setVerticalGroup(
+            panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBotonesLayout.createSequentialGroup()
+                .addContainerGap(23, Short.MAX_VALUE)
+                .addGroup(panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30))
+        );
+
+        pnlTotales.setBackground(new java.awt.Color(255, 255, 255));
+
+        ckbxDescuentoSi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ckbxDescuentoSi.setSelected(true);
+        ckbxDescuentoSi.setText("Si");
+
+        Descuento.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        Descuento.setForeground(new java.awt.Color(15, 105, 196));
+        Descuento.setText("Descuento");
+
+        ckbxDescuentoNo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ckbxDescuentoNo.setText("No");
+
+        labelPorsentaje.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        labelPorsentaje.setForeground(new java.awt.Color(0, 38, 115));
+        labelPorsentaje.setText("%");
+
+        btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
+        btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnGuardar.setBorderPainted(false);
+        btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnGuardar.setDefaultCapable(false);
+        btnGuardar.setFocusPainted(false);
+        btnGuardar.setRequestFocusEnabled(false);
+        btnGuardar.setRolloverEnabled(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+
+        btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
+        btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
+        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
+        btnDescartar.setText("Descartar");
+        btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnDescartar.setBorderPainted(false);
+        btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnDescartar.setDefaultCapable(false);
+        btnDescartar.setFocusPainted(false);
+        btnDescartar.setRequestFocusEnabled(false);
+        btnDescartar.setRolloverEnabled(false);
+        btnDescartar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescartarActionPerformed(evt);
+            }
+        });
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 204, 255)));
+        jPanel2.setForeground(new java.awt.Color(153, 204, 255));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setText("Subtotal");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel3.setText("Mano de Obra");
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setText("TOTAL");
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel5.setText("IVA");
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel6.setText("Descuento");
+
+        lblManoObra.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblManoObra.setText("$0.00");
+
+        lblSubtotal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblSubtotal.setText("$0.00");
+
+        lblDescuento.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDescuento.setText("-$0.00");
+
+        lblTotal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTotal.setText("$0.00");
+
+        lblIVA.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblIVA.setText("$0.00");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblSubtotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblManoObra, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblIVA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblDescuento, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
+                            .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(lblSubtotal))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(lblManoObra))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(lblIVA))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(lblDescuento))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(lblTotal)))
+        );
+
+        javax.swing.GroupLayout pnlTotalesLayout = new javax.swing.GroupLayout(pnlTotales);
+        pnlTotales.setLayout(pnlTotalesLayout);
+        pnlTotalesLayout.setHorizontalGroup(
+            pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTotalesLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlTotalesLayout.createSequentialGroup()
+                        .addComponent(Descuento)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(pnlTotalesLayout.createSequentialGroup()
+                        .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlTotalesLayout.createSequentialGroup()
+                                .addComponent(ckbxDescuentoSi)
+                                .addGap(18, 18, 18)
+                                .addComponent(ckbxDescuentoNo)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelPorsentaje))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45)
+                        .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24))))
+        );
+        pnlTotalesLayout.setVerticalGroup(
+            pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTotalesLayout.createSequentialGroup()
+                .addGap(45, 45, 45)
+                .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTotalesLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(Descuento)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ckbxDescuentoSi)
+                    .addComponent(ckbxDescuentoNo)
+                    .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelPorsentaje))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
         );
 
         pnlNuevaCotizacion.setBackground(new java.awt.Color(255, 255, 255));
@@ -257,20 +584,18 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         pnlNuevaCotizacionLayout.setHorizontalGroup(
             pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addGap(24, 24, 24)
                 .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
-                        .addComponent(jScrollPane3)
-                        .addContainerGap())
+                    .addComponent(jScrollPane3)
                     .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
                         .addComponent(tituloNuevaCotizacion)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 536, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnNuevaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEliminarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))))
+                        .addComponent(btnEliminarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(24, 24, 24))
         );
         pnlNuevaCotizacionLayout.setVerticalGroup(
             pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -282,391 +607,149 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     .addComponent(btnEditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tituloNuevaCotizacion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(93, Short.MAX_VALUE))
-        );
-
-        panelSubtitulo.setBackground(new java.awt.Color(0, 81, 168));
-
-        ConsultarCotizacion.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        ConsultarCotizacion.setForeground(new java.awt.Color(255, 255, 255));
-        ConsultarCotizacion.setText("Crear cotización");
-
-        iconoCrear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-24.png"))); // NOI18N
-
-        btnVolver.setText("Volver");
-        btnVolver.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVolverActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panelSubtituloLayout = new javax.swing.GroupLayout(panelSubtitulo);
-        panelSubtitulo.setLayout(panelSubtituloLayout);
-        panelSubtituloLayout.setHorizontalGroup(
-            panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelSubtituloLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(iconoCrear)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ConsultarCotizacion)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnVolver)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        panelSubtituloLayout.setVerticalGroup(
-            panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelSubtituloLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(iconoCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ConsultarCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnVolver)))
-                .addContainerGap(12, Short.MAX_VALUE))
+
+        javax.swing.GroupLayout PanelPrincipalLayout = new javax.swing.GroupLayout(PanelPrincipal);
+        PanelPrincipal.setLayout(PanelPrincipalLayout);
+        PanelPrincipalLayout.setHorizontalGroup(
+            PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnlNuevaCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelBuscarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelSubtitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelBotones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnlTotales, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(panelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        panelBuscarCliente.setBackground(new java.awt.Color(255, 255, 255));
-
-        Buscar.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        Buscar.setForeground(new java.awt.Color(15, 105, 196));
-        Buscar.setText("Cliente");
-
-        txtBuscarCliente.setToolTipText("");
-
-        btnCrearCliente.setBackground(new java.awt.Color(0, 81, 168));
-        btnCrearCliente.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnCrearCliente.setForeground(new java.awt.Color(255, 255, 255));
-        btnCrearCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-20.png"))); // NOI18N
-        btnCrearCliente.setText("Cliente nuevo");
-        btnCrearCliente.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnCrearCliente.setBorderPainted(false);
-        btnCrearCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnCrearCliente.setDefaultCapable(false);
-        btnCrearCliente.setFocusPainted(false);
-        btnCrearCliente.setRequestFocusEnabled(false);
-        btnCrearCliente.setRolloverEnabled(false);
-
-        cbxSeleccionarCliente.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        javax.swing.GroupLayout panelBuscarClienteLayout = new javax.swing.GroupLayout(panelBuscarCliente);
-        panelBuscarCliente.setLayout(panelBuscarClienteLayout);
-        panelBuscarClienteLayout.setHorizontalGroup(
-            panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBuscarClienteLayout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelBuscarClienteLayout.createSequentialGroup()
-                        .addComponent(cbxSeleccionarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCrearCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(Buscar)
-                    .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(74, Short.MAX_VALUE))
-        );
-        panelBuscarClienteLayout.setVerticalGroup(
-            panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBuscarClienteLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Buscar)
+        PanelPrincipalLayout.setVerticalGroup(
+            PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelPrincipalLayout.createSequentialGroup()
+                .addGap(72, 72, 72)
+                .addComponent(panelSubtitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelBuscarClienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cbxSeleccionarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                    .addComponent(btnCrearCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        panelBotones.setBackground(new java.awt.Color(255, 255, 255));
-
-        btnVistaPrevia.setBackground(new java.awt.Color(254, 188, 47));
-        btnVistaPrevia.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnVistaPrevia.setForeground(new java.awt.Color(255, 255, 255));
-        btnVistaPrevia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vistaprevia-20.png"))); // NOI18N
-        btnVistaPrevia.setText("Vista Previa");
-        btnVistaPrevia.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnVistaPrevia.setBorderPainted(false);
-        btnVistaPrevia.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnVistaPrevia.setDefaultCapable(false);
-        btnVistaPrevia.setFocusPainted(false);
-        btnVistaPrevia.setRequestFocusEnabled(false);
-        btnVistaPrevia.setRolloverEnabled(false);
-
-        btnDescargar.setBackground(new java.awt.Color(0, 81, 168));
-        btnDescargar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnDescargar.setForeground(new java.awt.Color(255, 255, 255));
-        btnDescargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/download-updates-20.png"))); // NOI18N
-        btnDescargar.setText("Descargar");
-        btnDescargar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnDescargar.setBorderPainted(false);
-        btnDescargar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnDescargar.setDefaultCapable(false);
-        btnDescargar.setFocusPainted(false);
-        btnDescargar.setRequestFocusEnabled(false);
-        btnDescargar.setRolloverEnabled(false);
-
-        btnImprimir.setBackground(new java.awt.Color(0, 81, 168));
-        btnImprimir.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnImprimir.setForeground(new java.awt.Color(255, 255, 255));
-        btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/print-20.png"))); // NOI18N
-        btnImprimir.setText("Imprimir");
-        btnImprimir.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnImprimir.setBorderPainted(false);
-        btnImprimir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnImprimir.setDefaultCapable(false);
-        btnImprimir.setFocusPainted(false);
-        btnImprimir.setRequestFocusEnabled(false);
-        btnImprimir.setRolloverEnabled(false);
-
-        javax.swing.GroupLayout panelBotonesLayout = new javax.swing.GroupLayout(panelBotones);
-        panelBotones.setLayout(panelBotonesLayout);
-        panelBotonesLayout.setHorizontalGroup(
-            panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBotonesLayout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(63, 63, 63)
-                .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        panelBotonesLayout.setVerticalGroup(
-            panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBotonesLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addGroup(panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
-        );
-
-        pnlTotales.setBackground(new java.awt.Color(255, 255, 255));
-
-        ckbxDescuentoSi.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxDescuentoSi.setSelected(true);
-        ckbxDescuentoSi.setText("Si");
-
-        Descuento.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        Descuento.setForeground(new java.awt.Color(15, 105, 196));
-        Descuento.setText("Descuento");
-
-        ckbxDescuentoNo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        ckbxDescuentoNo.setText("No");
-
-        labelPorsentaje.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        labelPorsentaje.setForeground(new java.awt.Color(0, 38, 115));
-        labelPorsentaje.setText("%");
-
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 204, 255)));
-        jPanel2.setForeground(new java.awt.Color(153, 204, 255));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel2.setText("Subtotal");
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel3.setText("Mano de Obra");
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setText("TOTAL");
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel5.setText("IVA");
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel6.setText("Descuento");
-
-        lblManoObra.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblManoObra.setText("$0.00");
-
-        lblSubtotal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblSubtotal.setText("$0.00");
-
-        lblDescuento.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblDescuento.setText("-$0.00");
-
-        lblTotal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblTotal.setText("$0.00");
-
-        lblIVA.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblIVA.setText("$0.00");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel2)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6))
-                        .addGap(58, 58, 58)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblSubtotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblManoObra, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblIVA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblDescuento, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(lblSubtotal))
+                .addComponent(pnlNuevaCotizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(lblManoObra))
+                .addComponent(pnlTotales, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(lblIVA))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(lblDescuento))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(lblTotal)))
-        );
-
-        btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
-        btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
-        btnGuardar.setText("Guardar");
-        btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnGuardar.setBorderPainted(false);
-        btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnGuardar.setDefaultCapable(false);
-        btnGuardar.setFocusPainted(false);
-        btnGuardar.setRequestFocusEnabled(false);
-        btnGuardar.setRolloverEnabled(false);
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-            }
-        });
-
-        btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
-        btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
-        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
-        btnDescartar.setText("Descartar");
-        btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnDescartar.setBorderPainted(false);
-        btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnDescartar.setDefaultCapable(false);
-        btnDescartar.setFocusPainted(false);
-        btnDescartar.setRequestFocusEnabled(false);
-        btnDescartar.setRolloverEnabled(false);
-        btnDescartar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDescartarActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pnlTotalesLayout = new javax.swing.GroupLayout(pnlTotales);
-        pnlTotales.setLayout(pnlTotalesLayout);
-        pnlTotalesLayout.setHorizontalGroup(
-            pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlTotalesLayout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlTotalesLayout.createSequentialGroup()
-                        .addComponent(Descuento)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(pnlTotalesLayout.createSequentialGroup()
-                        .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(pnlTotalesLayout.createSequentialGroup()
-                                .addComponent(ckbxDescuentoSi)
-                                .addGap(18, 18, 18)
-                                .addComponent(ckbxDescuentoNo)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(labelPorsentaje))
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 368, Short.MAX_VALUE)
-                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
-                        .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(81, 81, 81))))
-        );
-        pnlTotalesLayout.setVerticalGroup(
-            pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlTotalesLayout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTotalesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Descuento)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ckbxDescuentoSi)
-                    .addComponent(ckbxDescuentoNo)
-                    .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelPorsentaje))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
+                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(PanelPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(PanelPrincipalLayout.createSequentialGroup()
+                    .addComponent(panelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 740, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelSubtitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelBuscarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnlNuevaCotizacion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlTotales, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panelBotones, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+            .addComponent(PanelPrincipal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(panelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelSubtitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlNuevaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlTotales, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(0, 1, Short.MAX_VALUE)
+                .addComponent(PanelPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 1, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        this.dispose();
-        InicioAdministrarCotizaciones ini = new InicioAdministrarCotizaciones();
+    private void btnEditarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCotizacionActionPerformed
+        int filaSeleccionada = tblDetallesAgregados.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una cotización de la tabla para editar.");
+            return;
+        }
 
-        ini.setVisible(true);
-    }//GEN-LAST:event_btnVolverActionPerformed
+        Object detalleAEditar = detallesEnMemoria.get(filaSeleccionada);
+        List<Material> materiales = materialesDisponibles;
+
+        DetalleEditorDialog dialog = null;
+
+        if (detalleAEditar instanceof VentanaDetalle vd) {
+            dialog = new DetalleEditorDialog(this, true, materiales, vd);
+
+        } else if (detalleAEditar instanceof PuertaAbatibleDetalle pd) {
+            dialog = new DetalleEditorDialog(this, true, materiales, pd);
+
+        } else if (detalleAEditar instanceof CanceleriaFijaDetalle cd) {
+            dialog = new DetalleEditorDialog(this, true, materiales, cd);
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Error desconocido en la corización.");
+            return;
+        }
+
+        dialog.setVisible(true);
+        Object detalleResultado = dialog.getDetalleResultado();
+
+        if (detalleResultado != null) {
+            detallesEnMemoria.set(filaSeleccionada, detalleResultado);
+            actualizarTablaDetalles();
+            recalcularTotales();
+        }
+    }//GEN-LAST:event_btnEditarCotizacionActionPerformed
+
+    private void btnNuevaCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCotizacionActionPerformed
+
+        List<Material> materiales = this.materialesDisponibles;
+
+        if (materiales == null || materiales.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Error: No se pudieron cargar los materiales. Revisa la base de datos.");
+            return;
+        }
+        DetalleEditorDialog dialog = new DetalleEditorDialog(this, true, materiales);
+        dialog.setVisible(true);
+
+        Object nuevoDetalle = dialog.getDetalleResultado();
+
+        if (nuevoDetalle != null) {
+            detallesEnMemoria.add(nuevoDetalle);
+            actualizarTablaDetalles();
+            recalcularTotales();
+        }
+    }//GEN-LAST:event_btnNuevaCotizacionActionPerformed
+
+    private void btnEliminarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCotizacionActionPerformed
+        int filaSeleccionada = tblDetallesAgregados.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una corización para eliminarla.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "¿Seguro que deseas eliminar esta cotización de la lista?",
+            "Confirmar", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            detallesEnMemoria.remove(filaSeleccionada);
+
+            actualizarTablaDetalles();
+            recalcularTotales();
+        }
+    }//GEN-LAST:event_btnEliminarCotizacionActionPerformed
+
+    private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
+        int opcion = JOptionPane.showConfirmDialog(
+            this,
+            "¿Está seguro de descartar la cotización?",
+            "Confirmar Cancelación",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            InicioAdministrarCotizaciones inicio = new InicioAdministrarCotizaciones();
+            inicio.setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnDescartarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
 
@@ -725,10 +808,10 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
             CotizacionBO bo = new CotizacionBO();
             boolean exito = bo.crearCotizacionCompleta(
-                    cotizacion,
-                    detallesVentana,
-                    detallesCanceleria,
-                    detallesPuerta
+                cotizacion,
+                detallesVentana,
+                detallesCanceleria,
+                detallesPuerta
             );
 
             if (exito) {
@@ -747,21 +830,89 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-    private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
-        int opcion = JOptionPane.showConfirmDialog(
-                this,
-                "¿Está seguro de descartar la cotización?",
-                "Confirmar Cancelación",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE
-        );
+    private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
+         // Validaciones básicas
+    if (cbxSeleccionarCliente.getSelectedIndex() == -1 || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
+        JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    if (vendedorPorDefecto == null) {
+        JOptionPane.showMessageDialog(this, "No se cargó un vendedor por defecto.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    if (detallesEnMemoria.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Debe agregar al menos un detalle.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-        if (opcion == JOptionPane.YES_OPTION) {
-            InicioAdministrarCotizaciones inicio = new InicioAdministrarCotizaciones();
-            inicio.setVisible(true);
-            this.dispose();
+    // Obtenemos cliente seleccionado
+    Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
+
+    // Inicializamos listas de detalle
+    ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
+    ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
+    ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
+    BigDecimal subtotal = BigDecimal.ZERO;
+
+    // Clasificamos detalles y calculamos subtotal
+    for (Object detalleObj : detallesEnMemoria) {
+        if (detalleObj instanceof VentanaDetalle vd) {
+            detallesVentana.add(vd);
+            subtotal = subtotal.add(vd.getSubtotalLinea());
+        } else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
+            detallesPuerta.add(pd);
+            subtotal = subtotal.add(pd.getSubtotalLinea());
+        } else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
+            detallesCanceleria.add(cd);
+            subtotal = subtotal.add(cd.getSubtotalLinea());
         }
-    }//GEN-LAST:event_btnDescartarActionPerformed
+    }
+
+    // Calculamos mano de obra (10%)
+    BigDecimal porcentajeManoObra = new BigDecimal("0.10");
+    BigDecimal manoObra = subtotal.multiply(porcentajeManoObra);
+
+    // Calculamos IVA (16%)
+    BigDecimal iva = (subtotal.add(manoObra)).multiply(new BigDecimal("0.16"));
+
+    // Calculamos descuento
+    BigDecimal descuentoMonto = BigDecimal.ZERO;
+    if (ckbxDescuentoSi.isSelected() && !txtDescuento.getText().trim().isEmpty()) {
+        BigDecimal descuentoPorcentaje = new BigDecimal(txtDescuento.getText().trim());
+        descuentoMonto = subtotal.multiply(descuentoPorcentaje.divide(new BigDecimal("100")));
+    }
+
+    // Calculamos total
+    BigDecimal total = subtotal.add(manoObra).add(iva).subtract(descuentoMonto);
+
+    // Creamos objeto cotización y seteamos todos los datos
+    Cotizacion cotizacion = new Cotizacion();
+    cotizacion.setCliente(clienteSeleccionado);
+    cotizacion.setVendedor(vendedorPorDefecto);
+    cotizacion.setProyecto(null); // o según corresponda
+    cotizacion.setFecha(new Date());
+    cotizacion.setEstado("Pendiente");
+    cotizacion.setSubtotal(subtotal);
+    cotizacion.setManoObra(manoObra);
+    cotizacion.setIva(iva);
+    cotizacion.setDescuentoMonto(descuentoMonto);
+    cotizacion.setTotal(total);
+
+    cotizacion.setVentanaDetalles(detallesVentana);
+    cotizacion.setPuertaAbatibleDetalles(detallesPuerta);
+    cotizacion.setCanceleriaFijaDetalles(detallesCanceleria);
+
+    // Llama al diálogo de visualización pasándole la cotización completa
+    DialogoPrevisualizacionCotizacion previsualizar = new DialogoPrevisualizacionCotizacion(this, cotizacion);
+    previsualizar.setVisible(true);
+    }//GEN-LAST:event_btnVistaPreviaActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        this.dispose();
+        InicioAdministrarCotizaciones ini = new InicioAdministrarCotizaciones();
+
+        ini.setVisible(true);
+    }//GEN-LAST:event_btnVolverActionPerformed
 
     /**
      * Configura la tabla, los listeners y el estado inicial de los botones.
@@ -879,85 +1030,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         lblTotal.setText("$ " + total.setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
-    private void btnEliminarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCotizacionActionPerformed
-        int filaSeleccionada = tblDetallesAgregados.getSelectedRow();
-
-        if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona una corización para eliminarla.", "Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        int confirm = JOptionPane.showConfirmDialog(this,
-                "¿Seguro que deseas eliminar esta cotización de la lista?",
-                "Confirmar", JOptionPane.YES_NO_OPTION);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            detallesEnMemoria.remove(filaSeleccionada);
-
-            actualizarTablaDetalles();
-            recalcularTotales();
-        }
-    }//GEN-LAST:event_btnEliminarCotizacionActionPerformed
-
-    private void btnNuevaCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCotizacionActionPerformed
-
-        List<Material> materiales = this.materialesDisponibles;
-
-        if (materiales == null || materiales.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Error: No se pudieron cargar los materiales. Revisa la base de datos.");
-            return;
-        }
-        DetalleEditorDialog dialog = new DetalleEditorDialog(this, true, materiales);
-        dialog.setVisible(true);
-
-        Object nuevoDetalle = dialog.getDetalleResultado();
-
-       
-        if (nuevoDetalle != null) 
-        { 
-            detallesEnMemoria.add(nuevoDetalle); 
-            actualizarTablaDetalles(); 
-            recalcularTotales(); 
-        }
-        
-    }//GEN-LAST:event_btnNuevaCotizacionActionPerformed
-
-    private void btnEditarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCotizacionActionPerformed
-        int filaSeleccionada = tblDetallesAgregados.getSelectedRow();
-        if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(this, "Selecciona una cotización de la tabla para editar.");
-            return;
-        }
-
-        Object detalleAEditar = detallesEnMemoria.get(filaSeleccionada);
-        List<Material> materiales = materialesDisponibles;
-
-        DetalleEditorDialog dialog = null;
-
-        if (detalleAEditar instanceof VentanaDetalle vd) {
-            dialog = new DetalleEditorDialog(this, true, materiales, vd);
-
-        } else if (detalleAEditar instanceof PuertaAbatibleDetalle pd) {
-            dialog = new DetalleEditorDialog(this, true, materiales, pd);
-
-        } else if (detalleAEditar instanceof CanceleriaFijaDetalle cd) {
-            dialog = new DetalleEditorDialog(this, true, materiales, cd);
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Error desconocido en la corización.");
-            return;
-        }
-
-        dialog.setVisible(true);
-        Object detalleResultado = dialog.getDetalleResultado();
-
-        if (detalleResultado != null) {
-            detallesEnMemoria.set(filaSeleccionada, detalleResultado);
-            actualizarTablaDetalles();
-            recalcularTotales();
-        }
-    }//GEN-LAST:event_btnEditarCotizacionActionPerformed
-
     private void cargarMaterialesDisponibles() {
         try {
             MaterialDAO materialDAO = new MaterialDAO(utils.Conexion.getConnection());
@@ -1059,6 +1131,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JLabel Buscar;
     private javax.swing.JLabel ConsultarCotizacion;
     private javax.swing.JLabel Descuento;
+    private javax.swing.JPanel PanelPrincipal;
     private javax.swing.JButton btnCrearCliente;
     private javax.swing.JButton btnDescargar;
     private javax.swing.JButton btnDescartar;
