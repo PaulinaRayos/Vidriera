@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import modelo.Material;
+import modelo.MaterialDetalle;
 
 /**
  *
@@ -53,26 +55,37 @@ public class MaterialDetalleDAO {
         return false;
     }
 
-    /**
-     * Obtener materiales asociados a un detalle de ventana
-     *
-     * @param idVentanaDetalle ID del detalle de ventana
-     * @return Map con idMaterial -> cantidad
-     */
-    public Map<Integer, BigDecimal> obtenerMaterialesVentana(int idVentanaDetalle) {
-        String sql = "SELECT idMaterial, cantidad FROM VentanaDetalle_Material WHERE idVentanaDetalle = ?";
-        Map<Integer, BigDecimal> materiales = new HashMap<>();
+
+    public List<MaterialDetalle> obtenerMaterialesVentana(int idVentanaDetalle) {
+        String sql = """
+        SELECT m.idMaterial, m.descripcion, m.precio, m.tipo, vdm.cantidad
+        FROM VentanaDetalle_Material vdm
+        JOIN material m ON vdm.idMaterial = m.idMaterial
+        WHERE vdm.idVentanaDetalle = ?
+    """;
+        List<MaterialDetalle> materiales = new ArrayList<>();
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idVentanaDetalle);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                materiales.put(rs.getInt("idMaterial"), rs.getBigDecimal("cantidad"));
+                Material m = new Material();
+                m.setIdMaterial(rs.getInt("idMaterial"));
+                m.setDescripcion(rs.getString("descripcion"));
+                m.setPrecio(rs.getBigDecimal("precio"));
+                m.setTipo(Material.TipoMaterial.valueOf(rs.getString("tipo")));
+
+                MaterialDetalle md = new MaterialDetalle();
+                md.setMaterial(m);
+                md.setCantidad(rs.getBigDecimal("cantidad"));
+
+                materiales.add(md);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return materiales;
     }
 
@@ -121,26 +134,37 @@ public class MaterialDetalleDAO {
         return false;
     }
 
-    /**
-     * Obtener materiales asociados a un detalle de cancelería
-     *
-     * @param idCanceleriaDetalle ID del detalle de cancelería
-     * @return Map con idMaterial -> cantidad
-     */
-    public Map<Integer, BigDecimal> obtenerMaterialesCanceleria(int idCanceleriaDetalle) {
-        String sql = "SELECT idMaterial, cantidad FROM CanceleriaFijaDetalle_Material WHERE idCanceleriaDetalle = ?";
-        Map<Integer, BigDecimal> materiales = new HashMap<>();
+    public List<MaterialDetalle> obtenerMaterialesCanceleria(int idCanceleriaDetalle) {
+        String sql = """
+        SELECT m.idMaterial, m.descripcion, m.precio, m.tipo, cdm.cantidad
+        FROM CanceleriaFijaDetalle_Material cdm
+        JOIN material m ON cdm.idMaterial = m.idMaterial
+        WHERE cdm.idCanceleriaDetalle = ?
+    """;
+
+        List<MaterialDetalle> materiales = new ArrayList<>();
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idCanceleriaDetalle);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                materiales.put(rs.getInt("idMaterial"), rs.getBigDecimal("cantidad"));
+                Material m = new Material();
+                m.setIdMaterial(rs.getInt("idMaterial"));
+                m.setDescripcion(rs.getString("descripcion"));
+                m.setPrecio(rs.getBigDecimal("precio"));
+                m.setTipo(Material.TipoMaterial.valueOf(rs.getString("tipo")));
+
+                MaterialDetalle md = new MaterialDetalle();
+                md.setMaterial(m);
+                md.setCantidad(rs.getBigDecimal("cantidad"));
+
+                materiales.add(md);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return materiales;
     }
 
@@ -172,7 +196,7 @@ public class MaterialDetalleDAO {
      * @return true si se asociaron correctamente
      */
     public boolean asociarMaterialesPuerta(int idDetallePuerta, Map<Integer, BigDecimal> materiales) {
-        String sql = "INSERT INTO PuertaAbatible_Material (id_detalle_puerta, idMaterial, cantidad) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO PuertaAbatibleDetalle_Material (id_detalle_puerta, idMaterial, cantidad) VALUES (?, ?, ?)";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             for (Map.Entry<Integer, BigDecimal> entry : materiales.entrySet()) {
@@ -189,26 +213,38 @@ public class MaterialDetalleDAO {
         return false;
     }
 
-    /**
-     * Obtener materiales asociados a un detalle de puerta
-     *
-     * @param idDetallePuerta ID del detalle de puerta
-     * @return Map con idMaterial -> cantidad
-     */
-    public Map<Integer, BigDecimal> obtenerMaterialesPuerta(int idDetallePuerta) {
-        String sql = "SELECT idMaterial, cantidad FROM PuertaAbatible_Material WHERE id_detalle_puerta = ?";
-        Map<Integer, BigDecimal> materiales = new HashMap<>();
+
+    public List<MaterialDetalle> obtenerMaterialesPuerta(int idDetallePuerta) {
+        String sql = """
+        SELECT m.idMaterial, m.descripcion, m.precio, m.tipo, pdm.cantidad
+        FROM PuertaAbatibleDetalle_Material pdm
+        JOIN material m ON pdm.idMaterial = m.idMaterial
+        WHERE pdm.id_detalle_puerta = ?
+    """;
+
+        List<MaterialDetalle> materiales = new ArrayList<>();
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idDetallePuerta);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                materiales.put(rs.getInt("idMaterial"), rs.getBigDecimal("cantidad"));
+                Material m = new Material();
+                m.setIdMaterial(rs.getInt("idMaterial"));
+                m.setDescripcion(rs.getString("descripcion"));
+                m.setPrecio(rs.getBigDecimal("precio"));
+                m.setTipo(Material.TipoMaterial.valueOf(rs.getString("tipo")));
+
+                MaterialDetalle md = new MaterialDetalle();
+                md.setMaterial(m);
+                md.setCantidad(rs.getBigDecimal("cantidad"));
+
+                materiales.add(md);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return materiales;
     }
 
@@ -219,7 +255,7 @@ public class MaterialDetalleDAO {
      * @return true si se eliminaron correctamente
      */
     public boolean eliminarMaterialesPuerta(int idDetallePuerta) {
-        String sql = "DELETE FROM PuertaAbatible_Material WHERE id_detalle_puerta = ?";
+        String sql = "DELETE FROM PuertaAbatibleDetalle_Material WHERE id_detalle_puerta = ?";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setInt(1, idDetallePuerta);
@@ -247,6 +283,7 @@ public class MaterialDetalleDAO {
         return valores;
     }
 //detallecanceleria
+
     public List<String> obtenerValoresDistinctCanceleria(String columna) throws SQLException {
         List<String> valores = new ArrayList<>();
         String sql = "SELECT DISTINCT " + columna
@@ -261,21 +298,21 @@ public class MaterialDetalleDAO {
         }
         return valores;
     }
+
     //detalleventana
     public List<String> obtenerValoresDistinctVentana(String columna) throws SQLException {
-    List<String> valores = new ArrayList<>();
-    String sql = "SELECT DISTINCT " + columna
-               + " FROM ventanadetalle "
-               + " WHERE " + columna + " IS NOT NULL AND " + columna + " <> '' "
-               + " ORDER BY " + columna;
+        List<String> valores = new ArrayList<>();
+        String sql = "SELECT DISTINCT " + columna
+                + " FROM ventanadetalle "
+                + " WHERE " + columna + " IS NOT NULL AND " + columna + " <> '' "
+                + " ORDER BY " + columna;
 
-    try (Statement stmt = conexion.createStatement();
-         ResultSet rs = stmt.executeQuery(sql)) {
-        while (rs.next()) {
-            valores.add(rs.getString(columna));
+        try (Statement stmt = conexion.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                valores.add(rs.getString(columna));
+            }
         }
+        return valores;
     }
-    return valores;
-}
 
 }

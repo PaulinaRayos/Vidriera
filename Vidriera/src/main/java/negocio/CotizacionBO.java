@@ -68,7 +68,7 @@ public class CotizacionBO {
             List<PuertaAbatibleDetalle> puertas) {
         // Calcular Mano de Obra
         // 10% del subtotal
-        BigDecimal porcentajeManoObra = new BigDecimal("0.10");
+        BigDecimal porcentajeManoObra = new BigDecimal("0.45");
         BigDecimal manoObra = c.getSubtotal().multiply(porcentajeManoObra);
 
         // Calcular IVA 

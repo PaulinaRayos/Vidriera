@@ -63,7 +63,7 @@ public class DetalleEditorDialog extends javax.swing.JDialog {
         this.detalleResultado = detalleAEditar;
         this.esModoEdicion = true;
 
-        radVentana.setEnabled(false);
+        radVentana.setEnabled(true);
         radPuerta.setEnabled(false);
         radCanceleria.setEnabled(false);
         if (detalleAEditar instanceof VentanaDetalle vd) {
@@ -104,14 +104,14 @@ public class DetalleEditorDialog extends javax.swing.JDialog {
         List<Material> vidrios = new ArrayList<>();
         if (materialesDisponibles != null) {
             for (Material m : materialesDisponibles) {
-                if (m.getTipo() == Material.TipoMaterial.Vidrio) {
+                if (m.getTipo() == Material.TipoMaterial.VIDRIO) {
                     vidrios.add(m);
                 }
             }
         }
 
         panelVentana = new PanelDetalleVentana();
-        panelVentana.inicializarDatos(vidrios);
+        panelVentana.inicializarDatos(materialesDisponibles);
 
         panelPuerta = new PanelDetallePuertaAbatible();
         panelPuerta.inicializarDatos(materialesDisponibles);
@@ -393,13 +393,16 @@ public class DetalleEditorDialog extends javax.swing.JDialog {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         Object detalleDelPanel = null;
 
-        if (radVentana.isSelected()) {
-            detalleDelPanel = panelVentana.getDetalle();
-        } else if (radPuerta.isSelected()) {
-            detalleDelPanel = panelPuerta.getDetalle();
-        } else if (radCanceleria.isSelected()) {
-            detalleDelPanel = panelCanceleria.getDetalle();
-        }
+         if (radVentana.isSelected()) {
+        detalleDelPanel = panelVentana.getDetalle();
+        System.out.println("DEBUG: getDetalle() Ventana → " + detalleDelPanel);
+    } else if (radPuerta.isSelected()) {
+        detalleDelPanel = panelPuerta.getDetalle();
+        System.out.println("DEBUG: getDetalle() Puerta → " + detalleDelPanel);
+    } else if (radCanceleria.isSelected()) {
+        detalleDelPanel = panelCanceleria.getDetalle();
+        System.out.println("DEBUG: getDetalle() Cancelería → " + detalleDelPanel);
+    }
 
         if (detalleDelPanel == null) {
             JOptionPane.showMessageDialog(this, "Por favor, seleccione un tipo de trabajo y llene los campos correctamente.", "Error", JOptionPane.WARNING_MESSAGE);

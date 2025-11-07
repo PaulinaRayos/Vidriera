@@ -62,8 +62,8 @@ VALUES
 ('Junquillo 1/4" anodizado', 85.00, 180, 'JUNQUILLO'),
 
 -- ZOCOLO
-('Zócalo aluminio natural', 110.00, 150, 'ZOCOLO'),
-('Zócalo aluminio blanco', 120.00, 140, 'ZOCOLO'),
+('Zócalo aluminio natural', 110.00, 150, 'ZOCLO'),
+('Zócalo aluminio blanco', 120.00, 140, 'ZOCLO'),
 
 -- TAPA
 ('Tapa aluminio blanca', 90.00, 160, 'TAPA'),
@@ -125,6 +125,14 @@ VALUES
 ('Perfil de aluminio tipo U 1”', 170.00, 100, 'PERFIL'),
 ('Perfil de aluminio tipo L 3/4”', 160.00, 110, 'PERFIL'),
 
+-- ARCO
+('Arco aluminio serie 2"', 180.00, 50, 'ARCO'),
+('Arco aluminio serie 3"', 200.00, 40, 'ARCO'),
+
+-- BOLSA
+('Bolsa para panel fijo', 50.00, 100, 'BOLSA'),
+('Bolsa reforzada transparente', 65.00, 80, 'BOLSA'),
+
 -- OTRO
 ('Cinta doble cara industrial', 90.00, 70, 'OTRO'),
 ('Espaciador plástico 3mm', 15.00, 200, 'OTRO');
@@ -136,7 +144,7 @@ INSERT INTO ventanadetalle (id_tipo_trabajo, id_cotizacion, medidaHorizontal, me
 VALUES
 (1, 1, 1.20, 1.00, 2, 'Vidrio claro 6mm', 2, 'Ventana corrediza con mosquitero', '2"', TRUE, FALSE);
 
-INSERT INTO detalle_puertaabatible (id_cotizacion, id_tipo_trabajo, medidaHorizontal, medidaVertical, cantidad, tipoCristal, noHojas, descripcion, tipo_puerta, duela, adaptador, pivote, jaladera)
+INSERT INTO puertaabatibledetalle (id_cotizacion, id_tipo_trabajo, medidaHorizontal, medidaVertical, cantidad, tipoCristal, noHojas, descripcion, tipo_puerta, duela, adaptador, pivote, jaladera)
 VALUES
 (1, 2, 0.90, 2.10, 1, 'Vidrio tintex 6mm', 1, 'Puerta abatible con pivote y jaladera', 'SERIE_1751', TRUE, TRUE, TRUE, TRUE);
 
@@ -155,7 +163,7 @@ VALUES
 (1, 9, 2.00, 250.00, 500.00);  -- Mosquitero
 
 -- Puertas
-INSERT INTO PuertaAbatible_Material (id_detalle_puerta, idMaterial, cantidad, precioUnitario, precioTotal)
+INSERT INTO PuertaAbatibleDetalle_Material (id_detalle_puerta, idMaterial, cantidad, precioUnitario, precioTotal)
 VALUES
 (1, 2, 1.00, 600.00, 600.00),  -- Vidrio tintex
 (1, 10, 2.00, 85.00, 170.00),  -- Pivote

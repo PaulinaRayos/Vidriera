@@ -17,8 +17,10 @@ import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.SpinnerNumberModel;
+import modelo.MaterialDetalle;
 import utils.Conexion;
 
 /**
@@ -705,7 +707,8 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
     }//GEN-LAST:event_txtDescripcionActionPerformed
 
     /**
-     * Carga los ComboBoxes con datos.
+     * Carga los ComboBoxes con datos filtrando por tipo de material o desde el
+     * Enum.
      */
     private void cargarDatosComboBox() {
         // Cargar los tipos de puerta desde el Enum
@@ -714,33 +717,38 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
             cmbTipoPuerta.addItem(tp.getDescripcion());
         }
 
-        // Cargar los tipos de cristal
-        cmbTipoCristal.removeAllItems();
+        // Cargar los tipos de material desde la lista de materiales filtrando por TipoMaterial
+        cargarComboPorTipo(cmbTipoCristal, Material.TipoMaterial.VIDRIO);
+        cargarComboPorTipo(cbxTipoDuela, Material.TipoMaterial.DUELA);
+        cargarComboPorTipo(cbxTipoAdaptador, Material.TipoMaterial.ADAPTADOR);
+        cargarComboPorTipo(cbxTipoJunquillo, Material.TipoMaterial.JUNQUILLO);
+        cargarComboPorTipo(cbxTipoCanal, Material.TipoMaterial.CANALILLO);
+        cargarComboPorTipo(cbxTipoJaladera, Material.TipoMaterial.JALADERA);
+        cargarComboPorTipo(cbxTipoBarra, Material.TipoMaterial.BARRA);
+        cargarComboPorTipo(cbxTipoPivote, Material.TipoMaterial.PIVOTE);
+
+        // cargarComboPorTipo(cbxTipoArco, Material.TipoMaterial.ARCO);
+        // cargarComboPorTipo(cbxTipoBolsa, Material.TipoMaterial.BOLSA);
+    }
+
+    /**
+     * Llena un JComboBox filtrando la lista de materiales por el tipo de
+     * material.
+     *
+     * @param combo El JComboBox a llenar.
+     * @param tipo El tipo de material a filtrar.
+     */
+    private void cargarComboPorTipo(JComboBox<String> combo, Material.TipoMaterial tipo) {
+        combo.removeAllItems();
         if (materialesDisponibles != null) {
-            for (modelo.Material m : materialesDisponibles) {
-                if (m.getTipo() == Material.TipoMaterial.Vidrio) {
-                    cmbTipoCristal.addItem(m.getDescripcion());
+            for (Material m : materialesDisponibles) {
+                if (m.getTipo() == tipo) {
+                    combo.addItem(m.getDescripcion());
                 }
             }
         } else {
-            cmbTipoCristal.addItem("Error al cargar");
+            combo.addItem("Error al cargar");
         }
-
-        try (Connection conn = utils.Conexion.getConnection()) {
-            MaterialDetalleDAO dao = new MaterialDetalleDAO(conn);
-
-            cargarCombo(cbxTipoDuela, dao.obtenerValoresDistinctPuerta("tipo_duela"));
-            cargarCombo(cbxTipoAdaptador, dao.obtenerValoresDistinctPuerta("tipo_adaptador"));
-            cargarCombo(cbxTipoJunquillo, dao.obtenerValoresDistinctPuerta("tipo_junquillo"));
-            cargarCombo(cbxTipoCanal, dao.obtenerValoresDistinctPuerta("tipo_canal"));
-            cargarCombo(cbxTipoJaladera, dao.obtenerValoresDistinctPuerta("tipo_jaladera"));
-            cargarCombo(cbxTipoBarra, dao.obtenerValoresDistinctPuerta("tipo_barra"));
-            cargarCombo(cbxTipoPivote, dao.obtenerValoresDistinctPuerta("tipo_pivote"));
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al cargar datos desde la BD: " + ex.getMessage());
-        }
-
     }
 
     /**
@@ -954,26 +962,29 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
             // Barra
             d.setBarra(ckBarra.isSelected());
             d.setTipoBarra(ckBarra.isSelected() ? (String) cbxTipoBarra.getSelectedItem() : null);
-            
-            BigDecimal precioUnidad = BigDecimal.ZERO;
-            try (Connection conn = utils.Conexion.getConnection()) {
-                PuertaAbatibleDetalleDAO puertaDAO = new PuertaAbatibleDetalleDAO(conn);
 
-                precioUnidad = puertaDAO.obtenerPrecio(descPuerta, (String) cmbTipoCristal.getSelectedItem(),
-                        (Integer) spnNoHojas.getValue());
+            // Obtener materiales seleccionados del panel (lista de Material)
+            List<Material> materialesSeleccionados = obtenerMaterialesSeleccionados();
 
-                if (precioUnidad == null) {
-                    precioUnidad = BigDecimal.ZERO;
-                }
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error al obtener precio desde la BD", "Error", JOptionPane.ERROR_MESSAGE);
+            // Convertir a MaterialDetalle
+            List<MaterialDetalle> materialesDetalle = new ArrayList<>();
+            for (Material m : materialesSeleccionados) {
+                BigDecimal cantidad = BigDecimal.valueOf(d.getCantidad()); // cantidad de cancelería
+                BigDecimal precioUnitario = m.getPrecio();
+                MaterialDetalle md = new MaterialDetalle(m, cantidad, precioUnitario);
+                materialesDetalle.add(md);
             }
 
-            d.setPrecioSoloUnaUnidadCalculado(precioUnidad);
-            d.setSubtotalLinea(precioUnidad.multiply(new BigDecimal(d.getCantidad())));
-            
+            // Asignar a tu detalle
+            d.setMateriales(materialesDetalle);
+
+            // Calcular subtotal general
+            BigDecimal subtotal = BigDecimal.ZERO;
+            for (MaterialDetalle md : materialesDetalle) {
+                subtotal = subtotal.add(md.getPrecioTotal());
+            }
+            d.setPrecioSoloUnaUnidadCalculado(subtotal); // opcional
+            d.setSubtotalLinea(subtotal);
 
         } catch (Exception e) {
             System.err.println("Error al leer datos del panel de puerta: " + e.getMessage());
@@ -981,15 +992,13 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
                     + e.getMessage(), "Error de Formato", JOptionPane.ERROR_MESSAGE);
             return null;
         }
-        
-        
-        
 
         return d;
     }
 
     /**
-     * llena los campos del panel con datos de un detalle existente para editar.
+     * Llena los campos del panel de puerta con los datos de un detalle
+     * existente para editar.
      *
      * @param detalle El detalle a cargar en el formulario.
      */
@@ -998,64 +1007,156 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
             return;
         }
 
+        // Medidas y cantidad
         txtMedidaH.setText(detalle.getMedidaHorizontal().toPlainString());
         txtMedidaV.setText(detalle.getMedidaVertical().toPlainString());
         spnCantidad.setValue(detalle.getCantidad());
+
+        // Tipo de cristal y número de hojas
         cmbTipoCristal.setSelectedItem(detalle.getTipoCristal());
         spnNoHojas.setValue(detalle.getNoHojas());
 
-        // txtPrecioUnidad.setText(detalle.getPrecioSoloUnaUnidadCalculado().toPlainString());
-        // txtSubtotal.setText(detalle.getSubtotalLinea().toPlainString());
+        // Descripción
         txtDescripcion.setText(detalle.getDescripcion());
 
+        // Tipo de puerta (del enum)
         if (detalle.getTipoPuerta() != null) {
             cmbTipoPuerta.setSelectedItem(detalle.getTipoPuerta().getDescripcion());
         }
 
+        // Mosquitero
         ckMosquitero.setSelected(detalle.isMosquitero());
 
-        // Cargar datos y habilitar/deshabilitar campos
+        // Duela
         ckDuela.setSelected(detalle.isDuela());
         cbxTipoDuela.setSelectedItem(detalle.getTipoDuela());
         txtMedidaDuela.setText(detalle.getMedidaDuela() != null ? detalle.getMedidaDuela().toPlainString() : "");
         cbxTipoDuela.setEnabled(detalle.isDuela());
         txtMedidaDuela.setEnabled(detalle.isDuela());
 
+        // Adaptador
         ckAdaptador.setSelected(detalle.isAdaptador());
         cbxTipoAdaptador.setSelectedItem(detalle.getTipoAdaptador());
         cbxTipoAdaptador.setEnabled(detalle.isAdaptador());
 
+        // Junquillo
         ckJunquillo.setSelected(detalle.isJunquillo());
         cbxTipoJunquillo.setSelectedItem(detalle.getTipoJunquillo());
         cbxTipoJunquillo.setEnabled(detalle.isJunquillo());
 
+        // Canal
         ckCanal.setSelected(detalle.isCanal());
         cbxTipoCanal.setSelectedItem(detalle.getTipoCanal());
         cbxTipoCanal.setEnabled(detalle.isCanal());
 
+        // Pivote
         ckPivote.setSelected(detalle.isPivote());
         cbxTipoPivote.setSelectedItem(detalle.getTipoPivote());
         spnCantidadPivote.setValue(detalle.getCantidadPivote());
         cbxTipoPivote.setEnabled(detalle.isPivote());
         spnCantidadPivote.setEnabled(detalle.isPivote());
 
+        // Jaladera
         ckJaladera.setSelected(detalle.isJaladera());
         cbxTipoJaladera.setSelectedItem(detalle.getTipoJaladera());
         spnCantidadJaladera.setValue(detalle.getCantidadJaladera());
         cbxTipoJaladera.setEnabled(detalle.isJaladera());
         spnCantidadJaladera.setEnabled(detalle.isJaladera());
 
+        // Barra
         ckBarra.setSelected(detalle.isBarra());
         cbxTipoBarra.setSelectedItem(detalle.getTipoBarra());
         cbxTipoBarra.setEnabled(detalle.isBarra());
     }
 
-    private void cargarCombo(JComboBox<String> combo, List<String> valores) {
-        combo.removeAllItems();
-        for (String valor : valores) {
-            combo.addItem(valor);
+    /**
+     * Devuelve la lista de materiales seleccionados según los checkboxes y
+     * comboboxes de la puerta abatible.
+     */
+    private List<Material> obtenerMaterialesSeleccionados() {
+        List<Material> seleccionados = new ArrayList<>();
+
+        // Duela
+        if (ckDuela.isSelected() && cbxTipoDuela.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.DUELA, (String) cbxTipoDuela.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
         }
+
+        // Adaptador
+        if (ckAdaptador.isSelected() && cbxTipoAdaptador.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.ADAPTADOR, (String) cbxTipoAdaptador.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        // Junquillo
+        if (ckJunquillo.isSelected() && cbxTipoJunquillo.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.JUNQUILLO, (String) cbxTipoJunquillo.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        // Canal
+        if (ckCanal.isSelected() && cbxTipoCanal.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.CANALILLO, (String) cbxTipoCanal.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        // Pivote
+        if (ckPivote.isSelected() && cbxTipoPivote.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.PIVOTE, (String) cbxTipoPivote.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        // Jaladera
+        if (ckJaladera.isSelected() && cbxTipoJaladera.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.JALADERA, (String) cbxTipoJaladera.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        // Barra
+        if (ckBarra.isSelected() && cbxTipoBarra.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.BARRA, (String) cbxTipoBarra.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        // Mosquitero (si aplica como material)
+        if (ckMosquitero.isSelected()) {
+            Material m = buscarMaterial(Material.TipoMaterial.MOSQUITERO, "Mosquitero");
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        return seleccionados;
     }
+
+    /**
+     * Busca un material dentro de la lista de materiales disponibles según tipo
+     * y descripción.
+     */
+    private Material buscarMaterial(Material.TipoMaterial tipo, String descripcion) {
+        for (Material m : materialesDisponibles) {
+            if (m.getTipo() == tipo && m.getDescripcion().equals(descripcion)) {
+                return m;
+            }
+        }
+        return null;
+    }
+
+
 
     private void permitirSoloNumeros(javax.swing.JTextField campo) {
         campo.addKeyListener(new java.awt.event.KeyAdapter() {

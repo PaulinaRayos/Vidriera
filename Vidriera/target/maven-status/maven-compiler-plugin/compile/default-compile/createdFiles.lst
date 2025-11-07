@@ -15,6 +15,7 @@ dao\VentanaDetalleDAO.class
 modelo\TipoVentana.class
 presentacion\PanelDetallePuertaAbatible$12.class
 com\mycompany\vidriera\Test2Crear.class
+presentacion\frmCrearCotizacion$12.class
 presentacion\PanelDetalleVentana.class
 presentacion\PanelDetalleVentana$6.class
 presentacion\frmEditarCotizacion$6.class
@@ -58,6 +59,7 @@ modelo\VentanaDetalle.class
 negocio\CotizacionBO.class
 presentacion\frmEditarCotizacion$4.class
 modelo\MaterialDetalle.class
+presentacion\frmCrearCotizacion$11.class
 presentacion\PanelDetalleVentana$2.class
 presentacion\InicioAdministrarCotizaciones$2.class
 presentacion\PanelDetalleCanceleria$7.class
@@ -88,6 +90,7 @@ presentacion\PanelDetallePuertaAbatible$13.class
 presentacion\frmCrearCotizacion$2.class
 presentacion\PanelDetallePuertaAbatible$7.class
 presentacion\InicioAdministrarCotizaciones$4.class
+presentacion\frmCrearCotizacion$13.class
 modelo\Material.class
 presentacion\DetalleEditorDialog$3.class
 modelo\DetalleCotizacion.class

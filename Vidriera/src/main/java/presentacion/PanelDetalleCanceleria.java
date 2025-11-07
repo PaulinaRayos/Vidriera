@@ -18,8 +18,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.SpinnerNumberModel;
+import modelo.MaterialDetalle;
 
 /**
  *
@@ -29,8 +31,6 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
 
     private List<Material> materialesDisponibles;
     private CatalogoTrabajoDAO catalogoDAO;
-    
-    
 
     /**
      * Creates new form PanelDetalleCanceleria
@@ -72,7 +72,8 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
     }
 
     /**
-     * Carga los ComboBoxes con datos.
+     * Carga los ComboBoxes con datos filtrando por tipo de material o desde DAO
+     * según corresponda.
      */
     private void cargarDatosComboBox() {
         // Cargar los tipos de cancelería desde el Enum
@@ -81,31 +82,34 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
             cmbTipoCanceleria.addItem(tc.getDescripcion());
         }
 
-        // Cargar los tipos de cristal (vidrios)
-        cmbTipoCristal.removeAllItems();
+        // Cargar los tipos de material desde la lista de materiales filtrando por TipoMaterial
+        cargarComboPorTipo(cmbTipoCristal, Material.TipoMaterial.VIDRIO);
+        cargarComboPorTipo(cbxTipoTapa, Material.TipoMaterial.TAPA);
+        cargarComboPorTipo(cbxTipoZoclo, Material.TipoMaterial.ZOCLO);
+        cargarComboPorTipo(cbxTipoJunquillo, Material.TipoMaterial.JUNQUILLO);
+        cargarComboPorTipo(cbxTipoArco, Material.TipoMaterial.ARCO);
+        cargarComboPorTipo(cbxTipoCanalillo, Material.TipoMaterial.CANALILLO);
+      //  cargarComboPorTipo(cbxBolsa, Material.TipoMaterial.BOLSA); // 
+        // Agrega más ComboBoxes si llegas a tener PERFIL, OTRO, etc.
+    }
+
+    /**
+     * Llena un JComboBox filtrando la lista de materiales por el tipo de
+     * material.
+     *
+     * @param combo El JComboBox a llenar.
+     * @param tipo El tipo de material a filtrar.
+     */
+    private void cargarComboPorTipo(JComboBox<String> combo, Material.TipoMaterial tipo) {
+        combo.removeAllItems();
         if (materialesDisponibles != null) {
-            for (modelo.Material m : materialesDisponibles) {
-                if (m.getTipo() == Material.TipoMaterial.Vidrio) {
-                    cmbTipoCristal.addItem(m.getDescripcion());
+            for (Material m : materialesDisponibles) {
+                if (m.getTipo() == tipo) {
+                    combo.addItem(m.getDescripcion());
                 }
             }
         } else {
-            cmbTipoCristal.addItem("Error al cargar");
-        }
-
-        // Cargar ComboBoxes de accesorios desde BD usando el DAO
-        try (Connection conn = utils.Conexion.getConnection()) {
-            MaterialDetalleDAO dao = new MaterialDetalleDAO(conn);
-
-            cargarCombo(cbxTipoTapa, dao.obtenerValoresDistinctCanceleria("tipoTapa"));
-            cargarCombo(cbxTipoZoclo, dao.obtenerValoresDistinctCanceleria("tipoZoclo"));
-            cargarCombo(cbxTipoJunquillo, dao.obtenerValoresDistinctCanceleria("tipoJunquillo"));
-            cargarCombo(cbxTipoArco, dao.obtenerValoresDistinctCanceleria("tipoArco"));
-            cargarCombo(cbxTipoCanalillo, dao.obtenerValoresDistinctCanceleria("tipoCanalillo"));
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error al cargar tipos de cancelería desde la BD", "Error", JOptionPane.ERROR_MESSAGE);
+            combo.addItem("Error al cargar");
         }
     }
 
@@ -390,48 +394,42 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
             panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
+                        .addGap(180, 180, 180)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                .addGap(180, 180, 180)
-                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cmbTipoCanceleria, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmbTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtMedidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(medidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tipoCanceleria, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(medidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(10, 10, 10)
-                                .addComponent(txtMedidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(cmbTipoCanceleria, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtMedidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                .addComponent(cantidadTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(spnCantidadTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                .addComponent(tipoTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(cbxTipoTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDetalleVentanaLayout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                .addComponent(bolsa, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(10, 10, 10)
-                                .addComponent(ckBolsa))
-                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                .addGap(180, 180, 180)
-                                .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(noHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(medidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tipoCanceleria, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(medidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
+                        .addComponent(txtMedidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                            .addComponent(bolsa, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(10, 10, 10)
+                            .addComponent(ckBolsa))
+                        .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                            .addGap(180, 180, 180)
+                            .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(noHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                            .addComponent(fijosVertical, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(10, 10, 10)
+                            .addComponent(spnNumFijosVerticales1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                            .addComponent(fijosHorizontal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGap(10, 10, 10)
+                            .addComponent(spnNumFijosHorizontales1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -464,13 +462,13 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addComponent(fijosVertical, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cantidadTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
-                        .addComponent(spnNumFijosVerticales1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(spnCantidadTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addComponent(fijosHorizontal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tipoTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
-                        .addComponent(spnNumFijosHorizontales1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cbxTipoTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(25, 25, 25)
                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -496,9 +494,9 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
             panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
                 .addComponent(panelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(medidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtMedidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -517,27 +515,48 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
                         .addGap(12, 12, 12)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addGap(24, 24, 24)
+                            .addComponent(cmbTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tipoJuanquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxTipoJunquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ckArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(arco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(noHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(bolsa, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ckBolsa, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(medicaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(fijosVertical, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(spnNumFijosVerticales1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(12, 12, 12)
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(fijosHorizontal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(spnNumFijosHorizontales1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(ckZoclo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(zoclo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tipoZoclo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbxTipoZoclo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(spnNumFijosHorizontales1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(ckCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(canalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -552,49 +571,28 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
                                 .addGap(12, 12, 12)
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tipoTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxTipoTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(cantidadTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(spnCantidadTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(13, 13, 13)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ckZoclo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(zoclo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tipoZoclo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxTipoZoclo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(8, 8, 8)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ckJunquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(junquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(12, 12, 12)
-                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tipoJuanquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxTipoJunquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ckArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(arco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(noHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(bolsa, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ckBolsa, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(12, 12, 12)
-                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(medicaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(12, Short.MAX_VALUE))
-                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tipoTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxTipoTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cantidadTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spnCantidadTapa, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -791,8 +789,6 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
             d.setCantidad((Integer) spnCantidad.getValue());
             d.setTipoCristal((String) cmbTipoCristal.getSelectedItem());
             d.setNoHojas((Integer) spnNoHojas.getValue());
-            d.setPrecioSoloUnaUnidadCalculado(BigDecimal.ZERO);
-            d.setSubtotalLinea(BigDecimal.ZERO);
             d.setDescripcion(txtDescripcion.getText());
 
             String descCanceleria = (String) cmbTipoCanceleria.getSelectedItem();
@@ -816,21 +812,29 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
             d.setCanalillo(ckCanalillo.isSelected());
             d.setTipoCanalillo(ckCanalillo.isSelected() ? (String) cbxTipoCanalillo.getSelectedItem() : null);
             d.setMedidaCanalillo(new BigDecimal(txtMedidaCanalillo.getText().isEmpty() ? "0" : txtMedidaCanalillo.getText()));
-            
-            try (Connection conn = utils.Conexion.getConnection()) {
-                CanceleriaFijaDetalleDAO dao = new CanceleriaFijaDetalleDAO(conn);
-                String tipoCanc = (String) cmbTipoCanceleria.getSelectedItem();
-                String tipoCristalSel = (String) cmbTipoCristal.getSelectedItem();
-                int hojas = (Integer) spnNoHojas.getValue();
 
-                BigDecimal precioUnidad = dao.obtenerPrecio(tipoCanc, tipoCristalSel, hojas);
-                d.setPrecioSoloUnaUnidadCalculado(precioUnidad);
-                d.setSubtotalLinea(precioUnidad.multiply(new BigDecimal(d.getCantidad())));
-            } catch (SQLException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error al obtener precio desde la BD", "Error", JOptionPane.ERROR_MESSAGE);
+            // Obtener materiales seleccionados del panel (lista de Material)
+            List<Material> materialesSeleccionados = obtenerMaterialesSeleccionados();
+
+            // Convertir a MaterialDetalle
+            List<MaterialDetalle> materialesDetalle = new ArrayList<>();
+            for (Material m : materialesSeleccionados) {
+                BigDecimal cantidad = BigDecimal.valueOf(d.getCantidad()); // cantidad de cancelería
+                BigDecimal precioUnitario = m.getPrecio();
+                MaterialDetalle md = new MaterialDetalle(m, cantidad, precioUnitario);
+                materialesDetalle.add(md);
             }
 
+            // Asignar a tu detalle
+            d.setMateriales(materialesDetalle);
+
+            // Calcular subtotal general
+            BigDecimal subtotal = BigDecimal.ZERO;
+            for (MaterialDetalle md : materialesDetalle) {
+                subtotal = subtotal.add(md.getPrecioTotal());
+            }
+            d.setPrecioSoloUnaUnidadCalculado(subtotal); // opcional
+            d.setSubtotalLinea(subtotal);
 
         } catch (Exception e) {
             System.err.println("Error al leer datos del panel de cancelería: " + e.getMessage());
@@ -894,7 +898,6 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
         txtMedidaCanalillo.setEnabled(detalle.isCanalillo());
     }
 
-
     private void permitirSoloNumeros(javax.swing.JTextField campo) {
         campo.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
@@ -908,14 +911,65 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
         });
     }
 
-    private void cargarCombo(JComboBox<String> combo, List<String> valores) {
-        combo.removeAllItems();
-        for (String valor : valores) {
-            combo.addItem(valor);
-        }
-    }
     
 
+    /**
+     * Devuelve la lista de materiales seleccionados según los checkboxes y
+     * comboboxes.
+     */
+    private List<Material> obtenerMaterialesSeleccionados() {
+        List<Material> seleccionados = new ArrayList<>();
+
+        if (ckZoclo.isSelected() && cbxTipoZoclo.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.ZOCLO, (String) cbxTipoZoclo.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        if (ckJunquillo.isSelected() && cbxTipoJunquillo.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.JUNQUILLO, (String) cbxTipoJunquillo.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        if (ckArco.isSelected() && cbxTipoArco.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.ARCO, (String) cbxTipoArco.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        if (ckCanalillo.isSelected() && cbxTipoCanalillo.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.CANALILLO, (String) cbxTipoCanalillo.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        if (ckBolsa.isSelected() && cbxTipoTapa.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.BOLSA, (String) cbxTipoTapa.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        return seleccionados;
+    }
+
+    /**
+     * Busca un material dentro de la lista de materiales disponibles según tipo
+     * y descripción.
+     */
+    private Material buscarMaterial(Material.TipoMaterial tipo, String descripcion) {
+        for (Material m : materialesDisponibles) {
+            if (m.getTipo() == tipo && m.getDescripcion().equals(descripcion)) {
+                return m;
+            }
+        }
+        return null;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arco;

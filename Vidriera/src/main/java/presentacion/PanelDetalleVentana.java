@@ -7,10 +7,12 @@ import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import modelo.Material;
+import modelo.MaterialDetalle;
 
 /**
  *
@@ -34,8 +36,8 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
      *
      * @param materialesVidrio La lista de materiales
      */
-    public void inicializarDatos(List<Material> materialesVidrio) {
-        this.materialesDisponibles = materialesVidrio;
+    public void inicializarDatos(List<Material> materiales) {
+        this.materialesDisponibles = materiales;
 
         // Inicializa el DAO
         try {
@@ -376,7 +378,8 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
     }//GEN-LAST:event_txtDescripcionActionPerformed
 
     /**
-     * Carga los ComboBoxes con datos (Tipos de Ventana y Cristales).
+     * Carga los ComboBoxes con datos filtrando por tipo de material o desde el
+     * Enum.
      */
     private void cargarDatosComboBox() {
         // Cargar los tipos de ventana desde el Enum
@@ -385,28 +388,34 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
             cmbTipoVentana.addItem(tv.getDescripcion());
         }
 
-        // Cargar los tipos de cristal (vidrios)
-        cmbTipoCristal.removeAllItems();
+        // Cargar materiales filtrados por tipo
+        cargarComboPorTipo(cmbTipoCristal, Material.TipoMaterial.VIDRIO);
+        cargarComboPorTipo(cbxTipoArco, Material.TipoMaterial.ARCO);
+        cargarComboPorTipo(cbxTipoCanalillo, Material.TipoMaterial.CANALILLO);
+        //cargarComboPorTipo(cbxTipoZoclo, Material.TipoMaterial.ZOCLO);
+        //cargarComboPorTipo(cbxTipoJunquillo, Material.TipoMaterial.JUNQUILLO);
+        //cargarComboPorTipo(cbxTipoTapa, Material.TipoMaterial.TAPA);
+        // cargarComboPorTipo(cbxTipoBolsa, Material.TipoMaterial.BOLSA);
+        // cargarComboPorTipo(cbxTipoPerfil, Material.TipoMaterial.PERFIL);
+    }
+
+    /**
+     * Llena un JComboBox filtrando la lista de materiales por el tipo de
+     * material.
+     *
+     * @param combo El JComboBox a llenar.
+     * @param tipo El tipo de material a filtrar.
+     */
+    private void cargarComboPorTipo(JComboBox<String> combo, Material.TipoMaterial tipo) {
+        combo.removeAllItems();
         if (materialesDisponibles != null && !materialesDisponibles.isEmpty()) {
-            for (modelo.Material m : materialesDisponibles) {
-                if (m.getTipo() == Material.TipoMaterial.Vidrio) {
-                    cmbTipoCristal.addItem(m.getDescripcion());
+            for (Material m : materialesDisponibles) {
+                if (m.getTipo() == tipo) {
+                    combo.addItem(m.getDescripcion());
                 }
             }
         } else {
-            cmbTipoCristal.addItem("Error al cargar vidrios");
-        }
-
-        // Cargar ComboBoxes desde BD usando el DAO
-        try (Connection conn = utils.Conexion.getConnection()) {
-            MaterialDetalleDAO dao = new MaterialDetalleDAO(conn);
-
-            cargarCombo(cbxTipoArco, dao.obtenerValoresDistinctVentana("tipoArco"));
-            cargarCombo(cbxTipoCanalillo, dao.obtenerValoresDistinctVentana("tipoCanalillo"));
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error al cargar tipos de ventana desde la BD", "Error", JOptionPane.ERROR_MESSAGE);
+            combo.addItem("Error al cargar");
         }
     }
 
@@ -428,20 +437,22 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
             }
         });
 
-        // (Puedes añadir más listeners aquí)
     }
 
-    /**
-     * lee todos los campos del panel y crea un objeto VentanaDetalle.
-     *
-     * @return El objeto VentanaDetalle con los datos del formulario.
-     */
     public modelo.VentanaDetalle getDetalle() {
         modelo.VentanaDetalle d = new modelo.VentanaDetalle();
 
         try {
+            System.out.println("=== INICIANDO getDetalle() ===");
 
-            // 1. Campos numéricos obligatorios: medida H y V
+            // Validar que catalogoDAO esté inicializado
+            if (catalogoDAO != null) {
+                d.setTipoTrabajo(catalogoDAO.obtenerPorId(1));
+            } else {
+                throw new RuntimeException("CatalogoDAO no inicializado.");
+            }
+
+            // Validar medidas horizontales y verticales
             if (txtMedidaH.getText().trim().isEmpty() || txtMedidaV.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Debe ingresar las medidas horizontal y vertical.",
                         "Campos obligatorios", JOptionPane.WARNING_MESSAGE);
@@ -463,7 +474,7 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                 return null;
             }
 
-            // 2. Combos obligatorios
+            // Validar selección de tipo de ventana y cristal
             if (cmbTipoVentana.getSelectedIndex() < 0) {
                 JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de ventana.",
                         "Falta selección", JOptionPane.WARNING_MESSAGE);
@@ -476,13 +487,17 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                 return null;
             }
 
+            // Arco opcional
             d.setArco(ckArco.isSelected());
             if (d.isArco()) {
-                if (cbxTipoArco.getSelectedIndex() <= 0) {
-                    /*...error tipo arco...*/ return null;
+                System.out.println("Ventana con arco seleccionada.");
+                if (cbxTipoArco.getSelectedIndex() < 0) {
+                    JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de arco.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                    return null;
                 }
                 if (txtMedidaArco.getText().trim().isEmpty()) {
-                    /*...error medida arco vacía...*/ return null;
+                    JOptionPane.showMessageDialog(this, "Debe ingresar la medida del arco.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                    return null;
                 }
 
                 BigDecimal medidaArcoBD = new BigDecimal(txtMedidaArco.getText());
@@ -497,34 +512,33 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                 d.setTipoArco(null);
             }
 
+            // Canalillo obligatorio
+            if (cbxTipoCanalillo.getSelectedIndex() < 0) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de canalillo.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
             if (txtMedidaCanalillo.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "La medida del canalillo es oblogatoria.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "La medida del canalillo es obligatoria.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
                 txtMedidaCanalillo.requestFocus();
                 return null;
             }
 
-            BigDecimal medidaCanalilloBD = BigDecimal.ZERO;
-            // (Asumo que el índice 0 de tu JComboBox 'txtTipoCanalillo' es "Ninguno")
-            if (cbxTipoCanalillo.getSelectedIndex() > 0) {
-                if (txtMedidaCanalillo.getText().trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(this, "Si selecciona un tipo de canalillo, la 'Medida' es obligatoria.", "Campo requerido", JOptionPane.WARNING_MESSAGE);
+            BigDecimal medidaCanalilloBD;
+            try {
+                medidaCanalilloBD = new BigDecimal(txtMedidaCanalillo.getText());
+                if (medidaCanalilloBD.compareTo(BigDecimal.ZERO) <= 0) {
+                    JOptionPane.showMessageDialog(this, "La 'Medida canalillo' debe ser mayor que 0.", "Valor inválido", JOptionPane.WARNING_MESSAGE);
                     txtMedidaCanalillo.requestFocus();
                     return null;
                 }
-                try {
-                    medidaCanalilloBD = new BigDecimal(txtMedidaCanalillo.getText());
-                    // Validación para que sea mayor que 0 (permite 0.1)
-                    if (medidaCanalilloBD.compareTo(BigDecimal.ZERO) <= 0) {
-                        JOptionPane.showMessageDialog(this, "La medida canalillo' debe ser mayor que 0.", "Valor inválido", JOptionPane.WARNING_MESSAGE);
-                        txtMedidaCanalillo.requestFocus();
-                        return null;
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "La medida canalillo debe ser numérica.", "Error de formato", JOptionPane.ERROR_MESSAGE);
-                    return null;
-                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "La medida canalillo debe ser numérica.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+                System.out.println("Error de formato en medida canalillo: " + ex.getMessage());
+                return null;
             }
 
+            // Descripción
             if (txtDescripcion.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "La Descripción es obligatoria.",
                         "Campo requerido", JOptionPane.WARNING_MESSAGE);
@@ -532,54 +546,46 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                 return null;
             }
 
-            // ---- CONSTRUCCIÓN DEL OBJETO ----
-            if (catalogoDAO != null) {
-                d.setTipoTrabajo(catalogoDAO.obtenerPorId(1)); // id del catálogo para ventanas
-            } else {
-                throw new RuntimeException("CatalogoDAO no inicializado.");
-            }
-
+            // Construcción del objeto VentanaDetalle
+            System.out.println("Construyendo objeto VentanaDetalle...");
             d.setMedidaHorizontal(medidaH);
             d.setMedidaVertical(medidaV);
             d.setCantidad((Integer) spnCantidad.getValue());
             d.setTipoCristal((String) cmbTipoCristal.getSelectedItem());
             d.setNoHojas((Integer) spnNoHojas.getValue());
-
             d.setDescripcion(txtDescripcion.getText());
 
             String descVentana = (String) cmbTipoVentana.getSelectedItem();
             d.setTipoVentana(modelo.TipoVentana.fromDescripcion(descVentana));
 
             d.setMosquitero(ckMosquitero.isSelected());
-            d.setArco(ckArco.isSelected());
-            d.setTipoArco(ckArco.isSelected() ? (String) cbxTipoArco.getSelectedItem() : null);
-            // d.setMedidaArco(medidaArcoBD);
-
-            // Canalillo siempre se lee del combo, no hay checkbox
             d.setTipoCanalillo((String) cbxTipoCanalillo.getSelectedItem());
-            d.setMedidaCanalillo(new BigDecimal(txtMedidaCanalillo.getText().isEmpty() ? "0" : txtMedidaCanalillo.getText()));
+            d.setMedidaCanalillo(medidaCanalilloBD);
 
-            BigDecimal precioUnidad = BigDecimal.ZERO;
-            try (Connection conn = utils.Conexion.getConnection()) {
-                VentanaDetalleDAO ventanaDAO = new VentanaDetalleDAO(conn);
-
-                precioUnidad = ventanaDAO.obtenerPrecio(descVentana, (String) cmbTipoCristal.getSelectedItem(),
-                        (Integer) spnNoHojas.getValue());
-
-                if (precioUnidad == null) {
-                    precioUnidad = BigDecimal.ZERO;
-                }
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error al obtener precio desde la BD", "Error", JOptionPane.ERROR_MESSAGE);
+            // Materiales
+            System.out.println("Obteniendo materiales seleccionados...");
+            List<Material> materialesSeleccionados = obtenerMaterialesSeleccionados();
+            List<MaterialDetalle> materialesDetalle = new ArrayList<>();
+            for (Material m : materialesSeleccionados) {
+                BigDecimal cantidad = BigDecimal.valueOf(d.getCantidad());
+                BigDecimal precioUnitario = m.getPrecio();
+                MaterialDetalle md = new MaterialDetalle(m, cantidad, precioUnitario);
+                materialesDetalle.add(md);
             }
+            d.setMateriales(materialesDetalle);
 
-            d.setPrecioSoloUnaUnidadCalculado(precioUnidad);
-            d.setSubtotalLinea(precioUnidad.multiply(new BigDecimal(d.getCantidad())));
+            // Calcular subtotal
+            BigDecimal subtotal = BigDecimal.ZERO;
+            for (MaterialDetalle md : materialesDetalle) {
+                subtotal = subtotal.add(md.getPrecioTotal());
+            }
+            d.setPrecioSoloUnaUnidadCalculado(subtotal);
+            d.setSubtotalLinea(subtotal);
+
 
         } catch (Exception e) {
-            System.err.println("Error al leer datos del panel de ventana: " + e.getMessage());
+            System.err.println("Error en getDetalle(): " + e.getMessage());
+            e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
             return null;
@@ -626,12 +632,63 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         txtMedidaCanalillo.setText(detalle.getMedidaCanalillo() != null ? detalle.getMedidaCanalillo().toPlainString() : "");
     }
 
-    // Método auxiliar para llenar los combos
-    private void cargarCombo(JComboBox<String> combo, List<String> valores) {
-        combo.removeAllItems();
-        for (String valor : valores) {
-            combo.addItem(valor);
+    /**
+     * Devuelve la lista de materiales seleccionados según los checkboxes y
+     * comboboxes del panel de Ventana.
+     */
+    private List<Material> obtenerMaterialesSeleccionados() {
+        List<Material> seleccionados = new ArrayList<>();
+
+        // VIDRIO
+        if (cmbTipoCristal.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.VIDRIO, (String) cmbTipoCristal.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
         }
+
+        // ARCO
+        if (ckArco.isSelected() && cbxTipoArco.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.ARCO, (String) cbxTipoArco.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        // CANALILLO
+        if (cbxTipoCanalillo.getSelectedItem() != null) {
+            Material m = buscarMaterial(Material.TipoMaterial.CANALILLO, (String) cbxTipoCanalillo.getSelectedItem());
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        // MOSQUITERO (si aplica)
+        if (ckMosquitero.isSelected()) {
+            Material m = buscarMaterial(Material.TipoMaterial.MOSQUITERO, "Mosquitero");
+            if (m != null) {
+                seleccionados.add(m);
+            }
+        }
+
+        return seleccionados;
+    }
+
+    /**
+     * Busca un material dentro de la lista de materiales disponibles según tipo
+     * y descripción.
+     */
+    private Material buscarMaterial(Material.TipoMaterial tipo, String descripcion) {
+        if (materialesDisponibles == null) {
+            return null;
+        }
+
+        for (Material m : materialesDisponibles) {
+            if (m.getTipo() == tipo && m.getDescripcion().equals(descripcion)) {
+                return m;
+            }
+        }
+        return null;
     }
 
     private void permitirSoloNumeros(javax.swing.JTextField campo) {

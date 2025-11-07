@@ -41,6 +41,7 @@ public class CanceleriaFijaDetalle {
     private String tipoCanalillo;
     private BigDecimal medidaCanalillo;
     private CatalogoTrabajo tipoTrabajo;
+    private List<MaterialDetalle> materiales;
 
     // Constructor vacío
     public CanceleriaFijaDetalle() {
@@ -332,16 +333,25 @@ public class CanceleriaFijaDetalle {
         this.tipoTrabajo = tipoTrabajo;
     }
 
-    public void calcularSubtotal(List<MaterialDetalle> materialesDelDetalle) {
-        BigDecimal subtotal = BigDecimal.ZERO;
+    public List<MaterialDetalle> getMateriales() {
+        return materiales;
+    }
 
-        for (MaterialDetalle md : materialesDelDetalle) {
+    public void setMateriales(List<MaterialDetalle> materiales) {
+        this.materiales = materiales;
+    }
+
+    
+    
+    public void calcularSubtotal() {
+        BigDecimal subtotal = BigDecimal.ZERO;
+        for (MaterialDetalle md : materiales) {
             if (md.getMaterial() != null && md.getCantidad() != null) {
                 subtotal = subtotal.add(md.getMaterial().getPrecio().multiply(md.getCantidad()));
             }
         }
-
         this.subtotalLinea = subtotal;
+
         if (this.cantidad > 0) {
             this.precioSoloUnaUnidadCalculado = subtotal.divide(new BigDecimal(this.cantidad), BigDecimal.ROUND_HALF_UP);
         } else {

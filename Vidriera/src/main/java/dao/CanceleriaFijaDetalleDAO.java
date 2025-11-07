@@ -3,11 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dao;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import modelo.Material;
+import modelo.MaterialDetalle;
+
 /**
  *
  * @author pauli
@@ -20,33 +26,47 @@ public class CanceleriaFijaDetalleDAO {
         this.conn = conn;
     }
 
-    /**
-     * Obtiene el precio unitario de la cancelería fija según coincidencias.
-     *
-     * @param tipoCanceleria Tipo de cancelería ("2\"", "3\"")
-     * @param tipoCristal    Tipo de cristal
-     * @param noHojas        Número de hojas
-     * @return Precio unitario, o BigDecimal.ZERO si no se encuentra
-     * @throws SQLException
-     */
-    public BigDecimal obtenerPrecio(String tipoCanceleria, String tipoCristal, int noHojas) throws SQLException {
-        String sql = "SELECT precioSoloUnaUnidadCalculado FROM canceleriafijadetalle "
-                   + "WHERE tipoCanceleria = ? AND tipoCristal = ? AND noHojas = ? "
-                   + "LIMIT 1";
+    // Obtener materiales de un detalle de cancelería fija
+    public List<MaterialDetalle> obtenerMateriales(int idCanceleriaDetalle) {
+        List<MaterialDetalle> lista = new ArrayList<>();
+        String sql = "SELECT m.idMaterial, m.descripcion, m.precio, cfm.cantidad "
+                + "FROM CanceleriaFijaDetalle_Material cfm "
+                + "JOIN Material m ON cfm.idMaterial = m.idMaterial "
+                + "WHERE cfm.idCanceleriaDetalle = ?";
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, tipoCanceleria);
-            ps.setString(2, tipoCristal);
-            ps.setInt(3, noHojas);
-
+            ps.setInt(1, idCanceleriaDetalle);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    BigDecimal precio = rs.getBigDecimal("precioSoloUnaUnidadCalculado");
-                    return precio != null ? precio : BigDecimal.ZERO;
-                } else {
-                    return BigDecimal.ZERO; // Si no hay coincidencias
+                while (rs.next()) {
+                    Material m = new Material();
+                    m.setIdMaterial(rs.getInt("idMaterial"));
+                    m.setDescripcion(rs.getString("descripcion"));
+                    m.setPrecio(rs.getBigDecimal("precio"));
+
+                    BigDecimal cantidad = rs.getBigDecimal("cantidad");
+                    BigDecimal precioUnitario = m.getPrecio();
+                    lista.add(new MaterialDetalle(m, cantidad, precioUnitario));
                 }
             }
+        } catch (Exception e) {
+            System.err.println("Error al obtener materiales: " + e.getMessage());
         }
+        return lista;
     }
+
+    // Calcular subtotal del detalle de cancelería
+    public BigDecimal calcularSubtotal(int idCanceleriaDetalle) {
+        List<MaterialDetalle> materiales = obtenerMateriales(idCanceleriaDetalle);
+        BigDecimal subtotal = BigDecimal.ZERO;
+
+        for (MaterialDetalle md : materiales) {
+            if (md.getCantidad() != null && md.getPrecioUnitario() != null) {
+                subtotal = subtotal.add(md.getPrecioTotal());
+            }
+        }
+
+        return subtotal;
+    }
+
+    
 }

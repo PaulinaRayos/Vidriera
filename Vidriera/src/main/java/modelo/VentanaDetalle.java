@@ -5,6 +5,7 @@
 package modelo;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -32,6 +33,7 @@ public class VentanaDetalle extends DetalleCotizacion {
     private String tipoCanalillo;
     private BigDecimal medidaCanalillo;
     private CatalogoTrabajo tipoTrabajo;
+    private List<MaterialDetalle> materiales;
 
     public VentanaDetalle() {
         super();
@@ -233,20 +235,30 @@ public class VentanaDetalle extends DetalleCotizacion {
         this.tipoTrabajo = tipoTrabajo;
     }
 
-    public void calcularSubtotal(List<MaterialDetalle> materialesDelDetalle) {
+    public List<MaterialDetalle> getMateriales() {
+        return materiales;
+    }
+
+    public void setMateriales(List<MaterialDetalle> materiales) {
+        this.materiales = materiales;
+    }
+
+    public void calcularSubtotal() {
         BigDecimal subtotal = BigDecimal.ZERO;
 
-        // Recorremos los materiales asignados a esta ventana
-        for (MaterialDetalle md : materialesDelDetalle) {
-            if (md.getMaterial() != null && md.getCantidad() != null) {
-                subtotal = subtotal.add(md.getMaterial().getPrecio().multiply(md.getCantidad()));
+        if (materiales != null) {
+            for (MaterialDetalle md : materiales) {
+                if (md.getMaterial() != null && md.getCantidad() != null) {
+                    subtotal = subtotal.add(md.getMaterial().getPrecio().multiply(md.getCantidad()));
+                }
             }
         }
 
         this.subtotalLinea = subtotal;
 
         if (this.cantidad > 0) {
-            this.precioSoloUnaUnidadCalculado = subtotal.divide(new BigDecimal(this.cantidad), BigDecimal.ROUND_HALF_UP);
+            this.precioSoloUnaUnidadCalculado
+                    = subtotal.divide(new BigDecimal(this.cantidad), BigDecimal.ROUND_HALF_UP);
         } else {
             this.precioSoloUnaUnidadCalculado = BigDecimal.ZERO;
         }

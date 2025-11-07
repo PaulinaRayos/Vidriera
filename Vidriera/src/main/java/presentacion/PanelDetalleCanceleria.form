@@ -38,57 +38,50 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="panelTitulo" alignment="0" max="32767" attributes="0"/>
               <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="30" pref="30" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="180" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="cantidadTapa" min="-2" pref="170" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                                  <Component id="spnCantidadTapa" min="-2" pref="160" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="tipoTapa" min="-2" pref="170" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                                  <Component id="cbxTipoTapa" min="-2" pref="160" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="cmbTipoCanceleria" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
+                              <Component id="cmbTipoCristal" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
+                              <Component id="txtMedidaV" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
+                              <Component id="spnCantidad" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="30" pref="30" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="-2" pref="180" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="cmbTipoCanceleria" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
-                                      <Component id="cmbTipoCristal" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
-                                      <Component id="txtMedidaV" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
-                                      <Component id="spnCantidad" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="medidaV" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
-                                      <Component id="cantidad" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
-                                      <Component id="tipoCanceleria" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
-                                      <Component id="tipoCristal" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
-                                      <Component id="medidaH" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                                  <Component id="txtMedidaH" min="-2" pref="160" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="bolsa" min="-2" pref="170" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                                      <Component id="ckBolsa" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="180" max="-2" attributes="0"/>
-                                      <Component id="spnNoHojas" min="-2" pref="160" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Component id="noHojas" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="medidaV" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
+                              <Component id="cantidad" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
+                              <Component id="tipoCanceleria" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
+                              <Component id="tipoCristal" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
+                              <Component id="medidaH" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                          <Component id="txtMedidaH" min="-2" pref="160" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="bolsa" min="-2" pref="170" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                              <Component id="ckBolsa" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="180" max="-2" attributes="0"/>
+                              <Component id="spnNoHojas" min="-2" pref="160" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="noHojas" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="fijosVertical" min="-2" pref="170" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                              <Component id="spnNumFijosVerticales1" min="-2" pref="160" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="fijosHorizontal" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                              <Component id="spnNumFijosHorizontales1" min="-2" pref="160" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -135,14 +128,14 @@
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="fijosVertical" min="-2" pref="170" max="-2" attributes="0"/>
+                          <Component id="cantidadTapa" min="-2" pref="170" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                          <Component id="spnNumFijosVerticales1" min="-2" pref="160" max="-2" attributes="0"/>
+                          <Component id="spnCantidadTapa" min="-2" pref="160" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="fijosHorizontal" max="32767" attributes="0"/>
+                          <Component id="tipoTapa" min="-2" pref="170" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                          <Component id="spnNumFijosHorizontales1" min="-2" pref="160" max="-2" attributes="0"/>
+                          <Component id="cbxTipoTapa" min="-2" pref="160" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
@@ -179,9 +172,9 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Component id="panelTitulo" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="medidaH" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                               <Component id="txtMedidaH" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
@@ -206,11 +199,46 @@
                               <Component id="tipoCristal" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                               <Component id="cmbTipoCristal" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="tipoJuanquillo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="cbxTipoJunquillo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="ckArco" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="arco" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="noHojas" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="spnNoHojas" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="bolsa" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="ckBolsa" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
+                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="tipoArco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="cbxTipoArco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="medicaArco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="txtMedidaArco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="fijosVertical" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                                       <Component id="spnNumFijosVerticales1" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
@@ -220,18 +248,13 @@
                                       <Component id="fijosHorizontal" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                                       <Component id="spnNumFijosHorizontales1" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="ckZoclo" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
-                                      <Component id="zoclo" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="tipoZoclo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                      <Component id="cbxTipoZoclo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                  </Group>
                               </Group>
+                          </Group>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
+                                  <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="ckCanalillo" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
                                       <Component id="canalillo" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
@@ -252,6 +275,27 @@
                                       <Component id="txtDescripcion" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="tipoTapa" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="cbxTipoTapa" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="cantidadTapa" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="spnCantidadTapa" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="ckZoclo" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="zoclo" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="tipoZoclo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                      <Component id="cbxTipoZoclo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
                           </Group>
                           <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -260,58 +304,7 @@
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="tipoJuanquillo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="cbxTipoJunquillo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="ckArco" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="arco" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="noHojas" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="spnNoHojas" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="bolsa" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="ckBolsa" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                  </Group>
-                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="tipoArco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="cbxTipoArco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="medicaArco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="txtMedidaArco" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="tipoTapa" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="cbxTipoTapa" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cantidadTapa" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="spnCantidadTapa" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

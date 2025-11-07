@@ -910,7 +910,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         List<Material> vidrios = new ArrayList<>();
         if (this.materialesDisponibles != null) {
             for (Material m : this.materialesDisponibles) {
-                if (m.getTipo() == Material.TipoMaterial.Vidrio) {
+                if (m.getTipo() == Material.TipoMaterial.VIDRIO) {
                     vidrios.add(m);
                 }
             }

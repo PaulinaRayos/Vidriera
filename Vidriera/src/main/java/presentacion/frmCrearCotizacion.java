@@ -8,6 +8,7 @@ import dao.CatalogoTrabajoDAO;
 import dao.ClienteDAO;
 import dao.MaterialDAO;
 import dao.VendedorDAO;
+import java.awt.event.ItemEvent;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -21,6 +22,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import modelo.CanceleriaFijaDetalle;
 import modelo.CatalogoTrabajo;
@@ -76,6 +79,44 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
         //poner "No" seleccionado por defecto
         ckbxDescuentoNo.setSelected(true);
+        // Bloquear el campo de texto
+        txtDescuento.setText("0");
+        txtDescuento.setEnabled(false);
+
+        ckbxDescuentoSi.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                ckbxDescuentoNo.setSelected(false);
+                txtDescuento.setEnabled(true);
+                txtDescuento.setText(""); // limpiar si quieres
+                recalcularTotales();
+            }
+        });
+
+        ckbxDescuentoNo.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                ckbxDescuentoSi.setSelected(false);
+                txtDescuento.setText("0");
+                txtDescuento.setEnabled(false);
+                recalcularTotales();
+            }
+        });
+
+        txtDescuento.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                recalcularTotales();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                recalcularTotales();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
 
     }
 
@@ -367,6 +408,17 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
         ckbxDescuentoNo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         ckbxDescuentoNo.setText("No");
+        ckbxDescuentoNo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ckbxDescuentoNoActionPerformed(evt);
+            }
+        });
+
+        txtDescuento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDescuentoActionPerformed(evt);
+            }
+        });
 
         labelPorsentaje.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         labelPorsentaje.setForeground(new java.awt.Color(0, 38, 115));
@@ -724,8 +776,8 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         }
 
         int confirm = JOptionPane.showConfirmDialog(this,
-            "¿Seguro que deseas eliminar esta cotización de la lista?",
-            "Confirmar", JOptionPane.YES_NO_OPTION);
+                "¿Seguro que deseas eliminar esta cotización de la lista?",
+                "Confirmar", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
             detallesEnMemoria.remove(filaSeleccionada);
@@ -737,11 +789,11 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
     private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
         int opcion = JOptionPane.showConfirmDialog(
-            this,
-            "¿Está seguro de descartar la cotización?",
-            "Confirmar Cancelación",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.WARNING_MESSAGE
+                this,
+                "¿Está seguro de descartar la cotización?",
+                "Confirmar Cancelación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
         );
 
         if (opcion == JOptionPane.YES_OPTION) {
@@ -808,10 +860,10 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
             CotizacionBO bo = new CotizacionBO();
             boolean exito = bo.crearCotizacionCompleta(
-                cotizacion,
-                detallesVentana,
-                detallesCanceleria,
-                detallesPuerta
+                    cotizacion,
+                    detallesVentana,
+                    detallesCanceleria,
+                    detallesPuerta
             );
 
             if (exito) {
@@ -831,80 +883,80 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
-         // Validaciones básicas
-    if (cbxSeleccionarCliente.getSelectedIndex() == -1 || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
-        JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente.", "Error de validación", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    if (vendedorPorDefecto == null) {
-        JOptionPane.showMessageDialog(this, "No se cargó un vendedor por defecto.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    if (detallesEnMemoria.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Debe agregar al menos un detalle.", "Error de validación", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    // Obtenemos cliente seleccionado
-    Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
-
-    // Inicializamos listas de detalle
-    ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
-    ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
-    ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
-    BigDecimal subtotal = BigDecimal.ZERO;
-
-    // Clasificamos detalles y calculamos subtotal
-    for (Object detalleObj : detallesEnMemoria) {
-        if (detalleObj instanceof VentanaDetalle vd) {
-            detallesVentana.add(vd);
-            subtotal = subtotal.add(vd.getSubtotalLinea());
-        } else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
-            detallesPuerta.add(pd);
-            subtotal = subtotal.add(pd.getSubtotalLinea());
-        } else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
-            detallesCanceleria.add(cd);
-            subtotal = subtotal.add(cd.getSubtotalLinea());
+        // Validaciones básicas
+        if (cbxSeleccionarCliente.getSelectedIndex() == -1 || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    }
+        if (vendedorPorDefecto == null) {
+            JOptionPane.showMessageDialog(this, "No se cargó un vendedor por defecto.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (detallesEnMemoria.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe agregar al menos un detalle.", "Error de validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    // Calculamos mano de obra (10%)
-    BigDecimal porcentajeManoObra = new BigDecimal("0.10");
-    BigDecimal manoObra = subtotal.multiply(porcentajeManoObra);
+        // Obtenemos cliente seleccionado
+        Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
 
-    // Calculamos IVA (16%)
-    BigDecimal iva = (subtotal.add(manoObra)).multiply(new BigDecimal("0.16"));
+        // Inicializamos listas de detalle
+        ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
+        ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
+        ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
+        BigDecimal subtotal = BigDecimal.ZERO;
 
-    // Calculamos descuento
-    BigDecimal descuentoMonto = BigDecimal.ZERO;
-    if (ckbxDescuentoSi.isSelected() && !txtDescuento.getText().trim().isEmpty()) {
-        BigDecimal descuentoPorcentaje = new BigDecimal(txtDescuento.getText().trim());
-        descuentoMonto = subtotal.multiply(descuentoPorcentaje.divide(new BigDecimal("100")));
-    }
+        // Clasificamos detalles y calculamos subtotal
+        for (Object detalleObj : detallesEnMemoria) {
+            if (detalleObj instanceof VentanaDetalle vd) {
+                detallesVentana.add(vd);
+                subtotal = subtotal.add(vd.getSubtotalLinea());
+            } else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
+                detallesPuerta.add(pd);
+                subtotal = subtotal.add(pd.getSubtotalLinea());
+            } else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
+                detallesCanceleria.add(cd);
+                subtotal = subtotal.add(cd.getSubtotalLinea());
+            }
+        }
 
-    // Calculamos total
-    BigDecimal total = subtotal.add(manoObra).add(iva).subtract(descuentoMonto);
+        // Calculamos mano de obra (10%)
+        BigDecimal porcentajeManoObra = new BigDecimal("0.10");
+        BigDecimal manoObra = subtotal.multiply(porcentajeManoObra);
 
-    // Creamos objeto cotización y seteamos todos los datos
-    Cotizacion cotizacion = new Cotizacion();
-    cotizacion.setCliente(clienteSeleccionado);
-    cotizacion.setVendedor(vendedorPorDefecto);
-    cotizacion.setProyecto(null); // o según corresponda
-    cotizacion.setFecha(new Date());
-    cotizacion.setEstado("Pendiente");
-    cotizacion.setSubtotal(subtotal);
-    cotizacion.setManoObra(manoObra);
-    cotizacion.setIva(iva);
-    cotizacion.setDescuentoMonto(descuentoMonto);
-    cotizacion.setTotal(total);
+        // Calculamos IVA (16%)
+        BigDecimal iva = (subtotal.add(manoObra)).multiply(new BigDecimal("0.16"));
 
-    cotizacion.setVentanaDetalles(detallesVentana);
-    cotizacion.setPuertaAbatibleDetalles(detallesPuerta);
-    cotizacion.setCanceleriaFijaDetalles(detallesCanceleria);
+        // Calculamos descuento
+        BigDecimal descuentoMonto = BigDecimal.ZERO;
+        if (ckbxDescuentoSi.isSelected() && !txtDescuento.getText().trim().isEmpty()) {
+            BigDecimal descuentoPorcentaje = new BigDecimal(txtDescuento.getText().trim());
+            descuentoMonto = subtotal.multiply(descuentoPorcentaje.divide(new BigDecimal("100")));
+        }
 
-    // Llama al diálogo de visualización pasándole la cotización completa
-    DialogoPrevisualizacionCotizacion previsualizar = new DialogoPrevisualizacionCotizacion(this, cotizacion);
-    previsualizar.setVisible(true);
+        // Calculamos total
+        BigDecimal total = subtotal.add(manoObra).add(iva).subtract(descuentoMonto);
+
+        // Creamos objeto cotización y seteamos todos los datos
+        Cotizacion cotizacion = new Cotizacion();
+        cotizacion.setCliente(clienteSeleccionado);
+        cotizacion.setVendedor(vendedorPorDefecto);
+        cotizacion.setProyecto(null); // o según corresponda
+        cotizacion.setFecha(new Date());
+        cotizacion.setEstado("Pendiente");
+        cotizacion.setSubtotal(subtotal);
+        cotizacion.setManoObra(manoObra);
+        cotizacion.setIva(iva);
+        cotizacion.setDescuentoMonto(descuentoMonto);
+        cotizacion.setTotal(total);
+
+        cotizacion.setVentanaDetalles(detallesVentana);
+        cotizacion.setPuertaAbatibleDetalles(detallesPuerta);
+        cotizacion.setCanceleriaFijaDetalles(detallesCanceleria);
+
+        // Llama al diálogo de visualización pasándole la cotización completa
+        DialogoPrevisualizacionCotizacion previsualizar = new DialogoPrevisualizacionCotizacion(this, cotizacion);
+        previsualizar.setVisible(true);
     }//GEN-LAST:event_btnVistaPreviaActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
@@ -913,6 +965,23 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
         ini.setVisible(true);
     }//GEN-LAST:event_btnVolverActionPerformed
+
+    private void txtDescuentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescuentoActionPerformed
+        if (ckbxDescuentoSi.isSelected()) {
+            ckbxDescuentoNo.setSelected(false); // deseleccionar "No"
+            txtDescuento.setEnabled(true);      // habilitar para escribir
+            recalcularTotales();                // recalcular totales
+        }
+    }//GEN-LAST:event_txtDescuentoActionPerformed
+
+    private void ckbxDescuentoNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckbxDescuentoNoActionPerformed
+        if (ckbxDescuentoNo.isSelected()) {
+            ckbxDescuentoSi.setSelected(false); // deseleccionar "Sí"
+            txtDescuento.setText("0");          // poner 0
+            txtDescuento.setEnabled(false);     // deshabilitar
+            recalcularTotales();                // recalcular totales
+        }
+    }//GEN-LAST:event_ckbxDescuentoNoActionPerformed
 
     /**
      * Configura la tabla, los listeners y el estado inicial de los botones.

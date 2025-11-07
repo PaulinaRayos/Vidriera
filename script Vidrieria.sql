@@ -96,9 +96,9 @@ CREATE TABLE ventanadetalle (
 );
 
 -- ===========================
--- Tabla: detalle_puertaabatible
+-- Tabla: puertaabatibledetalle
 -- ===========================
-CREATE TABLE detalle_puertaabatible (
+CREATE TABLE puertaabatibledetalle (
     id_detalle_puerta INT PRIMARY KEY AUTO_INCREMENT,
     id_cotizacion INT,
     id_tipo_trabajo INT,
@@ -173,10 +173,10 @@ CREATE TABLE material (
     precio DECIMAL(10,2),
     stockActual INT,
     tipo ENUM(
-	'VIDRIO', 'ALUMINIO', 'JUNQUILLO', 'ZOCOLO', 'TAPA', 'CANALILLO',
-    'DUELA', 'ADAPTADOR', 'MOSQUITERO', 'PIVOTE', 'JALADERA', 'BARRA',
-    'BISAGRA', 'TORNILLERIA', 'EMPAQUE', 'SELLADOR', 'HERRAJE', 'ACCESORIO',
-    'PERFIL', 'OTRO'
+        'VIDRIO', 'ALUMINIO', 'JUNQUILLO', 'ZOCLO', 'TAPA', 'CANALILLO',
+        'DUELA', 'ADAPTADOR', 'MOSQUITERO', 'PIVOTE', 'JALADERA', 'BARRA',
+        'BISAGRA', 'TORNILLERIA', 'EMPAQUE', 'SELLADOR', 'HERRAJE', 'ACCESORIO',
+        'PERFIL', 'ARCO', 'BOLSA', 'OTRO'
     ) NOT NULL
 );
 
@@ -282,14 +282,14 @@ CREATE TABLE CanceleriaFijaDetalle_Material (
     FOREIGN KEY (idMaterial) REFERENCES Material(idMaterial) ON DELETE CASCADE
 );
 
-CREATE TABLE PuertaAbatible_Material (
+CREATE TABLE PuertaAbatibleDetalle_Material (
     id_detalle_puerta INT NOT NULL,
     idMaterial INT NOT NULL,
     cantidad DECIMAL(10,2) NOT NULL,
     precioUnitario DECIMAL(10,2) NOT NULL,
     precioTotal DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (id_detalle_puerta, idMaterial),
-    FOREIGN KEY (id_detalle_puerta) REFERENCES Detalle_PuertaAbatible(id_detalle_puerta) ON DELETE CASCADE,
+    FOREIGN KEY (id_detalle_puerta) REFERENCES puertaabatibledetalle(id_detalle_puerta) ON DELETE CASCADE,
     FOREIGN KEY (idMaterial) REFERENCES Material(idMaterial) ON DELETE CASCADE
 );
 

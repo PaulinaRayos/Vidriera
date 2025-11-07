@@ -57,7 +57,7 @@ public class PuertaAbatibleDetalle {
     private int numFijosVerticales;
     private int numFijosHorizontales;
     private CatalogoTrabajo tipoTrabajo;
-    private List<MaterialDetalle> materialesDelDetalle;
+    private List<MaterialDetalle> materiales;
 
     //Constructor vacío
     public PuertaAbatibleDetalle() {
@@ -509,26 +509,23 @@ public class PuertaAbatibleDetalle {
         this.tipoTrabajo = tipoTrabajo;
     }
 
-    public List<MaterialDetalle> getMaterialesDelDetalle() {
-        return materialesDelDetalle;
+    public List<MaterialDetalle> getMateriales() {
+        return materiales;
     }
 
-    public void setMaterialesDelDetalle(List<MaterialDetalle> materialesDelDetalle) {
-        this.materialesDelDetalle = materialesDelDetalle;
+    public void setMateriales(List<MaterialDetalle> materiales) {
+        this.materiales = materiales;
     }
 
     public void calcularSubtotal() {
         BigDecimal subtotal = BigDecimal.ZERO;
-
-        if (materialesDelDetalle != null) {
-            for (MaterialDetalle md : materialesDelDetalle) {
-                if (md.getMaterial() != null && md.getCantidad() != null) {
-                    subtotal = subtotal.add(md.getMaterial().getPrecio().multiply(md.getCantidad()));
-                }
+        for (MaterialDetalle md : materiales) {
+            if (md.getMaterial() != null && md.getCantidad() != null) {
+                subtotal = subtotal.add(md.getMaterial().getPrecio().multiply(md.getCantidad()));
             }
         }
-
         this.subtotalLinea = subtotal;
+
         if (this.cantidad > 0) {
             this.precioSoloUnaUnidadCalculado = subtotal.divide(new BigDecimal(this.cantidad), BigDecimal.ROUND_HALF_UP);
         } else {
