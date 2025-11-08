@@ -7,6 +7,9 @@ package presentacion;
 import dao.CatalogoTrabajoDAO;
 import dao.DetalleCotizacionDAO;
 import dao.MaterialDAO;
+import java.awt.BorderLayout;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -14,11 +17,23 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.*;
 import negocio.CotizacionBO;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import utils.Conexion;
 
 /**
@@ -108,6 +123,8 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         btnVistaPrevia = new javax.swing.JButton();
         btnDescargar = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
+        btnDescartar = new javax.swing.JButton();
         pnlTotales2 = new javax.swing.JPanel();
         ckbxDescuentoSi2 = new javax.swing.JCheckBox();
         descuento = new javax.swing.JLabel();
@@ -125,8 +142,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         lblDescuento2 = new javax.swing.JLabel();
         lblTotal2 = new javax.swing.JLabel();
         lblIVA2 = new javax.swing.JLabel();
-        btnGuardar = new javax.swing.JButton();
-        btnDescartar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Editar cotización");
@@ -284,7 +299,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                     .addComponent(jScrollPane3)
                     .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
                         .addComponent(tituloEditarCotizacion)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 547, Short.MAX_VALUE)
                         .addComponent(btnNuevaCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -319,6 +334,11 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         btnVistaPrevia.setFocusPainted(false);
         btnVistaPrevia.setRequestFocusEnabled(false);
         btnVistaPrevia.setRolloverEnabled(false);
+        btnVistaPrevia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVistaPreviaActionPerformed(evt);
+            }
+        });
 
         btnDescargar.setBackground(new java.awt.Color(0, 81, 168));
         btnDescargar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
@@ -332,6 +352,11 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         btnDescargar.setFocusPainted(false);
         btnDescargar.setRequestFocusEnabled(false);
         btnDescargar.setRolloverEnabled(false);
+        btnDescargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescargarActionPerformed(evt);
+            }
+        });
 
         btnImprimir.setBackground(new java.awt.Color(0, 81, 168));
         btnImprimir.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
@@ -345,6 +370,47 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         btnImprimir.setFocusPainted(false);
         btnImprimir.setRequestFocusEnabled(false);
         btnImprimir.setRolloverEnabled(false);
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
+
+        btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
+        btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
+        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
+        btnGuardar.setText("Guardar");
+        btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnGuardar.setBorderPainted(false);
+        btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnGuardar.setDefaultCapable(false);
+        btnGuardar.setFocusPainted(false);
+        btnGuardar.setRequestFocusEnabled(false);
+        btnGuardar.setRolloverEnabled(false);
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+
+        btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
+        btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
+        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
+        btnDescartar.setText("Descartar");
+        btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnDescartar.setBorderPainted(false);
+        btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnDescartar.setDefaultCapable(false);
+        btnDescartar.setFocusPainted(false);
+        btnDescartar.setRequestFocusEnabled(false);
+        btnDescartar.setRolloverEnabled(false);
+        btnDescartar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescartarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelBotonesLayout = new javax.swing.GroupLayout(panelBotones);
         panelBotones.setLayout(panelBotonesLayout);
@@ -357,7 +423,11 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                 .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40)
                 .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
         );
         panelBotonesLayout.setVerticalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -366,7 +436,9 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                 .addGroup(panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
 
@@ -469,42 +541,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                     .addComponent(lblTotal2)))
         );
 
-        btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
-        btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
-        btnGuardar.setText("Guardar");
-        btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnGuardar.setBorderPainted(false);
-        btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnGuardar.setDefaultCapable(false);
-        btnGuardar.setFocusPainted(false);
-        btnGuardar.setRequestFocusEnabled(false);
-        btnGuardar.setRolloverEnabled(false);
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
-            }
-        });
-
-        btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
-        btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
-        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
-        btnDescartar.setText("Descartar");
-        btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnDescartar.setBorderPainted(false);
-        btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnDescartar.setDefaultCapable(false);
-        btnDescartar.setFocusPainted(false);
-        btnDescartar.setRequestFocusEnabled(false);
-        btnDescartar.setRolloverEnabled(false);
-        btnDescartar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDescartarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout pnlTotales2Layout = new javax.swing.GroupLayout(pnlTotales2);
         pnlTotales2.setLayout(pnlTotales2Layout);
         pnlTotales2Layout.setHorizontalGroup(
@@ -526,20 +562,10 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(labelPorsentaje2))
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(24, 24, 24))))
+                        .addGap(24, 755, Short.MAX_VALUE))))
         );
         pnlTotales2Layout.setVerticalGroup(
             pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlTotales2Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTotales2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(descuento)
@@ -758,6 +784,15 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnNuevaCotizacionActionPerformed
 
+     private BufferedImage panelToImage(JPanel panel) {
+        int w = panel.getWidth();
+        int h = panel.getHeight();
+        BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = image.createGraphics();
+        panel.paint(g2);
+        g2.dispose();
+        return image;
+    }
     private void btnEditarCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCotizacionActionPerformed
         int filaSeleccionada = tblDetallesAgregados.getSelectedRow();
         if (filaSeleccionada == -1) {
@@ -790,6 +825,72 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
             recalcularTotales();
         }
     }//GEN-LAST:event_btnEditarCotizacionActionPerformed
+
+    private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
+        // TODO add your handling code here:
+        panelBotones.setVisible(false);
+        BufferedImage img = panelToImage(panelBuscarCliente);
+        JLabel label = new JLabel(new ImageIcon(img));
+        JScrollPane scroll = new JScrollPane(label);
+
+        JDialog dialog = new JDialog(this, "Previsualización Cotización", true);
+        dialog.setSize(1000, 650);
+        dialog.setLayout(new BorderLayout());
+        dialog.add(scroll, BorderLayout.CENTER);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+      panelBotones.setVisible(true);
+
+    }//GEN-LAST:event_btnVistaPreviaActionPerformed
+
+    private void btnDescargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarActionPerformed
+        // TODO add your handling code here:
+        panelBotones.setVisible(false);
+        BufferedImage img = panelToImage(panelBuscarCliente);
+
+        JFileChooser chooser = new JFileChooser();
+        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            try (PDDocument doc = new PDDocument()) {
+                PDPage page = new PDPage(new PDRectangle(img.getWidth(), img.getHeight()));
+                doc.addPage(page);
+                PDImageXObject pdImage = LosslessFactory.createFromImage(doc, img);
+                try (PDPageContentStream contentStream = new PDPageContentStream(doc, page)) {
+                    contentStream.drawImage(pdImage, 0, 0, img.getWidth(), img.getHeight());
+                }
+                doc.save(chooser.getSelectedFile());
+                JOptionPane.showMessageDialog(this, "PDF guardado correctamente.");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error al guardar PDF: " + ex.getMessage());
+            }
+        }
+        panelBotones.setVisible(true);
+
+    }//GEN-LAST:event_btnDescargarActionPerformed
+
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        // TODO add your handling code here:
+          panelBotones.setVisible(false);
+        BufferedImage img = panelToImage(panelBuscarCliente);
+
+        try (PDDocument doc = new PDDocument()) {
+            PDPage page = new PDPage(new PDRectangle(img.getWidth(), img.getHeight()));
+            doc.addPage(page);
+            PDImageXObject pdImage = LosslessFactory.createFromImage(doc, img);
+            try (PDPageContentStream contentStream = new PDPageContentStream(doc, page)) {
+                contentStream.drawImage(pdImage, 0, 0, img.getWidth(), img.getHeight());
+            }
+            // imprime el PDF generado
+            java.awt.print.PrinterJob printJob = java.awt.print.PrinterJob.getPrinterJob();
+            printJob.setPageable(new org.apache.pdfbox.printing.PDFPageable(doc));
+            if (printJob.printDialog()) {
+                printJob.print();
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al imprimir: " + ex.getMessage());
+        }
+        panelBotones.setVisible(true);
+
+    }//GEN-LAST:event_btnImprimirActionPerformed
 
     // --- carga el catalogo
     private void cargarCatalogo() {

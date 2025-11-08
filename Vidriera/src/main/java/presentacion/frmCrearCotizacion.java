@@ -44,7 +44,6 @@ import modelo.PuertaAbatibleDetalle;
 import modelo.Vendedor;
 import modelo.VentanaDetalle;
 import negocio.CotizacionBO;
-import negocio.GeneradorPDF;
 import utils.Conexion;
 import org.apache.pdfbox.pdmodel.*;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -453,10 +452,10 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             .addGroup(panelBotonesLayout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(56, 56, 56)
+                .addGap(71, 71, 71)
                 .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(52, 52, 52)
+                .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(46, 46, 46)
@@ -932,6 +931,8 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         dialog.add(scroll, BorderLayout.CENTER);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
+        panelBotones.setVisible(true);
+
     }//GEN-LAST:event_btnVistaPreviaActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
@@ -977,6 +978,8 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Error al guardar PDF: " + ex.getMessage());
             }
         }
+       panelBotones.setVisible(true);
+
     }//GEN-LAST:event_btnDescargarActionPerformed
 
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
@@ -1000,6 +1003,8 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al imprimir: " + ex.getMessage());
         }
+      panelBotones.setVisible(true);
+
     }//GEN-LAST:event_btnImprimirActionPerformed
 
     /**

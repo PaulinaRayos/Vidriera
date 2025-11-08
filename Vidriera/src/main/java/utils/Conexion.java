@@ -17,7 +17,7 @@ public class Conexion {
 
     private static final String USER = "root";
    
-    private static final String PASS = "password";
+    private static final String PASS = "root";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASS);

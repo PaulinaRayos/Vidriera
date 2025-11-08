@@ -1,4 +1,5 @@
 utils\Conexion.class
+presentacion\InicioAdministrarCotizaciones$9.class
 presentacion\PanelDetallePuertaAbatible$15.class
 presentacion\PanelDetalleCanceleria$13.class
 presentacion\PanelDetallePuertaAbatible$5.class
@@ -23,7 +24,9 @@ modelo\TipoPuerta.class
 presentacion\PanelDetalleVentana$3.class
 presentacion\frmCrearCotizacion$15.class
 presentacion\InicioAdministrarCotizaciones$3.class
+presentacion\InicioAdministrarCotizaciones$10.class
 dao\CotizacionDAO.class
+presentacion\frmEditarCotizacion$9.class
 TestConexion.class
 dao\CanceleriaFijaDetalleDAO.class
 modelo\CatalogoTrabajo.class
@@ -91,8 +94,10 @@ presentacion\frmCrearCotizacion$2.class
 presentacion\PanelDetallePuertaAbatible$7.class
 presentacion\InicioAdministrarCotizaciones$4.class
 presentacion\frmCrearCotizacion$13.class
+presentacion\InicioAdministrarCotizaciones$11.class
 modelo\Material.class
 presentacion\DetalleEditorDialog$3.class
+presentacion\frmEditarCotizacion$8.class
 modelo\DetalleCotizacion.class
 modelo\PuertaAbatibleDetalle.class
 presentacion\frmCrearCotizacion$3.class
@@ -106,6 +111,7 @@ presentacion\frmEditarCotizacion$1.class
 presentacion\PanelDetalleCanceleria$11.class
 modelo\Cliente.class
 presentacion\frmCrearCotizacion$14.class
+presentacion\frmEditarCotizacion$7.class
 presentacion\DetalleEditorDialog.class
 presentacion\InicioAdministrarCotizaciones$5.class
 presentacion\PanelDetalleCanceleria$5.class

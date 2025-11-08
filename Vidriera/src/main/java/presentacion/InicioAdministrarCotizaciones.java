@@ -6,22 +6,37 @@ package presentacion;
 
 import com.toedter.calendar.JDateChooser;
 import dao.DetalleCotizacionDAO;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import modelo.Cotizacion;
 import negocio.CotizacionBO;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 /**
  *
@@ -377,6 +392,11 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         btnVistaPrevia.setFocusPainted(false);
         btnVistaPrevia.setRequestFocusEnabled(false);
         btnVistaPrevia.setRolloverEnabled(false);
+        btnVistaPrevia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVistaPreviaActionPerformed(evt);
+            }
+        });
 
         btnDescargar.setBackground(new java.awt.Color(0, 81, 168));
         btnDescargar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
@@ -390,6 +410,11 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         btnDescargar.setFocusPainted(false);
         btnDescargar.setRequestFocusEnabled(false);
         btnDescargar.setRolloverEnabled(false);
+        btnDescargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDescargarActionPerformed(evt);
+            }
+        });
 
         btnEditar.setBackground(new java.awt.Color(97, 85, 245));
         btnEditar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
@@ -421,6 +446,11 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         btnImprimir.setFocusPainted(false);
         btnImprimir.setRequestFocusEnabled(false);
         btnImprimir.setRolloverEnabled(false);
+        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImprimirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelBotonesLayout = new javax.swing.GroupLayout(panelBotones);
         panelBotones.setLayout(panelBotonesLayout);
@@ -657,6 +687,80 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_chkBuscarPorFechaActionPerformed
 
+    private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
+        // TODO add your handling code here:
+         panelBotones.setVisible(false);
+        BufferedImage img = panelToImage(panelDetalles);
+        JLabel label = new JLabel(new ImageIcon(img));
+        JScrollPane scroll = new JScrollPane(label);
+
+        JDialog dialog = new JDialog(this, "Previsualización Cotización", true);
+        dialog.setSize(1000, 650);
+        dialog.setLayout(new BorderLayout());
+        dialog.add(scroll, BorderLayout.CENTER);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+        panelBotones.setVisible(true);
+
+    }//GEN-LAST:event_btnVistaPreviaActionPerformed
+
+    private void btnDescargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarActionPerformed
+        // TODO add your handling code here:
+         panelBotones.setVisible(false);
+        BufferedImage img = panelToImage(panelDetalles);
+
+        JFileChooser chooser = new JFileChooser();
+        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            try (PDDocument doc = new PDDocument()) {
+                PDPage page = new PDPage(new PDRectangle(img.getWidth(), img.getHeight()));
+                doc.addPage(page);
+                PDImageXObject pdImage = LosslessFactory.createFromImage(doc, img);
+                try (PDPageContentStream contentStream = new PDPageContentStream(doc, page)) {
+                    contentStream.drawImage(pdImage, 0, 0, img.getWidth(), img.getHeight());
+                }
+                doc.save(chooser.getSelectedFile());
+                JOptionPane.showMessageDialog(this, "PDF guardado correctamente.");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error al guardar PDF: " + ex.getMessage());
+            }
+        }
+                 panelBotones.setVisible(true);
+
+    }//GEN-LAST:event_btnDescargarActionPerformed
+
+    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
+        // TODO add your handling code here:
+         panelBotones.setVisible(false);
+        BufferedImage img = panelToImage(panelDetalles);
+
+        try (PDDocument doc = new PDDocument()) {
+            PDPage page = new PDPage(new PDRectangle(img.getWidth(), img.getHeight()));
+            doc.addPage(page);
+            PDImageXObject pdImage = LosslessFactory.createFromImage(doc, img);
+            try (PDPageContentStream contentStream = new PDPageContentStream(doc, page)) {
+                contentStream.drawImage(pdImage, 0, 0, img.getWidth(), img.getHeight());
+            }
+            // imprime el PDF generado
+            java.awt.print.PrinterJob printJob = java.awt.print.PrinterJob.getPrinterJob();
+            printJob.setPageable(new org.apache.pdfbox.printing.PDFPageable(doc));
+            if (printJob.printDialog()) {
+                printJob.print();
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al imprimir: " + ex.getMessage());
+        }
+                 panelBotones.setVisible(true);
+
+    }//GEN-LAST:event_btnImprimirActionPerformed
+ private BufferedImage panelToImage(JPanel panel) {
+        int w = panel.getWidth();
+        int h = panel.getHeight();
+        BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = image.createGraphics();
+        panel.paint(g2);
+        g2.dispose();
+        return image;
+    }
     private void inicializarLogica() {
         this.cotizacionBO = new CotizacionBO();
         this.detalleDAO = new DetalleCotizacionDAO(cotizacionBO.getConexion());
