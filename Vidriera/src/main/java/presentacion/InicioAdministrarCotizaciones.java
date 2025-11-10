@@ -12,6 +12,8 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +33,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import modelo.Cotizacion;
 import negocio.CotizacionBO;
+import negocio.GeneradorPDF;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -48,6 +51,8 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
     private DetalleCotizacionDAO detalleDAO;
     private DefaultTableModel modeloTablaCotizaciones;
     private DefaultTableModel modeloTablaDetalles;
+    private List<Cotizacion> listaCotizacionesActuales; 
+    private Cotizacion cotizacionSeleccionada;
 
     /**
      * Creates new form InicioAdministrarCotizaciones
@@ -608,8 +613,8 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
 
         // Solo obtener fechas si el checkbox está marcado
         if (chkBuscarPorFecha.isSelected() && panelFechas.getComponentCount() >= 2
-            && panelFechas.getComponent(0) instanceof com.toedter.calendar.JDateChooser
-            && panelFechas.getComponent(1) instanceof com.toedter.calendar.JDateChooser) {
+                && panelFechas.getComponent(0) instanceof com.toedter.calendar.JDateChooser
+                && panelFechas.getComponent(1) instanceof com.toedter.calendar.JDateChooser) {
             fechaInicio = ((com.toedter.calendar.JDateChooser) panelFechas.getComponent(0)).getDate();
             fechaFin = ((com.toedter.calendar.JDateChooser) panelFechas.getComponent(1)).getDate();
         }
@@ -619,7 +624,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         try {
             // Si no hay filtros, carga todo
             if (numeroCotización.isEmpty() && nombreCliente.isEmpty()
-                && (!chkBuscarPorFecha.isSelected() || (fechaInicio == null && fechaFin == null))) {
+                    && (!chkBuscarPorFecha.isSelected() || (fechaInicio == null && fechaFin == null))) {
                 cotizaciones = cotizacionBO.obtenerCotizaciones();
             } else {
                 cotizaciones = cotizacionBO.obtenerCotizaciones(); // base
@@ -635,7 +640,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
                     cotizaciones = cotizacionBO.filtrarPorCliente(cotizaciones, nombreCliente);
                 }
 
-                // Filtrar por fecha (si aplica)
+                // Filtrar por fecha
                 if (chkBuscarPorFecha.isSelected()) {
                     if (fechaInicio == null || fechaFin == null) {
                         JOptionPane.showMessageDialog(this, "Selecciona ambas fechas para buscar por rango.");
@@ -643,7 +648,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
                     }
                     if (fechaInicio.after(fechaFin)) {
                         JOptionPane.showMessageDialog(this, "La fecha de inicio no puede ser posterior a la fecha de fin.",
-                            "Fechas Inválidas", JOptionPane.WARNING_MESSAGE);
+                                "Fechas Inválidas", JOptionPane.WARNING_MESSAGE);
                         return;
                     }
                     cotizaciones = cotizacionBO.filtrarPorFechas(cotizaciones, fechaInicio, fechaFin);
@@ -655,10 +660,11 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al realizar la búsqueda: " + e.getMessage(),
-                "Error de Búsqueda", JOptionPane.ERROR_MESSAGE);
+                    "Error de Búsqueda", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
+        this.listaCotizacionesActuales = cotizaciones;
         llenarTablaCotizaciones(cotizaciones);
 
         modeloTablaDetalles.setRowCount(0);
@@ -669,13 +675,13 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         boolean activo = chkBuscarPorFecha.isSelected();
 
         if (panelFechas.getComponentCount() >= 2
-            && panelFechas.getComponent(0) instanceof com.toedter.calendar.JDateChooser
-            && panelFechas.getComponent(1) instanceof com.toedter.calendar.JDateChooser) {
+                && panelFechas.getComponent(0) instanceof com.toedter.calendar.JDateChooser
+                && panelFechas.getComponent(1) instanceof com.toedter.calendar.JDateChooser) {
 
             com.toedter.calendar.JDateChooser fechaInicio
-            = (com.toedter.calendar.JDateChooser) panelFechas.getComponent(0);
+                    = (com.toedter.calendar.JDateChooser) panelFechas.getComponent(0);
             com.toedter.calendar.JDateChooser fechaFin
-            = (com.toedter.calendar.JDateChooser) panelFechas.getComponent(1);
+                    = (com.toedter.calendar.JDateChooser) panelFechas.getComponent(1);
 
             fechaInicio.setEnabled(activo);
             fechaFin.setEnabled(activo);
@@ -688,8 +694,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
     }//GEN-LAST:event_chkBuscarPorFechaActionPerformed
 
     private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
-        // TODO add your handling code here:
-         panelBotones.setVisible(false);
+        panelBotones.setVisible(false);
         BufferedImage img = panelToImage(panelDetalles);
         JLabel label = new JLabel(new ImageIcon(img));
         JScrollPane scroll = new JScrollPane(label);
@@ -705,54 +710,86 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVistaPreviaActionPerformed
 
     private void btnDescargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarActionPerformed
-        // TODO add your handling code here:
-         panelBotones.setVisible(false);
-        BufferedImage img = panelToImage(panelDetalles);
 
+        // Verificar que haya una cotización seleccionada
+        if (this.cotizacionSeleccionada == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una cotización de la tabla de arriba.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Preparar el JFileChooser
         JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Guardar PDF de Cotización");
+
+        // Sugerir nombre de archivo
+        String nombreSugerido = "Cotizacion_" + this.cotizacionSeleccionada.getCliente().getNombre().replaceAll("[^a-zA-Z0-9.-]", "_") + ".pdf";
+        chooser.setSelectedFile(new File(nombreSugerido));
+
         if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            try (PDDocument doc = new PDDocument()) {
-                PDPage page = new PDPage(new PDRectangle(img.getWidth(), img.getHeight()));
-                doc.addPage(page);
-                PDImageXObject pdImage = LosslessFactory.createFromImage(doc, img);
-                try (PDPageContentStream contentStream = new PDPageContentStream(doc, page)) {
-                    contentStream.drawImage(pdImage, 0, 0, img.getWidth(), img.getHeight());
+            try {
+                // Generar el PDF usando la cotización en memoria
+                byte[] pdfBytes = GeneradorPDF.generarCotizacionPdf(this.cotizacionSeleccionada);
+
+                if (pdfBytes == null) {
+                    throw new Exception("El GeneradorPDF devolvió null.");
                 }
-                doc.save(chooser.getSelectedFile());
+
+                // 4. Guardar el archivo
+                File archivo = chooser.getSelectedFile();
+                String rutaArchivo = archivo.getAbsolutePath();
+                if (!rutaArchivo.toLowerCase().endsWith(".pdf")) {
+                    archivo = new File(rutaArchivo + ".pdf");
+                }
+                try (FileOutputStream fos = new FileOutputStream(archivo)) {
+                    fos.write(pdfBytes);
+                }
+
                 JOptionPane.showMessageDialog(this, "PDF guardado correctamente.");
+
             } catch (Exception ex) {
+                ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error al guardar PDF: " + ex.getMessage());
             }
         }
-                 panelBotones.setVisible(true);
 
     }//GEN-LAST:event_btnDescargarActionPerformed
 
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
-        // TODO add your handling code here:
-         panelBotones.setVisible(false);
-        BufferedImage img = panelToImage(panelDetalles);
 
-        try (PDDocument doc = new PDDocument()) {
-            PDPage page = new PDPage(new PDRectangle(img.getWidth(), img.getHeight()));
-            doc.addPage(page);
-            PDImageXObject pdImage = LosslessFactory.createFromImage(doc, img);
-            try (PDPageContentStream contentStream = new PDPageContentStream(doc, page)) {
-                contentStream.drawImage(pdImage, 0, 0, img.getWidth(), img.getHeight());
+        // Verificar que haya una cotización seleccionada
+        if (this.cotizacionSeleccionada == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una cotización de la tabla de arriba.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // Generar el PDF usando la cotización en memori
+            byte[] pdfBytes = GeneradorPDF.generarCotizacionPdf(this.cotizacionSeleccionada);
+            if (pdfBytes == null) {
+                throw new Exception("El GeneradorPDF devolvió null.");
             }
-            // imprime el PDF generado
+
+            // Cargar los bytes del PDF en un PDDocument
+            PDDocument doc = PDDocument.load(pdfBytes);
+
+            // Imprimir el documento
             java.awt.print.PrinterJob printJob = java.awt.print.PrinterJob.getPrinterJob();
             printJob.setPageable(new org.apache.pdfbox.printing.PDFPageable(doc));
+
             if (printJob.printDialog()) {
                 printJob.print();
             }
+
+            doc.close(); 
+
         } catch (Exception ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al imprimir: " + ex.getMessage());
         }
-                 panelBotones.setVisible(true);
+
 
     }//GEN-LAST:event_btnImprimirActionPerformed
- private BufferedImage panelToImage(JPanel panel) {
+    private BufferedImage panelToImage(JPanel panel) {
         int w = panel.getWidth();
         int h = panel.getHeight();
         BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
@@ -761,6 +798,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         g2.dispose();
         return image;
     }
+
     private void inicializarLogica() {
         this.cotizacionBO = new CotizacionBO();
         this.detalleDAO = new DetalleCotizacionDAO(cotizacionBO.getConexion());
@@ -780,8 +818,10 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
      */
     private void cargarTodasLasCotizaciones() {
         try {
-            List<Cotizacion> lista = cotizacionBO.obtenerCotizaciones();
-            llenarTablaCotizaciones(lista);
+            // Guarda la lista en la variable de la clase
+            this.listaCotizacionesActuales = cotizacionBO.obtenerCotizaciones();
+            // Pasa esa misma lista para llenar la tabla
+            llenarTablaCotizaciones(this.listaCotizacionesActuales);
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al cargar cotizaciones: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -815,26 +855,39 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
     private void tablaCotizacionesSeleccionada() {
         int filaSeleccionada = tblCotizaciones.getSelectedRow();
 
+        // Si el usuario quita la selección
         if (filaSeleccionada == -1) {
             modeloTablaDetalles.setRowCount(0);
             lblNombreCliente.setText("");
+            this.cotizacionSeleccionada = null; // Limpia la variable
             return;
         }
 
         try {
-            int idCotizacion = (int) modeloTablaCotizaciones.getValueAt(filaSeleccionada, 0);
-            String nombreCliente = (String) modeloTablaCotizaciones.getValueAt(filaSeleccionada, 1);
+            // obtener el objeto
+            this.cotizacionSeleccionada = listaCotizacionesActuales.get(filaSeleccionada);
+
+            // obtener cotizacion
+            int idCotizacion = this.cotizacionSeleccionada.getIdCotizacion();
+            String nombreCliente = this.cotizacionSeleccionada.getCliente().getNombre();
             lblNombreCliente.setText(nombreCliente);
+
             List<modelo.VentanaDetalle> ventanas = detalleDAO.obtenerVentanasPorCotizacion(idCotizacion);
             List<modelo.CanceleriaFijaDetalle> cancelerias = detalleDAO.obtenerCanceleriasPorCotizacion(idCotizacion);
             List<modelo.PuertaAbatibleDetalle> puertas = detalleDAO.obtenerPuertasPorCotizacion(idCotizacion);
 
-            //llena la tabla de detalles
+            // detalles del objeto
+            this.cotizacionSeleccionada.setVentanaDetalles(ventanas);
+            this.cotizacionSeleccionada.setCanceleriaFijaDetalles(cancelerias);
+            this.cotizacionSeleccionada.setPuertaAbatibleDetalles(puertas);
+
+            // Llenar la tabla de detalles (como ya lo hacías)
             llenarTablaDetalles(ventanas, cancelerias, puertas);
 
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al cargar detalles: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            this.cotizacionSeleccionada = null; 
         }
     }
 

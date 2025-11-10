@@ -5,6 +5,7 @@
 package negocio;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.util.List;
 import modelo.CanceleriaFijaDetalle;
 import modelo.Cotizacion;
@@ -21,8 +22,8 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  * @author delll
  */
 public class GeneradorPDF {
-    
-public static byte[] generarCotizacionPdf(Cotizacion cotizacion) {
+
+    public static byte[] generarCotizacionPdf(Cotizacion cotizacion) {
         try {
             PDDocument doc = new PDDocument();
             PDPage page = new PDPage(PDRectangle.LETTER);
@@ -70,7 +71,6 @@ public static byte[] generarCotizacionPdf(Cotizacion cotizacion) {
 
             y -= 20;
 
-            // ||---------------------- DETALLES DE VENTANA ----------------------||
             List<VentanaDetalle> detallesVentana = cotizacion.getVentanaDetalles();
             for (VentanaDetalle v : detallesVentana) {
                 content.beginText();
@@ -80,7 +80,7 @@ public static byte[] generarCotizacionPdf(Cotizacion cotizacion) {
                 content.newLineAtOffset(80, 0);
                 content.showText(v.getDescripcion());
                 content.newLineAtOffset(180, 0);
-                content.showText(""+v.getMedidaHorizontal()+"X"+v.getMedidaVertical()+""); // formatea "2.00 x 1.00"
+                content.showText("" + v.getMedidaHorizontal() + " X " + v.getMedidaVertical() + ""); // Espacios añadidos
                 content.newLineAtOffset(100, 0);
                 content.showText(String.valueOf(v.getCantidad()));
                 content.newLineAtOffset(60, 0);
@@ -88,7 +88,6 @@ public static byte[] generarCotizacionPdf(Cotizacion cotizacion) {
                 content.endText();
                 y -= 18;
             }
-            // -- igual para puertas y cancelerías si existen:
             List<PuertaAbatibleDetalle> detallesPuerta = cotizacion.getPuertaAbatibleDetalles();
             for (PuertaAbatibleDetalle p : detallesPuerta) {
                 content.beginText();
@@ -98,7 +97,7 @@ public static byte[] generarCotizacionPdf(Cotizacion cotizacion) {
                 content.newLineAtOffset(80, 0);
                 content.showText(p.getDescripcion());
                 content.newLineAtOffset(180, 0);
-                content.showText(""+p.getMedidaHorizontal()+"X"+p.getMedidaVertical()+"");
+                content.showText("" + p.getMedidaHorizontal() + " X " + p.getMedidaVertical() + "");
                 content.newLineAtOffset(100, 0);
                 content.showText(String.valueOf(p.getCantidad()));
                 content.newLineAtOffset(60, 0);
@@ -115,7 +114,7 @@ public static byte[] generarCotizacionPdf(Cotizacion cotizacion) {
                 content.newLineAtOffset(80, 0);
                 content.showText(c.getDescripcion());
                 content.newLineAtOffset(180, 0);
-                content.showText(""+c.getMedidaHorizontal()+"X"+c.getMedidaVertical()+"");
+                content.showText("" + c.getMedidaHorizontal() + " X " + c.getMedidaVertical() + "");
                 content.newLineAtOffset(100, 0);
                 content.showText(String.valueOf(c.getCantidad()));
                 content.newLineAtOffset(60, 0);
@@ -130,25 +129,45 @@ public static byte[] generarCotizacionPdf(Cotizacion cotizacion) {
             content.lineTo(startX + 510, y);
             content.stroke();
 
-            // Totales y descuentos
-            y -= 20;
-            content.beginText();
+            // ||---------- SECCIÓN DE TOTALES ----------||
+            y -= 20; 
             content.setFont(PDType1Font.HELVETICA_BOLD, 13);
+
+            //  Subtotal
+            content.beginText();
             content.newLineAtOffset(startX, y);
-            content.showText("Subtotal: $" + cotizacion.getSubtotal());
-            content.newLineAtOffset(200, 0);
+            content.showText("Subtotal (Materiales): $" + cotizacion.getSubtotal());
+            content.endText();
+            y -= 20; 
+
+            // Mano de Obra
+            BigDecimal manoDeObra = cotizacion.getManoObra() != null ? cotizacion.getManoObra() : BigDecimal.ZERO;
+            content.beginText();
+            content.newLineAtOffset(startX, y);
+            content.showText("Mano de Obra: $" + manoDeObra);
+            content.endText();
+            y -= 20; 
+
+            // Descuento 
+            content.beginText();
+            content.newLineAtOffset(startX, y);
             content.showText("Descuento: $" + cotizacion.getDescuentoMonto());
-            content.newLineAtOffset(130, 0);
+            content.endText();
+            y -= 20; 
+
+            // IVA 
+            content.beginText();
+            content.newLineAtOffset(startX, y);
             content.showText("IVA: $" + cotizacion.getIva());
             content.endText();
 
-            y -= 20;
+            //  Línea final de Total 
+            y -= 25; 
             content.beginText();
-            content.setFont(PDType1Font.HELVETICA_BOLD, 15);
+            content.setFont(PDType1Font.HELVETICA_BOLD, 15); // Letra más grande
             content.newLineAtOffset(startX, y);
             content.showText("Total: $" + cotizacion.getTotal());
             content.endText();
-
             content.close();
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
