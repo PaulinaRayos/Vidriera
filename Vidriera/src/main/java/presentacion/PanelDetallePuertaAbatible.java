@@ -711,24 +711,27 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
      * Enum.
      */
     private void cargarDatosComboBox() {
-        // Cargar los tipos de puerta desde el Enum
+        // ===============================
+        // Tipo de Puerta
+        // ===============================
         cmbTipoPuerta.removeAllItems();
+        cmbTipoPuerta.addItem("Seleccione una opción...");
         for (modelo.TipoPuerta tp : modelo.TipoPuerta.values()) {
             cmbTipoPuerta.addItem(tp.getDescripcion());
         }
+        cmbTipoPuerta.setSelectedIndex(0);
 
-        // Cargar los tipos de material desde la lista de materiales filtrando por TipoMaterial
-        cargarComboPorTipo(cmbTipoCristal, Material.TipoMaterial.VIDRIO);
-        cargarComboPorTipo(cbxTipoDuela, Material.TipoMaterial.DUELA);
-        cargarComboPorTipo(cbxTipoAdaptador, Material.TipoMaterial.ADAPTADOR);
-        cargarComboPorTipo(cbxTipoJunquillo, Material.TipoMaterial.JUNQUILLO);
-        cargarComboPorTipo(cbxTipoCanal, Material.TipoMaterial.CANALILLO);
-        cargarComboPorTipo(cbxTipoJaladera, Material.TipoMaterial.JALADERA);
-        cargarComboPorTipo(cbxTipoBarra, Material.TipoMaterial.BARRA);
-        cargarComboPorTipo(cbxTipoPivote, Material.TipoMaterial.PIVOTE);
-
-        // cargarComboPorTipo(cbxTipoArco, Material.TipoMaterial.ARCO);
-        // cargarComboPorTipo(cbxTipoBolsa, Material.TipoMaterial.BOLSA);
+        // ===============================
+        // Materiales (Cristal, Duela, Adaptador, etc.)
+        // ===============================
+        cargarComboPorTipoConOpcionInicial(cmbTipoCristal, Material.TipoMaterial.VIDRIO);
+        cargarComboPorTipoConOpcionInicial(cbxTipoDuela, Material.TipoMaterial.DUELA);
+        cargarComboPorTipoConOpcionInicial(cbxTipoAdaptador, Material.TipoMaterial.ADAPTADOR);
+        cargarComboPorTipoConOpcionInicial(cbxTipoJunquillo, Material.TipoMaterial.JUNQUILLO);
+        cargarComboPorTipoConOpcionInicial(cbxTipoCanal, Material.TipoMaterial.CANALILLO);
+        cargarComboPorTipoConOpcionInicial(cbxTipoJaladera, Material.TipoMaterial.JALADERA);
+        cargarComboPorTipoConOpcionInicial(cbxTipoBarra, Material.TipoMaterial.BARRA);
+        cargarComboPorTipoConOpcionInicial(cbxTipoPivote, Material.TipoMaterial.PIVOTE);
     }
 
     /**
@@ -738,9 +741,11 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
      * @param combo El JComboBox a llenar.
      * @param tipo El tipo de material a filtrar.
      */
-    private void cargarComboPorTipo(JComboBox<String> combo, Material.TipoMaterial tipo) {
+    private void cargarComboPorTipoConOpcionInicial(JComboBox<String> combo, Material.TipoMaterial tipo) {
         combo.removeAllItems();
-        if (materialesDisponibles != null) {
+        combo.addItem("Seleccione una opción");
+
+        if (materialesDisponibles != null && !materialesDisponibles.isEmpty()) {
             for (Material m : materialesDisponibles) {
                 if (m.getTipo() == tipo) {
                     combo.addItem(m.getDescripcion());
@@ -749,6 +754,8 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         } else {
             combo.addItem("Error al cargar");
         }
+
+        combo.setSelectedIndex(0);
     }
 
     /**

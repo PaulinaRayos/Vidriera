@@ -223,6 +223,11 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         detalleCotizacion.setText("Detalles de Cotización");
 
         cbxEstadoCotizacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estado", "Item 2", "Item 3", "Item 4" }));
+        cbxEstadoCotizacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxEstadoCotizacionActionPerformed(evt);
+            }
+        });
 
         labelNumCotizacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         labelNumCotizacion.setText("Num. Cotizacion");
@@ -548,21 +553,18 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
             .addGroup(pnlTotales2Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlTotales2Layout.createSequentialGroup()
-                        .addComponent(descuento)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(pnlTotales2Layout.createSequentialGroup()
-                        .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(pnlTotales2Layout.createSequentialGroup()
-                                .addComponent(ckbxDescuentoSi2)
-                                .addGap(18, 18, 18)
-                                .addComponent(ckbxDescuentoNo2)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtDescuento2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(labelPorsentaje2))
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(24, 755, Short.MAX_VALUE))))
+                    .addComponent(descuento)
+                    .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(pnlTotales2Layout.createSequentialGroup()
+                            .addComponent(ckbxDescuentoSi2)
+                            .addGap(18, 18, 18)
+                            .addComponent(ckbxDescuentoNo2)
+                            .addGap(18, 18, 18)
+                            .addComponent(txtDescuento2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(labelPorsentaje2))
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlTotales2Layout.setVerticalGroup(
             pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -934,6 +936,10 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnImprimirActionPerformed
 
+    private void cbxEstadoCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxEstadoCotizacionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxEstadoCotizacionActionPerformed
+
     // --- carga el catalogo
     private void cargarCatalogo() {
         this.catalogoTrabajos = new ArrayList<>();
@@ -1081,8 +1087,14 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
             cbxEstadoCotizacion.addItem("Pendiente");
             cbxEstadoCotizacion.addItem("Aceptado");
             cbxEstadoCotizacion.addItem("Cancelada");
-            cbxEstadoCotizacion.setSelectedItem(cotizacionActual.getEstado());
 
+            // Si hay un estado guardado, lo seleccionamos, si no, dejamos la opción inicial
+            String estadoActual = cotizacionActual.getEstado();
+            if (estadoActual != null && !estadoActual.isEmpty()) {
+                cbxEstadoCotizacion.setSelectedItem(estadoActual);
+            } else {
+                cbxEstadoCotizacion.setSelectedIndex(0);
+            }
             // Llenar descuento
             BigDecimal descuentoMonto = cotizacionActual.getDescuentoMonto();
             BigDecimal subtotal = cotizacionActual.getSubtotal();

@@ -8,6 +8,7 @@ modelo\Vendedor.class
 presentacion\PanelDetallePuertaAbatible$2.class
 presentacion\PanelDetalleCanceleria$10.class
 presentacion\DetalleEditorDialog$1.class
+presentacion\frmEditarCotizacion$10.class
 presentacion\InicioAdministrarCotizaciones$6.class
 presentacion\PanelDetalleCanceleria$6.class
 presentacion\frmEditarCotizacion$3.class
@@ -33,6 +34,7 @@ modelo\CatalogoTrabajo.class
 modelo\Cotizacion.class
 presentacion\frmCrearCotizacion.class
 presentacion\frmEditarCotizacion$5.class
+presentacion\frmCrearCotizacion$16.class
 presentacion\InicioAdministrarCotizaciones$7.class
 presentacion\PanelDetallePuertaAbatible$10.class
 com\mycompany\vidriera\Test3Editar.class

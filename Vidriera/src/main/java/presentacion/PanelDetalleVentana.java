@@ -384,9 +384,11 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
     private void cargarDatosComboBox() {
         // Cargar los tipos de ventana desde el Enum
         cmbTipoVentana.removeAllItems();
+        cmbTipoVentana.addItem("Seleccione...");
         for (modelo.TipoVentana tv : modelo.TipoVentana.values()) {
             cmbTipoVentana.addItem(tv.getDescripcion());
         }
+        cmbTipoVentana.setSelectedIndex(0);
 
         // Cargar materiales filtrados por tipo
         cargarComboPorTipo(cmbTipoCristal, Material.TipoMaterial.VIDRIO);
@@ -408,6 +410,8 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
      */
     private void cargarComboPorTipo(JComboBox<String> combo, Material.TipoMaterial tipo) {
         combo.removeAllItems();
+        combo.addItem("Seleccione"); // Opción inicial vacía obligatoria
+
         if (materialesDisponibles != null && !materialesDisponibles.isEmpty()) {
             for (Material m : materialesDisponibles) {
                 if (m.getTipo() == tipo) {
@@ -415,8 +419,10 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                 }
             }
         } else {
-            combo.addItem("Error al cargar");
+            combo.addItem("No hay materiales disponibles");
         }
+
+        combo.setSelectedIndex(0);
     }
 
     /**
