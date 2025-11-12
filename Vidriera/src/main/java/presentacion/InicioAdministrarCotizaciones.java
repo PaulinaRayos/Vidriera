@@ -51,7 +51,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
     private DetalleCotizacionDAO detalleDAO;
     private DefaultTableModel modeloTablaCotizaciones;
     private DefaultTableModel modeloTablaDetalles;
-    private List<Cotizacion> listaCotizacionesActuales; 
+    private List<Cotizacion> listaCotizacionesActuales;
     private Cotizacion cotizacionSeleccionada;
 
     /**
@@ -60,11 +60,12 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
     public InicioAdministrarCotizaciones() {
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        editarTabla();
         quitarEspaciosEntrePaneles();
         inicializarLogica();
         cargarTodasLasCotizaciones();
         agregarDateChoosers();
+        editarTabla();
+
     }
 
     /**
@@ -780,7 +781,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
                 printJob.print();
             }
 
-            doc.close(); 
+            doc.close();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -887,7 +888,7 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al cargar detalles: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            this.cotizacionSeleccionada = null; 
+            this.cotizacionSeleccionada = null;
         }
     }
 

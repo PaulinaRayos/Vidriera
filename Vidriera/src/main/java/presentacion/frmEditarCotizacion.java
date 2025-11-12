@@ -678,6 +678,20 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
             return;
         }
 
+        int confirmacion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Deseas guardar los cambios realizados en la cotización?",
+                "Confirmar edición",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (confirmacion != JOptionPane.YES_OPTION) {
+            // Si el usuario elige "No", se cancela el guardado
+            JOptionPane.showMessageDialog(this, "La edición de la cotización fue cancelada.");
+            return;
+        }
+
         try {
             ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
             ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
@@ -697,11 +711,35 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                 }
             }
 
-            // calcula el descuento
+            // Calcula el descuento
             BigDecimal descuentoMonto = BigDecimal.ZERO;
-            if (ckbxDescuentoSi2.isSelected() && !txtDescuento2.getText().trim().isEmpty()) {
-                BigDecimal descuentoPorcentaje = new BigDecimal(txtDescuento2.getText().trim());
-                descuentoMonto = subtotal.multiply(descuentoPorcentaje.divide(new BigDecimal("100")));
+
+            if (ckbxDescuentoSi2.isSelected()) {
+                String textoDescuento = txtDescuento2.getText().trim();
+
+                if (textoDescuento.isEmpty()) {
+                    descuentoMonto = BigDecimal.ZERO; // sin descuento
+                } else {
+                    try {
+                        BigDecimal descuentoPorcentaje = new BigDecimal(textoDescuento);
+
+                        if (descuentoPorcentaje.compareTo(BigDecimal.ZERO) < 0
+                                || descuentoPorcentaje.compareTo(new BigDecimal("100")) > 0) {
+                            JOptionPane.showMessageDialog(this,
+                                    "El descuento debe estar entre 0% y 100%.",
+                                    "Descuento inválido", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        descuentoMonto = subtotal.multiply(descuentoPorcentaje.divide(new BigDecimal("100")));
+
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(this,
+                                "Ingrese un valor numérico válido para el descuento.",
+                                "Error de formato", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
             }
 
             cotizacionActual.setEstado(cbxEstadoCotizacion.getSelectedItem().toString());
@@ -716,9 +754,13 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
             );
 
             if (exito) {
-                JOptionPane.showMessageDialog(this, "Cotización " + cotizacionActual.getIdCotizacion() + " actualizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this,
+                        "Cotización " + cotizacionActual.getIdCotizacion() + " actualizada con éxito.",
+                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
                 this.dispose();
-                new InicioAdministrarCotizaciones().setVisible(true);
+                InicioAdministrarCotizaciones inicio = new InicioAdministrarCotizaciones();
+                inicio.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Ocurrió un error al actualizar la cotización.", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -784,7 +826,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnNuevaCotizacionActionPerformed
 
-     private BufferedImage panelToImage(JPanel panel) {
+    private BufferedImage panelToImage(JPanel panel) {
         int w = panel.getWidth();
         int h = panel.getHeight();
         BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
@@ -839,7 +881,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         dialog.add(scroll, BorderLayout.CENTER);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
-      panelBotones.setVisible(true);
+        panelBotones.setVisible(true);
 
     }//GEN-LAST:event_btnVistaPreviaActionPerformed
 
@@ -869,7 +911,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
         // TODO add your handling code here:
-          panelBotones.setVisible(false);
+        panelBotones.setVisible(false);
         BufferedImage img = panelToImage(panelBuscarCliente);
 
         try (PDDocument doc = new PDDocument()) {

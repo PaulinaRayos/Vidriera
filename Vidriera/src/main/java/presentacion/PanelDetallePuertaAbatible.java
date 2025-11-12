@@ -847,14 +847,13 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         try {
             // ---- VALIDACIONES BÁSICAS ----
 
-            // 1. Validar que catalogoDAO esté inicializado
             if (catalogoDAO != null) {
                 d.setTipoTrabajo(catalogoDAO.obtenerPorId(2));
             } else {
                 throw new RuntimeException("CatalogoDAO no inicializado.");
             }
 
-            // 2. Validar medidas obligatorias
+            // 1. Validar medidas obligatorias
             if (txtMedidaH.getText().trim().isEmpty() || txtMedidaV.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Debe ingresar las medidas horizontal y vertical.",
                         "Campos obligatorios", JOptionPane.WARNING_MESSAGE);
@@ -865,18 +864,32 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
             try {
                 medidaH = new BigDecimal(txtMedidaH.getText());
                 medidaV = new BigDecimal(txtMedidaV.getText());
+
+                // Medidas no pueden ser 0 o negativas
                 if (medidaH.compareTo(BigDecimal.ZERO) <= 0 || medidaV.compareTo(BigDecimal.ZERO) <= 0) {
                     JOptionPane.showMessageDialog(this, "Las medidas deben ser mayores que cero.",
                             "Valor inválido", JOptionPane.WARNING_MESSAGE);
                     return null;
                 }
+
+                // ✅ VALIDAR RANGO MÁXIMO
+                BigDecimal maxH = new BigDecimal("15"); // ancho máximo
+                BigDecimal maxV = new BigDecimal("10"); // alto máximo
+
+                if (medidaH.compareTo(maxH) > 0 || medidaV.compareTo(maxV) > 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "Las medidas exceden el rango permitido.\nMáximo: 15m de ancho y 10m de alto.",
+                            "Medidas fuera de rango", JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Las medidas deben ser numéricas válidas.",
                         "Error de formato", JOptionPane.ERROR_MESSAGE);
                 return null;
             }
 
-            // 3. Validar combos obligatorios
+            // 2. Validar combos obligatorios
             if (cmbTipoPuerta.getSelectedIndex() < 0) {
                 JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de puerta.",
                         "Falta selección", JOptionPane.WARNING_MESSAGE);
@@ -888,7 +901,7 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
                 return null;
             }
 
-            // 4. Validar campos condicionales por checkbox
+            // 3. Validaciones condicionales
             if (ckDuela.isSelected()) {
                 if (cbxTipoDuela.getSelectedIndex() < 0) {
                     JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de duela.",
@@ -904,20 +917,16 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
                 }
             }
 
-            if (ckPivote.isSelected()) {
-                if (cbxTipoPivote.getSelectedIndex() < 0) {
-                    JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de pivote.",
-                            "Falta selección", JOptionPane.WARNING_MESSAGE);
-                    return null;
-                }
+            if (ckPivote.isSelected() && cbxTipoPivote.getSelectedIndex() < 0) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de pivote.",
+                        "Falta selección", JOptionPane.WARNING_MESSAGE);
+                return null;
             }
 
-            if (ckJaladera.isSelected()) {
-                if (cbxTipoJaladera.getSelectedIndex() < 0) {
-                    JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de jaladera.",
-                            "Falta selección", JOptionPane.WARNING_MESSAGE);
-                    return null;
-                }
+            if (ckJaladera.isSelected() && cbxTipoJaladera.getSelectedIndex() < 0) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de jaladera.",
+                        "Falta selección", JOptionPane.WARNING_MESSAGE);
+                return null;
             }
 
             // ---- CONSTRUCCIÓN DEL OBJETO ----
@@ -932,64 +941,53 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
             d.setTipoPuerta(modelo.TipoPuerta.fromDescripcion(descPuerta));
             d.setMosquitero(ckMosquitero.isSelected());
 
-            // Duela
             d.setDuela(ckDuela.isSelected());
             d.setTipoDuela(ckDuela.isSelected() ? (String) cbxTipoDuela.getSelectedItem() : null);
             d.setMedidaDuela(new BigDecimal(txtMedidaDuela.getText().isEmpty() ? "0" : txtMedidaDuela.getText()));
 
-            // Adaptador
             d.setAdaptador(ckAdaptador.isSelected());
             d.setTipoAdaptador(ckAdaptador.isSelected() ? (String) cbxTipoAdaptador.getSelectedItem() : null);
 
-            // Junquillo
             d.setJunquillo(ckJunquillo.isSelected());
             d.setTipoJunquillo(ckJunquillo.isSelected() ? (String) cbxTipoJunquillo.getSelectedItem() : null);
 
-            // Canal
             d.setCanal(ckCanal.isSelected());
             d.setTipoCanal(ckCanal.isSelected() ? (String) cbxTipoCanal.getSelectedItem() : null);
 
-            // Pivote
             d.setPivote(ckPivote.isSelected());
             d.setTipoPivote(ckPivote.isSelected() ? (String) cbxTipoPivote.getSelectedItem() : null);
             d.setCantidadPivote((Integer) spnCantidadPivote.getValue());
 
-            // Jaladera
             d.setJaladera(ckJaladera.isSelected());
             d.setTipoJaladera(ckJaladera.isSelected() ? (String) cbxTipoJaladera.getSelectedItem() : null);
             d.setCantidadJaladera((Integer) spnCantidadJaladera.getValue());
 
-            // Barra
             d.setBarra(ckBarra.isSelected());
             d.setTipoBarra(ckBarra.isSelected() ? (String) cbxTipoBarra.getSelectedItem() : null);
 
-            // Obtener materiales seleccionados del panel (lista de Material)
+            // Materiales seleccionados
             List<Material> materialesSeleccionados = obtenerMaterialesSeleccionados();
-
-            // Convertir a MaterialDetalle
             List<MaterialDetalle> materialesDetalle = new ArrayList<>();
+
             for (Material m : materialesSeleccionados) {
-                BigDecimal cantidad = BigDecimal.valueOf(d.getCantidad()); // cantidad de cancelería
+                BigDecimal cantidad = BigDecimal.valueOf(d.getCantidad());
                 BigDecimal precioUnitario = m.getPrecio();
-                MaterialDetalle md = new MaterialDetalle(m, cantidad, precioUnitario);
-                materialesDetalle.add(md);
+                materialesDetalle.add(new MaterialDetalle(m, cantidad, precioUnitario));
             }
 
-            // Asignar a tu detalle
             d.setMateriales(materialesDetalle);
 
-            // Calcular subtotal general
             BigDecimal subtotal = BigDecimal.ZERO;
             for (MaterialDetalle md : materialesDetalle) {
                 subtotal = subtotal.add(md.getPrecioTotal());
             }
-            d.setPrecioSoloUnaUnidadCalculado(subtotal); // opcional
+            d.setPrecioSoloUnaUnidadCalculado(subtotal);
             d.setSubtotalLinea(subtotal);
 
         } catch (Exception e) {
             System.err.println("Error al leer datos del panel de puerta: " + e.getMessage());
-            JOptionPane.showMessageDialog(this, "Error en los datos: Ocurrió un error al leer los campos. Verifique los números.\n"
-                    + e.getMessage(), "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error en los datos: " + e.getMessage(),
+                    "Error de Formato", JOptionPane.ERROR_MESSAGE);
             return null;
         }
 
@@ -1155,8 +1153,6 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         }
         return null;
     }
-
-
 
     private void permitirSoloNumeros(javax.swing.JTextField campo) {
         campo.addKeyListener(new java.awt.event.KeyAdapter() {
