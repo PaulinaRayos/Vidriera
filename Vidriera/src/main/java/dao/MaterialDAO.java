@@ -24,6 +24,9 @@ public class MaterialDAO {
         this.conexion = conexion;
     }
 
+    public MaterialDAO() {
+    }
+
     /**
      * Crear un nuevo material
      *
@@ -368,6 +371,38 @@ public class MaterialDAO {
             e.printStackTrace();
         }
         return BigDecimal.ZERO;
+    }
+
+    public int obtenerIdPorDescripcion(String descripcion) {
+        String sql = "SELECT idMaterial FROM material WHERE descripcion = ?";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, descripcion);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("idMaterial");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return -1; // error
+    }
+
+    public int obtenerStock(int idMaterial) {
+        String sql = "SELECT stockActual FROM material WHERE idMaterial = ?";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, idMaterial);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("stockActual");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // error
     }
 
 }

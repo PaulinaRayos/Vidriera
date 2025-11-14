@@ -13,6 +13,7 @@ import modelo.PuertaAbatibleDetalle;
 import dao.CatalogoTrabajoDAO;
 import dao.MaterialDetalleDAO;
 import dao.PuertaAbatibleDetalleDAO;
+import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -20,6 +21,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import modelo.MaterialDetalle;
 import utils.Conexion;
 
@@ -651,7 +653,9 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
     }//GEN-LAST:event_ckDuelaActionPerformed
 
     private void ckMosquiteroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckMosquiteroActionPerformed
-        // TODO add your handling code here:
+        Window parent = SwingUtilities.getWindowAncestor(this);
+        MaterialMosquiteras dlg = new MaterialMosquiteras(parent, true);
+        dlg.setVisible(true);
     }//GEN-LAST:event_ckMosquiteroActionPerformed
 
     private void cmbTipoCristalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoCristalActionPerformed

@@ -1,20 +1,37 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package presentacion;
+
+import dao.MaterialDAO;
+import negocio.CotizacionBO;
 
 /**
  *
  * @author aleja
  */
-public class MaterialesCanalillo extends javax.swing.JFrame {
+public class MaterlialesCanalillos extends javax.swing.JDialog {
+
+    private CotizacionBO cotizacionBO;
+    private MaterialDAO materialDAO;
 
     /**
-     * Creates new form MaterialesCanalillo
+     * Creates new form MaterlialesCanalillos
      */
-    public MaterialesCanalillo() {
+    public MaterlialesCanalillos(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
+        this.cotizacionBO = new CotizacionBO();
+        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
+    }
+
+    public MaterlialesCanalillos(java.awt.Window parent, boolean modal) {
+        super(parent, ModalityType.APPLICATION_MODAL);
+        initComponents();
+        setLocationRelativeTo(parent);
+        this.cotizacionBO = new CotizacionBO();
+        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
     }
 
     /**
@@ -26,7 +43,6 @@ public class MaterialesCanalillo extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
         panelTitulo = new javax.swing.JPanel();
         titulo1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
@@ -36,7 +52,7 @@ public class MaterialesCanalillo extends javax.swing.JFrame {
         lblCanalillo3 = new javax.swing.JLabel();
         btnGuardar4 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         panelTitulo.setBackground(new java.awt.Color(0, 19, 90));
 
@@ -124,84 +140,65 @@ public class MaterialesCanalillo extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(panelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 175, Short.MAX_VALUE)
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(panelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardar4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar4ActionPerformed
+        try {
+            int cantCanalillo2 = (int) spnCanalillo2.getValue();
+            int cantCanalillo3 = (int) spnCanalillo3.getValue();
 
+            // --- CANALILLO 2" ---
+            if (cantCanalillo2 > 0) {
+                int idC2 = materialDAO.obtenerIdPorDescripcion("Canalillo serie 2\"");
+                if (idC2 != -1) {
+                    int stockActual = materialDAO.obtenerStock(idC2);
+                    materialDAO.actualizarStock(idC2, stockActual + cantCanalillo2);
+                }
+            }
+
+            // --- CANALILLO 3" ---
+            if (cantCanalillo3 > 0) {
+                int idC3 = materialDAO.obtenerIdPorDescripcion("Canalillo serie 3\"");
+                if (idC3 != -1) {
+                    int stockActual = materialDAO.obtenerStock(idC3);
+                    materialDAO.actualizarStock(idC3, stockActual + cantCanalillo3);
+                }
+            }
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Stock actualizado correctamente");
+
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Error al actualizar stock: " + e.getMessage(),
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+            e.printStackTrace();
+        }
+
+        this.dispose();
     }//GEN-LAST:event_btnGuardar4ActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-               }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MaterialesCanalillo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MaterialesCanalillo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MaterialesCanalillo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MaterialesCanalillo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MaterialesCanalillo().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton btnGuardar1;
-    private javax.swing.JButton btnGuardar2;
-    private javax.swing.JButton btnGuardar3;
     private javax.swing.JButton btnGuardar4;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblCanalillo2;
     private javax.swing.JLabel lblCanalillo3;

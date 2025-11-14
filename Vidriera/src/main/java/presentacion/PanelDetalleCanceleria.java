@@ -14,6 +14,7 @@ import modelo.CanceleriaFijaDetalle;
 import dao.CatalogoTrabajoDAO;
 import dao.MaterialDAO;
 import dao.MaterialDetalleDAO;
+import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -22,6 +23,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import modelo.MaterialDetalle;
 
 /**
@@ -645,7 +647,9 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
     }//GEN-LAST:event_cbxTipoJunquilloActionPerformed
 
     private void ckArcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckArcoActionPerformed
-        // TODO add your handling code here:
+        Window parent = SwingUtilities.getWindowAncestor(this);
+        MaterialArcos dlg = new MaterialArcos(parent, true);
+        dlg.setVisible(true);
     }//GEN-LAST:event_ckArcoActionPerformed
 
     private void cbxTipoArcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoArcoActionPerformed
@@ -653,7 +657,9 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
     }//GEN-LAST:event_cbxTipoArcoActionPerformed
 
     private void ckCanalilloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckCanalilloActionPerformed
-        // TODO add your handling code here:
+        Window parent = SwingUtilities.getWindowAncestor(this);
+        MaterlialesCanalillos dlg = new MaterlialesCanalillos(parent, true);
+        dlg.setVisible(true);
     }//GEN-LAST:event_ckCanalilloActionPerformed
 
     private void cbxTipoCanalilloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoCanalilloActionPerformed

@@ -1,20 +1,41 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package presentacion;
+
+import dao.MaterialDAO;
+import negocio.CotizacionBO;
 
 /**
  *
  * @author aleja
  */
-public class MaterialArco extends javax.swing.JFrame {
+public class MaterialArcos extends javax.swing.JDialog {
+
+    private CotizacionBO cotizacionBO;
+    private MaterialDAO materialDAO;
 
     /**
-     * Creates new form MaterialArco
+     * Creates new form MaterialArcos
      */
-    public MaterialArco() {
+    public MaterialArcos(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
+        setLocationRelativeTo(parent);
+
+        // Igual que Mosquiteras
+        this.cotizacionBO = new CotizacionBO();
+        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
+    }
+
+    public MaterialArcos(java.awt.Window parent, boolean modal) {
+        super(parent, ModalityType.APPLICATION_MODAL);
+        initComponents();
+        setLocationRelativeTo(parent);
+
+        this.cotizacionBO = new CotizacionBO();
+        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
     }
 
     /**
@@ -30,12 +51,12 @@ public class MaterialArco extends javax.swing.JFrame {
         titulo1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         lblJunquillo3 = new javax.swing.JLabel();
-        spnJunquillo3 = new javax.swing.JSpinner();
+        spnArco2 = new javax.swing.JSpinner();
         lblJunquillo1 = new javax.swing.JLabel();
-        spnJunquillo1 = new javax.swing.JSpinner();
+        spnArco3 = new javax.swing.JSpinner();
         btnGuardar5 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         panelTitulo.setBackground(new java.awt.Color(0, 19, 90));
 
@@ -97,10 +118,10 @@ public class MaterialArco extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblJunquillo3)
                     .addComponent(lblJunquillo1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spnJunquillo3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spnJunquillo1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spnArco2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spnArco3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(127, 127, 127)
@@ -113,11 +134,11 @@ public class MaterialArco extends javax.swing.JFrame {
                 .addGap(19, 19, 19)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblJunquillo3)
-                    .addComponent(spnJunquillo3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spnArco2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblJunquillo1)
-                    .addComponent(spnJunquillo1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spnArco3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addComponent(btnGuardar5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -142,43 +163,49 @@ public class MaterialArco extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardar5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar5ActionPerformed
-
-    }//GEN-LAST:event_btnGuardar5ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+            int cantArco2 = (int) spnArco2.getValue();
+            int cantArco3 = (int) spnArco3.getValue();
+
+            // --- ARCO SERIE 2" ---
+            if (cantArco2 > 0) {
+                int idArco2 = materialDAO.obtenerIdPorDescripcion("Arco aluminio serie 2\"");
+
+                if (idArco2 != -1) {
+                    int stockActual = materialDAO.obtenerStock(idArco2);
+                    int nuevoStock = stockActual + cantArco2;
+
+                    materialDAO.actualizarStock(idArco2, nuevoStock);
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MaterialArco.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MaterialArco.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MaterialArco.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MaterialArco.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MaterialArco().setVisible(true);
+            // --- ARCO SERIE 3" ---
+            if (cantArco3 > 0) {
+                int idArco3 = materialDAO.obtenerIdPorDescripcion("Arco aluminio serie 3\"");
+
+                if (idArco3 != -1) {
+                    int stockActual = materialDAO.obtenerStock(idArco3);
+                    int nuevoStock = stockActual + cantArco3;
+
+                    materialDAO.actualizarStock(idArco3, nuevoStock);
+                }
             }
-        });
-    }
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Stock actualizado correctamente");
+
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Error al actualizar stock: " + e.getMessage(),
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+            e.printStackTrace();
+        }
+
+        this.dispose();
+    }//GEN-LAST:event_btnGuardar5ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar5;
@@ -186,8 +213,8 @@ public class MaterialArco extends javax.swing.JFrame {
     private javax.swing.JLabel lblJunquillo1;
     private javax.swing.JLabel lblJunquillo3;
     private javax.swing.JPanel panelTitulo;
-    private javax.swing.JSpinner spnJunquillo1;
-    private javax.swing.JSpinner spnJunquillo3;
+    private javax.swing.JSpinner spnArco2;
+    private javax.swing.JSpinner spnArco3;
     private javax.swing.JLabel titulo1;
     // End of variables declaration//GEN-END:variables
 }

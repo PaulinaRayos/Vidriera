@@ -3,6 +3,8 @@ package presentacion;
 import dao.CatalogoTrabajoDAO;
 import dao.MaterialDetalleDAO;
 import dao.VentanaDetalleDAO;
+import java.awt.Frame;
+import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import modelo.Material;
 import modelo.MaterialDetalle;
 
@@ -366,11 +369,15 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
     }//GEN-LAST:event_cbxTipoArcoActionPerformed
 
     private void ckArcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckArcoActionPerformed
-        // TODO add your handling code here:
+        Window parent = SwingUtilities.getWindowAncestor(this);
+        MaterialArcos dlg = new MaterialArcos(parent, true);
+        dlg.setVisible(true);
     }//GEN-LAST:event_ckArcoActionPerformed
 
     private void ckMosquiteroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckMosquiteroActionPerformed
-        // TODO add your handling code here:
+        Window parent = SwingUtilities.getWindowAncestor(this);
+        MaterialMosquiteras dlg = new MaterialMosquiteras(parent, true);
+        dlg.setVisible(true);
     }//GEN-LAST:event_ckMosquiteroActionPerformed
 
     private void txtDescripcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescripcionActionPerformed

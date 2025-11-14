@@ -1,20 +1,41 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package presentacion;
+
+import dao.MaterialDAO;
+import negocio.CotizacionBO;
 
 /**
  *
  * @author aleja
  */
-public class MaterialMosquitera extends javax.swing.JFrame {
+public class MaterialMosquiteras extends javax.swing.JDialog {
+
+    private CotizacionBO cotizacionBO;
+    private MaterialDAO materialDAO;
 
     /**
-     * Creates new form MaterialMosquitera
+     * Creates new form MaterialMosquiteras
      */
-    public MaterialMosquitera() {
+    public MaterialMosquiteras(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
+        setLocationRelativeTo(parent);
+
+        // Crear la conexión y el DAO
+        this.cotizacionBO = new CotizacionBO();
+        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
+    }
+
+    public MaterialMosquiteras(java.awt.Window parent, boolean modal) {
+        super(parent, ModalityType.APPLICATION_MODAL);
+        initComponents();
+        setLocationRelativeTo(parent);
+
+        this.cotizacionBO = new CotizacionBO();
+        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
     }
 
     /**
@@ -26,9 +47,6 @@ public class MaterialMosquitera extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblMalla2 = new javax.swing.JLabel();
-        spnCantidad2 = new javax.swing.JSpinner();
-        btnGuardar4 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         lblMalla = new javax.swing.JLabel();
         spnMalla = new javax.swing.JSpinner();
@@ -38,29 +56,7 @@ public class MaterialMosquitera extends javax.swing.JFrame {
         panelTitulo = new javax.swing.JPanel();
         titulo1 = new javax.swing.JLabel();
 
-        lblMalla2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblMalla2.setForeground(new java.awt.Color(0, 0, 0));
-        lblMalla2.setText("Malla:");
-
-        btnGuardar4.setBackground(new java.awt.Color(4, 210, 65));
-        btnGuardar4.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnGuardar4.setForeground(new java.awt.Color(255, 255, 255));
-        btnGuardar4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
-        btnGuardar4.setText("Guardar");
-        btnGuardar4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnGuardar4.setBorderPainted(false);
-        btnGuardar4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnGuardar4.setDefaultCapable(false);
-        btnGuardar4.setFocusPainted(false);
-        btnGuardar4.setRequestFocusEnabled(false);
-        btnGuardar4.setRolloverEnabled(false);
-        btnGuardar4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardar4ActionPerformed(evt);
-            }
-        });
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -99,13 +95,13 @@ public class MaterialMosquitera extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblAluminio)
                     .addComponent(lblMalla))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(spnMalla, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(spnAluminio, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(99, 99, 99)
+                .addGap(130, 130, 130)
                 .addComponent(btnGuardar5, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -166,59 +162,59 @@ public class MaterialMosquitera extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnGuardar4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar4ActionPerformed
-
-    }//GEN-LAST:event_btnGuardar4ActionPerformed
-
     private void btnGuardar5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar5ActionPerformed
-
-    }//GEN-LAST:event_btnGuardar5ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+            int cantMalla = (int) spnMalla.getValue();
+            int cantAluminio = (int) spnAluminio.getValue();
+
+            // --- MALLA ---
+            if (cantMalla > 0) {
+                int idMalla = materialDAO.obtenerIdPorDescripcion("Malla Ciclónica");
+
+                if (idMalla != -1) {
+                    int stockActual = materialDAO.obtenerStock(idMalla);
+                    int nuevoStock = stockActual + cantMalla;
+
+                    materialDAO.actualizarStock(idMalla, nuevoStock);
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MaterialMosquitera.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MaterialMosquitera.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MaterialMosquitera.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MaterialMosquitera.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MaterialMosquitera().setVisible(true);
+            // --- ALUMINIO ---
+            if (cantAluminio > 0) {
+                int idAluminio = 4;
+                idAluminio = materialDAO.obtenerIdPorDescripcion("Aluminio para marco");
+
+                if (idAluminio != -1) {
+                    int stockActual = materialDAO.obtenerStock(idAluminio);
+                    int nuevoStock = stockActual + cantAluminio;
+
+                    materialDAO.actualizarStock(idAluminio, nuevoStock);
+                }
             }
-        });
-    }
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Stock actualizado correctamente");
+
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "Error al actualizar stock: " + e.getMessage(),
+                    "Error",
+                    javax.swing.JOptionPane.ERROR_MESSAGE
+            );
+            e.printStackTrace();
+        }
+
+        this.dispose();
+    }//GEN-LAST:event_btnGuardar5ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnGuardar4;
     private javax.swing.JButton btnGuardar5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblAluminio;
     private javax.swing.JLabel lblMalla;
-    private javax.swing.JLabel lblMalla2;
     private javax.swing.JPanel panelTitulo;
     private javax.swing.JSpinner spnAluminio;
-    private javax.swing.JSpinner spnCantidad2;
     private javax.swing.JSpinner spnMalla;
     private javax.swing.JLabel titulo1;
     // End of variables declaration//GEN-END:variables
