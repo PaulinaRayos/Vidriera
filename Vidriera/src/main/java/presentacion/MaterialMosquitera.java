@@ -28,17 +28,37 @@ public class MaterialMosquitera extends javax.swing.JFrame {
 
         lblMalla2 = new javax.swing.JLabel();
         spnCantidad2 = new javax.swing.JSpinner();
+        btnGuardar4 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         lblMalla = new javax.swing.JLabel();
         spnMalla = new javax.swing.JSpinner();
         lblAluminio = new javax.swing.JLabel();
         spnAluminio = new javax.swing.JSpinner();
+        btnGuardar5 = new javax.swing.JButton();
         panelTitulo = new javax.swing.JPanel();
         titulo1 = new javax.swing.JLabel();
 
         lblMalla2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblMalla2.setForeground(new java.awt.Color(0, 0, 0));
         lblMalla2.setText("Malla:");
+
+        btnGuardar4.setBackground(new java.awt.Color(4, 210, 65));
+        btnGuardar4.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnGuardar4.setForeground(new java.awt.Color(255, 255, 255));
+        btnGuardar4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
+        btnGuardar4.setText("Guardar");
+        btnGuardar4.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnGuardar4.setBorderPainted(false);
+        btnGuardar4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnGuardar4.setDefaultCapable(false);
+        btnGuardar4.setFocusPainted(false);
+        btnGuardar4.setRequestFocusEnabled(false);
+        btnGuardar4.setRolloverEnabled(false);
+        btnGuardar4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardar4ActionPerformed(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -52,12 +72,30 @@ public class MaterialMosquitera extends javax.swing.JFrame {
         lblAluminio.setForeground(new java.awt.Color(0, 0, 0));
         lblAluminio.setText("Aluminio:");
 
+        btnGuardar5.setBackground(new java.awt.Color(4, 210, 65));
+        btnGuardar5.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnGuardar5.setForeground(new java.awt.Color(255, 255, 255));
+        btnGuardar5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
+        btnGuardar5.setText("Guardar");
+        btnGuardar5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnGuardar5.setBorderPainted(false);
+        btnGuardar5.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnGuardar5.setDefaultCapable(false);
+        btnGuardar5.setFocusPainted(false);
+        btnGuardar5.setRequestFocusEnabled(false);
+        btnGuardar5.setRolloverEnabled(false);
+        btnGuardar5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardar5ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(26, 26, 26)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblAluminio)
                     .addComponent(lblMalla))
@@ -65,12 +103,16 @@ public class MaterialMosquitera extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(spnMalla, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(spnAluminio, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28))
+                .addGap(27, 27, 27))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(99, 99, 99)
+                .addComponent(btnGuardar5, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(59, 59, 59)
+                .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(spnMalla, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblMalla))
@@ -78,7 +120,9 @@ public class MaterialMosquitera extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblAluminio)
                     .addComponent(spnAluminio, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 41, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnGuardar5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         panelTitulo.setBackground(new java.awt.Color(0, 19, 90));
@@ -122,6 +166,14 @@ public class MaterialMosquitera extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnGuardar4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar4ActionPerformed
+
+    }//GEN-LAST:event_btnGuardar4ActionPerformed
+
+    private void btnGuardar5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar5ActionPerformed
+
+    }//GEN-LAST:event_btnGuardar5ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -158,6 +210,8 @@ public class MaterialMosquitera extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnGuardar4;
+    private javax.swing.JButton btnGuardar5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblAluminio;
     private javax.swing.JLabel lblMalla;
