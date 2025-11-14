@@ -24,7 +24,6 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(parent);
 
-        // Crear la conexión y el DAO
         this.cotizacionBO = new CotizacionBO();
         this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
     }
@@ -48,11 +47,17 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        lblAluminioSerie2 = new javax.swing.JLabel();
+        spnAluminioSerie2 = new javax.swing.JSpinner();
+        lblAluminioSerie3 = new javax.swing.JLabel();
+        spnAluminioAluminioSerie3 = new javax.swing.JSpinner();
+        btnGuardar5 = new javax.swing.JButton();
+        panelTitulo1 = new javax.swing.JPanel();
+        titulo2 = new javax.swing.JLabel();
+        lblAluminioAnodizadoNegro = new javax.swing.JLabel();
+        spnAluminioAnodizadoNegro = new javax.swing.JSpinner();
         lblMalla = new javax.swing.JLabel();
         spnMalla = new javax.swing.JSpinner();
-        lblAluminio = new javax.swing.JLabel();
-        spnAluminio = new javax.swing.JSpinner();
-        btnGuardar5 = new javax.swing.JButton();
         panelTitulo = new javax.swing.JPanel();
         titulo1 = new javax.swing.JLabel();
 
@@ -60,13 +65,13 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        lblMalla.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblMalla.setForeground(new java.awt.Color(0, 0, 0));
-        lblMalla.setText("Malla:");
+        lblAluminioSerie2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblAluminioSerie2.setForeground(new java.awt.Color(0, 0, 0));
+        lblAluminioSerie2.setText("Perfil aluminio serie 2\" natural");
 
-        lblAluminio.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblAluminio.setForeground(new java.awt.Color(0, 0, 0));
-        lblAluminio.setText("Aluminio:");
+        lblAluminioSerie3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblAluminioSerie3.setForeground(new java.awt.Color(0, 0, 0));
+        lblAluminioSerie3.setText("Perfil aluminio serie 3\" blanco");
 
         btnGuardar5.setBackground(new java.awt.Color(4, 210, 65));
         btnGuardar5.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
@@ -86,39 +91,85 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
             }
         });
 
+        panelTitulo1.setBackground(new java.awt.Color(0, 19, 90));
+
+        titulo2.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        titulo2.setForeground(new java.awt.Color(255, 255, 255));
+        titulo2.setText("Materiales");
+
+        javax.swing.GroupLayout panelTitulo1Layout = new javax.swing.GroupLayout(panelTitulo1);
+        panelTitulo1.setLayout(panelTitulo1Layout);
+        panelTitulo1Layout.setHorizontalGroup(
+            panelTitulo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTitulo1Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(titulo2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelTitulo1Layout.setVerticalGroup(
+            panelTitulo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTitulo1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(titulo2)
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
+
+        lblAluminioAnodizadoNegro.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblAluminioAnodizadoNegro.setForeground(new java.awt.Color(0, 0, 0));
+        lblAluminioAnodizadoNegro.setText("Perfil aluminio anodizado negro");
+
+        lblMalla.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblMalla.setForeground(new java.awt.Color(0, 0, 0));
+        lblMalla.setText("Malla");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelTitulo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblAluminio)
-                    .addComponent(lblMalla))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spnMalla, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spnAluminio, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(130, 130, 130)
+                .addGap(151, 151, 151)
                 .addComponent(btnGuardar5, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblAluminioSerie3)
+                    .addComponent(lblAluminioSerie2)
+                    .addComponent(lblAluminioAnodizadoNegro)
+                    .addComponent(lblMalla))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(spnAluminioSerie2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(spnAluminioAluminioSerie3, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spnAluminioAnodizadoNegro, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spnMalla, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addComponent(panelTitulo1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(spnMalla, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMalla))
+                    .addComponent(spnAluminioSerie2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblAluminioSerie2))
                 .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblAluminio)
-                    .addComponent(spnAluminio, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(lblAluminioSerie3)
+                    .addComponent(spnAluminioAluminioSerie3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblAluminioAnodizadoNegro)
+                    .addComponent(spnAluminioAnodizadoNegro, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblMalla)
+                    .addComponent(spnMalla, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(btnGuardar5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         panelTitulo.setBackground(new java.awt.Color(0, 19, 90));
@@ -164,32 +215,27 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
 
     private void btnGuardar5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar5ActionPerformed
         try {
+            int cantSerie2 = (int) spnAluminioSerie2.getValue();
+            int cantSerie3 = (int) spnAluminioAluminioSerie3.getValue();
+            int cantNegro = (int) spnAluminioAnodizadoNegro.getValue();
             int cantMalla = (int) spnMalla.getValue();
-            int cantAluminio = (int) spnAluminio.getValue();
-
-            // --- MALLA ---
-            if (cantMalla > 0) {
-                int idMalla = materialDAO.obtenerIdPorDescripcion("Malla Ciclónica");
-
-                if (idMalla != -1) {
-                    int stockActual = materialDAO.obtenerStock(idMalla);
-                    int nuevoStock = stockActual + cantMalla;
-
-                    materialDAO.actualizarStock(idMalla, nuevoStock);
-                }
+            System.out.println("Serie2 = " + cantSerie2);
+            
+            if (cantSerie2 > 0) {
+                materialDAO.ajustarStockPorDescripcion("Perfil aluminio serie 2\" natural", cantSerie2);
+                System.out.println("Serie2 = " + cantSerie2);
             }
 
-            // --- ALUMINIO ---
-            if (cantAluminio > 0) {
-                int idAluminio = 4;
-                idAluminio = materialDAO.obtenerIdPorDescripcion("Aluminio para marco");
+            if (cantSerie3 > 0) {
+                materialDAO.ajustarStockPorDescripcion("Perfil aluminio serie 3\" blanco", cantSerie3);
+            }
 
-                if (idAluminio != -1) {
-                    int stockActual = materialDAO.obtenerStock(idAluminio);
-                    int nuevoStock = stockActual + cantAluminio;
+            if (cantNegro > 0) {
+                materialDAO.ajustarStockPorDescripcion("Perfil aluminio anodizado negro", cantNegro);
+            }
 
-                    materialDAO.actualizarStock(idAluminio, nuevoStock);
-                }
+            if (cantMalla > 0) {
+                materialDAO.ajustarStockPorDescripcion("Malla Gris", cantMalla);
             }
 
             javax.swing.JOptionPane.showMessageDialog(this, "Stock actualizado correctamente");
@@ -203,7 +249,7 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
             );
             e.printStackTrace();
         }
-
+        
         this.dispose();
     }//GEN-LAST:event_btnGuardar5ActionPerformed
 
@@ -211,11 +257,17 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblAluminio;
+    private javax.swing.JLabel lblAluminioAnodizadoNegro;
+    private javax.swing.JLabel lblAluminioSerie2;
+    private javax.swing.JLabel lblAluminioSerie3;
     private javax.swing.JLabel lblMalla;
     private javax.swing.JPanel panelTitulo;
-    private javax.swing.JSpinner spnAluminio;
+    private javax.swing.JPanel panelTitulo1;
+    private javax.swing.JSpinner spnAluminioAluminioSerie3;
+    private javax.swing.JSpinner spnAluminioAnodizadoNegro;
+    private javax.swing.JSpinner spnAluminioSerie2;
     private javax.swing.JSpinner spnMalla;
     private javax.swing.JLabel titulo1;
+    private javax.swing.JLabel titulo2;
     // End of variables declaration//GEN-END:variables
 }

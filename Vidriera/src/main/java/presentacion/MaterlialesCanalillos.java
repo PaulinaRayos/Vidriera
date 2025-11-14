@@ -160,25 +160,15 @@ public class MaterlialesCanalillos extends javax.swing.JDialog {
 
     private void btnGuardar4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar4ActionPerformed
         try {
-            int cantCanalillo2 = (int) spnCanalillo2.getValue();
-            int cantCanalillo3 = (int) spnCanalillo3.getValue();
+            int cantArco2 = (int) spnCanalillo2.getValue();
+            int cantArco3 = (int) spnCanalillo3.getValue();
 
-            // --- CANALILLO 2" ---
-            if (cantCanalillo2 > 0) {
-                int idC2 = materialDAO.obtenerIdPorDescripcion("Canalillo serie 2\"");
-                if (idC2 != -1) {
-                    int stockActual = materialDAO.obtenerStock(idC2);
-                    materialDAO.actualizarStock(idC2, stockActual + cantCanalillo2);
-                }
+            if (cantArco2 > 0) {
+                materialDAO.ajustarStockPorDescripcion("Arco aluminio serie 2\"", cantArco2);
             }
 
-            // --- CANALILLO 3" ---
-            if (cantCanalillo3 > 0) {
-                int idC3 = materialDAO.obtenerIdPorDescripcion("Canalillo serie 3\"");
-                if (idC3 != -1) {
-                    int stockActual = materialDAO.obtenerStock(idC3);
-                    materialDAO.actualizarStock(idC3, stockActual + cantCanalillo3);
-                }
+            if (cantArco3 > 0) {
+                materialDAO.ajustarStockPorDescripcion("Arco aluminio serie 3\"", cantArco3);
             }
 
             javax.swing.JOptionPane.showMessageDialog(this, "Stock actualizado correctamente");

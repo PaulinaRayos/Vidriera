@@ -5,6 +5,7 @@
 package presentacion;
 
 import dao.MaterialDAO;
+import javax.swing.JOptionPane;
 import negocio.CotizacionBO;
 
 /**
@@ -24,7 +25,6 @@ public class MaterialArcos extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(parent);
 
-        // Igual que Mosquiteras
         this.cotizacionBO = new CotizacionBO();
         this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
     }
@@ -167,38 +167,23 @@ public class MaterialArcos extends javax.swing.JDialog {
             int cantArco2 = (int) spnArco2.getValue();
             int cantArco3 = (int) spnArco3.getValue();
 
-            // --- ARCO SERIE 2" ---
             if (cantArco2 > 0) {
-                int idArco2 = materialDAO.obtenerIdPorDescripcion("Arco aluminio serie 2\"");
 
-                if (idArco2 != -1) {
-                    int stockActual = materialDAO.obtenerStock(idArco2);
-                    int nuevoStock = stockActual + cantArco2;
-
-                    materialDAO.actualizarStock(idArco2, nuevoStock);
-                }
+                materialDAO.ajustarStockPorDescripcion("Arco aluminio serie 2\"", cantArco2);
             }
 
-            // --- ARCO SERIE 3" ---
             if (cantArco3 > 0) {
-                int idArco3 = materialDAO.obtenerIdPorDescripcion("Arco aluminio serie 3\"");
-
-                if (idArco3 != -1) {
-                    int stockActual = materialDAO.obtenerStock(idArco3);
-                    int nuevoStock = stockActual + cantArco3;
-
-                    materialDAO.actualizarStock(idArco3, nuevoStock);
-                }
+                materialDAO.ajustarStockPorDescripcion("Arco aluminio serie 3\"", cantArco3);
             }
 
-            javax.swing.JOptionPane.showMessageDialog(this, "Stock actualizado correctamente");
+            JOptionPane.showMessageDialog(this, "Stock actualizado correctamente");
 
         } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(
+            JOptionPane.showMessageDialog(
                     this,
                     "Error al actualizar stock: " + e.getMessage(),
                     "Error",
-                    javax.swing.JOptionPane.ERROR_MESSAGE
+                    JOptionPane.ERROR_MESSAGE
             );
             e.printStackTrace();
         }

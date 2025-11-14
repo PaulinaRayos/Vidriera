@@ -405,4 +405,22 @@ public class MaterialDAO {
         return -1; // error
     }
 
+    public boolean ajustarStockPorDescripcion(String descripcion, int cantidad) throws SQLException {
+        String sql = """
+        UPDATE material 
+        SET stockActual = stockActual - ? 
+        WHERE descripcion = ? AND stockActual >= ?
+    """;
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setInt(1, cantidad);
+            ps.setString(2, descripcion);
+            ps.setInt(3, cantidad);
+
+            int filas = ps.executeUpdate();
+            
+            return filas > 0;
+        }
+    }
+
 }
