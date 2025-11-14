@@ -9,8 +9,11 @@ import dao.DetalleCotizacionDAO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -31,7 +36,10 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import modelo.CanceleriaFijaDetalle;
 import modelo.Cotizacion;
+import modelo.PuertaAbatibleDetalle;
+import modelo.VentanaDetalle;
 import negocio.CotizacionBO;
 import negocio.GeneradorPDF;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -53,6 +61,8 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
     private DefaultTableModel modeloTablaDetalles;
     private List<Cotizacion> listaCotizacionesActuales;
     private Cotizacion cotizacionSeleccionada;
+    private JPanel panelReporte;
+    private BufferedImage imgReporte;
 
     /**
      * Creates new form InicioAdministrarCotizaciones
@@ -696,18 +706,32 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
 
     private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
         panelBotones.setVisible(false);
-        BufferedImage img = panelToImage(panelDetalles);
-        JLabel label = new JLabel(new ImageIcon(img));
+
+        panelReporte = construirPanelReporte();
+
+        prepararPanel(panelReporte);
+        panelReporte.setPreferredSize(new Dimension(900, panelReporte.getPreferredSize().height));
+        panelReporte.setSize(panelReporte.getPreferredSize());
+
+        panelReporte.doLayout();
+        panelReporte.validate();
+
+        imgReporte = panelToImage(panelReporte);
+
+        JLabel label = new JLabel(new ImageIcon(imgReporte));
+
         JScrollPane scroll = new JScrollPane(label);
+        scroll.getVerticalScrollBar().setUnitIncrement(16);
 
         JDialog dialog = new JDialog(this, "Previsualización Cotización", true);
-        dialog.setSize(1000, 650);
+        dialog.setSize(1200, 800);
         dialog.setLayout(new BorderLayout());
         dialog.add(scroll, BorderLayout.CENTER);
+
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
-        panelBotones.setVisible(true);
 
+        panelBotones.setVisible(true);
     }//GEN-LAST:event_btnVistaPreviaActionPerformed
 
     private void btnDescargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarActionPerformed
@@ -790,15 +814,6 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_btnImprimirActionPerformed
-    private BufferedImage panelToImage(JPanel panel) {
-        int w = panel.getWidth();
-        int h = panel.getHeight();
-        BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2 = image.createGraphics();
-        panel.paint(g2);
-        g2.dispose();
-        return image;
-    }
 
     private void inicializarLogica() {
         this.cotizacionBO = new CotizacionBO();
@@ -1042,6 +1057,128 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         // Vuelve a aplicar el layout para que se eliminen los espacios
         getContentPane().revalidate();
         getContentPane().repaint();
+    }
+
+    private JPanel construirPanelReporte() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(BorderFactory.createEmptyBorder(40, 60, 40, 60)); // MARGEN TIPO PDF
+
+        // ===== ENCABEZADO =====
+        JLabel titulo = new JLabel("COTIZACIÓN");
+        titulo.setFont(new Font("SansSerif", Font.BOLD, 28));
+        titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(titulo);
+
+        panel.add(Box.createVerticalStrut(25));
+
+        JLabel cliente = new JLabel("Cliente: " + cotizacionSeleccionada.getCliente().getNombre());
+        cliente.setFont(new Font("SansSerif", Font.PLAIN, 18));
+        panel.add(cliente);
+
+        panel.add(Box.createVerticalStrut(10));
+
+        JLabel fecha = new JLabel("Fecha: " + cotizacionSeleccionada.getFecha());
+        fecha.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        panel.add(fecha);
+
+        JLabel estado = new JLabel("Estado: " + cotizacionSeleccionada.getEstado());
+        estado.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        panel.add(estado);
+
+        panel.add(Box.createVerticalStrut(25));
+
+        // ===== DETALLES =====
+        JLabel detallesTitulo = new JLabel("Detalles del Trabajo:");
+        detallesTitulo.setFont(new Font("SansSerif", Font.BOLD, 20));
+        panel.add(detallesTitulo);
+
+        panel.add(Box.createVerticalStrut(10));
+
+        JPanel lista = new JPanel();
+        lista.setLayout(new BoxLayout(lista, BoxLayout.Y_AXIS));
+        lista.setBackground(Color.WHITE);
+        lista.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 0)); // Sangría elegante
+
+        // Ventanas
+        for (VentanaDetalle v : cotizacionSeleccionada.getVentanaDetalles()) {
+            JLabel item = new JLabel(
+                    "• Ventana " + v.getTipoVentana().getDescripcion()
+                    + "   |   " + v.getMedidaHorizontal() + " x " + v.getMedidaVertical()
+                    + "   |   Cristal: " + v.getTipoCristal()
+                    + "   |   Cant: " + v.getCantidad());
+            item.setFont(new Font("SansSerif", Font.PLAIN, 15));
+            lista.add(item);
+        }
+
+        // Cancelería
+        for (CanceleriaFijaDetalle c : cotizacionSeleccionada.getCanceleriaFijaDetalles()) {
+            JLabel item = new JLabel(
+                    "• Cancelería " + c.getTipoCanceleria().getDescripcion()
+                    + "   |   " + c.getMedidaHorizontal() + " x " + c.getMedidaVertical()
+                    + "   |   Cristal: " + c.getTipoCristal()
+                    + "   |   Cant: " + c.getCantidad());
+            item.setFont(new Font("SansSerif", Font.PLAIN, 15));
+            lista.add(item);
+        }
+
+        // Puertas
+        for (PuertaAbatibleDetalle p : cotizacionSeleccionada.getPuertaAbatibleDetalles()) {
+            JLabel item = new JLabel(
+                    "• Puerta " + p.getTipoPuerta().getDescripcion()
+                    + "   |   " + p.getMedidaHorizontal() + " x " + p.getMedidaVertical()
+                    + "   |   Cristal: " + p.getTipoCristal()
+                    + "   |   Cant: " + p.getCantidad());
+            item.setFont(new Font("SansSerif", Font.PLAIN, 15));
+            lista.add(item);
+        }
+
+        panel.add(lista);
+
+        panel.add(Box.createVerticalStrut(35));
+
+        // ===== COSTOS =====
+        JLabel subtotalLbl = new JLabel("Subtotal: $" + cotizacionSeleccionada.getSubtotal());
+        JLabel ivaLbl = new JLabel("IVA (16%): $" + cotizacionSeleccionada.getIva());
+        JLabel totalLbl = new JLabel("TOTAL: $" + cotizacionSeleccionada.getTotal());
+
+        subtotalLbl.setFont(new Font("SansSerif", Font.BOLD, 17));
+        ivaLbl.setFont(new Font("SansSerif", Font.BOLD, 17));
+        totalLbl.setFont(new Font("SansSerif", Font.BOLD, 19));
+
+        panel.add(subtotalLbl);
+        panel.add(ivaLbl);
+        panel.add(totalLbl);
+
+        return panel;
+    }
+
+    private BufferedImage panelToImage(JPanel panel) {
+
+        int w = panel.getPreferredSize().width;
+        int h = panel.getPreferredSize().height;
+
+        BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = img.createGraphics();
+
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
+        g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
+        panel.paint(g2);
+        g2.dispose();
+
+        return img;
+    }
+
+    private void prepararPanel(JPanel panel) {
+        JFrame temp = new JFrame();
+        temp.add(panel);
+        temp.pack();
+        panel.setSize(panel.getPreferredSize());
+        panel.doLayout();
+        temp.dispose();
     }
 
 
