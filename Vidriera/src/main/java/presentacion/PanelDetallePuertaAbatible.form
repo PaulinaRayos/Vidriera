@@ -108,7 +108,7 @@
                               </Group>
                               <Component id="tipoCanal" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
                               <Component id="juanquillo" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
-                              <Component id="tipoJuanquillo" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
+                              <Component id="tipoJunquillo" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
                               <Component id="canal" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -310,7 +310,7 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="cbxTipoJunquillo" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
-                              <Component id="tipoJuanquillo" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="tipoJunquillo" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -650,10 +650,10 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="73" green="26" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Juanquillo:"/>
+            <Property name="text" type="java.lang.String" value="Junquillo:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="tipoJuanquillo">
+        <Component class="javax.swing.JLabel" name="tipoJunquillo">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="SansSerif" size="15" style="1"/>
@@ -661,7 +661,7 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="73" green="26" red="0" type="rgb"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Tipo juanquillo:"/>
+            <Property name="text" type="java.lang.String" value="Tipo junquillo:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="ckJunquillo">

@@ -106,7 +106,7 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         adaptador = new javax.swing.JLabel();
         ckAdaptador = new javax.swing.JCheckBox();
         juanquillo = new javax.swing.JLabel();
-        tipoJuanquillo = new javax.swing.JLabel();
+        tipoJunquillo = new javax.swing.JLabel();
         ckJunquillo = new javax.swing.JCheckBox();
         cbxTipoJunquillo = new javax.swing.JComboBox<>();
         canal = new javax.swing.JLabel();
@@ -266,11 +266,11 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
 
         juanquillo.setFont(new java.awt.Font("SansSerif", 1, 15)); // NOI18N
         juanquillo.setForeground(new java.awt.Color(0, 38, 115));
-        juanquillo.setText("Juanquillo:");
+        juanquillo.setText("Junquillo:");
 
-        tipoJuanquillo.setFont(new java.awt.Font("SansSerif", 1, 15)); // NOI18N
-        tipoJuanquillo.setForeground(new java.awt.Color(0, 38, 115));
-        tipoJuanquillo.setText("Tipo juanquillo:");
+        tipoJunquillo.setFont(new java.awt.Font("SansSerif", 1, 15)); // NOI18N
+        tipoJunquillo.setForeground(new java.awt.Color(0, 38, 115));
+        tipoJunquillo.setText("Tipo junquillo:");
 
         ckJunquillo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         ckJunquillo.addActionListener(new java.awt.event.ActionListener() {
@@ -458,7 +458,7 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
                                 .addComponent(ckMosquitero))
                             .addComponent(tipoCanal, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(juanquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tipoJuanquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tipoJunquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(canal, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -610,7 +610,7 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbxTipoJunquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tipoJuanquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tipoJunquillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(12, 12, 12)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ckCanal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1221,7 +1221,7 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
     private javax.swing.JLabel tipoCanal;
     private javax.swing.JLabel tipoCristal;
     private javax.swing.JLabel tipoJaladera;
-    private javax.swing.JLabel tipoJuanquillo;
+    private javax.swing.JLabel tipoJunquillo;
     private javax.swing.JLabel tipoPivote;
     private javax.swing.JLabel tipoPuerta;
     private javax.swing.JLabel titulo;
