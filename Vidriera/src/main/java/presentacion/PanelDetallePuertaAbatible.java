@@ -847,6 +847,169 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         });
     }
 
+    public boolean validar() {
+
+        // ===== VALIDAR MEDIDAS OBLIGATORIAS =====
+        if (txtMedidaH.getText().trim().isEmpty() || txtMedidaV.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe ingresar las medidas horizontal y vertical.",
+                    "Campos obligatorios", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        BigDecimal h, v;
+
+        try {
+            h = new BigDecimal(txtMedidaH.getText());
+            v = new BigDecimal(txtMedidaV.getText());
+
+            if (h.compareTo(BigDecimal.ZERO) <= 0 || v.compareTo(BigDecimal.ZERO) <= 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Las medidas deben ser mayores que cero.",
+                        "Valor inválido", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+
+            // Límites definidos en tu getDetalle()
+            BigDecimal maxH = new BigDecimal("15");
+            BigDecimal maxV = new BigDecimal("10");
+
+            if (h.compareTo(maxH) > 0 || v.compareTo(maxV) > 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Las medidas exceden el rango permitido.\nMáximo: 15m de ancho y 10m de alto.",
+                        "Medidas fuera de rango", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Las medidas deben ser numéricas válidas.",
+                    "Error de formato", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // ===== VALIDAR TIPO DE PUERTA =====
+        if (cmbTipoPuerta.getSelectedIndex() <= 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un tipo de puerta.",
+                    "Selección requerida", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // ===== VALIDAR CRISTAL =====
+        if (cmbTipoCristal.getSelectedIndex() <= 0
+                || "Error al cargar".equals(cmbTipoCristal.getSelectedItem())) {
+
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un tipo de cristal válido.",
+                    "Selección requerida", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // ===== VALIDACIONES CONDICIONALES =====
+        // Duela
+        if (ckDuela.isSelected()) {
+            if (cbxTipoDuela.getSelectedIndex() <= 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Debe seleccionar un tipo de duela.",
+                        "Selección requerida", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+
+            if (txtMedidaDuela.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Debe ingresar la medida de la duela.",
+                        "Dato faltante", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+
+            try {
+                new BigDecimal(txtMedidaDuela.getText());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this,
+                        "La medida de la duela debe ser numérica.",
+                        "Error de formato", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+
+        // Adaptador
+        if (ckAdaptador.isSelected() && cbxTipoAdaptador.getSelectedIndex() <= 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un tipo de adaptador.",
+                    "Selección requerida", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Junquillo
+        if (ckJunquillo.isSelected() && cbxTipoJunquillo.getSelectedIndex() <= 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un tipo de junquillo.",
+                    "Selección requerida", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Canal
+        if (ckCanal.isSelected() && cbxTipoCanal.getSelectedIndex() <= 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un tipo de canal.",
+                    "Selección requerida", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Pivote
+        if (ckPivote.isSelected()) {
+            if (cbxTipoPivote.getSelectedIndex() <= 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Debe seleccionar un tipo de pivote.",
+                        "Selección requerida", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+
+            if ((Integer) spnCantidadPivote.getValue() <= 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Debe asignar una cantidad de pivotes mayor a 0.",
+                        "Dato inválido", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+        }
+
+        // Jaladera
+        if (ckJaladera.isSelected()) {
+            if (cbxTipoJaladera.getSelectedIndex() <= 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Debe seleccionar un tipo de jaladera.",
+                        "Selección requerida", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+
+            if ((Integer) spnCantidadJaladera.getValue() <= 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Debe asignar una cantidad de jaladeras mayor a 0.",
+                        "Dato inválido", JOptionPane.WARNING_MESSAGE);
+                return false;
+            }
+        }
+
+        // Barra
+        if (ckBarra.isSelected() && cbxTipoBarra.getSelectedIndex() <= 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un tipo de barra.",
+                    "Selección requerida", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Descripción
+        if (txtDescripcion.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe ingresar una descripción del trabajo.",
+                    "Dato requerido", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Lee todos los campos del panel y crea un objeto PuertaAbatibleDetalle.
      *

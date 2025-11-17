@@ -391,30 +391,73 @@ public class DetalleEditorDialog extends javax.swing.JDialog {
 
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
-        Object detalleDelPanel = null;
+        Object detalleNuevo = null;
 
-         if (radVentana.isSelected()) {
-        detalleDelPanel = panelVentana.getDetalle();
-        System.out.println("DEBUG: getDetalle() Ventana → " + detalleDelPanel);
-    } else if (radPuerta.isSelected()) {
-        detalleDelPanel = panelPuerta.getDetalle();
-        System.out.println("DEBUG: getDetalle() Puerta → " + detalleDelPanel);
-    } else if (radCanceleria.isSelected()) {
-        detalleDelPanel = panelCanceleria.getDetalle();
-        System.out.println("DEBUG: getDetalle() Cancelería → " + detalleDelPanel);
-    }
+        if (radVentana.isSelected()) {
 
-        if (detalleDelPanel == null) {
-            JOptionPane.showMessageDialog(this, "Por favor, seleccione un tipo de trabajo y llene los campos correctamente.", "Error", JOptionPane.WARNING_MESSAGE);
+            // VALIDAR
+            if (!panelVentana.validar()) {
+                return; // si falla → no continua
+            }
+
+            // OBTENER DETALLE
+            detalleNuevo = panelVentana.getDetalle();
+            if (detalleNuevo == null) {
+                JOptionPane.showMessageDialog(this,
+                        "No se pudo obtener el detalle de la ventana.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+        } else if (radPuerta.isSelected()) {
+
+            // VALIDAR
+            if (!panelPuerta.validar()) {
+                return;
+            }
+
+            // OBTENER DETALLE
+            detalleNuevo = panelPuerta.getDetalle();
+            if (detalleNuevo == null) {
+                JOptionPane.showMessageDialog(this,
+                        "No se pudo obtener el detalle de la puerta.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+        } else if (radCanceleria.isSelected()) {
+
+            // VALIDAR
+            if (!panelCanceleria.validar()) {
+                return;
+            }
+
+            // OBTENER DETALLE
+            detalleNuevo = panelCanceleria.getDetalle();
+            if (detalleNuevo == null) {
+                JOptionPane.showMessageDialog(this,
+                        "No se pudo obtener el detalle de la cancelería.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+        } else {
+
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un tipo de trabajo (Ventana, Puerta o Cancelería).",
+                    "Seleccione una opción",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         if (esModoEdicion) {
-            actualizarDetalleExistente(detalleDelPanel);
+            actualizarDetalleExistente(detalleNuevo);
+            this.detalleResultado = detalleResultado;  // mantiene el mismo objeto
         } else {
-            this.detalleResultado = detalleDelPanel;
+            this.detalleResultado = detalleNuevo;  // asigna el nuevo objeto
         }
 
+        // CERRAR
         this.dispose();
     }//GEN-LAST:event_btnAceptarActionPerformed
 
@@ -430,7 +473,6 @@ public class DetalleEditorDialog extends javax.swing.JDialog {
     private void radPuertaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radPuertaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_radPuertaActionPerformed
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -21,7 +21,9 @@ import java.sql.SQLException;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -66,6 +68,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private List<CanceleriaFijaDetalle> detallesCancelaria;
     private List<PuertaAbatibleDetalle> detallesPuerta;
     private List<Material> materialesDisponibles;
+    private Map<String, Cliente> mapaClientes = new HashMap<>();
 
     private DefaultTableModel modeloTablaDetalles;
     private List<Object> detallesEnMemoria = new ArrayList<>();
@@ -693,14 +696,17 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         );
         pnlNuevaCotizacionLayout.setVerticalGroup(
             pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlNuevaCotizacionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
 
@@ -791,12 +797,25 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
     private void btnNuevaCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCotizacionActionPerformed
 
+        String clienteSeleccionado = (String) cbxSeleccionarCliente.getSelectedItem();
+
+        if (clienteSeleccionado == null
+                || clienteSeleccionado.equals("Seleccione un cliente...")) {
+
+            JOptionPane.showMessageDialog(this,
+                    "Por favor selecciona un cliente antes de crear una nueva cotización.",
+                    "Cliente requerido",
+                    JOptionPane.WARNING_MESSAGE);
+            return; // Evita continuar
+        }
+
         List<Material> materiales = this.materialesDisponibles;
 
         if (materiales == null || materiales.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Error: No se pudieron cargar los materiales. Revisa la base de datos.");
             return;
         }
+
         DetalleEditorDialog dialog = new DetalleEditorDialog(this, true, materiales);
         dialog.setVisible(true);
 
@@ -846,7 +865,8 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDescartarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        if (cbxSeleccionarCliente.getSelectedIndex() == -1 || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
+        if (cbxSeleccionarCliente.getSelectedIndex() == -1
+                || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
             JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente.", "Error de validación", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -860,7 +880,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Debe agregar al menos un detalle a la cotización.", "Error de validación", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         if (cbxSeleccionarCliente.getSelectedIndex() <= 0
                 || cbxSeleccionarCliente.getSelectedItem().toString().equals("Seleccione un cliente...")
                 || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
@@ -871,7 +891,8 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             return;
         }
 
-        Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
+        String nombre = cbxSeleccionarCliente.getSelectedItem().toString();
+        Cliente clienteSeleccionado = mapaClientes.get(nombre);
 
         try {
             ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
@@ -879,79 +900,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
             BigDecimal subtotal = BigDecimal.ZERO;
 
-            //VALIDACIONES GENERALES DE LOS DETALLES
-            for (Object detalleObj : detallesEnMemoria) {
-                double alto = 0;
-                double ancho = 0;
-                int cantidad = 0;
-
-                // Usamos reflexión para acceder a los campos comunes
-                try {
-                    java.lang.reflect.Field fAlto = detalleObj.getClass().getDeclaredField("alto");
-                    fAlto.setAccessible(true);
-                    alto = ((Number) fAlto.get(detalleObj)).doubleValue();
-                } catch (Exception ignored) {
-                }
-
-                try {
-                    java.lang.reflect.Field fAncho = detalleObj.getClass().getDeclaredField("ancho");
-                    fAncho.setAccessible(true);
-                    ancho = ((Number) fAncho.get(detalleObj)).doubleValue();
-                } catch (Exception ignored) {
-                }
-
-                try {
-                    java.lang.reflect.Field fCantidad = detalleObj.getClass().getDeclaredField("cantidad");
-                    fCantidad.setAccessible(true);
-                    cantidad = ((Number) fCantidad.get(detalleObj)).intValue();
-                } catch (Exception ignored) {
-                }
-
-                //Validar medidas
-                if (alto <= 0 || alto > 10) {
-                    JOptionPane.showMessageDialog(this,
-                            "Error: Campo obligatorio.\nEl alto debe ser mayor a 0 y máximo 10 metros.",
-                            "Error de validación",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (ancho <= 0 || ancho > 15) {
-                    JOptionPane.showMessageDialog(this,
-                            "Error: Campo obligatorio.\nEl ancho debe ser mayor a 0 y máximo 15 metros.",
-                            "Error de validación",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                //Validar cantidad
-                if (cantidad <= 0) {
-                    JOptionPane.showMessageDialog(this,
-                            "Error: Campo obligatorio.\nLa cantidad debe ser mayor a 0.",
-                            "Error de validación",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                //Validar número de hojas
-                try {
-                    java.lang.reflect.Field fNumHojas = detalleObj.getClass().getDeclaredField("numHojas");
-                    fNumHojas.setAccessible(true);
-                    int numHojas = ((Number) fNumHojas.get(detalleObj)).intValue();
-
-                    if (numHojas <= 0) {
-                        JOptionPane.showMessageDialog(this,
-                                "Error: Campo obligatorio.\nEl número de hojas debe ser mayor a 0.",
-                                "Error de validación",
-                                JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                } catch (NoSuchFieldException nsfe) {
-                    // Ignorar si el objeto no tiene numHojas
-                }
-            }
-
-            //Clasificar detalles y calcular subtotal
             for (Object detalleObj : detallesEnMemoria) {
                 if (detalleObj instanceof VentanaDetalle vd) {
                     detallesVentana.add(vd);
@@ -975,7 +923,8 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     try {
                         BigDecimal descuentoPorcentaje = new BigDecimal(textoDescuento);
 
-                        if (descuentoPorcentaje.compareTo(BigDecimal.ZERO) < 0 || descuentoPorcentaje.compareTo(new BigDecimal("100")) > 0) {
+                        if (descuentoPorcentaje.compareTo(BigDecimal.ZERO) < 0
+                                || descuentoPorcentaje.compareTo(new BigDecimal("100")) > 0) {
                             JOptionPane.showMessageDialog(this,
                                     "El descuento debe estar entre 0% y 100%.",
                                     "Descuento inválido", JOptionPane.ERROR_MESSAGE);
@@ -1391,21 +1340,23 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             ClienteDAO clienteDAO = new ClienteDAO(conexion);
             clientes = clienteDAO.obtenerTodos();
 
+            mapaClientes.clear();
+
             DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
 
-            // 🔹 Opción vacía por defecto (evita cliente precargado)
             modelo.addElement("Seleccione un cliente...");
 
             if (clientes != null && !clientes.isEmpty()) {
                 for (Cliente c : clientes) {
                     modelo.addElement(c.getNombre());
+                    mapaClientes.put(c.getNombre(), c);
                 }
             } else {
                 modelo.addElement("No hay clientes");
             }
 
             cbxSeleccionarCliente.setModel(modelo);
-            cbxSeleccionarCliente.setSelectedIndex(0); // Asegura que inicie vacío
+            cbxSeleccionarCliente.setSelectedIndex(0);
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar clientes: " + ex.getMessage());
@@ -1414,8 +1365,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
     private void filtrarClientes(String texto) {
         cbxSeleccionarCliente.removeAllItems();
-
-        // 🔹 Siempre mantener la primera opción
         cbxSeleccionarCliente.addItem("Seleccione un cliente...");
 
         String textoNormalizado = normalizarTexto(texto);
@@ -1427,7 +1376,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             }
         }
 
-        // Si no hay coincidencias, mostrar mensaje
         if (cbxSeleccionarCliente.getItemCount() == 1) {
             cbxSeleccionarCliente.addItem("No hay coincidencias");
         }

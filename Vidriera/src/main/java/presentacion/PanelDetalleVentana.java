@@ -108,6 +108,11 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         medidaH.setText("Medida horizontal (m):");
 
         txtMedidaH.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtMedidaH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMedidaHActionPerformed(evt);
+            }
+        });
 
         medidaV.setFont(new java.awt.Font("SansSerif", 1, 15)); // NOI18N
         medidaV.setForeground(new java.awt.Color(0, 38, 115));
@@ -384,6 +389,10 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDescripcionActionPerformed
 
+    private void txtMedidaHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMedidaHActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtMedidaHActionPerformed
+
     /**
      * Carga los ComboBoxes con datos filtrando por tipo de material o desde el
      * Enum.
@@ -512,7 +521,7 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                 return null;
             }
 
-            // VALIDAR ARCO (opcional)
+            // VALIDAR ARCO 
             d.setArco(ckArco.isSelected());
             if (d.isArco()) {
                 if (cbxTipoArco.getSelectedIndex() < 0) {
@@ -674,6 +683,101 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
 
         cbxTipoCanalillo.setSelectedItem(detalle.getTipoCanalillo());
         txtMedidaCanalillo.setText(detalle.getMedidaCanalillo() != null ? detalle.getMedidaCanalillo().toPlainString() : "");
+    }
+
+    public boolean validar() {
+
+        // Validar medidas
+        if (txtMedidaH.getText().trim().isEmpty() || txtMedidaV.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar las medidas horizontal y vertical.");
+            return false;
+        }
+
+        try {
+            BigDecimal h = new BigDecimal(txtMedidaH.getText());
+            BigDecimal v = new BigDecimal(txtMedidaV.getText());
+
+            if (h.compareTo(BigDecimal.ZERO) <= 0 || v.compareTo(BigDecimal.ZERO) <= 0) {
+                JOptionPane.showMessageDialog(this, "Las medidas deben ser mayores a 0.");
+                return false;
+            }
+
+            if (h.compareTo(new BigDecimal("10")) > 0 || v.compareTo(new BigDecimal("15")) > 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Las medidas exceden el máximo permitido:\n10m ancho y 15m alto.");
+                return false;
+            }
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Las medidas deben ser numéricas.");
+            return false;
+        }
+
+        // Tipo ventana
+        if (cmbTipoVentana.getSelectedIndex() <= 0) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de ventana.");
+            return false;
+        }
+
+        // Tipo cristal
+        if (cmbTipoCristal.getSelectedIndex() <= 0) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de cristal.");
+            return false;
+        }
+
+        // Canalillo
+        if (cbxTipoCanalillo.getSelectedIndex() <= 0) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de canalillo.");
+            return false;
+        }
+
+        if (txtMedidaCanalillo.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar la medida del canalillo.");
+            return false;
+        }
+
+        try {
+            BigDecimal canal = new BigDecimal(txtMedidaCanalillo.getText());
+            if (canal.compareTo(BigDecimal.ZERO) <= 0) {
+                JOptionPane.showMessageDialog(this, "La medida del canalillo debe ser mayor a 0.");
+                return false;
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "La medida del canalillo debe ser numérica.");
+            return false;
+        }
+
+        // Arco
+        if (ckArco.isSelected()) {
+            if (cbxTipoArco.getSelectedIndex() <= 0) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de arco.");
+                return false;
+            }
+
+            if (txtMedidaArco.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Debe ingresar la medida del arco.");
+                return false;
+            }
+
+            try {
+                BigDecimal arco = new BigDecimal(txtMedidaArco.getText());
+                if (arco.compareTo(BigDecimal.ZERO) <= 0) {
+                    JOptionPane.showMessageDialog(this, "La medida del arco debe ser mayor a 0.");
+                    return false;
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "La medida del arco debe ser numérica.");
+                return false;
+            }
+        }
+
+        // Descripción
+        if (txtDescripcion.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar una descripción.");
+            return false;
+        }
+
+        return true;
     }
 
     /**
