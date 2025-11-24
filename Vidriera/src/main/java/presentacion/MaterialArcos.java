@@ -5,7 +5,11 @@
 package presentacion;
 
 import dao.MaterialDAO;
+import java.awt.Window;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
+import modelo.MaterialDetalle;
 import negocio.CotizacionBO;
 
 /**
@@ -14,28 +18,15 @@ import negocio.CotizacionBO;
  */
 public class MaterialArcos extends javax.swing.JDialog {
 
-    private CotizacionBO cotizacionBO;
-    private MaterialDAO materialDAO;
+    private int cantArco2 = 0;
+    private int cantArco3 = 0;
 
-    /**
-     * Creates new form MaterialArcos
-     */
-    public MaterialArcos(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-        setLocationRelativeTo(parent);
-
-        this.cotizacionBO = new CotizacionBO();
-        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
-    }
-
-    public MaterialArcos(java.awt.Window parent, boolean modal) {
+    public MaterialArcos(Window parent, boolean modal) {
         super(parent, ModalityType.APPLICATION_MODAL);
         initComponents();
         setLocationRelativeTo(parent);
 
-        this.cotizacionBO = new CotizacionBO();
-        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
+        btnGuardar5.addActionListener(evt -> btnGuardar5ActionPerformed(evt));
     }
 
     /**
@@ -163,34 +154,18 @@ public class MaterialArcos extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardar5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar5ActionPerformed
-        try {
-            int cantArco2 = (int) spnArco2.getValue();
-            int cantArco3 = (int) spnArco3.getValue();
-
-            if (cantArco2 > 0) {
-
-                materialDAO.ajustarStockPorDescripcion("Arco aluminio serie 2\"", cantArco2);
-            }
-
-            if (cantArco3 > 0) {
-                materialDAO.ajustarStockPorDescripcion("Arco aluminio serie 3\"", cantArco3);
-            }
-
-            JOptionPane.showMessageDialog(this, "Stock actualizado correctamente");
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Error al actualizar stock: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            e.printStackTrace();
-        }
-
+        cantArco2 = (int) spnArco2.getValue();
+        cantArco3 = (int) spnArco3.getValue();
         this.dispose();
-    }//GEN-LAST:event_btnGuardar5ActionPerformed
 
+    }//GEN-LAST:event_btnGuardar5ActionPerformed
+    public int getCantArco2() {
+        return cantArco2;
+    }
+
+    public int getCantArco3() {
+        return cantArco3;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar5;

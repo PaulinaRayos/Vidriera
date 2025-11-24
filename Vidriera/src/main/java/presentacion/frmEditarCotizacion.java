@@ -142,6 +142,9 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         lblDescuento2 = new javax.swing.JLabel();
         lblTotal2 = new javax.swing.JLabel();
         lblIVA2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtMaterialUtilizar = new javax.swing.JTextArea();
+        descuento1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Editar cotización");
@@ -455,7 +458,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
         descuento.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         descuento.setForeground(new java.awt.Color(15, 105, 196));
-        descuento.setText("Descuento");
+        descuento.setText("Material a utilizar:");
 
         ckbxDescuentoNo2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         ckbxDescuentoNo2.setText("No");
@@ -546,40 +549,67 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                     .addComponent(lblTotal2)))
         );
 
+        txtMaterialUtilizar.setEditable(false);
+        txtMaterialUtilizar.setColumns(20);
+        txtMaterialUtilizar.setRows(5);
+        jScrollPane1.setViewportView(txtMaterialUtilizar);
+
+        descuento1.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        descuento1.setForeground(new java.awt.Color(15, 105, 196));
+        descuento1.setText("Descuento");
+
         javax.swing.GroupLayout pnlTotales2Layout = new javax.swing.GroupLayout(pnlTotales2);
         pnlTotales2.setLayout(pnlTotales2Layout);
         pnlTotales2Layout.setHorizontalGroup(
             pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlTotales2Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
+                .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlTotales2Layout.createSequentialGroup()
+                        .addComponent(ckbxDescuentoSi2)
+                        .addGap(18, 18, 18)
+                        .addComponent(ckbxDescuentoNo2)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtDescuento2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelPorsentaje2))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(63, 63, 63)
                 .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(descuento)
-                    .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(pnlTotales2Layout.createSequentialGroup()
-                            .addComponent(ckbxDescuentoSi2)
-                            .addGap(18, 18, 18)
-                            .addComponent(ckbxDescuentoNo2)
-                            .addGap(18, 18, 18)
-                            .addComponent(txtDescuento2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(labelPorsentaje2))
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 487, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(descuento))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlTotales2Layout.createSequentialGroup()
+                    .addGap(34, 34, 34)
+                    .addComponent(descuento1)
+                    .addContainerGap(895, Short.MAX_VALUE)))
         );
         pnlTotales2Layout.setVerticalGroup(
             pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTotales2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(descuento)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ckbxDescuentoSi2)
-                    .addComponent(ckbxDescuentoNo2)
-                    .addComponent(txtDescuento2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelPorsentaje2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
+                .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlTotales2Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ckbxDescuentoSi2)
+                            .addComponent(ckbxDescuentoNo2)
+                            .addComponent(txtDescuento2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelPorsentaje2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(pnlTotales2Layout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(descuento)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)))
+                .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+            .addGroup(pnlTotales2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlTotales2Layout.createSequentialGroup()
+                    .addGap(16, 16, 16)
+                    .addComponent(descuento1)
+                    .addContainerGap(194, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout panelBuscarClienteLayout = new javax.swing.GroupLayout(panelBuscarCliente);
@@ -805,6 +835,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
             detallesEnMemoria.remove(filaSeleccionada);
             actualizarTablaDetalles();
             recalcularTotales();
+            actualizarTextAreaMateriales();
         }
     }//GEN-LAST:event_btnEliminarCotizacionActionPerformed
 
@@ -824,6 +855,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
             detallesEnMemoria.add(nuevoDetalle);
             actualizarTablaDetalles();
             recalcularTotales();
+            actualizarTextAreaMateriales();
         }
 
     }//GEN-LAST:event_btnNuevaCotizacionActionPerformed
@@ -867,6 +899,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
             detallesEnMemoria.set(filaSeleccionada, detalleResultado);
             actualizarTablaDetalles();
             recalcularTotales();
+            actualizarTextAreaMateriales();
         }
     }//GEN-LAST:event_btnEditarCotizacionActionPerformed
 
@@ -1132,6 +1165,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
             // 4. Actualizar la JTable y los Totales
             actualizarTablaDetalles();
             recalcularTotales();
+            actualizarTextAreaMateriales();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1139,6 +1173,65 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Actualiza el textArea txtMaterialUtilizar mostrando todos los materiales
+     * utilizados en la cotización.
+     */
+    private void actualizarTextAreaMateriales() {
+        StringBuilder sb = new StringBuilder();
+
+        boolean hayVentanas = false;
+        boolean hayPuertas = false;
+        boolean hayCanceleria = false;
+
+        // ---------- RECORRER DETALLES ----------
+        for (Object obj : detallesEnMemoria) {
+
+            // -------- VENTANAS --------
+            if (obj instanceof VentanaDetalle d) {
+                if (!hayVentanas) {
+                    sb.append("=== MATERIALES DE VENTANAS ===\n");
+                    hayVentanas = true;
+                }
+                for (modelo.MaterialDetalle md : d.getMateriales()) {
+                    sb.append("- ").append(md.getMaterial().getTipo())
+                            .append("  x").append(md.getCantidad())
+                            .append("\n");
+                }
+                sb.append("\n");
+            } // -------- PUERTAS --------
+            else if (obj instanceof PuertaAbatibleDetalle d) {
+                if (!hayPuertas) {
+                    sb.append("=== MATERIALES DE PUERTAS ===\n");
+                    hayPuertas = true;
+                }
+                for (modelo.MaterialDetalle md : d.getMateriales()) {
+                    sb.append("- ").append(md.getMaterial().getTipo())
+                            .append("  x").append(md.getCantidad())
+                            .append("\n");
+                }
+                sb.append("\n");
+            } // -------- CANCELERÍA --------
+            else if (obj instanceof CanceleriaFijaDetalle d) {
+                if (!hayCanceleria) {
+                    sb.append("=== MATERIALES DE CANCELERÍA ===\n");
+                    hayCanceleria = true;
+                }
+                for (modelo.MaterialDetalle md : d.getMateriales()) {
+                    sb.append("- ").append(md.getMaterial().getTipo())
+                            .append("  x").append(md.getCantidad())
+                            .append("\n");
+                }
+                sb.append("\n");
+            }
+        }
+
+        if (sb.length() == 0) {
+            txtMaterialUtilizar.setText("No hay materiales registrados.");
+        } else {
+            txtMaterialUtilizar.setText(sb.toString());
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel EditarCotizacion;
@@ -1156,6 +1249,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JCheckBox ckbxDescuentoNo2;
     private javax.swing.JCheckBox ckbxDescuentoSi2;
     private javax.swing.JLabel descuento;
+    private javax.swing.JLabel descuento1;
     private javax.swing.JLabel detalleCotizacion;
     private javax.swing.JLabel estado;
     private javax.swing.JLabel fehcCotizacion;
@@ -1168,6 +1262,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel labelFechaCotizacion;
     private javax.swing.JLabel labelNomCliente;
@@ -1188,5 +1283,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JTable tblDetallesAgregados;
     private javax.swing.JLabel tituloEditarCotizacion;
     private javax.swing.JTextField txtDescuento2;
+    private javax.swing.JTextArea txtMaterialUtilizar;
     // End of variables declaration//GEN-END:variables
 }
