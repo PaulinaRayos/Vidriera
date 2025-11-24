@@ -863,19 +863,12 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarCotizacionActionPerformed
 
     private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
-        // TODO add your handling code here:
-        panelBotones.setVisible(false);
-        BufferedImage img = panelToImage(panelBuscarCliente);
-        JLabel label = new JLabel(new ImageIcon(img));
-        JScrollPane scroll = new JScrollPane(label);
+        if (this.cotizacionSeleccionada == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione una cotización.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        VistaPreviaCotizacionDialog.mostrarPrevia(this, this.cotizacionSeleccionada);
 
-        JDialog dialog = new JDialog(this, "Previsualización Cotización", true);
-        dialog.setSize(1000, 650);
-        dialog.setLayout(new BorderLayout());
-        dialog.add(scroll, BorderLayout.CENTER);
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
-        panelBotones.setVisible(true);
 
     }//GEN-LAST:event_btnVistaPreviaActionPerformed
 

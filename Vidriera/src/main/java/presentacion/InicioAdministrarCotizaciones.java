@@ -702,7 +702,6 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Seleccione una cotización.", "Aviso", JOptionPane.WARNING_MESSAGE);
         return;
     }
-    // Asegúrate de que la cotizacionSeleccionada tenga sus listas cargadas (ya lo haces en tablaCotizacionesSeleccionada)
     VistaPreviaCotizacionDialog.mostrarPrevia(this, this.cotizacionSeleccionada);
     }//GEN-LAST:event_btnVistaPreviaActionPerformed
 

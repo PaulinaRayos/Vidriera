@@ -1,20 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package presentacion;
 
 import dao.CatalogoTrabajoDAO;
 import dao.ClienteDAO;
 import dao.MaterialDAO;
 import dao.VendedorDAO;
-import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import java.awt.event.ItemEvent;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -25,14 +18,9 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
@@ -41,17 +29,12 @@ import modelo.CatalogoTrabajo;
 import modelo.Cliente;
 import modelo.Cotizacion;
 import modelo.Material;
-import modelo.MaterialDetalle;
 import modelo.PuertaAbatibleDetalle;
 import modelo.Vendedor;
 import modelo.VentanaDetalle;
 import negocio.CotizacionBO;
-import negocio.GeneradorPDF;
 import utils.Conexion;
 import org.apache.pdfbox.pdmodel.*;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 
 /**
  *
@@ -67,7 +50,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private List<CanceleriaFijaDetalle> detallesCancelaria;
     private List<PuertaAbatibleDetalle> detallesPuerta;
     private List<Material> materialesDisponibles;
-
+    private Cotizacion cotizacionSeleccionada;
     private DefaultTableModel modeloTablaDetalles;
     private List<Object> detallesEnMemoria = new ArrayList<>();
 
@@ -1104,19 +1087,11 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
-
-        panelBotones.setVisible(false);
-        BufferedImage img = panelToImage(PanelPrincipal);
-        JLabel label = new JLabel(new ImageIcon(img));
-        JScrollPane scroll = new JScrollPane(label);
-
-        JDialog dialog = new JDialog(this, "Previsualización Cotización", true);
-        dialog.setSize(1000, 650);
-        dialog.setLayout(new BorderLayout());
-        dialog.add(scroll, BorderLayout.CENTER);
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
-        panelBotones.setVisible(true);
+        if (this.cotizacionSeleccionada == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione una cotización.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        VistaPreviaCotizacionDialog.mostrarPrevia(this, this.cotizacionSeleccionada);
 
     }//GEN-LAST:event_btnVistaPreviaActionPerformed
 

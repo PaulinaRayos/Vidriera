@@ -31,14 +31,15 @@ public class VistaPreviaCotizacionDialog extends JDialog {
         scroll.getVerticalScrollBar().setUnitIncrement(16);
         add(scroll, BorderLayout.CENTER);
 
-        setSize(900, 900);
+        setSize(720, 780);
         setLocationRelativeTo(parent);
+
     }
 
     private JPanel construirPanelCotizacion(Cotizacion c) {
         JPanel panel = new JPanel();
         panel.setBackground(Color.WHITE);
-        // Cambiamos el layout a BorderLayout para controlar el centrado
+        // layout a BorderLayout para controlar el centrado
         panel.setLayout(new BorderLayout());
 
         // Contenedor principal que se alinea a la izquierda
@@ -47,7 +48,7 @@ public class VistaPreviaCotizacionDialog extends JDialog {
         contentWrapper.setLayout(new BoxLayout(contentWrapper, BoxLayout.Y_AXIS));
         contentWrapper.setBorder(BorderFactory.createEmptyBorder(24, 30, 24, 30)); // Margen de 30px a la izquierda
 
-        // Encabezado (título COTIZACIÓN)
+        // Encabezado 
         JLabel titulo = new JLabel("COTIZACIÓN");
         titulo.setFont(new Font("SansSerif", Font.BOLD, 28));
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT); // <-- ALINEAR A LA IZQUIERDA
@@ -82,7 +83,7 @@ public class VistaPreviaCotizacionDialog extends JDialog {
         contentWrapper.add(thickSeparator());
         contentWrapper.add(Box.createVerticalStrut(14));
 
-        // DETALLES (bloques)
+        // bloques
         contentWrapper.add(titleLeft("DETALLES DE LA COTIZACIÓN"));
         contentWrapper.add(Box.createVerticalStrut(10));
         contentWrapper.add(crearBloquesDetalleFactura(c));
@@ -115,6 +116,7 @@ public class VistaPreviaCotizacionDialog extends JDialog {
 
         // Añadir el wrapper al centro para que use el margen izquierdo
         panel.add(contentWrapper, BorderLayout.CENTER);
+        contentWrapper.setMaximumSize(new Dimension(650, Integer.MAX_VALUE));
         return panel;
     }
 
@@ -128,7 +130,6 @@ public class VistaPreviaCotizacionDialog extends JDialog {
         // Aseguramos que el contenedor se alinee a la izquierda
         cont.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        cont.add(titleLeft("DETALLES DE LA COTIZACIÓN"));
         cont.add(Box.createVerticalStrut(10));
 
         // --- Tablas de Detalles ---
@@ -202,7 +203,6 @@ public class VistaPreviaCotizacionDialog extends JDialog {
         datos.add(labelBold("Mosquitero:"));
         datos.add(labelNormal(v.isMosquitero() ? "Sí" : "No"));
 
-
         bloque.add(datos);
         bloque.add(Box.createVerticalStrut(8));
 
@@ -211,7 +211,7 @@ public class VistaPreviaCotizacionDialog extends JDialog {
         bloque.add(Box.createVerticalStrut(4));
 
         JPanel matPanel = new JPanel();
-        matPanel.setLayout(new GridLayout(0, 3, 10, 2)); 
+        matPanel.setLayout(new GridLayout(0, 3, 10, 2));
         matPanel.setBackground(new Color(230, 230, 230));
         matPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         matPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -230,6 +230,7 @@ public class VistaPreviaCotizacionDialog extends JDialog {
                 if (!tipo.equals("VIDRIO")) {
                     matPanel.add(labelNormal("• " + safe(md.getMaterial().getDescripcion())));
                     matPanel.add(labelNormal(tipo));
+
                     matPanel.add(labelNormal(formatCurrency(md.getPrecioTotal()))); // <-- SOLO PRECIO TOTAL
                     materialesListados = true;
                 }
@@ -247,7 +248,7 @@ public class VistaPreviaCotizacionDialog extends JDialog {
         bloque.add(Box.createVerticalStrut(8));
         bloque.add(labelBold("Subtotal de la Línea: " + formatCurrency(v.getSubtotalLinea())));
         bloque.add(bigGap());
-        bloque.setMaximumSize(new Dimension(Integer.MAX_VALUE, bloque.getPreferredSize().height));
+        bloque.setMaximumSize(new Dimension(650, bloque.getPreferredSize().height));
         return bloque;
     }
 
@@ -295,7 +296,7 @@ public class VistaPreviaCotizacionDialog extends JDialog {
         bloque.add(Box.createVerticalStrut(4));
 
         JPanel matPanel = new JPanel();
-        matPanel.setLayout(new GridLayout(0, 3, 10, 2)); 
+        matPanel.setLayout(new GridLayout(0, 3, 10, 2));
         matPanel.setBackground(new Color(230, 230, 230));
         matPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         matPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -330,7 +331,8 @@ public class VistaPreviaCotizacionDialog extends JDialog {
         bloque.add(Box.createVerticalStrut(8));
         bloque.add(labelBold("Subtotal de la Línea: " + formatCurrency(p.getSubtotalLinea())));
         bloque.add(bigGap());
-        bloque.setMaximumSize(new Dimension(Integer.MAX_VALUE, bloque.getPreferredSize().height));
+        bloque.setMaximumSize(new Dimension(650, bloque.getPreferredSize().height));
+
         return bloque;
     }
 
@@ -380,7 +382,7 @@ public class VistaPreviaCotizacionDialog extends JDialog {
         bloque.add(Box.createVerticalStrut(4));
 
         JPanel matPanel = new JPanel();
-        matPanel.setLayout(new GridLayout(0, 3, 10, 2)); 
+        matPanel.setLayout(new GridLayout(0, 3, 10, 2));
         matPanel.setBackground(new Color(230, 230, 230));
         matPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         matPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -415,7 +417,8 @@ public class VistaPreviaCotizacionDialog extends JDialog {
         bloque.add(Box.createVerticalStrut(8));
         bloque.add(labelBold("Subtotal de la Línea: " + formatCurrency(cf.getSubtotalLinea())));
         bloque.add(bigGap());
-        bloque.setMaximumSize(new Dimension(Integer.MAX_VALUE, bloque.getPreferredSize().height));
+        bloque.setMaximumSize(new Dimension(650, bloque.getPreferredSize().height));
+
         return bloque;
     }
 
