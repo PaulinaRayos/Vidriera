@@ -25,6 +25,8 @@ public class MaterialArcos extends javax.swing.JDialog {
         super(parent, ModalityType.APPLICATION_MODAL);
         initComponents();
         setLocationRelativeTo(parent);
+        configurarSpinners();
+        agregarListeners();
     }
 
     /**
@@ -153,38 +155,26 @@ public class MaterialArcos extends javax.swing.JDialog {
 
     private void btnGuardar5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar5ActionPerformed
         try {
-            // Tomar valores del spinner
             cantArco2 = (int) spnArco2.getValue();
             cantArco3 = (int) spnArco3.getValue();
 
-            // Validar negativo
-            if (cantArco2 < 0 || cantArco3 < 0) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "La cantidad no puede ser negativa.",
-                        "Valor inválido",
-                        JOptionPane.WARNING_MESSAGE
-                );
-                return;
-            }
-
-            // Validar que no estén ambos seleccionados
-            if (cantArco2 > 0 && cantArco3 > 0) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Solo puedes seleccionar un tipo de arco (2\" o 3\").",
-                        "Selección inválida",
-                        JOptionPane.WARNING_MESSAGE
-                );
-                return;
-            }
-
-            // Validar que al menos uno tenga valor
+            // VALIDACIÓN: al menos 1 material
             if (cantArco2 == 0 && cantArco3 == 0) {
                 JOptionPane.showMessageDialog(
                         this,
                         "Debes seleccionar al menos un tipo de arco.",
                         "Material faltante",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            // VALIDACIÓN: Solo uno seleccionado (doble seguridad)
+            if (cantArco2 > 0 && cantArco3 > 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Solo puedes seleccionar un tipo de arco (2\" o 3\").",
+                        "Selección inválida",
                         JOptionPane.WARNING_MESSAGE
                 );
                 return;
@@ -200,7 +190,6 @@ public class MaterialArcos extends javax.swing.JDialog {
             e.printStackTrace();
         }
 
-        // Cerrar ventana
         this.dispose();
     }//GEN-LAST:event_btnGuardar5ActionPerformed
     public int getCantArco2() {
@@ -209,6 +198,46 @@ public class MaterialArcos extends javax.swing.JDialog {
 
     public int getCantArco3() {
         return cantArco3;
+    }
+
+    private void configurarSpinners() {
+        // Evitar negativos
+        spnArco2.setModel(new javax.swing.SpinnerNumberModel(0, 0, 9999, 1));
+        spnArco3.setModel(new javax.swing.SpinnerNumberModel(0, 0, 9999, 1));
+    }
+
+    private void agregarListeners() {
+        spnArco2.addChangeListener(e -> validarSeleccion(1));
+        spnArco3.addChangeListener(e -> validarSeleccion(2));
+    }
+
+    private void validarSeleccion(int spinnerModificado) {
+        int v2 = (int) spnArco2.getValue();
+        int v3 = (int) spnArco3.getValue();
+
+        // Evitar negativos (por si acaso)
+        if (v2 < 0) {
+            spnArco2.setValue(0);
+        }
+        if (v3 < 0) {
+            spnArco3.setValue(0);
+        }
+
+        // Si selecciona arco 2", bloquear arco 3"
+        if (spinnerModificado == 1 && v2 > 0) {
+            spnArco3.setEnabled(false);
+        } // Si regresó a cero, reactivar
+        else if (spinnerModificado == 1 && v2 == 0) {
+            spnArco3.setEnabled(true);
+        }
+
+        // Si selecciona arco 3", bloquear arco 2"
+        if (spinnerModificado == 2 && v3 > 0) {
+            spnArco2.setEnabled(false);
+        } // Si regresó a cero, reactivar
+        else if (spinnerModificado == 2 && v3 == 0) {
+            spnArco2.setEnabled(true);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
