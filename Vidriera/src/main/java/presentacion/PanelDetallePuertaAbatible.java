@@ -23,6 +23,7 @@ import javax.swing.JComboBox;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import modelo.MaterialDetalle;
+import presentacion.MaterialMosquiteras;
 import utils.Conexion;
 
 /**
@@ -135,6 +136,7 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         txtDescripcion = new javax.swing.JTextField();
 
         panelDetalleVentana.setBackground(new java.awt.Color(255, 255, 255));
+        panelDetalleVentana.setPreferredSize(new java.awt.Dimension(1130, 560));
 
         medidaH.setFont(new java.awt.Font("SansSerif", 1, 15)); // NOI18N
         medidaH.setForeground(new java.awt.Color(0, 38, 115));
@@ -411,7 +413,8 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
                         .addComponent(medidaDuela, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
-                        .addComponent(txtMedidaDuela, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtMedidaDuela, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(390, 390, 390))
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
@@ -471,8 +474,8 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(ckAdaptador)
                                     .addComponent(txtDescripcion)
-                                    .addComponent(cbxTipoAdaptador, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addGap(25, 25, 25)
+                                    .addComponent(cbxTipoAdaptador, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(25, 25, 25)))
                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jaladera, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tipoJaladera, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -621,7 +624,7 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbxTipoCanal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tipoCanal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -632,7 +635,7 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelDetalleVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 395, Short.MAX_VALUE)
+            .addComponent(panelDetalleVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -653,9 +656,24 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
     }//GEN-LAST:event_ckDuelaActionPerformed
 
     private void ckMosquiteroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckMosquiteroActionPerformed
-        Window parent = SwingUtilities.getWindowAncestor(this);
-        MaterialMosquiteras dlg = new MaterialMosquiteras(parent, true);
-        dlg.setVisible(true);
+      Window parent = SwingUtilities.getWindowAncestor(this);
+    MaterialMosquiteras dlg = new MaterialMosquiteras(parent, true);
+    dlg.setVisible(true);
+
+    // Recuperar selecciones
+    int s2 = dlg.getCantSerie2();
+    int s3 = dlg.getCantSerie3();
+    int negro = dlg.getCantNegro();
+    int malla = dlg.getCantMalla();
+
+    // Asegúrate de tener txtMaterialUtilizar definido en este panel
+    StringBuilder sb = new StringBuilder();
+    if (s2 > 0)  sb.append("Perfil aluminio serie 2\" natural - Cant: ").append(s2).append("\n");
+    if (s3 > 0)  sb.append("Perfil aluminio serie 3\" blanco - Cant: ").append(s3).append("\n");
+    if (negro > 0) sb.append("Perfil aluminio anodizado negro - Cant: ").append(negro).append("\n");
+    if (malla > 0) sb.append("Malla Gris - Cant: ").append(malla).append("\n");
+
+    
     }//GEN-LAST:event_ckMosquiteroActionPerformed
 
     private void cmbTipoCristalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoCristalActionPerformed
@@ -1016,157 +1034,177 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
      * @return El objeto PuertaAbatibleDetalle con los datos del formulario.
      */
     public modelo.PuertaAbatibleDetalle getDetalle() {
-        modelo.PuertaAbatibleDetalle d = new modelo.PuertaAbatibleDetalle();
 
-        try {
-            // ---- VALIDACIONES BÁSICAS ----
+    modelo.PuertaAbatibleDetalle d = new modelo.PuertaAbatibleDetalle();
 
-            if (catalogoDAO != null) {
-                d.setTipoTrabajo(catalogoDAO.obtenerPorId(2));
-            } else {
-                throw new RuntimeException("CatalogoDAO no inicializado.");
-            }
+    BigDecimal medidaH = null;
+    BigDecimal medidaV = null;
 
-            // 1. Validar medidas obligatorias
-            if (txtMedidaH.getText().trim().isEmpty() || txtMedidaV.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Debe ingresar las medidas horizontal y vertical.",
-                        "Campos obligatorios", JOptionPane.WARNING_MESSAGE);
-                return null;
-            }
+    try {
+        // ---- VALIDACIONES BÁSICAS ----
 
-            BigDecimal medidaH, medidaV;
-            try {
-                medidaH = new BigDecimal(txtMedidaH.getText());
-                medidaV = new BigDecimal(txtMedidaV.getText());
+        if (catalogoDAO != null) {
+            d.setTipoTrabajo(catalogoDAO.obtenerPorId(2));
+        } else {
+            throw new RuntimeException("CatalogoDAO no inicializado.");
+        }
 
-                // Medidas no pueden ser 0 o negativas
-                if (medidaH.compareTo(BigDecimal.ZERO) <= 0 || medidaV.compareTo(BigDecimal.ZERO) <= 0) {
-                    JOptionPane.showMessageDialog(this, "Las medidas deben ser mayores que cero.",
-                            "Valor inválido", JOptionPane.WARNING_MESSAGE);
-                    return null;
-                }
+        // 1. Validar medidas obligatorias
+        if (txtMedidaH.getText().trim().isEmpty() ||
+            txtMedidaV.getText().trim().isEmpty()) {
 
-                // ✅ VALIDAR RANGO MÁXIMO
-                BigDecimal maxH = new BigDecimal("15"); // ancho máximo
-                BigDecimal maxV = new BigDecimal("10"); // alto máximo
-
-                if (medidaH.compareTo(maxH) > 0 || medidaV.compareTo(maxV) > 0) {
-                    JOptionPane.showMessageDialog(this,
-                            "Las medidas exceden el rango permitido.\nMáximo: 15m de ancho y 10m de alto.",
-                            "Medidas fuera de rango", JOptionPane.WARNING_MESSAGE);
-                    return null;
-                }
-
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Las medidas deben ser numéricas válidas.",
-                        "Error de formato", JOptionPane.ERROR_MESSAGE);
-                return null;
-            }
-
-            // 2. Validar combos obligatorios
-            if (cmbTipoPuerta.getSelectedIndex() < 0) {
-                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de puerta.",
-                        "Falta selección", JOptionPane.WARNING_MESSAGE);
-                return null;
-            }
-            if (cmbTipoCristal.getSelectedIndex() < 0 || "Error al cargar".equals(cmbTipoCristal.getSelectedItem())) {
-                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de cristal válido.",
-                        "Falta selección", JOptionPane.WARNING_MESSAGE);
-                return null;
-            }
-
-            // 3. Validaciones condicionales
-            if (ckDuela.isSelected()) {
-                if (cbxTipoDuela.getSelectedIndex() < 0) {
-                    JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de duela.",
-                            "Falta selección", JOptionPane.WARNING_MESSAGE);
-                    return null;
-                }
-                try {
-                    new BigDecimal(txtMedidaDuela.getText());
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "La medida de la duela debe ser numérica.",
-                            "Error de formato", JOptionPane.ERROR_MESSAGE);
-                    return null;
-                }
-            }
-
-            if (ckPivote.isSelected() && cbxTipoPivote.getSelectedIndex() < 0) {
-                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de pivote.",
-                        "Falta selección", JOptionPane.WARNING_MESSAGE);
-                return null;
-            }
-
-            if (ckJaladera.isSelected() && cbxTipoJaladera.getSelectedIndex() < 0) {
-                JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de jaladera.",
-                        "Falta selección", JOptionPane.WARNING_MESSAGE);
-                return null;
-            }
-
-            // ---- CONSTRUCCIÓN DEL OBJETO ----
-            d.setMedidaHorizontal(medidaH);
-            d.setMedidaVertical(medidaV);
-            d.setCantidad((Integer) spnCantidad.getValue());
-            d.setTipoCristal((String) cmbTipoCristal.getSelectedItem());
-            d.setNoHojas((Integer) spnNoHojas.getValue());
-            d.setDescripcion(txtDescripcion.getText());
-
-            String descPuerta = (String) cmbTipoPuerta.getSelectedItem();
-            d.setTipoPuerta(modelo.TipoPuerta.fromDescripcion(descPuerta));
-            d.setMosquitero(ckMosquitero.isSelected());
-
-            d.setDuela(ckDuela.isSelected());
-            d.setTipoDuela(ckDuela.isSelected() ? (String) cbxTipoDuela.getSelectedItem() : null);
-            d.setMedidaDuela(new BigDecimal(txtMedidaDuela.getText().isEmpty() ? "0" : txtMedidaDuela.getText()));
-
-            d.setAdaptador(ckAdaptador.isSelected());
-            d.setTipoAdaptador(ckAdaptador.isSelected() ? (String) cbxTipoAdaptador.getSelectedItem() : null);
-
-            d.setJunquillo(ckJunquillo.isSelected());
-            d.setTipoJunquillo(ckJunquillo.isSelected() ? (String) cbxTipoJunquillo.getSelectedItem() : null);
-
-            d.setCanal(ckCanal.isSelected());
-            d.setTipoCanal(ckCanal.isSelected() ? (String) cbxTipoCanal.getSelectedItem() : null);
-
-            d.setPivote(ckPivote.isSelected());
-            d.setTipoPivote(ckPivote.isSelected() ? (String) cbxTipoPivote.getSelectedItem() : null);
-            d.setCantidadPivote((Integer) spnCantidadPivote.getValue());
-
-            d.setJaladera(ckJaladera.isSelected());
-            d.setTipoJaladera(ckJaladera.isSelected() ? (String) cbxTipoJaladera.getSelectedItem() : null);
-            d.setCantidadJaladera((Integer) spnCantidadJaladera.getValue());
-
-            d.setBarra(ckBarra.isSelected());
-            d.setTipoBarra(ckBarra.isSelected() ? (String) cbxTipoBarra.getSelectedItem() : null);
-
-            // Materiales seleccionados
-            List<Material> materialesSeleccionados = obtenerMaterialesSeleccionados();
-            List<MaterialDetalle> materialesDetalle = new ArrayList<>();
-
-            for (Material m : materialesSeleccionados) {
-                BigDecimal cantidad = BigDecimal.valueOf(d.getCantidad());
-                BigDecimal precioUnitario = m.getPrecio();
-                materialesDetalle.add(new MaterialDetalle(m, cantidad, precioUnitario));
-            }
-
-            d.setMateriales(materialesDetalle);
-
-            BigDecimal subtotal = BigDecimal.ZERO;
-            for (MaterialDetalle md : materialesDetalle) {
-                subtotal = subtotal.add(md.getPrecioTotal());
-            }
-            d.setPrecioSoloUnaUnidadCalculado(subtotal);
-            d.setSubtotalLinea(subtotal);
-
-        } catch (Exception e) {
-            System.err.println("Error al leer datos del panel de puerta: " + e.getMessage());
-            JOptionPane.showMessageDialog(this, "Error en los datos: " + e.getMessage(),
-                    "Error de Formato", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Debe ingresar las medidas horizontal y vertical.",
+                    "Campos obligatorios",
+                    JOptionPane.WARNING_MESSAGE);
             return null;
         }
 
-        return d;
+        // ============ SE MUEVE AFUERA =============
+        try {
+            medidaH = new BigDecimal(txtMedidaH.getText());
+            medidaV = new BigDecimal(txtMedidaV.getText());
+
+            if (medidaH.compareTo(BigDecimal.ZERO) <= 0 ||
+                medidaV.compareTo(BigDecimal.ZERO) <= 0) {
+
+                JOptionPane.showMessageDialog(this,
+                        "Las medidas deben ser mayores que cero.",
+                        "Valor inválido",
+                        JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+            BigDecimal maxH = new BigDecimal("15");
+            BigDecimal maxV = new BigDecimal("10");
+
+            if (medidaH.compareTo(maxH) > 0 ||
+                medidaV.compareTo(maxV) > 0) {
+
+                JOptionPane.showMessageDialog(this,
+                        "Las medidas exceden el rango permitido.\n" +
+                                "Máximo: 15m ancho y 10m alto.",
+                        "Medidas fuera de rango",
+                        JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Las medidas deben ser numéricas válidas.",
+                    "Error de formato",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        // **********************************************
+        // ASIGNACIÓN SEGURA (YA NO HAY RIESGO DE NULL)
+        // **********************************************
+        d.setMedidaHorizontal(medidaH);
+        d.setMedidaVertical(medidaV);
+
+        // 2. Validación combos
+        if (cmbTipoPuerta.getSelectedIndex() < 0) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un tipo de puerta.");
+            return null;
+        }
+        if (cmbTipoCristal.getSelectedIndex() < 0 ||
+            "Error al cargar".equals(cmbTipoCristal.getSelectedItem())) {
+
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un tipo de cristal válido.");
+            return null;
+        }
+
+        // 3. Condicionales
+        if (ckDuela.isSelected()) {
+            if (cbxTipoDuela.getSelectedIndex() < 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Debe seleccionar un tipo de duela.");
+                return null;
+            }
+
+            try {
+                new BigDecimal(txtMedidaDuela.getText());
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this,
+                        "La medida de la duela debe ser numérica.");
+                return null;
+            }
+        }
+
+        // === Construcción del resto del objeto ===
+        d.setCantidad((Integer) spnCantidad.getValue());
+        d.setTipoCristal((String) cmbTipoCristal.getSelectedItem());
+        d.setNoHojas((Integer) spnNoHojas.getValue());
+        d.setDescripcion(txtDescripcion.getText());
+
+        String descPuerta = (String) cmbTipoPuerta.getSelectedItem();
+        d.setTipoPuerta(modelo.TipoPuerta.fromDescripcion(descPuerta));
+        d.setMosquitero(ckMosquitero.isSelected());
+
+        d.setDuela(ckDuela.isSelected());
+        d.setTipoDuela(ckDuela.isSelected() ? (String) cbxTipoDuela.getSelectedItem() : null);
+        d.setMedidaDuela(
+                new BigDecimal(txtMedidaDuela.getText().isEmpty() ? "0" : txtMedidaDuela.getText())
+        );
+
+        d.setAdaptador(ckAdaptador.isSelected());
+        d.setTipoAdaptador(
+                ckAdaptador.isSelected() ? (String) cbxTipoAdaptador.getSelectedItem() : null);
+
+        d.setJunquillo(ckJunquillo.isSelected());
+        d.setTipoJunquillo(
+                ckJunquillo.isSelected() ? (String) cbxTipoJunquillo.getSelectedItem() : null);
+
+        d.setCanal(ckCanal.isSelected());
+        d.setTipoCanal(
+                ckCanal.isSelected() ? (String) cbxTipoCanal.getSelectedItem() : null);
+
+        d.setPivote(ckPivote.isSelected());
+        d.setTipoPivote(
+                ckPivote.isSelected() ? (String) cbxTipoPivote.getSelectedItem() : null);
+        d.setCantidadPivote((Integer) spnCantidadPivote.getValue());
+
+        d.setJaladera(ckJaladera.isSelected());
+        d.setTipoJaladera(
+                ckJaladera.isSelected() ? (String) cbxTipoJaladera.getSelectedItem() : null);
+        d.setCantidadJaladera((Integer) spnCantidadJaladera.getValue());
+
+        d.setBarra(ckBarra.isSelected());
+        d.setTipoBarra(
+                ckBarra.isSelected() ? (String) cbxTipoBarra.getSelectedItem() : null);
+
+        // === Materiales y precios ===
+        List<Material> materialesSeleccionados = obtenerMaterialesSeleccionados();
+        List<MaterialDetalle> materialesDetalle = new ArrayList<>();
+
+        for (Material m : materialesSeleccionados) {
+            BigDecimal cantidad = BigDecimal.valueOf(d.getCantidad());
+            materialesDetalle.add(new MaterialDetalle(m, cantidad, m.getPrecio()));
+        }
+
+        d.setMateriales(materialesDetalle);
+
+        BigDecimal subtotal = BigDecimal.ZERO;
+        for (MaterialDetalle md : materialesDetalle) {
+            subtotal = subtotal.add(md.getPrecioTotal());
+        }
+
+        d.setPrecioSoloUnaUnidadCalculado(subtotal);
+        d.setSubtotalLinea(subtotal);
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+                "Error en los datos: " + e.getMessage(),
+                "Error de Formato",
+                JOptionPane.ERROR_MESSAGE);
+        return null;
     }
+
+    return d;
+}
+
 
     /**
      * Llena los campos del panel de puerta con los datos de un detalle

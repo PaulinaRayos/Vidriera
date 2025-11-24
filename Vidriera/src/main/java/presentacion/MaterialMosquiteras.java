@@ -5,6 +5,7 @@
 package presentacion;
 
 import dao.MaterialDAO;
+import java.awt.Window;
 import negocio.CotizacionBO;
 
 /**
@@ -12,29 +13,19 @@ import negocio.CotizacionBO;
  * @author aleja
  */
 public class MaterialMosquiteras extends javax.swing.JDialog {
+    // ---------- Variables para devolver selección ----------
+    // Cantidades seleccionadas
+    private int cantSerie2 = 0;
+    private int cantSerie3 = 0;
+    private int cantNegro = 0;
+    private int cantMalla = 0;
 
-    private CotizacionBO cotizacionBO;
-    private MaterialDAO materialDAO;
-
-    /**
-     * Creates new form MaterialMosquiteras
-     */
-    public MaterialMosquiteras(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-        setLocationRelativeTo(parent);
-
-        this.cotizacionBO = new CotizacionBO();
-        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
-    }
-
-    public MaterialMosquiteras(java.awt.Window parent, boolean modal) {
+    public MaterialMosquiteras(Window parent, boolean modal) {
         super(parent, ModalityType.APPLICATION_MODAL);
         initComponents();
         setLocationRelativeTo(parent);
 
-        this.cotizacionBO = new CotizacionBO();
-        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
+        btnGuardar5.addActionListener(evt -> btnGuardar5ActionPerformed(evt));
     }
 
     /**
@@ -214,46 +205,28 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardar5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar5ActionPerformed
-        try {
-            int cantSerie2 = (int) spnAluminioSerie2.getValue();
-            int cantSerie3 = (int) spnAluminioAluminioSerie3.getValue();
-            int cantNegro = (int) spnAluminioAnodizadoNegro.getValue();
-            int cantMalla = (int) spnMalla.getValue();
-            System.out.println("Serie2 = " + cantSerie2);
-            
-            if (cantSerie2 > 0) {
-                materialDAO.ajustarStockPorDescripcion("Perfil aluminio serie 2\" natural", cantSerie2);
-                System.out.println("Serie2 = " + cantSerie2);
-            }
+        cantSerie2 = (int) spnAluminioSerie2.getValue();
+        cantSerie3 = (int) spnAluminioAluminioSerie3.getValue();
+        cantNegro = (int) spnAluminioAnodizadoNegro.getValue();
+        cantMalla = (int) spnMalla.getValue();
 
-            if (cantSerie3 > 0) {
-                materialDAO.ajustarStockPorDescripcion("Perfil aluminio serie 3\" blanco", cantSerie3);
-            }
-
-            if (cantNegro > 0) {
-                materialDAO.ajustarStockPorDescripcion("Perfil aluminio anodizado negro", cantNegro);
-            }
-
-            if (cantMalla > 0) {
-                materialDAO.ajustarStockPorDescripcion("Malla Gris", cantMalla);
-            }
-
-            javax.swing.JOptionPane.showMessageDialog(this, "Stock actualizado correctamente");
-
-        } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(
-                    this,
-                    "Error al actualizar stock: " + e.getMessage(),
-                    "Error",
-                    javax.swing.JOptionPane.ERROR_MESSAGE
-            );
-            e.printStackTrace();
-        }
-        
         this.dispose();
     }//GEN-LAST:event_btnGuardar5ActionPerformed
+    public int getCantSerie2() {
+        return cantSerie2;
+    }
 
+    public int getCantSerie3() {
+        return cantSerie3;
+    }
 
+    public int getCantNegro() {
+        return cantNegro;
+    }
+
+    public int getCantMalla() {
+        return cantMalla;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar5;
     private javax.swing.JPanel jPanel1;
