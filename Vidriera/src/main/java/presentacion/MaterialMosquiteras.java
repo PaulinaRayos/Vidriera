@@ -5,7 +5,7 @@
 package presentacion;
 
 import dao.MaterialDAO;
-import javax.swing.JOptionPane;
+import java.awt.Window;
 import negocio.CotizacionBO;
 
 /**
@@ -13,29 +13,19 @@ import negocio.CotizacionBO;
  * @author aleja
  */
 public class MaterialMosquiteras extends javax.swing.JDialog {
+    // ---------- Variables para devolver selección ----------
+    // Cantidades seleccionadas
+    private int cantSerie2 = 0;
+    private int cantSerie3 = 0;
+    private int cantNegro = 0;
+    private int cantMalla = 0;
 
-    private CotizacionBO cotizacionBO;
-    private MaterialDAO materialDAO;
-
-    /**
-     * Creates new form MaterialMosquiteras
-     */
-    public MaterialMosquiteras(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-        setLocationRelativeTo(parent);
-
-        this.cotizacionBO = new CotizacionBO();
-        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
-    }
-
-    public MaterialMosquiteras(java.awt.Window parent, boolean modal) {
+    public MaterialMosquiteras(Window parent, boolean modal) {
         super(parent, ModalityType.APPLICATION_MODAL);
         initComponents();
         setLocationRelativeTo(parent);
 
-        this.cotizacionBO = new CotizacionBO();
-        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
+        btnGuardar5.addActionListener(evt -> btnGuardar5ActionPerformed(evt));
     }
 
     /**
@@ -215,67 +205,28 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardar5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar5ActionPerformed
-        try {
-            int cantSerie2 = (int) spnAluminioSerie2.getValue();
-            int cantSerie3 = (int) spnAluminioAluminioSerie3.getValue();
-            int cantNegro = (int) spnAluminioAnodizadoNegro.getValue();
-            int cantMalla = (int) spnMalla.getValue();
-
-            int alumSeleccionados = 0;
-            if (cantSerie2 > 0) {
-                alumSeleccionados++;
-            }
-            if (cantSerie3 > 0) {
-                alumSeleccionados++;
-            }
-            if (cantNegro > 0) {
-                alumSeleccionados++;
-            }
-
-            if (alumSeleccionados > 1) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Solo puedes seleccionar un tipo de aluminio.\n(Malla sí puede seleccionarse junto con uno de ellos)",
-                        "Selección inválida",
-                        JOptionPane.WARNING_MESSAGE
-                );
-                return;
-            }
-
-            if (cantSerie2 < 0 || cantSerie3 < 0 || cantNegro < 0 || cantMalla < 0) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Las cantidades no pueden ser negativas.",
-                        "Valor inválido",
-                        JOptionPane.WARNING_MESSAGE
-                );
-                return;
-            }
-
-            if (cantSerie2 == 0 && cantSerie3 == 0 && cantNegro == 0 && cantMalla == 0) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Debes seleccionar al menos un material.",
-                        "Material faltante",
-                        JOptionPane.WARNING_MESSAGE
-                );
-                return;
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Error al actualizar stock: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            e.printStackTrace();
-        }
+        cantSerie2 = (int) spnAluminioSerie2.getValue();
+        cantSerie3 = (int) spnAluminioAluminioSerie3.getValue();
+        cantNegro = (int) spnAluminioAnodizadoNegro.getValue();
+        cantMalla = (int) spnMalla.getValue();
 
         this.dispose();
     }//GEN-LAST:event_btnGuardar5ActionPerformed
+    public int getCantSerie2() {
+        return cantSerie2;
+    }
 
+    public int getCantSerie3() {
+        return cantSerie3;
+    }
 
+    public int getCantNegro() {
+        return cantNegro;
+    }
+
+    public int getCantMalla() {
+        return cantMalla;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar5;
     private javax.swing.JPanel jPanel1;

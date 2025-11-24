@@ -21,9 +21,7 @@ import java.sql.SQLException;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -43,6 +41,7 @@ import modelo.CatalogoTrabajo;
 import modelo.Cliente;
 import modelo.Cotizacion;
 import modelo.Material;
+import modelo.MaterialDetalle;
 import modelo.PuertaAbatibleDetalle;
 import modelo.Vendedor;
 import modelo.VentanaDetalle;
@@ -68,7 +67,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private List<CanceleriaFijaDetalle> detallesCancelaria;
     private List<PuertaAbatibleDetalle> detallesPuerta;
     private List<Material> materialesDisponibles;
-    private Map<String, Cliente> mapaClientes = new HashMap<>();
 
     private DefaultTableModel modeloTablaDetalles;
     private List<Object> detallesEnMemoria = new ArrayList<>();
@@ -219,6 +217,9 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         lblDescuento = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
         lblIVA = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txtMaterialUtilizar = new javax.swing.JTextArea();
+        Descuento1 = new javax.swing.JLabel();
         panelBotones = new javax.swing.JPanel();
         pnlNuevaCotizacion = new javax.swing.JPanel();
         btnVistaPrevia = new javax.swing.JButton();
@@ -482,6 +483,14 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     .addComponent(lblTotal)))
         );
 
+        txtMaterialUtilizar.setColumns(20);
+        txtMaterialUtilizar.setRows(5);
+        jScrollPane2.setViewportView(txtMaterialUtilizar);
+
+        Descuento1.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        Descuento1.setForeground(new java.awt.Color(15, 105, 196));
+        Descuento1.setText("Materiales a utilizar:");
+
         javax.swing.GroupLayout pnlTotalesLayout = new javax.swing.GroupLayout(pnlTotales);
         pnlTotales.setLayout(pnlTotalesLayout);
         pnlTotalesLayout.setHorizontalGroup(
@@ -489,7 +498,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             .addGroup(pnlTotalesLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Descuento)
                     .addGroup(pnlTotalesLayout.createSequentialGroup()
                         .addComponent(ckbxDescuentoSi)
                         .addGap(18, 18, 18)
@@ -498,22 +506,32 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                         .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(labelPorsentaje))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(1351, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Descuento))
+                .addGap(46, 46, 46)
+                .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Descuento1)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(824, Short.MAX_VALUE))
         );
         pnlTotalesLayout.setVerticalGroup(
             pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTotalesLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Descuento)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ckbxDescuentoSi)
-                    .addComponent(ckbxDescuentoNo)
-                    .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelPorsentaje))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Descuento)
+                    .addComponent(Descuento1))
+                .addGap(18, 18, 18)
+                .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlTotalesLayout.createSequentialGroup()
+                        .addGroup(pnlTotalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ckbxDescuentoSi)
+                            .addComponent(ckbxDescuentoNo)
+                            .addComponent(txtDescuento, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelPorsentaje))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2))
                 .addGap(18, 18, 18))
         );
 
@@ -696,17 +714,14 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         );
         pnlNuevaCotizacionLayout.setVerticalGroup(
             pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlNuevaCotizacionLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
+            .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -792,22 +807,11 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             detallesEnMemoria.set(filaSeleccionada, detalleResultado);
             actualizarTablaDetalles();
             recalcularTotales();
+            actualizarTextAreaMateriales();
         }
     }//GEN-LAST:event_btnEditarCotizacionActionPerformed
 
     private void btnNuevaCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCotizacionActionPerformed
-
-        String clienteSeleccionado = (String) cbxSeleccionarCliente.getSelectedItem();
-
-        if (clienteSeleccionado == null
-                || clienteSeleccionado.equals("Seleccione un cliente...")) {
-
-            JOptionPane.showMessageDialog(this,
-                    "Por favor selecciona un cliente antes de crear una nueva cotización.",
-                    "Cliente requerido",
-                    JOptionPane.WARNING_MESSAGE);
-            return; // Evita continuar
-        }
 
         List<Material> materiales = this.materialesDisponibles;
 
@@ -815,7 +819,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error: No se pudieron cargar los materiales. Revisa la base de datos.");
             return;
         }
-
         DetalleEditorDialog dialog = new DetalleEditorDialog(this, true, materiales);
         dialog.setVisible(true);
 
@@ -825,6 +828,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             detallesEnMemoria.add(nuevoDetalle);
             actualizarTablaDetalles();
             recalcularTotales();
+            actualizarTextAreaMateriales();
         }
     }//GEN-LAST:event_btnNuevaCotizacionActionPerformed
 
@@ -865,128 +869,276 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDescartarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        if (cbxSeleccionarCliente.getSelectedIndex() == -1
-                || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente.", "Error de validación", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
 
-        if (vendedorPorDefecto == null) {
-            JOptionPane.showMessageDialog(this, "No se puede guardar porque no se cargó un vendedor por defecto.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+    // ===============================
+    // VALIDACIONES INICIALES
+    // ===============================
 
-        if (detallesEnMemoria.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Debe agregar al menos un detalle a la cotización.", "Error de validación", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+    // Validar cliente seleccionado
+    if (cbxSeleccionarCliente.getSelectedIndex() <= 0 ||
+            cbxSeleccionarCliente.getSelectedItem().toString().equals("Seleccione un cliente...") ||
+            cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
 
-        if (cbxSeleccionarCliente.getSelectedIndex() <= 0
-                || cbxSeleccionarCliente.getSelectedItem().toString().equals("Seleccione un cliente...")
-                || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
-            JOptionPane.showMessageDialog(this,
-                    "Debe seleccionar un cliente.",
-                    "Error de validación",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        JOptionPane.showMessageDialog(this,
+                "Debe seleccionar un cliente.",
+                "Error de validación",
+                JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-        String nombre = cbxSeleccionarCliente.getSelectedItem().toString();
-        Cliente clienteSeleccionado = mapaClientes.get(nombre);
+    // Validar vendedor por defecto
+    if (vendedorPorDefecto == null) {
+        JOptionPane.showMessageDialog(this,
+                "No se puede guardar porque no se cargó un vendedor por defecto.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-        try {
-            ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
-            ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
-            ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
-            BigDecimal subtotal = BigDecimal.ZERO;
+    // Validar que existan detalles en la memoria
+    if (detallesEnMemoria.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+                "Debe agregar al menos un detalle a la cotización.",
+                "Error de validación",
+                JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-            for (Object detalleObj : detallesEnMemoria) {
-                if (detalleObj instanceof VentanaDetalle vd) {
-                    detallesVentana.add(vd);
-                    subtotal = subtotal.add(vd.getSubtotalLinea());
-                } else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
-                    detallesPuerta.add(pd);
-                    subtotal = subtotal.add(pd.getSubtotalLinea());
-                } else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
-                    detallesCanceleria.add(cd);
-                    subtotal = subtotal.add(cd.getSubtotalLinea());
+    Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
+
+    try {
+        ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
+        ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
+        ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
+
+        BigDecimal subtotal = BigDecimal.ZERO;
+
+
+        // ===============================
+        // VALIDACIONES DE CADA DETALLE (CORRECTAS)
+        // ===============================
+
+        for (Object detalleObj : detallesEnMemoria) {
+
+            // ----------- VALIDAR VENTANA -----------
+            if (detalleObj instanceof VentanaDetalle d) {
+
+                if (d.getMedidaVertical() == null ||
+                        d.getMedidaVertical().compareTo(BigDecimal.ZERO) <= 0 ||
+                        d.getMedidaVertical().compareTo(new BigDecimal("10")) > 0) {
+
+                    JOptionPane.showMessageDialog(this,
+                            "Error en ventana: El alto debe ser entre 0 y 10 metros.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (d.getMedidaHorizontal() == null ||
+                        d.getMedidaHorizontal().compareTo(BigDecimal.ZERO) <= 0 ||
+                        d.getMedidaHorizontal().compareTo(new BigDecimal("15")) > 0) {
+
+                    JOptionPane.showMessageDialog(this,
+                            "Error en ventana: El ancho debe ser entre 0 y 15 metros.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (d.getCantidad() <= 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "Error en ventana: La cantidad debe ser mayor a 0.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
 
-            //Calcular descuento
-            BigDecimal descuentoMonto = BigDecimal.ZERO;
+            // ----------- VALIDAR PUERTA -----------
+            else if (detalleObj instanceof PuertaAbatibleDetalle d) {
 
-            if (ckbxDescuentoSi.isSelected()) {
-                String textoDescuento = txtDescuento.getText().trim();
+                if (d.getMedidaVertical() == null ||
+                        d.getMedidaVertical().compareTo(BigDecimal.ZERO) <= 0 ||
+                        d.getMedidaVertical().compareTo(new BigDecimal("10")) > 0) {
 
-                if (!textoDescuento.isEmpty()) {
-                    try {
-                        BigDecimal descuentoPorcentaje = new BigDecimal(textoDescuento);
+                    JOptionPane.showMessageDialog(this,
+                            "Error en puerta: El alto debe ser entre 0 y 10 metros.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-                        if (descuentoPorcentaje.compareTo(BigDecimal.ZERO) < 0
-                                || descuentoPorcentaje.compareTo(new BigDecimal("100")) > 0) {
-                            JOptionPane.showMessageDialog(this,
-                                    "El descuento debe estar entre 0% y 100%.",
-                                    "Descuento inválido", JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
+                if (d.getMedidaHorizontal() == null ||
+                        d.getMedidaHorizontal().compareTo(BigDecimal.ZERO) <= 0 ||
+                        d.getMedidaHorizontal().compareTo(new BigDecimal("15")) > 0) {
 
-                        descuentoMonto = subtotal.multiply(descuentoPorcentaje.divide(new BigDecimal("100")));
+                    JOptionPane.showMessageDialog(this,
+                            "Error en puerta: El ancho debe ser entre 0 y 15 metros.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-                    } catch (NumberFormatException ex) {
+                if (d.getCantidad() <= 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "Error en puerta: La cantidad debe ser mayor a 0.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
+            // ----------- VALIDAR CANCELERÍA -----------
+            else if (detalleObj instanceof CanceleriaFijaDetalle d) {
+
+                if (d.getMedidaVertical() == null ||
+                        d.getMedidaVertical().compareTo(BigDecimal.ZERO) <= 0 ||
+                        d.getMedidaVertical().compareTo(new BigDecimal("10")) > 0) {
+
+                    JOptionPane.showMessageDialog(this,
+                            "Error en cancelería: El alto debe ser entre 0 y 10 metros.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (d.getMedidaHorizontal() == null ||
+                        d.getMedidaHorizontal().compareTo(BigDecimal.ZERO) <= 0 ||
+                        d.getMedidaHorizontal().compareTo(new BigDecimal("15")) > 0) {
+
+                    JOptionPane.showMessageDialog(this,
+                            "Error en cancelería: El ancho debe ser entre 0 y 15 metros.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (d.getCantidad() <= 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "Error en cancelería: La cantidad debe ser mayor a 0.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+        }
+
+
+
+        // ===============================
+        // CLASIFICAR DETALLES Y CALCULAR SUBTOTAL
+        // ===============================
+
+        for (Object detalleObj : detallesEnMemoria) {
+            if (detalleObj instanceof VentanaDetalle vd) {
+                detallesVentana.add(vd);
+                subtotal = subtotal.add(vd.getSubtotalLinea());
+            }
+            else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
+                detallesPuerta.add(pd);
+                subtotal = subtotal.add(pd.getSubtotalLinea());
+            }
+            else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
+                detallesCanceleria.add(cd);
+                subtotal = subtotal.add(cd.getSubtotalLinea());
+            }
+        }
+
+
+
+        // ===============================
+        // CALCULAR DESCUENTO
+        // ===============================
+
+        BigDecimal descuentoMonto = BigDecimal.ZERO;
+
+        if (ckbxDescuentoSi.isSelected()) {
+            String textoDescuento = txtDescuento.getText().trim();
+
+            if (!textoDescuento.isEmpty()) {
+                try {
+                    BigDecimal porcentaje = new BigDecimal(textoDescuento);
+
+                    if (porcentaje.compareTo(BigDecimal.ZERO) < 0 ||
+                            porcentaje.compareTo(new BigDecimal("100")) > 0) {
+
                         JOptionPane.showMessageDialog(this,
-                                "Ingrese un valor numérico válido para el descuento.",
-                                "Error de formato", JOptionPane.ERROR_MESSAGE);
+                                "El descuento debe estar entre 0% y 100%.",
+                                "Descuento inválido",
+                                JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+
+                    descuentoMonto = subtotal.multiply(porcentaje.divide(new BigDecimal("100")));
+
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this,
+                            "El descuento debe ser numérico.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
-
-            //Confirmación
-            int confirm = JOptionPane.showConfirmDialog(
-                    this,
-                    "¿Desea guardar la cotización para el cliente:\n" + clienteSeleccionado.getNombre() + "?",
-                    "Confirmar guardado",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE
-            );
-
-            if (confirm != JOptionPane.YES_OPTION) {
-                JOptionPane.showMessageDialog(this, "Operación cancelada por el usuario.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-
-            //Crear y guardar la cotización
-            Cotizacion cotizacion = new Cotizacion();
-            cotizacion.setCliente(clienteSeleccionado);
-            cotizacion.setVendedor(vendedorPorDefecto);
-            cotizacion.setProyecto(null);
-            cotizacion.setFecha(new Date());
-            cotizacion.setEstado("Pendiente");
-            cotizacion.setSubtotal(subtotal);
-            cotizacion.setDescuentoMonto(descuentoMonto);
-
-            CotizacionBO bo = new CotizacionBO();
-            boolean exito = bo.crearCotizacionCompleta(cotizacion, detallesVentana, detallesCanceleria, detallesPuerta);
-
-            if (exito) {
-                JOptionPane.showMessageDialog(this,
-                        "Cotización guardada con éxito.\nNúmero de Cotización: " + cotizacion.getIdCotizacion(),
-                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                this.dispose();
-                new InicioAdministrarCotizaciones().setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Ocurrió un error al guardar la cotización.",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
-
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Error de formato numérico. Verifique todos los campos.", "Error de Datos", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(), "Error General", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
         }
+
+
+
+        // ===============================
+        // CONFIRMAR GUARDADO
+        // ===============================
+
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "¿Desea guardar la cotización para el cliente:\n" +
+                        clienteSeleccionado.getNombre() + "?",
+                "Confirmar guardado",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+
+
+        // ===============================
+        // GUARDAR COTIZACIÓN
+        // ===============================
+
+        Cotizacion cotizacion = new Cotizacion();
+        cotizacion.setCliente(clienteSeleccionado);
+        cotizacion.setVendedor(vendedorPorDefecto);
+        cotizacion.setProyecto(null);
+        cotizacion.setFecha(new Date());
+        cotizacion.setEstado("Pendiente");
+        cotizacion.setSubtotal(subtotal);
+        cotizacion.setDescuentoMonto(descuentoMonto);
+
+        CotizacionBO bo = new CotizacionBO();
+        boolean exito = bo.crearCotizacionCompleta(
+                cotizacion,
+                detallesVentana,
+                detallesCanceleria,
+                detallesPuerta
+        );
+
+        if (exito) {
+            JOptionPane.showMessageDialog(this,
+                    "Cotización guardada con éxito.\nNúmero: " +
+                            cotizacion.getIdCotizacion(),
+                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+            this.dispose();
+            new InicioAdministrarCotizaciones().setVisible(true);
+
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Ocurrió un error al guardar.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this,
+                "Error inesperado: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        e.printStackTrace();
+    }
+
+
+
+
 
     }//GEN-LAST:event_btnGuardarActionPerformed
 
@@ -1181,6 +1333,70 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         });
         actualizarEstadoBotones();
     }
+    /**
+ * Actualiza el textArea txtMaterialUtilizar mostrando todos
+ * los materiales utilizados en la cotización.
+ */
+private void actualizarTextAreaMateriales() {
+    StringBuilder sb = new StringBuilder();
+
+    boolean hayVentanas = false;
+    boolean hayPuertas = false;
+    boolean hayCanceleria = false;
+
+    // ---------- RECORRER DETALLES ----------
+    for (Object obj : detallesEnMemoria) {
+
+        // -------- VENTANAS --------
+        if (obj instanceof VentanaDetalle d) {
+            if (!hayVentanas) {
+                sb.append("=== MATERIALES DE VENTANAS ===\n");
+                hayVentanas = true;
+            }
+            for (MaterialDetalle md : d.getMateriales()) {
+                sb.append("- ").append(md.getMaterial().getTipo())
+                        .append("  x").append(md.getCantidad())
+                        .append("\n");
+            }
+            sb.append("\n");
+        }
+
+        // -------- PUERTAS --------
+        else if (obj instanceof PuertaAbatibleDetalle d) {
+            if (!hayPuertas) {
+                sb.append("=== MATERIALES DE PUERTAS ===\n");
+                hayPuertas = true;
+            }
+            for (MaterialDetalle md : d.getMateriales()) {
+                sb.append("- ").append(md.getMaterial().getTipo())
+                        .append("  x").append(md.getCantidad())
+                        .append("\n");
+            }
+            sb.append("\n");
+        }
+
+        // -------- CANCELERÍA --------
+        else if (obj instanceof CanceleriaFijaDetalle d) {
+            if (!hayCanceleria) {
+                sb.append("=== MATERIALES DE CANCELERÍA ===\n");
+                hayCanceleria = true;
+            }
+            for (MaterialDetalle md : d.getMateriales()) {
+                sb.append("- ").append(md.getMaterial().getTipo())
+                        .append("  x").append(md.getCantidad())
+                        .append("\n");
+            }
+            sb.append("\n");
+        }
+    }
+
+    if (sb.length() == 0) {
+        txtMaterialUtilizar.setText("No hay materiales registrados.");
+    } else {
+        txtMaterialUtilizar.setText(sb.toString());
+    }
+}
+
 
     /**
      * Habilita o deshabilita los botones editar y eliminar basado en si la
@@ -1340,23 +1556,21 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             ClienteDAO clienteDAO = new ClienteDAO(conexion);
             clientes = clienteDAO.obtenerTodos();
 
-            mapaClientes.clear();
-
             DefaultComboBoxModel<String> modelo = new DefaultComboBoxModel<>();
 
+            // 🔹 Opción vacía por defecto (evita cliente precargado)
             modelo.addElement("Seleccione un cliente...");
 
             if (clientes != null && !clientes.isEmpty()) {
                 for (Cliente c : clientes) {
                     modelo.addElement(c.getNombre());
-                    mapaClientes.put(c.getNombre(), c);
                 }
             } else {
                 modelo.addElement("No hay clientes");
             }
 
             cbxSeleccionarCliente.setModel(modelo);
-            cbxSeleccionarCliente.setSelectedIndex(0);
+            cbxSeleccionarCliente.setSelectedIndex(0); // Asegura que inicie vacío
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar clientes: " + ex.getMessage());
@@ -1365,6 +1579,8 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
     private void filtrarClientes(String texto) {
         cbxSeleccionarCliente.removeAllItems();
+
+        // 🔹 Siempre mantener la primera opción
         cbxSeleccionarCliente.addItem("Seleccione un cliente...");
 
         String textoNormalizado = normalizarTexto(texto);
@@ -1376,6 +1592,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             }
         }
 
+        // Si no hay coincidencias, mostrar mensaje
         if (cbxSeleccionarCliente.getItemCount() == 1) {
             cbxSeleccionarCliente.addItem("No hay coincidencias");
         }
@@ -1400,6 +1617,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JLabel Buscar;
     private javax.swing.JLabel ConsultarCotizacion;
     private javax.swing.JLabel Descuento;
+    private javax.swing.JLabel Descuento1;
     private javax.swing.JPanel PanelPrincipal;
     private javax.swing.JButton btnCrearCliente;
     private javax.swing.JButton btnDescargar;
@@ -1423,6 +1641,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel labelPorsentaje;
     private javax.swing.JLabel lblDescuento;
@@ -1440,5 +1659,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JLabel tituloNuevaCotizacion;
     private javax.swing.JTextField txtBuscarCliente;
     private javax.swing.JTextField txtDescuento;
+    private javax.swing.JTextArea txtMaterialUtilizar;
     // End of variables declaration//GEN-END:variables
 }

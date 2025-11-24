@@ -5,6 +5,7 @@
 package presentacion;
 
 import dao.MaterialDAO;
+import java.awt.Window;
 import negocio.CotizacionBO;
 
 /**
@@ -13,25 +14,15 @@ import negocio.CotizacionBO;
  */
 public class MaterlialesCanalillos extends javax.swing.JDialog {
 
-    private CotizacionBO cotizacionBO;
-    private MaterialDAO materialDAO;
+    private int cantCanalillo2 = 0;
+    private int cantCanalillo3 = 0;
 
-    /**
-     * Creates new form MaterlialesCanalillos
-     */
-    public MaterlialesCanalillos(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-        this.cotizacionBO = new CotizacionBO();
-        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
-    }
-
-    public MaterlialesCanalillos(java.awt.Window parent, boolean modal) {
+    public MaterlialesCanalillos(Window parent, boolean modal) {
         super(parent, ModalityType.APPLICATION_MODAL);
         initComponents();
         setLocationRelativeTo(parent);
-        this.cotizacionBO = new CotizacionBO();
-        this.materialDAO = new MaterialDAO(cotizacionBO.getConexion());
+
+        btnGuardar4.addActionListener(evt -> btnGuardar4ActionPerformed(evt));
     }
 
     /**
@@ -159,55 +150,18 @@ public class MaterlialesCanalillos extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardar4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar4ActionPerformed
-        try {
-            int cantCanalillo2 = (int) spnCanalillo2.getValue();
-            int cantCanalillo3 = (int) spnCanalillo3.getValue();
-
-            if (cantCanalillo2 > 0 && cantCanalillo3 > 0) {
-                javax.swing.JOptionPane.showMessageDialog(
-                        this,
-                        "Solo puedes seleccionar un tipo de canalillo (2\" o 3\").",
-                        "Selección inválida",
-                        javax.swing.JOptionPane.WARNING_MESSAGE
-                );
-                return;
-            }
-
-            if (cantCanalillo2 == 0 && cantCanalillo3 == 0) {
-                javax.swing.JOptionPane.showMessageDialog(
-                        this,
-                        "Debes seleccionar al menos un tipo de canalillo.",
-                        "Material faltante",
-                        javax.swing.JOptionPane.WARNING_MESSAGE
-                );
-                return;
-            }
-
-            // VALIDACIÓN 3 (opcional): No permitir cantidades negativas
-            if (cantCanalillo2 < 0 || cantCanalillo3 < 0) {
-                javax.swing.JOptionPane.showMessageDialog(
-                        this,
-                        "La cantidad no puede ser negativa.",
-                        "Valor inválido",
-                        javax.swing.JOptionPane.WARNING_MESSAGE
-                );
-                return;
-            }
-
-        } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(
-                    this,
-                    "Error al actualizar stock: " + e.getMessage(),
-                    "Error",
-                    javax.swing.JOptionPane.ERROR_MESSAGE
-            );
-            e.printStackTrace();
-        }
+        cantCanalillo2 = (int) spnCanalillo2.getValue();
+        cantCanalillo3 = (int) spnCanalillo3.getValue();
 
         this.dispose();
     }//GEN-LAST:event_btnGuardar4ActionPerformed
+    public int getCantCanalillo2() {
+        return cantCanalillo2;
+    }
 
-
+    public int getCantCanalillo3() {
+        return cantCanalillo3;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnGuardar4;
     private javax.swing.JPanel jPanel2;
