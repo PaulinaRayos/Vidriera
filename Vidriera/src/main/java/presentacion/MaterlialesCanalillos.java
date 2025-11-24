@@ -23,6 +23,13 @@ public class MaterlialesCanalillos extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(parent);
 
+        // MODELOS DE SPINNER
+        spnCanalillo2.setModel(new javax.swing.SpinnerNumberModel(0, 0, 999, 1));
+        spnCanalillo3.setModel(new javax.swing.SpinnerNumberModel(0, 0, 999, 1));
+
+        // Listener para bloquear el otro si uno tiene valor
+        spnCanalillo2.addChangeListener(e -> actualizarEstadoMateriales());
+        spnCanalillo3.addChangeListener(e -> actualizarEstadoMateriales());
     }
 
     /**
@@ -151,56 +158,57 @@ public class MaterlialesCanalillos extends javax.swing.JDialog {
 
     private void btnGuardar4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar4ActionPerformed
         try {
-            // Asignar valores a las variables globales, NO crear locales
             cantCanalillo2 = (int) spnCanalillo2.getValue();
             cantCanalillo3 = (int) spnCanalillo3.getValue();
 
             // Validar negativo
             if (cantCanalillo2 < 0 || cantCanalillo3 < 0) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "La cantidad no puede ser negativa.",
-                        "Valor inválido",
-                        JOptionPane.WARNING_MESSAGE
-                );
+                JOptionPane.showMessageDialog(this, "La cantidad no puede ser negativa.", "Valor inválido", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Validar que no se elijan ambos
-            if (cantCanalillo2 > 0 && cantCanalillo3 > 0) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Solo puedes seleccionar un tipo de canalillo (2\" o 3\").",
-                        "Selección inválida",
-                        JOptionPane.WARNING_MESSAGE
-                );
+            // Validación: solo uno de los dos puede ser > 0
+            int seleccionados = 0;
+            if (cantCanalillo2 > 0) {
+                seleccionados++;
+            }
+            if (cantCanalillo3 > 0) {
+                seleccionados++;
+            }
+
+            if (seleccionados > 1) {
+                JOptionPane.showMessageDialog(this, "Solo puedes seleccionar un tipo de canalillo.", "Selección inválida", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             // Validar que al menos uno tenga valor
             if (cantCanalillo2 == 0 && cantCanalillo3 == 0) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Debes seleccionar al menos un tipo de canalillo.",
-                        "Material faltante",
-                        JOptionPane.WARNING_MESSAGE
-                );
+                JOptionPane.showMessageDialog(this, "Debes seleccionar al menos un tipo de canalillo.", "Material faltante", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Error al actualizar stock: " + e.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            JOptionPane.showMessageDialog(this, "Error al actualizar stock: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 
         this.dispose();
 
     }//GEN-LAST:event_btnGuardar4ActionPerformed
+    private void actualizarEstadoMateriales() {
+        int cant2 = (int) spnCanalillo2.getValue();
+        int cant3 = (int) spnCanalillo3.getValue();
+
+        if (cant2 > 0) {
+            spnCanalillo3.setEnabled(false);
+        } else if (cant3 > 0) {
+            spnCanalillo2.setEnabled(false);
+        } else {
+            spnCanalillo2.setEnabled(true);
+            spnCanalillo3.setEnabled(true);
+        }
+    }
+
     public int getCantCanalillo2() {
         return cantCanalillo2;
     }
