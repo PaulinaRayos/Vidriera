@@ -223,8 +223,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         panelBotones = new javax.swing.JPanel();
         pnlNuevaCotizacion = new javax.swing.JPanel();
         btnVistaPrevia = new javax.swing.JButton();
-        btnDescargar = new javax.swing.JButton();
-        btnImprimir = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnDescartar = new javax.swing.JButton();
 
@@ -483,6 +481,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     .addComponent(lblTotal)))
         );
 
+        txtMaterialUtilizar.setEditable(false);
         txtMaterialUtilizar.setColumns(20);
         txtMaterialUtilizar.setRows(5);
         jScrollPane2.setViewportView(txtMaterialUtilizar);
@@ -623,42 +622,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             }
         });
 
-        btnDescargar.setBackground(new java.awt.Color(0, 81, 168));
-        btnDescargar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnDescargar.setForeground(new java.awt.Color(255, 255, 255));
-        btnDescargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/download-updates-20.png"))); // NOI18N
-        btnDescargar.setText("Descargar");
-        btnDescargar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnDescargar.setBorderPainted(false);
-        btnDescargar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnDescargar.setDefaultCapable(false);
-        btnDescargar.setFocusPainted(false);
-        btnDescargar.setRequestFocusEnabled(false);
-        btnDescargar.setRolloverEnabled(false);
-        btnDescargar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDescargarActionPerformed(evt);
-            }
-        });
-
-        btnImprimir.setBackground(new java.awt.Color(0, 81, 168));
-        btnImprimir.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnImprimir.setForeground(new java.awt.Color(255, 255, 255));
-        btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/print-20.png"))); // NOI18N
-        btnImprimir.setText("Imprimir");
-        btnImprimir.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnImprimir.setBorderPainted(false);
-        btnImprimir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnImprimir.setDefaultCapable(false);
-        btnImprimir.setFocusPainted(false);
-        btnImprimir.setRequestFocusEnabled(false);
-        btnImprimir.setRolloverEnabled(false);
-        btnImprimir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnImprimirActionPerformed(evt);
-            }
-        });
-
         btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
         btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
@@ -702,26 +665,23 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
                 .addGap(63, 63, 63)
                 .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(133, 133, 133)
-                .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(71, 71, 71)
-                .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(235, 235, 235)
+                .addGap(693, 693, 693)
                 .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(464, Short.MAX_VALUE))
         );
         pnlNuevaCotizacionLayout.setVerticalGroup(
             pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDescargar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnImprimir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlNuevaCotizacionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
 
@@ -841,8 +801,8 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         if (nuevoDetalle != null) {
             detallesEnMemoria.add(nuevoDetalle);
             actualizarTablaDetalles();
-            recalcularTotales();
             actualizarTextAreaMateriales();
+            recalcularTotales();
         }
     }//GEN-LAST:event_btnNuevaCotizacionActionPerformed
 
@@ -862,6 +822,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             detallesEnMemoria.remove(filaSeleccionada);
 
             actualizarTablaDetalles();
+            actualizarTextAreaMateriales();
             recalcularTotales();
         }
     }//GEN-LAST:event_btnEliminarCotizacionActionPerformed
@@ -908,7 +869,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             return;
         }
 
-        // Validar que existan detalles en la memoria
+        // Validar que existan detalles
         if (detallesEnMemoria.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     "Debe agregar al menos un detalle a la cotización.",
@@ -917,7 +878,17 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             return;
         }
 
-        Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
+        int indexCliente = cbxSeleccionarCliente.getSelectedIndex() - 1;
+
+        if (indexCliente < 0 || indexCliente >= clientes.size()) {
+            JOptionPane.showMessageDialog(this,
+                    "Error interno: índice de cliente inválido.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Cliente clienteSeleccionado = clientes.get(indexCliente);
 
         try {
             ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
@@ -1173,135 +1144,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ckbxDescuentoNoActionPerformed
 
-    private void btnDescargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarActionPerformed
-
-        if (cbxSeleccionarCliente.getSelectedIndex() == -1 || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente.", "Error de validación", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (detallesEnMemoria.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Debe agregar al menos un detalle a la cotización.", "Error de validación", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        Cotizacion cotizacionParaGuardar = new Cotizacion();
-
-        Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
-        cotizacionParaGuardar.setCliente(clienteSeleccionado);
-        cotizacionParaGuardar.setVendedor(vendedorPorDefecto);
-        cotizacionParaGuardar.setFecha(new Date());
-
-        ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
-        ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
-        ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
-
-        for (Object detalleObj : detallesEnMemoria) {
-            if (detalleObj instanceof VentanaDetalle vd) {
-                detallesVentana.add(vd);
-            } else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
-                detallesPuerta.add(pd);
-            } else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
-                detallesCanceleria.add(cd);
-            }
-        }
-        cotizacionParaGuardar.setVentanaDetalles(detallesVentana);
-        cotizacionParaGuardar.setPuertaAbatibleDetalles(detallesPuerta);
-        cotizacionParaGuardar.setCanceleriaFijaDetalles(detallesCanceleria);
-
-        BigDecimal subtotal = BigDecimal.ZERO;
-        for (Object detalle : detallesEnMemoria) {
-            if (detalle instanceof VentanaDetalle vd) {
-                subtotal = subtotal.add(vd.getSubtotalLinea());
-            } else if (detalle instanceof PuertaAbatibleDetalle pd) {
-                subtotal = subtotal.add(pd.getSubtotalLinea());
-            } else if (detalle instanceof CanceleriaFijaDetalle cd) {
-                subtotal = subtotal.add(cd.getSubtotalLinea());
-            }
-        }
-
-        BigDecimal porcentajeManoObra = new BigDecimal("0.45");
-        BigDecimal manoObra = subtotal.multiply(porcentajeManoObra);
-        cotizacionParaGuardar.setManoObra(manoObra);
-        BigDecimal descuentoMonto = BigDecimal.ZERO;
-
-        if (ckbxDescuentoSi.isSelected() && !txtDescuento.getText().trim().isEmpty()) {
-            try {
-                BigDecimal porcentaje = new BigDecimal(txtDescuento.getText().trim());
-                descuentoMonto = subtotal.multiply(porcentaje.divide(new BigDecimal("100")));
-            } catch (NumberFormatException e) {
-                descuentoMonto = BigDecimal.ZERO;
-            }
-        }
-
-        BigDecimal baseImponible = subtotal.add(manoObra).subtract(descuentoMonto);
-        BigDecimal iva = baseImponible.multiply(new BigDecimal("0.16"));
-        BigDecimal total = baseImponible.add(iva);
-
-        cotizacionParaGuardar.setSubtotal(subtotal); // Subtotal de piezas
-        cotizacionParaGuardar.setDescuentoMonto(descuentoMonto);
-        cotizacionParaGuardar.setIva(iva);
-        cotizacionParaGuardar.setTotal(total);
-
-        JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Guardar PDF de Cotizacion");
-
-        String nombreSugerido = "Cotizacion_" + clienteSeleccionado.getNombre().replaceAll("[^a-zA-Z0-9.-]", "_") + ".pdf";
-        chooser.setSelectedFile(new File(nombreSugerido));
-
-        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            try {
-                byte[] pdfBytes = GeneradorPDF.generarCotizacionPdf(cotizacionParaGuardar);
-
-                if (pdfBytes == null) {
-                    throw new Exception("El generador de PDF devolvió null.");
-                }
-
-                File archivo = chooser.getSelectedFile();
-
-                String rutaArchivo = archivo.getAbsolutePath();
-                if (!rutaArchivo.toLowerCase().endsWith(".pdf")) {
-                    archivo = new File(rutaArchivo + ".pdf");
-                }
-
-                try (FileOutputStream fos = new FileOutputStream(archivo)) {
-                    fos.write(pdfBytes);
-                }
-
-                JOptionPane.showMessageDialog(this, "PDF guardado correctamente en:\n" + archivo.getAbsolutePath());
-
-            } catch (Exception ex) {
-                ex.printStackTrace(); // Bueno para depurar
-                JOptionPane.showMessageDialog(this, "Error al guardar PDF: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-
-
-    }//GEN-LAST:event_btnDescargarActionPerformed
-
-    private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
-        panelBotones.setVisible(false);
-        BufferedImage img = panelToImage(PanelPrincipal);
-
-        try (PDDocument doc = new PDDocument()) {
-            PDPage page = new PDPage(new PDRectangle(img.getWidth(), img.getHeight()));
-            doc.addPage(page);
-            PDImageXObject pdImage = LosslessFactory.createFromImage(doc, img);
-            try (PDPageContentStream contentStream = new PDPageContentStream(doc, page)) {
-                contentStream.drawImage(pdImage, 0, 0, img.getWidth(), img.getHeight());
-            }
-            // imprime el PDF generado
-            java.awt.print.PrinterJob printJob = java.awt.print.PrinterJob.getPrinterJob();
-            printJob.setPageable(new org.apache.pdfbox.printing.PDFPageable(doc));
-            if (printJob.printDialog()) {
-                printJob.print();
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Error al imprimir: " + ex.getMessage());
-        }
-        panelBotones.setVisible(true);
-
-    }//GEN-LAST:event_btnImprimirActionPerformed
-
     private void cbxSeleccionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSeleccionarClienteActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbxSeleccionarClienteActionPerformed
@@ -1325,63 +1167,122 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     }
 
     /**
-     * Actualiza el textArea txtMaterialUtilizar mostrando todos los materiales
-     * utilizados en la cotización.
+     * Genera un resumen de texto con los detalles específicos (accesorios,
+     * hojas, etc.) de los elementos en la cotización actual.
      */
     private void actualizarTextAreaMateriales() {
         StringBuilder sb = new StringBuilder();
 
-        boolean hayVentanas = false;
-        boolean hayPuertas = false;
-        boolean hayCanceleria = false;
+        if (detallesEnMemoria.isEmpty()) {
+            txtMaterialUtilizar.setText("");
+            return;
+        }
 
-        // ---------- RECORRER DETALLES ----------
+        sb.append("=== RESUMEN DE MATERIALES Y ACCESORIOS ===\n\n");
+
+        int contador = 1;
+
         for (Object obj : detallesEnMemoria) {
+            sb.append(contador).append(". ");
 
-            // -------- VENTANAS --------
-            if (obj instanceof VentanaDetalle d) {
-                if (!hayVentanas) {
-                    sb.append("=== MATERIALES DE VENTANAS ===\n");
-                    hayVentanas = true;
+            // -------------------------------------------------------
+            // CASO 1: VENTANA
+            // (Mosquiteros, arco, canalillo, numero de hojas)
+            // -------------------------------------------------------
+            if (obj instanceof VentanaDetalle v) {
+                sb.append("VENTANA (").append(v.getCantidad()).append(" pzas) - ")
+                        .append(v.getTipoVentana().getDescripcion()).append("\n");
+
+                sb.append("   • Medidas: ").append(v.getMedidaHorizontal()).append(" x ").append(v.getMedidaVertical()).append("\n");
+                sb.append("   • Cristal: ").append(v.getTipoCristal()).append("\n");
+                sb.append("   • No. Hojas: ").append(v.getNoHojas()).append("\n");
+
+                // Detalles específicos solicitados
+                if (v.isMosquitero()) {
+                    sb.append("   • [X] Incluye Mosquitero\n");
                 }
-                for (MaterialDetalle md : d.getMateriales()) {
-                    sb.append("- ").append(md.getMaterial().getTipo())
-                            .append("  x").append(md.getCantidad())
-                            .append("\n");
+                if (v.isArco()) {
+                    sb.append("   • [X] Con Arco: ").append(v.getTipoArco()).append("\n");
                 }
-                sb.append("\n");
-            } // -------- PUERTAS --------
-            else if (obj instanceof PuertaAbatibleDetalle d) {
-                if (!hayPuertas) {
-                    sb.append("=== MATERIALES DE PUERTAS ===\n");
-                    hayPuertas = true;
+
+                // Validar si tiene canalillo (asumiendo que guarda el string del tipo)
+                if (v.getTipoCanalillo() != null && !v.getTipoCanalillo().equals("Ninguno")) {
+                    sb.append("   • [X] Canalillo: ").append(v.getTipoCanalillo()).append("\n");
                 }
-                for (MaterialDetalle md : d.getMateriales()) {
-                    sb.append("- ").append(md.getMaterial().getTipo())
-                            .append("  x").append(md.getCantidad())
-                            .append("\n");
+            } // -------------------------------------------------------
+            // CASO 2: PUERTA ABATIBLE
+            // (Mosquitero, Pivote, jaladera y numero de hojas)
+            // -------------------------------------------------------
+            else if (obj instanceof PuertaAbatibleDetalle p) {
+                sb.append("PUERTA (").append(p.getCantidad()).append(" pzas) - ")
+                        .append(p.getTipoPuerta().getDescripcion()).append("\n");
+
+                sb.append("   • Medidas: ").append(p.getMedidaHorizontal()).append(" x ").append(p.getMedidaVertical()).append("\n");
+                sb.append("   • Cristal: ").append(p.getTipoCristal()).append("\n");
+                sb.append("   • No. Hojas: ").append(p.getNoHojas()).append("\n");
+
+                // Detalles específicos solicitados
+                if (p.isMosquitero()) {
+                    sb.append("   • [X] Incluye Mosquitero\n");
                 }
-                sb.append("\n");
-            } // -------- CANCELERÍA --------
-            else if (obj instanceof CanceleriaFijaDetalle d) {
-                if (!hayCanceleria) {
-                    sb.append("=== MATERIALES DE CANCELERÍA ===\n");
-                    hayCanceleria = true;
+
+                if (p.isPivote()) {
+                    sb.append("   • [X] Pivote: ").append(p.getTipoPivote())
+                            .append(" (Cant: ").append(p.getCantidadPivote()).append(")\n");
                 }
-                for (MaterialDetalle md : d.getMateriales()) {
-                    sb.append("- ").append(md.getMaterial().getTipo())
-                            .append("  x").append(md.getCantidad())
-                            .append("\n");
+
+                if (p.isJaladera()) {
+                    sb.append("   • [X] Jaladera: ").append(p.getTipoJaladera())
+                            .append(" (Cant: ").append(p.getCantidadJaladera()).append(")\n");
                 }
-                sb.append("\n");
+
+                // Otros extras si quieres mostrarlos
+                if (p.isDuela()) {
+                    sb.append("   • [X] Duela: ").append(p.getTipoDuela()).append("\n");
+                }
+                if (p.isBarra()) {
+                    sb.append("   • [X] Barra: ").append(p.getTipoBarra()).append("\n");
+                }
+            } // -------------------------------------------------------
+            // CASO 3: CANCELERÍA FIJA
+            // (Numero de hojas, tapas, arco, canalillo)
+            // -------------------------------------------------------
+            else if (obj instanceof CanceleriaFijaDetalle c) {
+                sb.append("CANCELERÍA (").append(c.getCantidad()).append(" pzas) - ")
+                        .append(c.getTipoCanceleria().getDescripcion()).append("\n");
+
+                sb.append("   • Medidas: ").append(c.getMedidaHorizontal()).append(" x ").append(c.getMedidaVertical()).append("\n");
+                sb.append("   • Cristal: ").append(c.getTipoCristal()).append("\n");
+                sb.append("   • No. Hojas: ").append(c.getNoHojas()).append("\n"); // Aunque fijo suele ser 1, lo mostramos
+
+                // Detalles específicos solicitados
+                if (c.getCantidadTapa() > 0) {
+                    sb.append("   • [X] Tapas: ").append(c.getTipoTapa())
+                            .append(" (Cant: ").append(c.getCantidadTapa()).append(")\n");
+                }
+
+                if (c.isArco()) {
+                    sb.append("   • [X] Con Arco: ").append(c.getTipoArco()).append("\n");
+                }
+
+                if (c.isCanalillo()) { // Asumiendo que es booleano o string
+                    sb.append("   • [X] Canalillo: ").append(c.getTipoCanalillo()).append("\n");
+                }
+
+                // Otros extras
+                if (c.isBolsa()) {
+                    sb.append("   • [X] Bolsa\n");
+                }
             }
+
+            sb.append("----------------------------------------------------\n");
+            contador++;
         }
 
-        if (sb.length() == 0) {
-            txtMaterialUtilizar.setText("No hay materiales registrados.");
-        } else {
-            txtMaterialUtilizar.setText(sb.toString());
-        }
+        // Asignar el texto al área de texto
+        txtMaterialUtilizar.setText(sb.toString());
+        // Mover el scroll al inicio
+        txtMaterialUtilizar.setCaretPosition(0);
     }
 
     /**
@@ -1606,12 +1507,10 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JLabel Descuento1;
     private javax.swing.JPanel PanelPrincipal;
     private javax.swing.JButton btnCrearCliente;
-    private javax.swing.JButton btnDescargar;
     private javax.swing.JButton btnDescartar;
     private javax.swing.JButton btnEditarCotizacion;
     private javax.swing.JButton btnEliminarCotizacion;
     private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnNuevaCotizacion;
     private javax.swing.JButton btnVistaPrevia;
     private javax.swing.JButton btnVolver;
