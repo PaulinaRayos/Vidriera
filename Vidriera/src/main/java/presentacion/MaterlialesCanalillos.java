@@ -6,6 +6,7 @@ package presentacion;
 
 import dao.MaterialDAO;
 import java.awt.Window;
+import javax.swing.JOptionPane;
 import negocio.CotizacionBO;
 
 /**
@@ -22,7 +23,6 @@ public class MaterlialesCanalillos extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(parent);
 
-        btnGuardar4.addActionListener(evt -> btnGuardar4ActionPerformed(evt));
     }
 
     /**
@@ -150,10 +150,56 @@ public class MaterlialesCanalillos extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardar4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar4ActionPerformed
-        cantCanalillo2 = (int) spnCanalillo2.getValue();
-        cantCanalillo3 = (int) spnCanalillo3.getValue();
+        try {
+            // Asignar valores a las variables globales, NO crear locales
+            cantCanalillo2 = (int) spnCanalillo2.getValue();
+            cantCanalillo3 = (int) spnCanalillo3.getValue();
+
+            // Validar negativo
+            if (cantCanalillo2 < 0 || cantCanalillo3 < 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "La cantidad no puede ser negativa.",
+                        "Valor inválido",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            // Validar que no se elijan ambos
+            if (cantCanalillo2 > 0 && cantCanalillo3 > 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Solo puedes seleccionar un tipo de canalillo (2\" o 3\").",
+                        "Selección inválida",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            // Validar que al menos uno tenga valor
+            if (cantCanalillo2 == 0 && cantCanalillo3 == 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Debes seleccionar al menos un tipo de canalillo.",
+                        "Material faltante",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al actualizar stock: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            e.printStackTrace();
+        }
 
         this.dispose();
+
     }//GEN-LAST:event_btnGuardar4ActionPerformed
     public int getCantCanalillo2() {
         return cantCanalillo2;
