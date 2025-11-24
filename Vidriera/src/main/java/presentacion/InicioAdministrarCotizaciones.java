@@ -698,33 +698,12 @@ public class InicioAdministrarCotizaciones extends javax.swing.JFrame {
     }//GEN-LAST:event_chkBuscarPorFechaActionPerformed
 
     private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
-        panelBotones.setVisible(false);
-
-        panelReporte = construirPanelReporte();
-
-        prepararPanel(panelReporte);
-        panelReporte.setPreferredSize(new Dimension(900, panelReporte.getPreferredSize().height));
-        panelReporte.setSize(panelReporte.getPreferredSize());
-
-        panelReporte.doLayout();
-        panelReporte.validate();
-
-        imgReporte = panelToImage(panelReporte);
-
-        JLabel label = new JLabel(new ImageIcon(imgReporte));
-
-        JScrollPane scroll = new JScrollPane(label);
-        scroll.getVerticalScrollBar().setUnitIncrement(16);
-
-        JDialog dialog = new JDialog(this, "Previsualización Cotización", true);
-        dialog.setSize(1200, 800);
-        dialog.setLayout(new BorderLayout());
-        dialog.add(scroll, BorderLayout.CENTER);
-
-        dialog.setLocationRelativeTo(this);
-        dialog.setVisible(true);
-
-        panelBotones.setVisible(true);
+        if (this.cotizacionSeleccionada == null) {
+        JOptionPane.showMessageDialog(this, "Seleccione una cotización.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    // Asegúrate de que la cotizacionSeleccionada tenga sus listas cargadas (ya lo haces en tablaCotizacionesSeleccionada)
+    VistaPreviaCotizacionDialog.mostrarPrevia(this, this.cotizacionSeleccionada);
     }//GEN-LAST:event_btnVistaPreviaActionPerformed
 
     private void btnDescargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarActionPerformed

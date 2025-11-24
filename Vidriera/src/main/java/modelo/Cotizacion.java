@@ -197,5 +197,9 @@ public class Cotizacion {
     public String toString() {
         return "Cotizacion{" + "idCotizacion=" + idCotizacion + ", fecha=" + fecha + ", subtotal=" + subtotal + ", manoObra=" + manoObra + ", iva=" + iva + ", descuentoMonto=" + descuentoMonto + ", total=" + total + ", estado=" + estado + ", cliente=" + cliente + ", proyecto=" + proyecto + ", vendedor=" + vendedor + ", ventanaDetalles=" + ventanaDetalles + ", puertaAbatibleDetalles=" + puertaAbatibleDetalles + ", canceleriaFijaDetalles=" + canceleriaFijaDetalles + '}';
     }
+
+    public double getDescuento() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }

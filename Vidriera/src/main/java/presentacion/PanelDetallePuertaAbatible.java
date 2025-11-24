@@ -8,23 +8,14 @@ import java.math.BigDecimal;
 import java.util.List;
 import javax.swing.JOptionPane;
 import modelo.Material;
-import modelo.TipoPuerta;
-import modelo.PuertaAbatibleDetalle;
 import dao.CatalogoTrabajoDAO;
-import dao.MaterialDetalleDAO;
-import dao.PuertaAbatibleDetalleDAO;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import modelo.MaterialDetalle;
-import presentacion.MaterialMosquiteras;
-import utils.Conexion;
 
 /**
  *
