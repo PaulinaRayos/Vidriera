@@ -167,16 +167,35 @@ public class MaterialArcos extends javax.swing.JDialog {
             int cantArco2 = (int) spnArco2.getValue();
             int cantArco3 = (int) spnArco3.getValue();
 
-            if (cantArco2 > 0) {
-
-                materialDAO.ajustarStockPorDescripcion("Arco aluminio serie 2\"", cantArco2);
+            if (cantArco2 > 0 && cantArco3 > 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Solo puedes seleccionar un tipo de arco (2\" o 3\").",
+                        "Selección inválida",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
             }
 
-            if (cantArco3 > 0) {
-                materialDAO.ajustarStockPorDescripcion("Arco aluminio serie 3\"", cantArco3);
+            if (cantArco2 == 0 && cantArco3 == 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Debes seleccionar al menos un tipo de arco.",
+                        "Material faltante",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
             }
 
-            JOptionPane.showMessageDialog(this, "Stock actualizado correctamente");
+            if (cantArco2 < 0 || cantArco3 < 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "La cantidad no puede ser negativa.",
+                        "Valor inválido",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(

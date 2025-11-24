@@ -5,6 +5,7 @@
 package presentacion;
 
 import dao.MaterialDAO;
+import javax.swing.JOptionPane;
 import negocio.CotizacionBO;
 
 /**
@@ -219,37 +220,58 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
             int cantSerie3 = (int) spnAluminioAluminioSerie3.getValue();
             int cantNegro = (int) spnAluminioAnodizadoNegro.getValue();
             int cantMalla = (int) spnMalla.getValue();
-            System.out.println("Serie2 = " + cantSerie2);
-            
+
+            int alumSeleccionados = 0;
             if (cantSerie2 > 0) {
-                materialDAO.ajustarStockPorDescripcion("Perfil aluminio serie 2\" natural", cantSerie2);
-                System.out.println("Serie2 = " + cantSerie2);
+                alumSeleccionados++;
             }
-
             if (cantSerie3 > 0) {
-                materialDAO.ajustarStockPorDescripcion("Perfil aluminio serie 3\" blanco", cantSerie3);
+                alumSeleccionados++;
             }
-
             if (cantNegro > 0) {
-                materialDAO.ajustarStockPorDescripcion("Perfil aluminio anodizado negro", cantNegro);
+                alumSeleccionados++;
             }
 
-            if (cantMalla > 0) {
-                materialDAO.ajustarStockPorDescripcion("Malla Gris", cantMalla);
+            if (alumSeleccionados > 1) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Solo puedes seleccionar un tipo de aluminio.\n(Malla sí puede seleccionarse junto con uno de ellos)",
+                        "Selección inválida",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
             }
 
-            javax.swing.JOptionPane.showMessageDialog(this, "Stock actualizado correctamente");
+            if (cantSerie2 < 0 || cantSerie3 < 0 || cantNegro < 0 || cantMalla < 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Las cantidades no pueden ser negativas.",
+                        "Valor inválido",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            if (cantSerie2 == 0 && cantSerie3 == 0 && cantNegro == 0 && cantMalla == 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Debes seleccionar al menos un material.",
+                        "Material faltante",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
 
         } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(
+            JOptionPane.showMessageDialog(
                     this,
                     "Error al actualizar stock: " + e.getMessage(),
                     "Error",
-                    javax.swing.JOptionPane.ERROR_MESSAGE
+                    JOptionPane.ERROR_MESSAGE
             );
             e.printStackTrace();
         }
-        
+
         this.dispose();
     }//GEN-LAST:event_btnGuardar5ActionPerformed
 

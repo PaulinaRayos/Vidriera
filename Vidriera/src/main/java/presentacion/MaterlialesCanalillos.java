@@ -160,18 +160,39 @@ public class MaterlialesCanalillos extends javax.swing.JDialog {
 
     private void btnGuardar4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar4ActionPerformed
         try {
-            int cantArco2 = (int) spnCanalillo2.getValue();
-            int cantArco3 = (int) spnCanalillo3.getValue();
+            int cantCanalillo2 = (int) spnCanalillo2.getValue();
+            int cantCanalillo3 = (int) spnCanalillo3.getValue();
 
-            if (cantArco2 > 0) {
-                materialDAO.ajustarStockPorDescripcion("Arco aluminio serie 2\"", cantArco2);
+            if (cantCanalillo2 > 0 && cantCanalillo3 > 0) {
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Solo puedes seleccionar un tipo de canalillo (2\" o 3\").",
+                        "Selección inválida",
+                        javax.swing.JOptionPane.WARNING_MESSAGE
+                );
+                return;
             }
 
-            if (cantArco3 > 0) {
-                materialDAO.ajustarStockPorDescripcion("Arco aluminio serie 3\"", cantArco3);
+            if (cantCanalillo2 == 0 && cantCanalillo3 == 0) {
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "Debes seleccionar al menos un tipo de canalillo.",
+                        "Material faltante",
+                        javax.swing.JOptionPane.WARNING_MESSAGE
+                );
+                return;
             }
 
-            javax.swing.JOptionPane.showMessageDialog(this, "Stock actualizado correctamente");
+            // VALIDACIÓN 3 (opcional): No permitir cantidades negativas
+            if (cantCanalillo2 < 0 || cantCanalillo3 < 0) {
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        "La cantidad no puede ser negativa.",
+                        "Valor inválido",
+                        javax.swing.JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
 
         } catch (Exception e) {
             javax.swing.JOptionPane.showMessageDialog(
