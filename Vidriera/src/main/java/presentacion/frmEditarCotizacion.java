@@ -10,6 +10,8 @@ import dao.MaterialDAO;
 import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -28,6 +30,7 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.*;
 import negocio.CotizacionBO;
+import negocio.GeneradorPDF;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -48,7 +51,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
     private DefaultTableModel modeloTablaDetalles;
     private List<Object> detallesEnMemoria = new ArrayList<>();
-
+    private Cotizacion cotizacionSeleccionada;
     private CotizacionBO cotizacionBO;
     private DetalleCotizacionDAO detalleDAO;
     private Cotizacion cotizacionActual;
@@ -921,27 +924,47 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVistaPreviaActionPerformed
 
     private void btnDescargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescargarActionPerformed
-        // TODO add your handling code here:
-        panelBotones.setVisible(false);
-        BufferedImage img = panelToImage(panelBuscarCliente);
 
+        // Verificar que haya una cotización seleccionada
+        if (this.cotizacionSeleccionada == null) {
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una cotización de la tabla de arriba.", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Preparar el JFileChooser
         JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Guardar PDF de Cotización");
+
+        // Sugerir nombre de archivo
+        String nombreSugerido = "Cotizacion_" + this.cotizacionSeleccionada.getCliente().getNombre().replaceAll("[^a-zA-Z0-9.-]", "_") + ".pdf";
+        chooser.setSelectedFile(new File(nombreSugerido));
+
         if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            try (PDDocument doc = new PDDocument()) {
-                PDPage page = new PDPage(new PDRectangle(img.getWidth(), img.getHeight()));
-                doc.addPage(page);
-                PDImageXObject pdImage = LosslessFactory.createFromImage(doc, img);
-                try (PDPageContentStream contentStream = new PDPageContentStream(doc, page)) {
-                    contentStream.drawImage(pdImage, 0, 0, img.getWidth(), img.getHeight());
+            try {
+                // Generar el PDF usando la cotización en memoria
+                byte[] pdfBytes = GeneradorPDF.generarCotizacionPdf(this.cotizacionSeleccionada);
+
+                if (pdfBytes == null) {
+                    throw new Exception("El GeneradorPDF devolvió null.");
                 }
-                doc.save(chooser.getSelectedFile());
+
+                // 4. Guardar el archivo
+                File archivo = chooser.getSelectedFile();
+                String rutaArchivo = archivo.getAbsolutePath();
+                if (!rutaArchivo.toLowerCase().endsWith(".pdf")) {
+                    archivo = new File(rutaArchivo + ".pdf");
+                }
+                try (FileOutputStream fos = new FileOutputStream(archivo)) {
+                    fos.write(pdfBytes);
+                }
+
                 JOptionPane.showMessageDialog(this, "PDF guardado correctamente.");
+
             } catch (Exception ex) {
+                ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error al guardar PDF: " + ex.getMessage());
             }
         }
-        panelBotones.setVisible(true);
-
     }//GEN-LAST:event_btnDescargarActionPerformed
 
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed

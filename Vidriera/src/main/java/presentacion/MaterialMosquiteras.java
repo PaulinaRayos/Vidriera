@@ -49,19 +49,15 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
         spnAluminioAnodizadoNegro = new javax.swing.JSpinner();
         lblMalla = new javax.swing.JLabel();
         spnMalla = new javax.swing.JSpinner();
-        panelTitulo = new javax.swing.JPanel();
-        titulo1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         lblAluminioSerie2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblAluminioSerie2.setForeground(new java.awt.Color(0, 0, 0));
         lblAluminioSerie2.setText("Perfil aluminio serie 2\" natural");
 
         lblAluminioSerie3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblAluminioSerie3.setForeground(new java.awt.Color(0, 0, 0));
         lblAluminioSerie3.setText("Perfil aluminio serie 3\" blanco");
 
         btnGuardar5.setBackground(new java.awt.Color(4, 210, 65));
@@ -93,24 +89,22 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
         panelTitulo1Layout.setHorizontalGroup(
             panelTitulo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTitulo1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(16, 16, 16)
                 .addComponent(titulo2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelTitulo1Layout.setVerticalGroup(
             panelTitulo1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTitulo1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(10, 10, 10)
                 .addComponent(titulo2)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         lblAluminioAnodizadoNegro.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblAluminioAnodizadoNegro.setForeground(new java.awt.Color(0, 0, 0));
         lblAluminioAnodizadoNegro.setText("Perfil aluminio anodizado negro");
 
         lblMalla.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblMalla.setForeground(new java.awt.Color(0, 0, 0));
         lblMalla.setText("Malla");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -163,42 +157,15 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        panelTitulo.setBackground(new java.awt.Color(0, 19, 90));
-
-        titulo1.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
-        titulo1.setForeground(new java.awt.Color(255, 255, 255));
-        titulo1.setText("Materiales");
-
-        javax.swing.GroupLayout panelTituloLayout = new javax.swing.GroupLayout(panelTitulo);
-        panelTitulo.setLayout(panelTituloLayout);
-        panelTituloLayout.setHorizontalGroup(
-            panelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTituloLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(titulo1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        panelTituloLayout.setVerticalGroup(
-            panelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTituloLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(titulo1)
-                .addContainerGap(14, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(panelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -234,13 +201,11 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
     private javax.swing.JLabel lblAluminioSerie2;
     private javax.swing.JLabel lblAluminioSerie3;
     private javax.swing.JLabel lblMalla;
-    private javax.swing.JPanel panelTitulo;
     private javax.swing.JPanel panelTitulo1;
     private javax.swing.JSpinner spnAluminioAluminioSerie3;
     private javax.swing.JSpinner spnAluminioAnodizadoNegro;
     private javax.swing.JSpinner spnAluminioSerie2;
     private javax.swing.JSpinner spnMalla;
-    private javax.swing.JLabel titulo1;
     private javax.swing.JLabel titulo2;
     // End of variables declaration//GEN-END:variables
 }

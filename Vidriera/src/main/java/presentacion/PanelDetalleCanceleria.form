@@ -21,7 +21,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="panelDetalleVentana" min="-2" max="-2" attributes="0"/>
+          <Component id="panelDetalleVentana" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -40,6 +40,23 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="30" pref="30" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="bolsa" min="-2" pref="170" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                          <Component id="ckBolsa" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="141" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="fijosHorizontal" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                          <Component id="spnNumFijosHorizontales1" min="-2" pref="160" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="noHojas" min="-2" pref="170" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="spnNoHojas" min="-2" pref="160" max="-2" attributes="0"/>
+                      </Group>
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="180" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -60,29 +77,10 @@
                           <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                           <Component id="txtMedidaH" min="-2" pref="160" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="bolsa" min="-2" pref="170" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                              <Component id="ckBolsa" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="180" max="-2" attributes="0"/>
-                              <Component id="spnNoHojas" min="-2" pref="160" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="noHojas" alignment="0" min="-2" pref="170" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="fijosVertical" min="-2" pref="170" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                              <Component id="spnNumFijosVerticales1" min="-2" pref="160" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="fijosHorizontal" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                              <Component id="spnNumFijosHorizontales1" min="-2" pref="160" max="-2" attributes="0"/>
-                          </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="fijosVertical" min="-2" pref="170" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                          <Component id="spnNumFijosVerticales1" min="-2" pref="160" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -138,7 +136,7 @@
                           <Component id="cbxTipoTapa" min="-2" pref="160" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" alignment="1" attributes="0">
@@ -164,7 +162,7 @@
                           <Component id="txtDescripcion" min="-2" pref="160" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -304,7 +302,7 @@
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace pref="55" max="32767" attributes="0"/>
+                  <EmptySpace pref="56" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
