@@ -25,8 +25,6 @@ public class MaterialArcos extends javax.swing.JDialog {
         super(parent, ModalityType.APPLICATION_MODAL);
         initComponents();
         setLocationRelativeTo(parent);
-
-        btnGuardar5.addActionListener(evt -> btnGuardar5ActionPerformed(evt));
     }
 
     /**
@@ -154,10 +152,56 @@ public class MaterialArcos extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardar5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar5ActionPerformed
-        cantArco2 = (int) spnArco2.getValue();
-        cantArco3 = (int) spnArco3.getValue();
-        this.dispose();
+        try {
+            // Tomar valores del spinner
+            cantArco2 = (int) spnArco2.getValue();
+            cantArco3 = (int) spnArco3.getValue();
 
+            // Validar negativo
+            if (cantArco2 < 0 || cantArco3 < 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "La cantidad no puede ser negativa.",
+                        "Valor inválido",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            // Validar que no estén ambos seleccionados
+            if (cantArco2 > 0 && cantArco3 > 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Solo puedes seleccionar un tipo de arco (2\" o 3\").",
+                        "Selección inválida",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+            // Validar que al menos uno tenga valor
+            if (cantArco2 == 0 && cantArco3 == 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Debes seleccionar al menos un tipo de arco.",
+                        "Material faltante",
+                        JOptionPane.WARNING_MESSAGE
+                );
+                return;
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error al actualizar stock: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            e.printStackTrace();
+        }
+
+        // Cerrar ventana
+        this.dispose();
     }//GEN-LAST:event_btnGuardar5ActionPerformed
     public int getCantArco2() {
         return cantArco2;

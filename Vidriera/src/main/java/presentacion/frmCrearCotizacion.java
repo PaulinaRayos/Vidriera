@@ -812,13 +812,27 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEditarCotizacionActionPerformed
 
     private void btnNuevaCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCotizacionActionPerformed
+        // VALIDACIÓN: Debe seleccionar un cliente antes de continuar
+        if (cbxSeleccionarCliente.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Debes seleccionar un cliente antes de agregar una cotización.",
+                    "Cliente requerido",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
 
         List<Material> materiales = this.materialesDisponibles;
 
         if (materiales == null || materiales.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Error: No se pudieron cargar los materiales. Revisa la base de datos.");
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Error: No se pudieron cargar los materiales. Revisa la base de datos."
+            );
             return;
         }
+
         DetalleEditorDialog dialog = new DetalleEditorDialog(this, true, materiales);
         dialog.setVisible(true);
 
@@ -870,274 +884,250 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
 
-    // ===============================
-    // VALIDACIONES INICIALES
-    // ===============================
-
-    // Validar cliente seleccionado
-    if (cbxSeleccionarCliente.getSelectedIndex() <= 0 ||
-            cbxSeleccionarCliente.getSelectedItem().toString().equals("Seleccione un cliente...") ||
-            cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
-
-        JOptionPane.showMessageDialog(this,
-                "Debe seleccionar un cliente.",
-                "Error de validación",
-                JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    // Validar vendedor por defecto
-    if (vendedorPorDefecto == null) {
-        JOptionPane.showMessageDialog(this,
-                "No se puede guardar porque no se cargó un vendedor por defecto.",
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    // Validar que existan detalles en la memoria
-    if (detallesEnMemoria.isEmpty()) {
-        JOptionPane.showMessageDialog(this,
-                "Debe agregar al menos un detalle a la cotización.",
-                "Error de validación",
-                JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
-
-    try {
-        ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
-        ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
-        ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
-
-        BigDecimal subtotal = BigDecimal.ZERO;
-
-
         // ===============================
-        // VALIDACIONES DE CADA DETALLE (CORRECTAS)
+        // VALIDACIONES INICIALES
         // ===============================
+        // Validar cliente seleccionado
+        if (cbxSeleccionarCliente.getSelectedIndex() <= 0
+                || cbxSeleccionarCliente.getSelectedItem().toString().equals("Seleccione un cliente...")
+                || cbxSeleccionarCliente.getSelectedItem().toString().equals("No hay clientes")) {
 
-        for (Object detalleObj : detallesEnMemoria) {
-
-            // ----------- VALIDAR VENTANA -----------
-            if (detalleObj instanceof VentanaDetalle d) {
-
-                if (d.getMedidaVertical() == null ||
-                        d.getMedidaVertical().compareTo(BigDecimal.ZERO) <= 0 ||
-                        d.getMedidaVertical().compareTo(new BigDecimal("10")) > 0) {
-
-                    JOptionPane.showMessageDialog(this,
-                            "Error en ventana: El alto debe ser entre 0 y 10 metros.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (d.getMedidaHorizontal() == null ||
-                        d.getMedidaHorizontal().compareTo(BigDecimal.ZERO) <= 0 ||
-                        d.getMedidaHorizontal().compareTo(new BigDecimal("15")) > 0) {
-
-                    JOptionPane.showMessageDialog(this,
-                            "Error en ventana: El ancho debe ser entre 0 y 15 metros.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (d.getCantidad() <= 0) {
-                    JOptionPane.showMessageDialog(this,
-                            "Error en ventana: La cantidad debe ser mayor a 0.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-
-            // ----------- VALIDAR PUERTA -----------
-            else if (detalleObj instanceof PuertaAbatibleDetalle d) {
-
-                if (d.getMedidaVertical() == null ||
-                        d.getMedidaVertical().compareTo(BigDecimal.ZERO) <= 0 ||
-                        d.getMedidaVertical().compareTo(new BigDecimal("10")) > 0) {
-
-                    JOptionPane.showMessageDialog(this,
-                            "Error en puerta: El alto debe ser entre 0 y 10 metros.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (d.getMedidaHorizontal() == null ||
-                        d.getMedidaHorizontal().compareTo(BigDecimal.ZERO) <= 0 ||
-                        d.getMedidaHorizontal().compareTo(new BigDecimal("15")) > 0) {
-
-                    JOptionPane.showMessageDialog(this,
-                            "Error en puerta: El ancho debe ser entre 0 y 15 metros.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (d.getCantidad() <= 0) {
-                    JOptionPane.showMessageDialog(this,
-                            "Error en puerta: La cantidad debe ser mayor a 0.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-
-            // ----------- VALIDAR CANCELERÍA -----------
-            else if (detalleObj instanceof CanceleriaFijaDetalle d) {
-
-                if (d.getMedidaVertical() == null ||
-                        d.getMedidaVertical().compareTo(BigDecimal.ZERO) <= 0 ||
-                        d.getMedidaVertical().compareTo(new BigDecimal("10")) > 0) {
-
-                    JOptionPane.showMessageDialog(this,
-                            "Error en cancelería: El alto debe ser entre 0 y 10 metros.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (d.getMedidaHorizontal() == null ||
-                        d.getMedidaHorizontal().compareTo(BigDecimal.ZERO) <= 0 ||
-                        d.getMedidaHorizontal().compareTo(new BigDecimal("15")) > 0) {
-
-                    JOptionPane.showMessageDialog(this,
-                            "Error en cancelería: El ancho debe ser entre 0 y 15 metros.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (d.getCantidad() <= 0) {
-                    JOptionPane.showMessageDialog(this,
-                            "Error en cancelería: La cantidad debe ser mayor a 0.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-        }
-
-
-
-        // ===============================
-        // CLASIFICAR DETALLES Y CALCULAR SUBTOTAL
-        // ===============================
-
-        for (Object detalleObj : detallesEnMemoria) {
-            if (detalleObj instanceof VentanaDetalle vd) {
-                detallesVentana.add(vd);
-                subtotal = subtotal.add(vd.getSubtotalLinea());
-            }
-            else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
-                detallesPuerta.add(pd);
-                subtotal = subtotal.add(pd.getSubtotalLinea());
-            }
-            else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
-                detallesCanceleria.add(cd);
-                subtotal = subtotal.add(cd.getSubtotalLinea());
-            }
-        }
-
-
-
-        // ===============================
-        // CALCULAR DESCUENTO
-        // ===============================
-
-        BigDecimal descuentoMonto = BigDecimal.ZERO;
-
-        if (ckbxDescuentoSi.isSelected()) {
-            String textoDescuento = txtDescuento.getText().trim();
-
-            if (!textoDescuento.isEmpty()) {
-                try {
-                    BigDecimal porcentaje = new BigDecimal(textoDescuento);
-
-                    if (porcentaje.compareTo(BigDecimal.ZERO) < 0 ||
-                            porcentaje.compareTo(new BigDecimal("100")) > 0) {
-
-                        JOptionPane.showMessageDialog(this,
-                                "El descuento debe estar entre 0% y 100%.",
-                                "Descuento inválido",
-                                JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-
-                    descuentoMonto = subtotal.multiply(porcentaje.divide(new BigDecimal("100")));
-
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this,
-                            "El descuento debe ser numérico.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-        }
-
-
-
-        // ===============================
-        // CONFIRMAR GUARDADO
-        // ===============================
-
-        int confirm = JOptionPane.showConfirmDialog(
-                this,
-                "¿Desea guardar la cotización para el cliente:\n" +
-                        clienteSeleccionado.getNombre() + "?",
-                "Confirmar guardado",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
-        );
-
-        if (confirm != JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe seleccionar un cliente.",
+                    "Error de validación",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-
-
-        // ===============================
-        // GUARDAR COTIZACIÓN
-        // ===============================
-
-        Cotizacion cotizacion = new Cotizacion();
-        cotizacion.setCliente(clienteSeleccionado);
-        cotizacion.setVendedor(vendedorPorDefecto);
-        cotizacion.setProyecto(null);
-        cotizacion.setFecha(new Date());
-        cotizacion.setEstado("Pendiente");
-        cotizacion.setSubtotal(subtotal);
-        cotizacion.setDescuentoMonto(descuentoMonto);
-
-        CotizacionBO bo = new CotizacionBO();
-        boolean exito = bo.crearCotizacionCompleta(
-                cotizacion,
-                detallesVentana,
-                detallesCanceleria,
-                detallesPuerta
-        );
-
-        if (exito) {
+        // Validar vendedor por defecto
+        if (vendedorPorDefecto == null) {
             JOptionPane.showMessageDialog(this,
-                    "Cotización guardada con éxito.\nNúmero: " +
-                            cotizacion.getIdCotizacion(),
-                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
-
-            this.dispose();
-            new InicioAdministrarCotizaciones().setVisible(true);
-
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    "Ocurrió un error al guardar.",
-                    "Error", JOptionPane.ERROR_MESSAGE);
+                    "No se puede guardar porque no se cargó un vendedor por defecto.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this,
-                "Error inesperado: " + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
-    }
+        // Validar que existan detalles en la memoria
+        if (detallesEnMemoria.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe agregar al menos un detalle a la cotización.",
+                    "Error de validación",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
+        Cliente clienteSeleccionado = clientes.get(cbxSeleccionarCliente.getSelectedIndex());
 
+        try {
+            ArrayList<VentanaDetalle> detallesVentana = new ArrayList<>();
+            ArrayList<PuertaAbatibleDetalle> detallesPuerta = new ArrayList<>();
+            ArrayList<CanceleriaFijaDetalle> detallesCanceleria = new ArrayList<>();
 
+            BigDecimal subtotal = BigDecimal.ZERO;
+
+            // ===============================
+            // VALIDACIONES DE CADA DETALLE (CORRECTAS)
+            // ===============================
+            for (Object detalleObj : detallesEnMemoria) {
+
+                // ----------- VALIDAR VENTANA -----------
+                if (detalleObj instanceof VentanaDetalle d) {
+
+                    if (d.getMedidaVertical() == null
+                            || d.getMedidaVertical().compareTo(BigDecimal.ZERO) <= 0
+                            || d.getMedidaVertical().compareTo(new BigDecimal("10")) > 0) {
+
+                        JOptionPane.showMessageDialog(this,
+                                "Error en ventana: El alto debe ser entre 0 y 10 metros.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (d.getMedidaHorizontal() == null
+                            || d.getMedidaHorizontal().compareTo(BigDecimal.ZERO) <= 0
+                            || d.getMedidaHorizontal().compareTo(new BigDecimal("15")) > 0) {
+
+                        JOptionPane.showMessageDialog(this,
+                                "Error en ventana: El ancho debe ser entre 0 y 15 metros.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (d.getCantidad() <= 0) {
+                        JOptionPane.showMessageDialog(this,
+                                "Error en ventana: La cantidad debe ser mayor a 0.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                } // ----------- VALIDAR PUERTA -----------
+                else if (detalleObj instanceof PuertaAbatibleDetalle d) {
+
+                    if (d.getMedidaVertical() == null
+                            || d.getMedidaVertical().compareTo(BigDecimal.ZERO) <= 0
+                            || d.getMedidaVertical().compareTo(new BigDecimal("10")) > 0) {
+
+                        JOptionPane.showMessageDialog(this,
+                                "Error en puerta: El alto debe ser entre 0 y 10 metros.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (d.getMedidaHorizontal() == null
+                            || d.getMedidaHorizontal().compareTo(BigDecimal.ZERO) <= 0
+                            || d.getMedidaHorizontal().compareTo(new BigDecimal("15")) > 0) {
+
+                        JOptionPane.showMessageDialog(this,
+                                "Error en puerta: El ancho debe ser entre 0 y 15 metros.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (d.getCantidad() <= 0) {
+                        JOptionPane.showMessageDialog(this,
+                                "Error en puerta: La cantidad debe ser mayor a 0.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                } // ----------- VALIDAR CANCELERÍA -----------
+                else if (detalleObj instanceof CanceleriaFijaDetalle d) {
+
+                    if (d.getMedidaVertical() == null
+                            || d.getMedidaVertical().compareTo(BigDecimal.ZERO) <= 0
+                            || d.getMedidaVertical().compareTo(new BigDecimal("10")) > 0) {
+
+                        JOptionPane.showMessageDialog(this,
+                                "Error en cancelería: El alto debe ser entre 0 y 10 metros.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (d.getMedidaHorizontal() == null
+                            || d.getMedidaHorizontal().compareTo(BigDecimal.ZERO) <= 0
+                            || d.getMedidaHorizontal().compareTo(new BigDecimal("15")) > 0) {
+
+                        JOptionPane.showMessageDialog(this,
+                                "Error en cancelería: El ancho debe ser entre 0 y 15 metros.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if (d.getCantidad() <= 0) {
+                        JOptionPane.showMessageDialog(this,
+                                "Error en cancelería: La cantidad debe ser mayor a 0.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+            }
+
+            // ===============================
+            // CLASIFICAR DETALLES Y CALCULAR SUBTOTAL
+            // ===============================
+            for (Object detalleObj : detallesEnMemoria) {
+                if (detalleObj instanceof VentanaDetalle vd) {
+                    detallesVentana.add(vd);
+                    subtotal = subtotal.add(vd.getSubtotalLinea());
+                } else if (detalleObj instanceof PuertaAbatibleDetalle pd) {
+                    detallesPuerta.add(pd);
+                    subtotal = subtotal.add(pd.getSubtotalLinea());
+                } else if (detalleObj instanceof CanceleriaFijaDetalle cd) {
+                    detallesCanceleria.add(cd);
+                    subtotal = subtotal.add(cd.getSubtotalLinea());
+                }
+            }
+
+            // ===============================
+            // CALCULAR DESCUENTO
+            // ===============================
+            BigDecimal descuentoMonto = BigDecimal.ZERO;
+
+            if (ckbxDescuentoSi.isSelected()) {
+                String textoDescuento = txtDescuento.getText().trim();
+
+                if (!textoDescuento.isEmpty()) {
+                    try {
+                        BigDecimal porcentaje = new BigDecimal(textoDescuento);
+
+                        if (porcentaje.compareTo(BigDecimal.ZERO) < 0
+                                || porcentaje.compareTo(new BigDecimal("100")) > 0) {
+
+                            JOptionPane.showMessageDialog(this,
+                                    "El descuento debe estar entre 0% y 100%.",
+                                    "Descuento inválido",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        descuentoMonto = subtotal.multiply(porcentaje.divide(new BigDecimal("100")));
+
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(this,
+                                "El descuento debe ser numérico.",
+                                "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+            }
+
+            // ===============================
+            // CONFIRMAR GUARDADO
+            // ===============================
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Desea guardar la cotización para el cliente:\n"
+                    + clienteSeleccionado.getNombre() + "?",
+                    "Confirmar guardado",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+            );
+
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            // ===============================
+            // GUARDAR COTIZACIÓN
+            // ===============================
+            Cotizacion cotizacion = new Cotizacion();
+            cotizacion.setCliente(clienteSeleccionado);
+            cotizacion.setVendedor(vendedorPorDefecto);
+            cotizacion.setProyecto(null);
+            cotizacion.setFecha(new Date());
+            cotizacion.setEstado("Pendiente");
+            cotizacion.setSubtotal(subtotal);
+            cotizacion.setDescuentoMonto(descuentoMonto);
+
+            CotizacionBO bo = new CotizacionBO();
+            boolean exito = bo.crearCotizacionCompleta(
+                    cotizacion,
+                    detallesVentana,
+                    detallesCanceleria,
+                    detallesPuerta
+            );
+
+            if (exito) {
+                JOptionPane.showMessageDialog(this,
+                        "Cotización guardada con éxito.\nNúmero: "
+                        + cotizacion.getIdCotizacion(),
+                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+                this.dispose();
+                new InicioAdministrarCotizaciones().setVisible(true);
+
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Ocurrió un error al guardar.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error inesperado: " + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
 
 
     }//GEN-LAST:event_btnGuardarActionPerformed
@@ -1333,70 +1323,66 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         });
         actualizarEstadoBotones();
     }
+
     /**
- * Actualiza el textArea txtMaterialUtilizar mostrando todos
- * los materiales utilizados en la cotización.
- */
-private void actualizarTextAreaMateriales() {
-    StringBuilder sb = new StringBuilder();
+     * Actualiza el textArea txtMaterialUtilizar mostrando todos los materiales
+     * utilizados en la cotización.
+     */
+    private void actualizarTextAreaMateriales() {
+        StringBuilder sb = new StringBuilder();
 
-    boolean hayVentanas = false;
-    boolean hayPuertas = false;
-    boolean hayCanceleria = false;
+        boolean hayVentanas = false;
+        boolean hayPuertas = false;
+        boolean hayCanceleria = false;
 
-    // ---------- RECORRER DETALLES ----------
-    for (Object obj : detallesEnMemoria) {
+        // ---------- RECORRER DETALLES ----------
+        for (Object obj : detallesEnMemoria) {
 
-        // -------- VENTANAS --------
-        if (obj instanceof VentanaDetalle d) {
-            if (!hayVentanas) {
-                sb.append("=== MATERIALES DE VENTANAS ===\n");
-                hayVentanas = true;
+            // -------- VENTANAS --------
+            if (obj instanceof VentanaDetalle d) {
+                if (!hayVentanas) {
+                    sb.append("=== MATERIALES DE VENTANAS ===\n");
+                    hayVentanas = true;
+                }
+                for (MaterialDetalle md : d.getMateriales()) {
+                    sb.append("- ").append(md.getMaterial().getTipo())
+                            .append("  x").append(md.getCantidad())
+                            .append("\n");
+                }
+                sb.append("\n");
+            } // -------- PUERTAS --------
+            else if (obj instanceof PuertaAbatibleDetalle d) {
+                if (!hayPuertas) {
+                    sb.append("=== MATERIALES DE PUERTAS ===\n");
+                    hayPuertas = true;
+                }
+                for (MaterialDetalle md : d.getMateriales()) {
+                    sb.append("- ").append(md.getMaterial().getTipo())
+                            .append("  x").append(md.getCantidad())
+                            .append("\n");
+                }
+                sb.append("\n");
+            } // -------- CANCELERÍA --------
+            else if (obj instanceof CanceleriaFijaDetalle d) {
+                if (!hayCanceleria) {
+                    sb.append("=== MATERIALES DE CANCELERÍA ===\n");
+                    hayCanceleria = true;
+                }
+                for (MaterialDetalle md : d.getMateriales()) {
+                    sb.append("- ").append(md.getMaterial().getTipo())
+                            .append("  x").append(md.getCantidad())
+                            .append("\n");
+                }
+                sb.append("\n");
             }
-            for (MaterialDetalle md : d.getMateriales()) {
-                sb.append("- ").append(md.getMaterial().getTipo())
-                        .append("  x").append(md.getCantidad())
-                        .append("\n");
-            }
-            sb.append("\n");
         }
 
-        // -------- PUERTAS --------
-        else if (obj instanceof PuertaAbatibleDetalle d) {
-            if (!hayPuertas) {
-                sb.append("=== MATERIALES DE PUERTAS ===\n");
-                hayPuertas = true;
-            }
-            for (MaterialDetalle md : d.getMateriales()) {
-                sb.append("- ").append(md.getMaterial().getTipo())
-                        .append("  x").append(md.getCantidad())
-                        .append("\n");
-            }
-            sb.append("\n");
-        }
-
-        // -------- CANCELERÍA --------
-        else if (obj instanceof CanceleriaFijaDetalle d) {
-            if (!hayCanceleria) {
-                sb.append("=== MATERIALES DE CANCELERÍA ===\n");
-                hayCanceleria = true;
-            }
-            for (MaterialDetalle md : d.getMateriales()) {
-                sb.append("- ").append(md.getMaterial().getTipo())
-                        .append("  x").append(md.getCantidad())
-                        .append("\n");
-            }
-            sb.append("\n");
+        if (sb.length() == 0) {
+            txtMaterialUtilizar.setText("No hay materiales registrados.");
+        } else {
+            txtMaterialUtilizar.setText(sb.toString());
         }
     }
-
-    if (sb.length() == 0) {
-        txtMaterialUtilizar.setText("No hay materiales registrados.");
-    } else {
-        txtMaterialUtilizar.setText(sb.toString());
-    }
-}
-
 
     /**
      * Habilita o deshabilita los botones editar y eliminar basado en si la

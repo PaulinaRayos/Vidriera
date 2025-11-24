@@ -6,6 +6,7 @@ package presentacion;
 
 import dao.MaterialDAO;
 import java.awt.Window;
+import javax.swing.JOptionPane;
 import negocio.CotizacionBO;
 
 /**
@@ -13,6 +14,7 @@ import negocio.CotizacionBO;
  * @author aleja
  */
 public class MaterialMosquiteras extends javax.swing.JDialog {
+
     // ---------- Variables para devolver selección ----------
     // Cantidades seleccionadas
     private int cantSerie2 = 0;
@@ -25,7 +27,13 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(parent);
 
-        btnGuardar5.addActionListener(evt -> btnGuardar5ActionPerformed(evt));
+        spnAluminioSerie2.setModel(new javax.swing.SpinnerNumberModel(0, 0, 999, 1));
+        spnAluminioAluminioSerie3.setModel(new javax.swing.SpinnerNumberModel(0, 0, 999, 1));
+        spnAluminioAnodizadoNegro.setModel(new javax.swing.SpinnerNumberModel(0, 0, 999, 1));
+        spnMalla.setModel(new javax.swing.SpinnerNumberModel(0, 0, 999, 1));
+        spnAluminioSerie2.addChangeListener(e -> actualizarEstadoMateriales());
+        spnAluminioAluminioSerie3.addChangeListener(e -> actualizarEstadoMateriales());
+        spnAluminioAnodizadoNegro.addChangeListener(e -> actualizarEstadoMateriales());
     }
 
     /**
@@ -205,15 +213,88 @@ public class MaterialMosquiteras extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardar5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardar5ActionPerformed
-        cantSerie2 = (int) spnAluminioSerie2.getValue();
-        cantSerie3 = (int) spnAluminioAluminioSerie3.getValue();
-        cantNegro = (int) spnAluminioAnodizadoNegro.getValue();
-        cantMalla = (int) spnMalla.getValue();
+        try {
+        int cantSerie2 = (int) spnAluminioSerie2.getValue();
+        int cantSerie3 = (int) spnAluminioAluminioSerie3.getValue();
+        int cantNegro = (int) spnAluminioAnodizadoNegro.getValue();
+        int cantMalla = (int) spnMalla.getValue();
 
-        this.dispose();
+        // Contar cuántos materiales de aluminio están seleccionados
+        int alumSeleccionados = 0;
+        if (cantSerie2 > 0) alumSeleccionados++;
+        if (cantSerie3 > 0) alumSeleccionados++;
+        if (cantNegro > 0) alumSeleccionados++;
+
+        if (alumSeleccionados > 1) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Solo puedes seleccionar un tipo de aluminio.",
+                    "Selección inválida",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        if (cantSerie2 == 0 && cantSerie3 == 0 && cantNegro == 0 && cantMalla == 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Debes seleccionar al menos un material.",
+                    "Material faltante",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(
+                this,
+                "Error al actualizar stock: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+        );
+        e.printStackTrace();
+    }
+
+    this.dispose();
     }//GEN-LAST:event_btnGuardar5ActionPerformed
     public int getCantSerie2() {
         return cantSerie2;
+    }
+
+    private void actualizarEstadoMateriales() {
+        int cant2 = (int) spnAluminioSerie2.getValue();
+        int cant3 = (int) spnAluminioAluminioSerie3.getValue();
+        int cantNegro = (int) spnAluminioAnodizadoNegro.getValue();
+
+        int seleccionados = 0;
+        if (cant2 > 0) {
+            seleccionados++;
+        }
+        if (cant3 > 0) {
+            seleccionados++;
+        }
+        if (cantNegro > 0) {
+            seleccionados++;
+        }
+
+        // Si solo uno está seleccionado → bloquear los demás
+        if (seleccionados == 1) {
+            if (cant2 > 0) {
+                spnAluminioAluminioSerie3.setEnabled(false);
+                spnAluminioAnodizadoNegro.setEnabled(false);
+            } else if (cant3 > 0) {
+                spnAluminioSerie2.setEnabled(false);
+                spnAluminioAnodizadoNegro.setEnabled(false);
+            } else if (cantNegro > 0) {
+                spnAluminioSerie2.setEnabled(false);
+                spnAluminioAluminioSerie3.setEnabled(false);
+            }
+        } else {
+            // Si ninguno está seleccionado, habilitar todos
+            spnAluminioSerie2.setEnabled(true);
+            spnAluminioAluminioSerie3.setEnabled(true);
+            spnAluminioAnodizadoNegro.setEnabled(true);
+        }
     }
 
     public int getCantSerie3() {
