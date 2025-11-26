@@ -41,13 +41,16 @@ public class DetalleCotizacionDAO {
         String sql = """
         INSERT INTO ventanadetalle(
             id_tipo_trabajo, id_cotizacion, medidaHorizontal, medidaVertical, cantidad,
-            tipoCristal, noHojas, descripcion, tipoVentana, mosquitero, arco, tipoArco,
-            medidaArco, tipoCanalillo, medidaCanalillo)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            tipoCristal, noHojas, descripcion, tipoVentana, mosquitero,
+            tipoMosquitero, tipoPerfil, noEscuadras, tipoTela, largoTela,
+            arco, tipoArco, medidaArco, tipoCanalillo, medidaCanalillo
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """;
 
         try (PreparedStatement ps = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             for (VentanaDetalle d : detalles) {
+
                 ps.setInt(1, d.getTipoTrabajo().getIdCatalogo());
                 ps.setInt(2, d.getCotizacion().getIdCotizacion());
                 ps.setBigDecimal(3, d.getMedidaHorizontal());
@@ -58,11 +61,21 @@ public class DetalleCotizacionDAO {
                 ps.setString(8, d.getDescripcion());
                 ps.setString(9, d.getTipoVentana() != null ? d.getTipoVentana().getDescripcion() : null);
                 ps.setBoolean(10, d.isMosquitero());
-                ps.setBoolean(11, d.isArco());
-                ps.setString(12, d.getTipoArco());
-                ps.setBigDecimal(13, d.getMedidaArco());
-                ps.setString(14, d.getTipoCanalillo());
-                ps.setBigDecimal(15, d.getMedidaCanalillo());
+
+                //NUEVOS CAMPOS
+                ps.setString(11, d.getTipoMosquitero());
+                ps.setString(12, d.getTipoPerfil());
+                ps.setInt(13, d.getNoEscuadras());
+                ps.setString(14, d.getTipoTela());
+                ps.setBigDecimal(15, d.getLargoTela());
+
+                //Campos anteriores
+                ps.setBoolean(16, d.isArco());
+                ps.setString(17, d.getTipoArco());
+                ps.setBigDecimal(18, d.getMedidaArco());
+                ps.setString(19, d.getTipoCanalillo());
+                ps.setBigDecimal(20, d.getMedidaCanalillo());
+
                 ps.addBatch();
             }
 
@@ -205,14 +218,29 @@ public class DetalleCotizacionDAO {
     // Guardar detalles de Puerta Abatible
     public boolean crearDetallePuerta(List<PuertaAbatibleDetalle> detalles) {
         String sql = """
-        INSERT INTO puertaabatibledetalle(
-            id_tipo_trabajo, id_cotizacion, medidaHorizontal, medidaVertical, cantidad,
-            tipoCristal, noHojas, descripcion, tipo_puerta, mosquitero, duela, tipo_duela,
-            medida_duela, adaptador, tipo_adaptador, junquillo, tipo_junquillo, canal, tipo_canal,
-            pivote, tipo_pivote, cantidad_pivote, jaladera, tipo_jaladera, cantidad_jaladera,
-            barra, tipo_barra)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """;
+    INSERT INTO puertaabatibledetalle(
+        id_tipo_trabajo, id_cotizacion, medidaHorizontal, medidaVertical, cantidad,
+        tipoCristal, noHojas, descripcion, tipo_puerta,
+        mosquitero, tipoMosquitero, tipoPerfil, noEscuadras, tipoTela, largoTela,
+        duela, tipo_duela, medida_duela,
+        adaptador, tipo_adaptador,
+        junquillo, tipo_junquillo,
+        canal, tipo_canal,
+        pivote, tipo_pivote, cantidad_pivote,
+        jaladera, tipo_jaladera, cantidad_jaladera,
+        barra, tipo_barra
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, 
+        ?, ?, ?, ?, ?, ?, 
+        ?, ?, ?, 
+        ?, ?, 
+        ?, ?, 
+        ?, ?, 
+        ?, ?, ?, 
+        ?, ?, ?, 
+        ?, ?
+    )
+""";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             for (PuertaAbatibleDetalle d : detalles) {
@@ -225,24 +253,31 @@ public class DetalleCotizacionDAO {
                 ps.setInt(7, d.getNoHojas());
                 ps.setString(8, d.getDescripcion());
                 ps.setString(9, d.getTipoPuerta() != null ? d.getTipoPuerta().name() : null);
+
                 ps.setBoolean(10, d.isMosquitero());
-                ps.setBoolean(11, d.isDuela());
-                ps.setString(12, d.getTipoDuela());
-                ps.setBigDecimal(13, d.getMedidaDuela());
-                ps.setBoolean(14, d.isAdaptador());
-                ps.setString(15, d.getTipoAdaptador());
-                ps.setBoolean(16, d.isJunquillo());
-                ps.setString(17, d.getTipoJunquillo());
-                ps.setBoolean(18, d.isCanal());
-                ps.setString(19, d.getTipoCanal());
-                ps.setBoolean(20, d.isPivote());
-                ps.setString(21, d.getTipoPivote());
-                ps.setInt(22, d.getCantidadPivote());
-                ps.setBoolean(23, d.isJaladera());
-                ps.setString(24, d.getTipoJaladera());
-                ps.setInt(25, d.getCantidadJaladera());
-                ps.setBoolean(26, d.isBarra());
-                ps.setString(27, d.getTipoBarra());
+                ps.setString(11, d.getTipoMosquitero());
+                ps.setString(12, d.getTipoPerfil());
+                ps.setInt(13, d.getNoEscuadras());
+                ps.setString(14, d.getTipoTela());
+                ps.setBigDecimal(15, d.getLargoTela());
+
+                ps.setBoolean(16, d.isDuela());
+                ps.setString(17, d.getTipoDuela());
+                ps.setBigDecimal(18, d.getMedidaDuela());
+                ps.setBoolean(19, d.isAdaptador());
+                ps.setString(20, d.getTipoAdaptador());
+                ps.setBoolean(21, d.isJunquillo());
+                ps.setString(22, d.getTipoJunquillo());
+                ps.setBoolean(23, d.isCanal());
+                ps.setString(24, d.getTipoCanal());
+                ps.setBoolean(25, d.isPivote());
+                ps.setString(26, d.getTipoPivote());
+                ps.setInt(27, d.getCantidadPivote());
+                ps.setBoolean(28, d.isJaladera());
+                ps.setString(29, d.getTipoJaladera());
+                ps.setInt(30, d.getCantidadJaladera());
+                ps.setBoolean(31, d.isBarra());
+                ps.setString(32, d.getTipoBarra());
                 ps.addBatch();
             }
 

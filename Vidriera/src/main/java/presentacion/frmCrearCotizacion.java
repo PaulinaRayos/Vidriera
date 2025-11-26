@@ -86,7 +86,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 ckbxDescuentoNo.setSelected(false);
                 txtDescuento.setEnabled(true);
-                txtDescuento.setText(""); // limpiar si quieres
+                txtDescuento.setText(""); // limpiar
                 recalcularTotales();
             }
         });

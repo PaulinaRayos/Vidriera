@@ -1,4 +1,3 @@
-
 package modelo;
 
 import java.math.BigDecimal;
@@ -24,6 +23,11 @@ public class VentanaDetalle extends DetalleCotizacion {
     private String descripcion;
     private TipoVentana tipoVentana;
     private boolean mosquitero;
+    private String tipoMosquitero;
+    private String tipoPerfil;
+    private int noEscuadras;
+    private String tipoTela;
+    private BigDecimal LargoTela;
     private boolean arco;
     private String tipoArco;
     private BigDecimal medidaArco;
@@ -37,7 +41,7 @@ public class VentanaDetalle extends DetalleCotizacion {
     }
 
     //Constructor con id
-    public VentanaDetalle(int idVentanaDetalle, int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoVentana tipoVentana, boolean mosquitero, boolean arco, String tipoArco, BigDecimal medidaArco, String tipoCanalillo, BigDecimal medidaCanalillo) {
+    public VentanaDetalle(int idVentanaDetalle, int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoVentana tipoVentana, boolean mosquitero, String tipoMosquitero, String tipoPerfil, int noEscuadras, String tipoTela, BigDecimal LargoTela, boolean arco, String tipoArco, BigDecimal medidaArco, String tipoCanalillo, BigDecimal medidaCanalillo) {
         this.idVentanaDetalle = idVentanaDetalle;
         this.idTipoTrabajo = idTipoTrabajo;
         this.cotizacion = cotizacion;
@@ -51,6 +55,11 @@ public class VentanaDetalle extends DetalleCotizacion {
         this.descripcion = descripcion;
         this.tipoVentana = tipoVentana;
         this.mosquitero = mosquitero;
+        this.tipoMosquitero = tipoMosquitero;
+        this.tipoPerfil = tipoPerfil;
+        this.noEscuadras = noEscuadras;
+        this.tipoTela = tipoTela;
+        this.LargoTela = LargoTela;
         this.arco = arco;
         this.tipoArco = tipoArco;
         this.medidaArco = medidaArco;
@@ -59,7 +68,7 @@ public class VentanaDetalle extends DetalleCotizacion {
     }
 
     //Constructor sin id
-    public VentanaDetalle(int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoVentana tipoVentana, boolean mosquitero, boolean arco, String tipoArco, BigDecimal medidaArco, String tipoCanalillo, BigDecimal medidaCanalillo) {
+    public VentanaDetalle(int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoVentana tipoVentana, boolean mosquitero, String tipoMosquitero, String tipoPerfil, int noEscuadras, String tipoTela, BigDecimal LargoTela, boolean arco, String tipoArco, BigDecimal medidaArco, String tipoCanalillo, BigDecimal medidaCanalillo) {
         this.idTipoTrabajo = idTipoTrabajo;
         this.cotizacion = cotizacion;
         this.medidaHorizontal = medidaHorizontal;
@@ -72,6 +81,11 @@ public class VentanaDetalle extends DetalleCotizacion {
         this.descripcion = descripcion;
         this.tipoVentana = tipoVentana;
         this.mosquitero = mosquitero;
+        this.tipoMosquitero = tipoMosquitero;
+        this.tipoPerfil = tipoPerfil;
+        this.noEscuadras = noEscuadras;
+        this.tipoTela = tipoTela;
+        this.LargoTela = LargoTela;
         this.arco = arco;
         this.tipoArco = tipoArco;
         this.medidaArco = medidaArco;
@@ -238,6 +252,46 @@ public class VentanaDetalle extends DetalleCotizacion {
 
     public void setMateriales(List<MaterialDetalle> materiales) {
         this.materiales = materiales;
+    }
+
+    public String getTipoMosquitero() {
+        return tipoMosquitero;
+    }
+
+    public void setTipoMosquitero(String tipoMosquitero) {
+        this.tipoMosquitero = tipoMosquitero;
+    }
+
+    public String getTipoPerfil() {
+        return tipoPerfil;
+    }
+
+    public void setTipoPerfil(String tipoPerfil) {
+        this.tipoPerfil = tipoPerfil;
+    }
+
+    public int getNoEscuadras() {
+        return noEscuadras;
+    }
+
+    public void setNoEscuadras(int noEscuadras) {
+        this.noEscuadras = noEscuadras;
+    }
+
+    public String getTipoTela() {
+        return tipoTela;
+    }
+
+    public void setTipoTela(String tipoTela) {
+        this.tipoTela = tipoTela;
+    }
+
+    public BigDecimal getLargoTela() {
+        return LargoTela;
+    }
+
+    public void setLargoTela(BigDecimal LargoTela) {
+        this.LargoTela = LargoTela;
     }
 
     public void calcularSubtotal() {

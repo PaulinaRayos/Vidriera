@@ -44,6 +44,11 @@ public class DetalleEditorDialog extends javax.swing.JDialog {
         configurarRadioBotones();
 
         this.esModoEdicion = false;
+        
+         // Selecciona Ventana por defecto
+        radVentana.setSelected(true);
+        mostrarPanelSeleccionado();
+    
         this.setTitle("Añadir Detalle");
         this.pack();
         this.setLocationRelativeTo(parent);

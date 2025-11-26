@@ -1,4 +1,3 @@
-
 package modelo;
 
 import java.math.BigDecimal;
@@ -23,6 +22,11 @@ public class PuertaAbatibleDetalle {
     private String descripcion;
     private TipoPuerta tipoPuerta;
     private boolean mosquitero;
+    private String tipoMosquitero;
+    private String tipoPerfil;
+    private int noEscuadras;
+    private String tipoTela;
+    private BigDecimal LargoTela;
     private boolean duela;
     private String tipoDuela;
     private BigDecimal medidaDuela;
@@ -61,7 +65,7 @@ public class PuertaAbatibleDetalle {
     }
 
     //Constructor con id
-    public PuertaAbatibleDetalle(int idDetallePuerta, int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoPuerta tipoPuerta, boolean mosquitero, boolean duela, String tipoDuela, BigDecimal medidaDuela, boolean adaptador, String tipoAdaptador, boolean junquillo, String tipoJunquillo, boolean canal, String tipoCanal, boolean pivote, String tipoPivote, int cantidadPivote, boolean jaladera, String tipoJaladera, int cantidadJaladera, boolean barra, String tipoBarra, boolean chapa, String tipoChapa, int cantidadChapa, boolean bisagra, String tipoBisagra, int cantidadBisagra, boolean cierraPuerta, String tipoCierraPuerta, int cantidadCierraPuerta, boolean swiggle, String tipoSwiggle, int numFijosVerticales, int numFijosHorizontales) {
+    public PuertaAbatibleDetalle(int idDetallePuerta, int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoPuerta tipoPuerta, boolean mosquitero, String tipoMosquitero, String tipoPerfil, int noEscuadras, String tipoTela, BigDecimal LargoTela, boolean duela, String tipoDuela, BigDecimal medidaDuela, boolean adaptador, String tipoAdaptador, boolean junquillo, String tipoJunquillo, boolean canal, String tipoCanal, boolean pivote, String tipoPivote, int cantidadPivote, boolean jaladera, String tipoJaladera, int cantidadJaladera, boolean barra, String tipoBarra, boolean chapa, String tipoChapa, int cantidadChapa, boolean bisagra, String tipoBisagra, int cantidadBisagra, boolean cierraPuerta, String tipoCierraPuerta, int cantidadCierraPuerta, boolean swiggle, String tipoSwiggle, int numFijosVerticales, int numFijosHorizontales) {
         this.idDetallePuerta = idDetallePuerta;
         this.idTipoTrabajo = idTipoTrabajo;
         this.cotizacion = cotizacion;
@@ -75,6 +79,11 @@ public class PuertaAbatibleDetalle {
         this.descripcion = descripcion;
         this.tipoPuerta = tipoPuerta;
         this.mosquitero = mosquitero;
+        this.tipoMosquitero = tipoMosquitero;
+        this.tipoPerfil = tipoPerfil;
+        this.noEscuadras = noEscuadras;
+        this.tipoTela = tipoTela;
+        this.LargoTela = LargoTela;
         this.duela = duela;
         this.tipoDuela = tipoDuela;
         this.medidaDuela = medidaDuela;
@@ -108,7 +117,7 @@ public class PuertaAbatibleDetalle {
     }
 
     //Constructor sin id
-    public PuertaAbatibleDetalle(int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoPuerta tipoPuerta, boolean mosquitero, boolean duela, String tipoDuela, BigDecimal medidaDuela, boolean adaptador, String tipoAdaptador, boolean junquillo, String tipoJunquillo, boolean canal, String tipoCanal, boolean pivote, String tipoPivote, int cantidadPivote, boolean jaladera, String tipoJaladera, int cantidadJaladera, boolean barra, String tipoBarra, boolean chapa, String tipoChapa, int cantidadChapa, boolean bisagra, String tipoBisagra, int cantidadBisagra, boolean cierraPuerta, String tipoCierraPuerta, int cantidadCierraPuerta, boolean swiggle, String tipoSwiggle, int numFijosVerticales, int numFijosHorizontales) {
+    public PuertaAbatibleDetalle(int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoPuerta tipoPuerta, boolean mosquitero, String tipoMosquitero, String tipoPerfil, int noEscuadras, String tipoTela, BigDecimal LargoTela, boolean duela, String tipoDuela, BigDecimal medidaDuela, boolean adaptador, String tipoAdaptador, boolean junquillo, String tipoJunquillo, boolean canal, String tipoCanal, boolean pivote, String tipoPivote, int cantidadPivote, boolean jaladera, String tipoJaladera, int cantidadJaladera, boolean barra, String tipoBarra, boolean chapa, String tipoChapa, int cantidadChapa, boolean bisagra, String tipoBisagra, int cantidadBisagra, boolean cierraPuerta, String tipoCierraPuerta, int cantidadCierraPuerta, boolean swiggle, String tipoSwiggle, int numFijosVerticales, int numFijosHorizontales) {
         this.idTipoTrabajo = idTipoTrabajo;
         this.cotizacion = cotizacion;
         this.medidaHorizontal = medidaHorizontal;
@@ -121,6 +130,11 @@ public class PuertaAbatibleDetalle {
         this.descripcion = descripcion;
         this.tipoPuerta = tipoPuerta;
         this.mosquitero = mosquitero;
+        this.tipoMosquitero = tipoMosquitero;
+        this.tipoPerfil = tipoPerfil;
+        this.noEscuadras = noEscuadras;
+        this.tipoTela = tipoTela;
+        this.LargoTela = LargoTela;
         this.duela = duela;
         this.tipoDuela = tipoDuela;
         this.medidaDuela = medidaDuela;
@@ -512,6 +526,46 @@ public class PuertaAbatibleDetalle {
 
     public void setMateriales(List<MaterialDetalle> materiales) {
         this.materiales = materiales;
+    }
+
+    public String getTipoMosquitero() {
+        return tipoMosquitero;
+    }
+
+    public void setTipoMosquitero(String tipoMosquitero) {
+        this.tipoMosquitero = tipoMosquitero;
+    }
+
+    public String getTipoPerfil() {
+        return tipoPerfil;
+    }
+
+    public void setTipoPerfil(String tipoPerfil) {
+        this.tipoPerfil = tipoPerfil;
+    }
+
+    public int getNoEscuadras() {
+        return noEscuadras;
+    }
+
+    public void setNoEscuadras(int noEscuadras) {
+        this.noEscuadras = noEscuadras;
+    }
+
+    public String getTipoTela() {
+        return tipoTela;
+    }
+
+    public void setTipoTela(String tipoTela) {
+        this.tipoTela = tipoTela;
+    }
+
+    public BigDecimal getLargoTela() {
+        return LargoTela;
+    }
+
+    public void setLargoTela(BigDecimal LargoTela) {
+        this.LargoTela = LargoTela;
     }
 
     public void calcularSubtotal() {

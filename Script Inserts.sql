@@ -48,9 +48,11 @@ VALUES
 INSERT INTO material (descripcion, precio, stockActual, tipo)
 VALUES
 -- VIDRIO
-('Vidrio claro 6mm', 480.00, 60, 'VIDRIO'),
-('Vidrio tintex 6mm', 550.00, 45, 'VIDRIO'),
-('Vidrio reflecta 6mm bronce', 620.00, 30, 'VIDRIO'),
+('Claro 6mm (1.83x2.44)' , 480.00, 60, 'VIDRIO'),
+('Tintex 6mm (2.13x2.44)', 550.00, 45, 'VIDRIO'),
+('Reflecta 6mm (2.14x3.30)', 620.00, 30, 'VIDRIO'),
+('Reflecta 6mm (2.25x3.21)', 620.00, 30, 'VIDRIO'),
+('Reflecta 6mm (2.44x3.66)', 620.00, 30, 'VIDRIO'),
 
 -- ALUMINIO
 ('Perfil aluminio serie 2" natural', 340.00, 120, 'ALUMINIO'),
@@ -82,8 +84,8 @@ VALUES
 ('Adaptador aluminio serie 3"', 95.00, 100, 'ADAPTADOR'),
 
 -- MOSQUITERO
-('Mosquitero corredizo gris', 250.00, 60, 'MOSQUITERO'),
-('Malla mosquitera fibra de vidrio', 180.00, 90, 'MOSQUITERO'),
+('Mosquitero corredizo', 250.00, 60, 'MOSQUITERO'),
+('Mosquitero fijo', 180.00, 90, 'MOSQUITERO'),
 
 -- PIVOTE
 ('Pivote metálico reforzado', 85.00, 100, 'PIVOTE'),
@@ -122,8 +124,8 @@ VALUES
 ('Tapa de perfil plástica', 35.00, 180, 'ACCESORIO'),
 
 -- PERFIL
-('Perfil de aluminio tipo U 1”', 170.00, 100, 'PERFIL'),
-('Perfil de aluminio tipo L 3/4”', 160.00, 110, 'PERFIL'),
+('Aluminio tipo U 1”', 170.00, 100, 'PERFIL'),
+('Aluminio tipo L 3/4”', 160.00, 110, 'PERFIL'),
 
 -- ARCO
 ('Arco aluminio serie 2"', 180.00, 50, 'ARCO'),
@@ -135,7 +137,14 @@ VALUES
 
 -- OTRO
 ('Cinta doble cara industrial', 90.00, 70, 'OTRO'),
-('Espaciador plástico 3mm', 15.00, 200, 'OTRO');
+('Espaciador plástico 3mm', 15.00, 200, 'OTRO'),
+
+-- TELA
+('Tela (0.60m de ancho)', 90.00, 70, 'TELA'),
+('Tela (0.90m de ancho)', 150.00, 200, 'TELA'),
+('Tela (1.0m de ancho)', 200.00, 200, 'TELA'),
+('Tela (1.2m de ancho)', 230.00, 200, 'TELA'),
+('Tela (1.5m de ancho)', 260.00, 200, 'TELA');
 
 -- ===========================
 -- DETALLES DE TRABAJOS

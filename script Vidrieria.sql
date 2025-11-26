@@ -86,6 +86,11 @@ CREATE TABLE ventanadetalle (
     descripcion TEXT,
     tipoVentana ENUM('1 ½"', '2"', '3 7/8"') NOT NULL, 
     mosquitero BOOLEAN NOT NULL DEFAULT FALSE,
+    tipoMosquitero VARCHAR(100),
+    tipoPerfil VARCHAR(100),
+    noEscuadras INT,
+    tipoTela VARCHAR(100),
+    largoTela DECIMAL(10,2),
     arco BOOLEAN NOT NULL DEFAULT FALSE,
     tipoArco VARCHAR(100),
     medidaArco DECIMAL(10,2),
@@ -109,7 +114,12 @@ CREATE TABLE puertaabatibledetalle (
     noHojas INT,
     descripcion TEXT,
     tipo_puerta ENUM('SERIE_1751', 'LINEA_PESADA'),
-    mosquitero TINYINT(1),
+    mosquitero BOOLEAN NOT NULL DEFAULT FALSE,
+    tipoMosquitero VARCHAR(100),
+    tipoPerfil VARCHAR(100),
+    noEscuadras INT,
+    tipoTela VARCHAR(100),
+    largoTela DECIMAL(10,2),
     duela TINYINT(1),
     tipo_duela VARCHAR(50),
     medida_duela DECIMAL(8,2),
@@ -176,7 +186,7 @@ CREATE TABLE material (
         'VIDRIO', 'ALUMINIO', 'JUNQUILLO', 'ZOCLO', 'TAPA', 'CANALILLO',
         'DUELA', 'ADAPTADOR', 'MOSQUITERO', 'PIVOTE', 'JALADERA', 'BARRA',
         'BISAGRA', 'TORNILLERIA', 'EMPAQUE', 'SELLADOR', 'HERRAJE', 'ACCESORIO',
-        'PERFIL', 'ARCO', 'BOLSA', 'OTRO'
+        'PERFIL', 'ARCO', 'BOLSA', 'OTRO', 'TELA'
     ) NOT NULL
 );
 

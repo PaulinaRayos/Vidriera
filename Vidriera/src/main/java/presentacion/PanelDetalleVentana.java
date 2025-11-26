@@ -57,6 +57,7 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         // Configurar los Spinners
         spnCantidad.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
         spnNoHojas.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
+        spnNoEscuadras.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
         // Validar campos de texto para permitir solo números
         permitirSoloNumeros(txtMedidaH);
         permitirSoloNumeros(txtMedidaV);
@@ -101,7 +102,20 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         medidaCanalillo = new javax.swing.JLabel();
         txtMedidaCanalillo = new javax.swing.JTextField();
         descripcion = new javax.swing.JLabel();
-        txtDescripcion = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtDescripcion = new javax.swing.JTextArea();
+        tipoMosquitero = new javax.swing.JLabel();
+        cbxTipoMosquitero = new javax.swing.JComboBox<>();
+        noEscuadras = new javax.swing.JLabel();
+        spnNoEscuadras = new javax.swing.JSpinner();
+        tela = new javax.swing.JLabel();
+        cbxTelas = new javax.swing.JComboBox<>();
+        largoTela = new javax.swing.JLabel();
+        txtLargoTela = new javax.swing.JTextField();
+        tipoPerfil = new javax.swing.JLabel();
+        cbxTipoPerfil = new javax.swing.JComboBox<>();
+
+        setPreferredSize(new java.awt.Dimension(1213, 356));
 
         panelDetalleVentana.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -130,7 +144,7 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
             .addGroup(panelTituloLayout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addComponent(titulo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(1024, Short.MAX_VALUE))
         );
         panelTituloLayout.setVerticalGroup(
             panelTituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -203,7 +217,7 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
 
         medidaArcco.setFont(new java.awt.Font("SansSerif", 1, 15)); // NOI18N
         medidaArcco.setForeground(new java.awt.Color(0, 38, 115));
-        medidaArcco.setText("Medida arco (m):");
+        medidaArcco.setText("Altura arco (m):");
 
         txtMedidaArco.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -229,10 +243,53 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         descripcion.setForeground(new java.awt.Color(0, 38, 115));
         descripcion.setText("Descripción:");
 
-        txtDescripcion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtDescripcion.addActionListener(new java.awt.event.ActionListener() {
+        txtDescripcion.setColumns(20);
+        txtDescripcion.setRows(5);
+        jScrollPane1.setViewportView(txtDescripcion);
+
+        tipoMosquitero.setFont(new java.awt.Font("SansSerif", 1, 15)); // NOI18N
+        tipoMosquitero.setForeground(new java.awt.Color(0, 38, 115));
+        tipoMosquitero.setText("Tipo mosquitero:");
+
+        cbxTipoMosquitero.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbxTipoMosquitero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTipoMosquitero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDescripcionActionPerformed(evt);
+                cbxTipoMosquiteroActionPerformed(evt);
+            }
+        });
+
+        noEscuadras.setFont(new java.awt.Font("SansSerif", 1, 15)); // NOI18N
+        noEscuadras.setForeground(new java.awt.Color(0, 38, 115));
+        noEscuadras.setText("No. escuadras:");
+
+        tela.setFont(new java.awt.Font("SansSerif", 1, 15)); // NOI18N
+        tela.setForeground(new java.awt.Color(0, 38, 115));
+        tela.setText("Tela:");
+
+        cbxTelas.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbxTelas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTelas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxTelasActionPerformed(evt);
+            }
+        });
+
+        largoTela.setFont(new java.awt.Font("SansSerif", 1, 15)); // NOI18N
+        largoTela.setForeground(new java.awt.Color(0, 38, 115));
+        largoTela.setText("Largo Tela (m):");
+
+        txtLargoTela.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        tipoPerfil.setFont(new java.awt.Font("SansSerif", 1, 15)); // NOI18N
+        tipoPerfil.setForeground(new java.awt.Color(0, 38, 115));
+        tipoPerfil.setText("Tipo perfil:");
+
+        cbxTipoPerfil.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbxTipoPerfil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbxTipoPerfil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxTipoPerfilActionPerformed(evt);
             }
         });
 
@@ -242,108 +299,167 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
             panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panelTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                .addGap(27, 27, 27)
                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                        .addGap(428, 428, 428)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(noHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(medidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(medidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cmbTipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMedidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMedidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(108, 108, 108)
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(medidaCanalillo)
-                            .addComponent(descripcion)
                             .addComponent(medidaArcco, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addComponent(arco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(tipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(tipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(tipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(medidaCanalillo))
                                 .addGap(10, 10, 10)
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(cbxTipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(cbxTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(ckArco)
-                                            .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(txtDescripcion)
-                                            .addComponent(txtMedidaCanalillo, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
-                                        .addContainerGap(52, Short.MAX_VALUE))))))
+                                    .addComponent(cbxTipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtMedidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ckArco)
+                                    .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addComponent(mosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(ckMosquitero)
-                        .addContainerGap(641, Short.MAX_VALUE))))
+                        .addGap(50, 50, 50)
+                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(tipoPerfil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tipoMosquitero, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(mosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(49, 49, 49)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbxTipoPerfil, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ckMosquitero)
+                                    .addComponent(cbxTipoMosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(medidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(medidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(noHojas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cmbTipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(cmbTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtMedidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtMedidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                        .addGap(428, 428, 428)
+                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tela, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(largoTela, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(56, 56, 56)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtLargoTela, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxTelas, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addComponent(noEscuadras, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(74, 74, 74)
+                                .addComponent(spnNoEscuadras, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(descripcion)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(65, 65, 65))
         );
         panelDetalleVentanaLayout.setVerticalGroup(
             panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(panelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addComponent(panelTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ckArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ckArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                        .addComponent(arco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(12, 12, 12)
+                                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(tipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(cbxTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(12, 12, 12)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(medidaArcco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(13, 13, 13)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxTipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(medidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtMedidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(medidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtMedidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(arco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtMedidaH, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(12, 12, 12)
                                 .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(medidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtMedidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cbxTipoArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(12, 12, 12)
+                                    .addComponent(txtMedidaV, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cmbTipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cmbTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(noHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(medidaArcco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMedidaArco, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(cantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(spnCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(12, 12, 12)
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbTipoVentana, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cmbTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(medidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(noHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spnNoHojas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                    .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(noEscuadras, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(spnNoEscuadras, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(tela, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(cbxTelas, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(txtLargoTela, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
+                                    .addGap(77, 77, 77)
+                                    .addComponent(largoTela, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDetalleVentanaLayout.createSequentialGroup()
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(mosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ckMosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(cbxTipoMosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tipoMosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(12, 12, 12)
+                                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tipoPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbxTipoPerfil, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(37, 37, 37))
                     .addGroup(panelDetalleVentanaLayout.createSequentialGroup()
-                        .addComponent(cbxTipoCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(txtMedidaCanalillo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(7, 7, 7)
-                .addGroup(panelDetalleVentanaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(mosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ckMosquitero, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(64, Short.MAX_VALUE))
+                        .addGap(38, 38, 38)
+                        .addComponent(descripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -354,7 +470,7 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelDetalleVentana, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panelDetalleVentana, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -415,9 +531,17 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_ckMosquiteroActionPerformed
 
-    private void txtDescripcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescripcionActionPerformed
+    private void cbxTipoMosquiteroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoMosquiteroActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtDescripcionActionPerformed
+    }//GEN-LAST:event_cbxTipoMosquiteroActionPerformed
+
+    private void cbxTelasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTelasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxTelasActionPerformed
+
+    private void cbxTipoPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoPerfilActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxTipoPerfilActionPerformed
 
     /**
      * Carga los ComboBoxes con datos filtrando por tipo de material o desde el
@@ -436,6 +560,9 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         cargarComboPorTipo(cmbTipoCristal, Material.TipoMaterial.VIDRIO);
         cargarComboPorTipo(cbxTipoArco, Material.TipoMaterial.ARCO);
         cargarComboPorTipo(cbxTipoCanalillo, Material.TipoMaterial.CANALILLO);
+        cargarComboPorTipo(cbxTipoMosquitero, Material.TipoMaterial.MOSQUITERO);
+        cargarComboPorTipo(cbxTelas, Material.TipoMaterial.TELA);
+        cargarComboPorTipo(cbxTipoPerfil, Material.TipoMaterial.PERFIL);
     }
 
     private void cargarComboPorTipo(JComboBox<String> combo, Material.TipoMaterial tipo) {
@@ -471,6 +598,30 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
                 txtMedidaArco.setText("");
             }
         });
+
+        //mosquitero
+        cbxTipoMosquitero.setEnabled(false);
+        cbxTipoPerfil.setEnabled(false);
+        spnNoEscuadras.setEnabled(false);
+        cbxTelas.setEnabled(false);
+        txtLargoTela.setEnabled(false);
+
+        ckMosquitero.addActionListener(e -> {
+            boolean seleccionado = ckMosquitero.isSelected();
+            cbxTipoMosquitero.setEnabled(seleccionado);
+            cbxTipoPerfil.setEnabled(seleccionado);
+            spnNoEscuadras.setEnabled(seleccionado);
+            cbxTelas.setEnabled(seleccionado);
+            txtLargoTela.setEnabled(seleccionado);
+            if (!seleccionado) {
+                cbxTipoMosquitero.setSelectedIndex(0);
+                cbxTipoPerfil.setSelectedIndex(0);
+                spnNoEscuadras.setValue(0);
+                cbxTelas.setSelectedIndex(0);
+                txtLargoTela.setText("");
+            }
+        });
+
     }
 
     /**
@@ -674,6 +825,101 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
             }
 
             // ============================================
+            // VALIDAR MOSQUITEROS
+            // ============================================
+            d.setMosquitero(ckMosquitero.isSelected());
+
+            if (d.isMosquitero()) {
+
+                // ---- Tipo de mosquitero ----
+                if (cbxTipoMosquitero.getSelectedIndex() <= 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "Debe seleccionar un tipo de mosquitero.",
+                            "Falta selección",
+                            JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+                d.setTipoMosquitero((String) cbxTipoMosquitero.getSelectedItem());
+
+                // ---- Tipo de perfil ----
+                if (cbxTipoPerfil.getSelectedIndex() <= 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "Debe seleccionar un tipo de perfil.",
+                            "Falta selección",
+                            JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+                d.setTipoPerfil((String) cbxTipoPerfil.getSelectedItem());
+
+                // ---- Número de escuadras ----
+                int noEscuadras = (int) spnNoEscuadras.getValue();
+                if (noEscuadras <= 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "El número de escuadras debe ser mayor que 0.",
+                            "Valor inválido",
+                            JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+                d.setNoEscuadras(noEscuadras);
+
+                // ---- Tipo de tela ----
+                if (cbxTelas.getSelectedIndex() <= 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "Debe seleccionar un tipo de tela.",
+                            "Falta selección",
+                            JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+                d.setTipoTela((String) cbxTelas.getSelectedItem());
+
+                // ---- Largo de tela ----
+                if (txtLargoTela.getText().trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Debe ingresar el largo de la tela.",
+                            "Campo requerido",
+                            JOptionPane.WARNING_MESSAGE);
+                    return null;
+                }
+
+                try {
+                    BigDecimal largoTelaBD = new BigDecimal(txtLargoTela.getText().trim());
+
+                    if (largoTelaBD.compareTo(BigDecimal.ZERO) <= 0) {
+                        JOptionPane.showMessageDialog(this,
+                                "El largo de la tela debe ser mayor que 0.",
+                                "Valor inválido",
+                                JOptionPane.WARNING_MESSAGE);
+                        return null;
+                    }
+
+                    if (largoTelaBD.compareTo(maxAlto) > 0) {
+                        JOptionPane.showMessageDialog(this,
+                                "El largo de la tela excede el máximo permitido de 10 metros.",
+                                "Medida fuera de rango",
+                                JOptionPane.WARNING_MESSAGE);
+                        return null;
+                    }
+
+                    d.setLargoTela(largoTelaBD);
+
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this,
+                            "El largo de la tela debe ser numérico.",
+                            "Error de formato",
+                            JOptionPane.ERROR_MESSAGE);
+                    return null;
+                }
+
+            } else {
+                // Si no hay mosquitero, limpiar los campos relacionados
+                d.setTipoMosquitero(null);
+                d.setTipoPerfil(null);
+                d.setNoEscuadras(0);
+                d.setTipoTela(null);
+                d.setLargoTela(null);
+            }
+
+            // ============================================
             // DESCRIPCIÓN
             // ============================================
             if (txtDescripcion.getText().trim().isEmpty()) {
@@ -696,6 +942,13 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
             d.setMosquitero(ckMosquitero.isSelected());
             d.setTipoCanalillo((String) cbxTipoCanalillo.getSelectedItem());
             d.setMedidaCanalillo(medidaCanalilloBD);
+
+            d.setTipoMosquitero((String) cbxTipoMosquitero.getSelectedItem());
+            d.setTipoPerfil((String) cbxTipoPerfil.getSelectedItem());
+            d.setNoEscuadras((Integer) spnNoEscuadras.getValue());
+            d.setTipoTela((String) cbxTelas.getSelectedItem());
+            BigDecimal bigdecimal = new BigDecimal(txtLargoTela.getText());
+            d.setLargoTela(bigdecimal);
 
             // ============================================
             // MATERIALES & SUBTOTAL
@@ -762,6 +1015,21 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
 
         cbxTipoCanalillo.setSelectedItem(detalle.getTipoCanalillo());
         txtMedidaCanalillo.setText(detalle.getMedidaCanalillo() != null ? detalle.getMedidaCanalillo().toPlainString() : "");
+
+        //mosquitero
+        boolean mosquiteroSeleccionado = detalle.isMosquitero();
+        cbxTipoMosquitero.setEnabled(mosquiteroSeleccionado);
+        cbxTipoPerfil.setEnabled(mosquiteroSeleccionado);
+        spnNoEscuadras.setEnabled(mosquiteroSeleccionado);
+        cbxTelas.setEnabled(mosquiteroSeleccionado);
+        txtLargoTela.setEnabled(mosquiteroSeleccionado);
+
+        cbxTipoMosquitero.setSelectedItem(detalle.getTipoMosquitero());
+        cbxTipoPerfil.setSelectedItem(detalle.getTipoPerfil());
+        spnNoEscuadras.setValue(detalle.getNoEscuadras());
+        cbxTelas.setSelectedItem(detalle.getTipoTela());
+        txtLargoTela.setText(detalle.getLargoTela() != null ? detalle.getLargoTela().toPlainString() : "");
+
     }
 
     /**
@@ -796,8 +1064,8 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
         }
 
         // MOSQUITERO (si aplica)
-        if (ckMosquitero.isSelected()) {
-            Material m = buscarMaterial(Material.TipoMaterial.MOSQUITERO, "Mosquitero");
+        if (cbxTipoMosquitero.getSelectedIndex() > 0) {
+            Material m = buscarMaterial(Material.TipoMaterial.MOSQUITERO, (String) cbxTipoMosquitero.getSelectedItem());
             if (m != null) {
                 seleccionados.add(m);
             }
@@ -933,29 +1201,40 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arco;
     private javax.swing.JLabel cantidad;
+    private javax.swing.JComboBox<String> cbxTelas;
     private javax.swing.JComboBox<String> cbxTipoArco;
     private javax.swing.JComboBox<String> cbxTipoCanalillo;
+    private javax.swing.JComboBox<String> cbxTipoMosquitero;
+    private javax.swing.JComboBox<String> cbxTipoPerfil;
     private javax.swing.JCheckBox ckArco;
     private javax.swing.JCheckBox ckMosquitero;
     private javax.swing.JComboBox<String> cmbTipoCristal;
     private javax.swing.JComboBox<String> cmbTipoVentana;
     private javax.swing.JLabel descripcion;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel largoTela;
     private javax.swing.JLabel medidaArcco;
     private javax.swing.JLabel medidaCanalillo;
     private javax.swing.JLabel medidaH;
     private javax.swing.JLabel medidaV;
     private javax.swing.JLabel mosquitero;
+    private javax.swing.JLabel noEscuadras;
     private javax.swing.JLabel noHojas;
     private javax.swing.JPanel panelDetalleVentana;
     private javax.swing.JPanel panelTitulo;
     private javax.swing.JSpinner spnCantidad;
+    private javax.swing.JSpinner spnNoEscuadras;
     private javax.swing.JSpinner spnNoHojas;
+    private javax.swing.JLabel tela;
     private javax.swing.JLabel tipoArco;
     private javax.swing.JLabel tipoCanalillo;
     private javax.swing.JLabel tipoCristal;
+    private javax.swing.JLabel tipoMosquitero;
+    private javax.swing.JLabel tipoPerfil;
     private javax.swing.JLabel tipoVentana;
     private javax.swing.JLabel titulo;
-    private javax.swing.JTextField txtDescripcion;
+    private javax.swing.JTextArea txtDescripcion;
+    private javax.swing.JTextField txtLargoTela;
     private javax.swing.JTextField txtMedidaArco;
     private javax.swing.JTextField txtMedidaCanalillo;
     private javax.swing.JTextField txtMedidaH;
