@@ -637,23 +637,7 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
     }//GEN-LAST:event_cbxTipoJunquilloActionPerformed
 
     private void ckArcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckArcoActionPerformed
-        // Abre diálogo de Arcos
-        Window parent = SwingUtilities.getWindowAncestor(this);
-        MaterialArcos dlg = new MaterialArcos(parent, true);
-        dlg.setVisible(true);
-
-        // Al cerrar, recupera cantidades
-        int a2 = dlg.getCantArco2();
-        int a3 = dlg.getCantArco3();
-
-        // Construye texto y agrega al textArea (no limpiar, solo agregar)
-        StringBuilder sb = new StringBuilder();
-        if (a2 > 0) {
-            sb.append("Arco aluminio serie 2\" - Cant: ").append(a2).append("\n");
-        }
-        if (a3 > 0) {
-            sb.append("Arco aluminio serie 3\" - Cant: ").append(a3).append("\n");
-        }
+        
 
     }//GEN-LAST:event_ckArcoActionPerformed
 
@@ -662,9 +646,7 @@ public class PanelDetalleCanceleria extends javax.swing.JPanel {
     }//GEN-LAST:event_cbxTipoArcoActionPerformed
 
     private void ckCanalilloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckCanalilloActionPerformed
-        Window parent = SwingUtilities.getWindowAncestor(this);
-        MaterlialesCanalillos dlg = new MaterlialesCanalillos(parent, true);
-        dlg.setVisible(true);
+       
     }//GEN-LAST:event_ckCanalilloActionPerformed
 
     private void cbxTipoCanalilloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoCanalilloActionPerformed

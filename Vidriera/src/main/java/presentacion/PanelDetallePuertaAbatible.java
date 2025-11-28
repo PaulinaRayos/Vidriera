@@ -752,31 +752,7 @@ public class PanelDetallePuertaAbatible extends javax.swing.JPanel {
     }//GEN-LAST:event_ckDuelaActionPerformed
 
     private void ckMosquiteroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckMosquiteroActionPerformed
-        Window parent = SwingUtilities.getWindowAncestor(this);
-        MaterialMosquiteras dlg = new MaterialMosquiteras(parent, true);
-        dlg.setVisible(true);
-
-        // Recuperar selecciones
-        int s2 = dlg.getCantSerie2();
-        int s3 = dlg.getCantSerie3();
-        int negro = dlg.getCantNegro();
-        int malla = dlg.getCantMalla();
-
-        // Asegúrate de tener txtMaterialUtilizar definido en este panel
-        StringBuilder sb = new StringBuilder();
-        if (s2 > 0) {
-            sb.append("Perfil aluminio serie 2\" natural - Cant: ").append(s2).append("\n");
-        }
-        if (s3 > 0) {
-            sb.append("Perfil aluminio serie 3\" blanco - Cant: ").append(s3).append("\n");
-        }
-        if (negro > 0) {
-            sb.append("Perfil aluminio anodizado negro - Cant: ").append(negro).append("\n");
-        }
-        if (malla > 0) {
-            sb.append("Malla Gris - Cant: ").append(malla).append("\n");
-        }
-
+       
 
     }//GEN-LAST:event_ckMosquiteroActionPerformed
 

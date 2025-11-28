@@ -1077,112 +1077,43 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     }
 
     /**
-     * Genera un resumen de texto con los detalles específicos (accesorios, hojas, etc.)
-     * de los elementos en la cotización actual.
+     * Genera un resumen de texto con los detalles específicos (accesorios,
+     * hojas, etc.) de los elementos en la cotización actual.
      */
     private void actualizarTextAreaMateriales() {
         StringBuilder sb = new StringBuilder();
-        
+
         if (detallesEnMemoria.isEmpty()) {
             txtMaterialUtilizar.setText("");
             return;
         }
 
-        sb.append("=== RESUMEN DE MATERIALES Y ACCESORIOS ===\n\n");
-
-        int contador = 1;
+        sb.append("=== RESUMEN DE COTIZACIÓN ===\n\n");
 
         for (Object obj : detallesEnMemoria) {
-            sb.append(contador).append(". ");
 
-            // -------------------------------------------------------
-            // CASO 1: VENTANA
-            // (Mosquiteros, arco, canalillo, numero de hojas)
-            // -------------------------------------------------------
+            // ------------------------------
+            // VENTANA
+            // ------------------------------
             if (obj instanceof VentanaDetalle v) {
-                sb.append("VENTANA (").append(v.getCantidad()).append(" pzas) - ")
-                  .append(v.getTipoVentana().getDescripcion()).append("\n");
-                
-                sb.append("   • Medidas: ").append(v.getMedidaHorizontal()).append(" x ").append(v.getMedidaVertical()).append("\n");
-                sb.append("   • Cristal: ").append(v.getTipoCristal()).append("\n");
-                sb.append("   • No. Hojas: ").append(v.getNoHojas()).append("\n");
-                
-                // Detalles específicos solicitados
-                if (v.isMosquitero()) sb.append("   • [X] Incluye Mosquitero\n");
-                if (v.isArco()) sb.append("   • [X] Con Arco: ").append(v.getTipoArco()).append("\n");
-                
-                // Validar si tiene canalillo (asumiendo que guarda el string del tipo)
-                if (v.getTipoCanalillo() != null && !v.getTipoCanalillo().equals("Ninguno")) {
-                    sb.append("   • [X] Canalillo: ").append(v.getTipoCanalillo()).append("\n");
-                }
-            } 
-            
-            // -------------------------------------------------------
-            // CASO 2: PUERTA ABATIBLE
-            // (Mosquitero, Pivote, jaladera y numero de hojas)
-            // -------------------------------------------------------
+                sb.append(v.getDescripcion()).append("\n");
+            } // ------------------------------
+            // PUERTA
+            // ------------------------------
             else if (obj instanceof PuertaAbatibleDetalle p) {
-                sb.append("PUERTA (").append(p.getCantidad()).append(" pzas) - ")
-                  .append(p.getTipoPuerta().getDescripcion()).append("\n");
-                
-                sb.append("   • Medidas: ").append(p.getMedidaHorizontal()).append(" x ").append(p.getMedidaVertical()).append("\n");
-                sb.append("   • Cristal: ").append(p.getTipoCristal()).append("\n");
-                sb.append("   • No. Hojas: ").append(p.getNoHojas()).append("\n");
-
-                // Detalles específicos solicitados
-                if (p.isMosquitero()) sb.append("   • [X] Incluye Mosquitero\n");
-                
-                if (p.isPivote()) {
-                    sb.append("   • [X] Pivote: ").append(p.getTipoPivote())
-                      .append(" (Cant: ").append(p.getCantidadPivote()).append(")\n");
-                }
-                
-                if (p.isJaladera()) {
-                    sb.append("   • [X] Jaladera: ").append(p.getTipoJaladera())
-                      .append(" (Cant: ").append(p.getCantidadJaladera()).append(")\n");
-                }
-                
-                // Otros extras si quieres mostrarlos
-                if (p.isDuela()) sb.append("   • [X] Duela: ").append(p.getTipoDuela()).append("\n");
-                if (p.isBarra()) sb.append("   • [X] Barra: ").append(p.getTipoBarra()).append("\n");
-            } 
-            
-            // -------------------------------------------------------
-            // CASO 3: CANCELERÍA FIJA
-            // (Numero de hojas, tapas, arco, canalillo)
-            // -------------------------------------------------------
+                sb.append(p.getDescripcion()).append("\n");
+            } // ------------------------------
+            // CANCELERÍA
+            // ------------------------------
             else if (obj instanceof CanceleriaFijaDetalle c) {
-                sb.append("CANCELERÍA (").append(c.getCantidad()).append(" pzas) - ")
-                  .append(c.getTipoCanceleria().getDescripcion()).append("\n");
-                
-                sb.append("   • Medidas: ").append(c.getMedidaHorizontal()).append(" x ").append(c.getMedidaVertical()).append("\n");
-                sb.append("   • Cristal: ").append(c.getTipoCristal()).append("\n");
-                sb.append("   • No. Hojas: ").append(c.getNoHojas()).append("\n"); // Aunque fijo suele ser 1, lo mostramos
-
-                // Detalles específicos solicitados
-                if (c.getCantidadTapa() > 0) {
-                    sb.append("   • [X] Tapas: ").append(c.getTipoTapa())
-                      .append(" (Cant: ").append(c.getCantidadTapa()).append(")\n");
-                }
-                
-                if (c.isArco()) sb.append("   • [X] Con Arco: ").append(c.getTipoArco()).append("\n");
-                
-                if (c.isCanalillo()) { // Asumiendo que es booleano o string
-                     sb.append("   • [X] Canalillo: ").append(c.getTipoCanalillo()).append("\n");
-                }
-                
-                // Otros extras
-                if (c.isBolsa()) sb.append("   • [X] Bolsa\n");
+                sb.append(c.getDescripcion()).append("\n");
             }
 
-            sb.append("----------------------------------------------------\n");
-            contador++;
+            sb.append("\n"); // salto entre items
         }
 
-        // Asignar el texto al área de texto
         txtMaterialUtilizar.setText(sb.toString());
-        // Mover el scroll al inicio
-        txtMaterialUtilizar.setCaretPosition(0); 
+        txtMaterialUtilizar.setCaretPosition(0);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

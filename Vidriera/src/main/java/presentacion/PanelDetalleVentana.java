@@ -487,48 +487,12 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
     }//GEN-LAST:event_cbxTipoArcoActionPerformed
 
     private void ckArcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckArcoActionPerformed
-        Window parent = SwingUtilities.getWindowAncestor(this);
-        MaterialArcos dlg = new MaterialArcos(parent, true);
-        dlg.setVisible(true);
-
-        int a2 = dlg.getCantArco2();
-        int a3 = dlg.getCantArco3();
-
-        StringBuilder sb = new StringBuilder();
-        if (a2 > 0) {
-            sb.append("Arco aluminio serie 2\" - Cant: ").append(a2).append("\n");
-        }
-        if (a3 > 0) {
-            sb.append("Arco aluminio serie 3\" - Cant: ").append(a3).append("\n");
-        }
-
+      
 
     }//GEN-LAST:event_ckArcoActionPerformed
 
     private void ckMosquiteroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckMosquiteroActionPerformed
-        Window parent = SwingUtilities.getWindowAncestor(this);
-        MaterialMosquiteras dlg = new MaterialMosquiteras(parent, true);
-        dlg.setVisible(true);
-
-        int s2 = dlg.getCantSerie2();
-        int s3 = dlg.getCantSerie3();
-        int negro = dlg.getCantNegro();
-        int malla = dlg.getCantMalla();
-
-        StringBuilder sb = new StringBuilder();
-        if (s2 > 0) {
-            sb.append("Perfil aluminio serie 2\" natural - Cant: ").append(s2).append("\n");
-        }
-        if (s3 > 0) {
-            sb.append("Perfil aluminio serie 3\" blanco - Cant: ").append(s3).append("\n");
-        }
-        if (negro > 0) {
-            sb.append("Perfil aluminio anodizado negro - Cant: ").append(negro).append("\n");
-        }
-        if (malla > 0) {
-            sb.append("Malla Gris - Cant: ").append(malla).append("\n");
-
-        }
+      
     }//GEN-LAST:event_ckMosquiteroActionPerformed
 
     private void cbxTipoMosquiteroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoMosquiteroActionPerformed
