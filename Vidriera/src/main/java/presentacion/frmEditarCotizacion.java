@@ -887,7 +887,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         }
     }
 
-    // (Copiado de frmCrearCotizacion - Asegúrate de que tu MaterialDAO esté completo)
+
     private void cargarMaterialesDisponibles() {
         try {
             MaterialDAO materialDAO = new MaterialDAO(utils.Conexion.getConnection());

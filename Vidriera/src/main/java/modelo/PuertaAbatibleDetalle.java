@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author Vidrieria
  */
-public class PuertaAbatibleDetalle {
+public class PuertaAbatibleDetalle extends DetalleCotizacion{
 
     private int idDetallePuerta;
     private int idTipoTrabajo;

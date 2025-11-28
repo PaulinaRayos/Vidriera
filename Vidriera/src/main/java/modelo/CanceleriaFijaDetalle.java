@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author Vidrieria
  */
-public class CanceleriaFijaDetalle {
+public class CanceleriaFijaDetalle extends DetalleCotizacion {
 
     private int idCanceleriaDetalle;
     private int idTipoTrabajo;
