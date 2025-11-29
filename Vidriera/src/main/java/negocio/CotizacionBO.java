@@ -62,76 +62,65 @@ public class CotizacionBO {
         return cotizacionDAO.crearCotizacion(c);
     }
 
-   public boolean crearCotizacionCompleta(Cotizacion c,
-        List<VentanaDetalle> ventanas,
-        List<CanceleriaFijaDetalle> cancelerias,
-        List<PuertaAbatibleDetalle> puertas) {
-
-    try {
-        // Calcular Mano de Obra (45%)
+    public boolean crearCotizacionCompleta(Cotizacion c,
+            List<VentanaDetalle> ventanas,
+            List<CanceleriaFijaDetalle> cancelerias,
+            List<PuertaAbatibleDetalle> puertas) {
+        // Calcular Mano de Obra
+        // 10% del subtotal
         BigDecimal porcentajeManoObra = new BigDecimal("0.45");
         BigDecimal manoObra = c.getSubtotal().multiply(porcentajeManoObra);
 
-        // Calcular IVA (16%)
+        // Calcular IVA 
+        // IVA del 16% sobre subtotal + mano de obra
         BigDecimal iva = (c.getSubtotal().add(manoObra)).multiply(new BigDecimal("0.16"));
 
-        // Calcular Total
-        BigDecimal total = c.getSubtotal()
-                .add(manoObra)
-                .add(iva)
+        // Calcular Total 
+        // Total = subtotal + manoObra + iva - descuento
+        BigDecimal total = c.getSubtotal().add(manoObra).add(iva)
                 .subtract(c.getDescuentoMonto() != null ? c.getDescuentoMonto() : BigDecimal.ZERO);
 
-        // Asignar valores
+        // Asignar los valores a la cotizacion
         c.setManoObra(manoObra);
         c.setIva(iva);
         c.setTotal(total);
 
-        // Guardar cotización
+        // Guardar cotizacion 
         boolean ok = cotizacionDAO.crearCotizacion(c);
         if (!ok) {
             return false;
         }
-
-        // Asignar cotización a los detalles
         if (ventanas != null) {
             for (VentanaDetalle detalle : ventanas) {
                 detalle.setCotizacion(c);
+
             }
-        }
-
-        if (cancelerias != null) {
-            for (CanceleriaFijaDetalle detalle : cancelerias) {
-                detalle.setCotizacion(c);
+            if (cancelerias != null) {
+                for (CanceleriaFijaDetalle detalle : cancelerias) {
+                    detalle.setCotizacion(c);
+                }
             }
-        }
-
-        if (puertas != null) {
-            for (PuertaAbatibleDetalle detalle : puertas) {
-                detalle.setCotizacion(c);
+            if (puertas != null) {
+                for (PuertaAbatibleDetalle detalle : puertas) {
+                    detalle.setCotizacion(c);
+                }
             }
+
+            boolean okVentanas = ventanas != null && !ventanas.isEmpty()
+                    ? detalleDAO.crearDetalleVentana(ventanas)
+                    : true;
+            boolean okCanceleria = cancelerias != null && !cancelerias.isEmpty()
+                    ? detalleDAO.crearDetalleCanceleria(cancelerias)
+                    : true;
+            boolean okPuertas = puertas != null && !puertas.isEmpty()
+                    ? detalleDAO.crearDetallePuerta(puertas)
+                    : true;
+
+            return okVentanas && okCanceleria && okPuertas;
         }
-
-        // Guardar detalles 
-        boolean okVentanas = ventanas != null && !ventanas.isEmpty()
-                ? detalleDAO.crearDetalleVentana(ventanas)
-                : true;
-
-        boolean okCanceleria = cancelerias != null && !cancelerias.isEmpty()
-                ? detalleDAO.crearDetalleCanceleria(cancelerias)
-                : true;
-
-        boolean okPuertas = puertas != null && !puertas.isEmpty()
-                ? detalleDAO.crearDetallePuerta(puertas)
-                : true;
-
-        return okVentanas && okCanceleria && okPuertas;
-
-    } catch (SQLException e) {
-        System.out.println("Error al crear la cotización completa: " + e.getMessage());
         return false;
-    }
-}
 
+    }
 
     // Obtener todas las cotizaciones
     public List<Cotizacion> obtenerCotizaciones() {
