@@ -69,6 +69,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
      */
     public frmEditarCotizacion(int idCotizacion) {
         initComponents();
+        txtDescuento2.setTransferHandler(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         try {
             this.cotizacionBO = new CotizacionBO();
@@ -101,7 +102,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         panelSubtitulo = new javax.swing.JPanel();
         EditarCotizacion = new javax.swing.JLabel();
         iconoEditar = new javax.swing.JLabel();
-        btnVolver = new javax.swing.JButton();
         panelTitulo = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         iconoTitulo = new javax.swing.JLabel();
@@ -158,13 +158,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
         iconoEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edit-20.png"))); // NOI18N
 
-        btnVolver.setText("Volver");
-        btnVolver.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVolverActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panelSubtituloLayout = new javax.swing.GroupLayout(panelSubtitulo);
         panelSubtitulo.setLayout(panelSubtituloLayout);
         panelSubtituloLayout.setHorizontalGroup(
@@ -174,19 +167,15 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
                 .addComponent(iconoEditar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(EditarCotizacion)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnVolver)
-                .addGap(24, 24, 24))
+                .addContainerGap(870, Short.MAX_VALUE))
         );
         panelSubtituloLayout.setVerticalGroup(
             panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSubtituloLayout.createSequentialGroup()
-                .addContainerGap(10, Short.MAX_VALUE)
+                .addContainerGap(11, Short.MAX_VALUE)
                 .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(iconoEditar)
-                    .addGroup(panelSubtituloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(EditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnVolver)))
+                    .addComponent(EditarCotizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(8, 8, 8))
         );
 
@@ -414,6 +403,11 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         ckbxDescuentoSi2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         ckbxDescuentoSi2.setSelected(true);
         ckbxDescuentoSi2.setText("Si");
+        ckbxDescuentoSi2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ckbxDescuentoSi2ActionPerformed(evt);
+            }
+        });
 
         descuento.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         descuento.setForeground(new java.awt.Color(15, 105, 196));
@@ -421,6 +415,25 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
         ckbxDescuentoNo2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         ckbxDescuentoNo2.setText("No");
+        ckbxDescuentoNo2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ckbxDescuentoNo2ActionPerformed(evt);
+            }
+        });
+
+        txtDescuento2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDescuento2ActionPerformed(evt);
+            }
+        });
+        txtDescuento2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDescuento2KeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDescuento2KeyTyped(evt);
+            }
+        });
 
         labelPorsentaje2.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         labelPorsentaje2.setForeground(new java.awt.Color(0, 38, 115));
@@ -653,12 +666,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
-        this.dispose();
-        InicioAdministrarCotizaciones in = new InicioAdministrarCotizaciones();
-        in.setVisible(true);
-    }//GEN-LAST:event_btnVolverActionPerformed
-
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         if (cotizacionActual == null) {
             JOptionPane.showMessageDialog(this, "No hay cotización cargada para guardar.");
@@ -875,6 +882,47 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private void cbxEstadoCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxEstadoCotizacionActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbxEstadoCotizacionActionPerformed
+
+    private void txtDescuento2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescuento2ActionPerformed
+        if (ckbxDescuentoSi2.isSelected()) {
+            ckbxDescuentoNo2.setSelected(false);
+            recalcularTotales();
+        }
+
+
+    }//GEN-LAST:event_txtDescuento2ActionPerformed
+
+    private void txtDescuento2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescuento2KeyReleased
+        if (ckbxDescuentoSi2.isSelected()) {
+            recalcularTotales();
+        }
+    }//GEN-LAST:event_txtDescuento2KeyReleased
+
+    private void txtDescuento2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescuento2KeyTyped
+        char c = evt.getKeyChar();
+
+        if (!Character.isDigit(c) && c != '.') {
+            evt.consume();
+        }
+
+        if (c == '.' && txtDescuento2.getText().contains(".")) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtDescuento2KeyTyped
+
+    private void ckbxDescuentoNo2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckbxDescuentoNo2ActionPerformed
+        ckbxDescuentoSi2.setSelected(false);
+        txtDescuento2.setText("");
+        txtDescuento2.setEnabled(false);
+        recalcularTotales();
+    }//GEN-LAST:event_ckbxDescuentoNo2ActionPerformed
+
+    private void ckbxDescuentoSi2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckbxDescuentoSi2ActionPerformed
+        ckbxDescuentoNo2.setSelected(false);
+        txtDescuento2.setEnabled(true);
+        txtDescuento2.requestFocus();
+        recalcularTotales();
+    }//GEN-LAST:event_ckbxDescuentoSi2ActionPerformed
 
     // --- carga el catalogo
     private void cargarCatalogo() {
@@ -1125,7 +1173,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevaCotizacion;
     private javax.swing.JButton btnVistaPrevia;
-    private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> cbxEstadoCotizacion;
     private javax.swing.JCheckBox ckbxDescuentoNo2;
     private javax.swing.JCheckBox ckbxDescuentoSi2;

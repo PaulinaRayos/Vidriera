@@ -55,6 +55,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
     public frmCrearCotizacion() {
         initComponents();
+        txtDescuento.setTransferHandler(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         cargarVendedorPorDefecto();
         panelDetallesDinamicos = new JPanel();
@@ -374,6 +375,14 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         txtDescuento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtDescuentoActionPerformed(evt);
+            }
+        });
+        txtDescuento.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDescuentoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDescuentoKeyTyped(evt);
             }
         });
 
@@ -1116,11 +1125,30 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             txtDescuento.setEnabled(false);
             recalcularTotales();
         }
+
     }//GEN-LAST:event_ckbxDescuentoNoActionPerformed
 
     private void cbxSeleccionarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSeleccionarClienteActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbxSeleccionarClienteActionPerformed
+
+    private void txtDescuentoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescuentoKeyReleased
+        if (ckbxDescuentoSi.isSelected()) {
+            recalcularTotales();
+        }
+
+    }//GEN-LAST:event_txtDescuentoKeyReleased
+
+    private void txtDescuentoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescuentoKeyTyped
+        char c = evt.getKeyChar();
+
+        if (!Character.isDigit(c) && c != '.') {
+            evt.consume(); // Bloquea letras y símbolos
+        }
+
+        if (c == '.' && txtDescuento.getText().contains(".")) {
+            evt.consume();
+        }    }//GEN-LAST:event_txtDescuentoKeyTyped
 
     /**
      * Configura la tabla, los listeners y el estado inicial de los botones.
@@ -1234,14 +1262,14 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private void recalcularTotales() {
         BigDecimal subtotal = BigDecimal.ZERO;
 
-        // 1. Sumar los subtotales de todos los detalles
+        // 1. Sumar los subtotales de todos los detalles (null-safe)
         for (Object detalle : detallesEnMemoria) {
             if (detalle instanceof VentanaDetalle vd) {
-                subtotal = subtotal.add(vd.getSubtotalLinea());
+                subtotal = subtotal.add(nullSafe(vd.getSubtotalLinea()));
             } else if (detalle instanceof PuertaAbatibleDetalle pd) {
-                subtotal = subtotal.add(pd.getSubtotalLinea());
+                subtotal = subtotal.add(nullSafe(pd.getSubtotalLinea()));
             } else if (detalle instanceof CanceleriaFijaDetalle cd) {
-                subtotal = subtotal.add(cd.getSubtotalLinea());
+                subtotal = subtotal.add(nullSafe(cd.getSubtotalLinea()));
             }
         }
 
@@ -1250,27 +1278,32 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         BigDecimal manoObra = subtotal.multiply(porcentajeManoObra);
 
         // 3. Calcular descuento (si aplica)
-        // Descuento
         BigDecimal descuento = BigDecimal.ZERO;
-        if (ckbxDescuentoSi.isSelected() && !txtDescuento.getText().trim().isEmpty()) {
+        if (ckbxDescuentoSi.isSelected() && txtDescuento.getText() != null && !txtDescuento.getText().trim().isEmpty()) {
             try {
                 BigDecimal porcentaje = new BigDecimal(txtDescuento.getText().trim());
+                if (porcentaje.compareTo(BigDecimal.ZERO) < 0) {
+                    porcentaje = BigDecimal.ZERO;
+                }
                 descuento = subtotal.multiply(porcentaje.divide(new BigDecimal("100")));
             } catch (NumberFormatException e) {
                 descuento = BigDecimal.ZERO; // Si hay error en el número, no aplicar descuento
             }
         } else {
-            descuento = BigDecimal.ZERO; // Si no hay descuento seleccionado o el checkbox "No" está activo
+            descuento = BigDecimal.ZERO;
         }
 
         // 4. Calcular IVA: 16% sobre (subtotal + manoObra - descuento)
         BigDecimal baseImponible = subtotal.add(manoObra).subtract(descuento);
+        if (baseImponible.compareTo(BigDecimal.ZERO) < 0) {
+            baseImponible = BigDecimal.ZERO;
+        }
         BigDecimal iva = baseImponible.multiply(new BigDecimal("0.16"));
 
         // 5. Calcular total
         BigDecimal total = baseImponible.add(iva);
 
-        // 6. Actualizar los JLabels
+        // 6. Actualizar los JLabels (formateo simple)
         lblSubtotal.setText("$ " + subtotal.setScale(2, BigDecimal.ROUND_HALF_UP));
         lblManoObra.setText("$ " + manoObra.setScale(2, BigDecimal.ROUND_HALF_UP));
         lblDescuento.setText("$ " + descuento.setScale(2, BigDecimal.ROUND_HALF_UP));
@@ -1363,8 +1396,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         cbxSeleccionarCliente.removeAllItems();
 
         // 🔹 Siempre mantener la primera opción
-        cbxSeleccionarCliente.addItem("Seleccione un cliente...");
-
+        //cbxSeleccionarCliente.addItem("Seleccione un cliente...");
         String textoNormalizado = normalizarTexto(texto);
 
         for (Cliente c : clientes) {
@@ -1392,6 +1424,10 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         String sinAcentos = Normalizer.normalize(texto, Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         return sinAcentos.toLowerCase();
+    }
+
+    private BigDecimal nullSafe(BigDecimal v) {
+        return v == null ? BigDecimal.ZERO : v;
     }
 
 

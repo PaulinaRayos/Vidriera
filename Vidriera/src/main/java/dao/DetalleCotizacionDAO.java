@@ -408,11 +408,17 @@ public class DetalleCotizacionDAO {
         d.setCantidad(rs.getInt("cantidad"));
         d.setTipoCristal(rs.getString("tipoCristal"));
         d.setNoHojas(rs.getInt("noHojas"));
-        // d.setPrecioSoloUnaUnidadCalculado(rs.getBigDecimal("precioSoloUnaUnidadCalculado"));
-        //  d.setSubtotalLinea(rs.getBigDecimal("subtotalLinea"));
         d.setDescripcion(rs.getString("descripcion"));
         d.setTipoVentana(TipoVentana.fromDescripcion(rs.getString("tipoVentana")));
         d.setMosquitero(rs.getBoolean("mosquitero"));
+
+        d.setTipoMosquitero(rs.getString("tipoMosquitero"));
+        d.setTipoPerfil(rs.getString("tipoPerfil"));
+        d.setNoEscuadras(rs.getInt("noEscuadras"));
+        d.setTipoTela(rs.getString("tipoTela"));
+        d.setLargoTela(rs.getBigDecimal("largoTela"));
+
+        // Arco
         d.setArco(rs.getBoolean("arco"));
         d.setTipoArco(rs.getString("tipoArco"));
         d.setMedidaArco(rs.getBigDecimal("medidaArco"));
@@ -427,14 +433,11 @@ public class DetalleCotizacionDAO {
         ct.setIdCatalogo(rs.getInt("id_tipo_trabajo"));
         d.setTipoTrabajo(ct);
 
-        // Cargar materiales
+        // Materiales
         MaterialDetalleDAO mdao = new MaterialDetalleDAO(conexion);
-        List<MaterialDetalle> materiales = mdao.obtenerMaterialesVentana(d.getIdVentanaDetalle());
-        d.setMateriales(materiales);
+        d.setMateriales(mdao.obtenerMaterialesVentana(d.getIdVentanaDetalle()));
 
-        // Calcular subtotal
         d.calcularSubtotal();
-
         return d;
     }
 
@@ -495,11 +498,16 @@ public class DetalleCotizacionDAO {
         d.setCantidad(rs.getInt("cantidad"));
         d.setTipoCristal(rs.getString("tipoCristal"));
         d.setNoHojas(rs.getInt("noHojas"));
-        // d.setPrecioSoloUnaUnidadCalculado(rs.getBigDecimal("precioSoloUnaUnidadCalculado"));
-        // d.setSubtotalLinea(rs.getBigDecimal("subtotalLinea"));
         d.setDescripcion(rs.getString("descripcion"));
         d.setTipoPuerta(TipoPuerta.fromDescripcion(rs.getString("tipo_puerta")));
+
         d.setMosquitero(rs.getBoolean("mosquitero"));
+        d.setTipoMosquitero(rs.getString("tipoMosquitero"));
+        d.setTipoPerfil(rs.getString("tipoPerfil"));
+        d.setNoEscuadras(rs.getInt("noEscuadras"));
+        d.setTipoTela(rs.getString("tipoTela"));
+        d.setLargoTela(rs.getBigDecimal("largoTela"));
+
         d.setDuela(rs.getBoolean("duela"));
         d.setTipoDuela(rs.getString("tipo_duela"));
         d.setMedidaDuela(rs.getBigDecimal("medida_duela"));
@@ -526,14 +534,11 @@ public class DetalleCotizacionDAO {
         ct.setIdCatalogo(rs.getInt("id_tipo_trabajo"));
         d.setTipoTrabajo(ct);
 
-        // Cargar materiales
         MaterialDetalleDAO mdao = new MaterialDetalleDAO(conexion);
-        List<MaterialDetalle> materiales = mdao.obtenerMaterialesPuerta(d.getIdDetallePuerta());
-        d.setMateriales(materiales);
+        d.setMateriales(mdao.obtenerMaterialesPuerta(d.getIdDetallePuerta()));
 
-        // Calcular subtotal
         d.calcularSubtotal();
-
         return d;
     }
+
 }

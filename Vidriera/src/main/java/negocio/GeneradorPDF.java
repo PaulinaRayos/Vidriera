@@ -5,7 +5,6 @@
 package negocio;
 
 import java.io.ByteArrayOutputStream;
-import java.math.BigDecimal;
 import java.util.List;
 import modelo.CanceleriaFijaDetalle;
 import modelo.Cotizacion;
@@ -13,6 +12,7 @@ import modelo.PuertaAbatibleDetalle;
 import modelo.VentanaDetalle;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
@@ -21,159 +21,154 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  *
  * @author delll
  */
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.List;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+
 public class GeneradorPDF {
+
+    private static String limpiarTexto(String txt) {
+        if (txt == null) {
+            return "";
+        }
+        return txt.replace("\n", " ").replace("\r", " ");
+    }
 
     public static byte[] generarCotizacionPdf(Cotizacion cotizacion) {
         try {
             PDDocument doc = new PDDocument();
             PDPage page = new PDPage(PDRectangle.LETTER);
             doc.addPage(page);
+
             PDPageContentStream content = new PDPageContentStream(doc, page);
 
-            // Encabezado y datos cliente
+            // ================= LOGO =================
+            try {
+                InputStream is = GeneradorPDF.class
+                        .getClassLoader()
+                        .getResourceAsStream("LogoVidrieria.jpg");
+
+                if (is != null) {
+                    PDImageXObject logo = PDImageXObject.createFromByteArray(
+                            doc,
+                            is.readAllBytes(),
+                            "logo"
+                    );
+
+                    float logoWidth = 120;
+                    float logoHeight = 90;
+
+                    float logoX = 40;
+                    float logoY = page.getMediaBox().getHeight() - 110;
+
+                    content.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
+                } else {
+                    System.out.println("NO SE ENCONTRÓ EL LOGO EN RESOURCES");
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error al cargar logo: " + e.getMessage());
+            }
+
+            // ================= TÍTULO =================
+            String titulo = "COTIZACIÓN";
+            float fontSize = 18;
+            float titleWidth = PDType1Font.HELVETICA_BOLD.getStringWidth(titulo) / 1000 * fontSize;
+            float pageWidth = page.getMediaBox().getWidth();
+            float centerX = (pageWidth - titleWidth) / 2;
+
             content.beginText();
-            content.setFont(PDType1Font.HELVETICA_BOLD, 18);
-            content.newLineAtOffset(40, 730);
-            content.showText("COTIZACIÓN");
-            content.setFont(PDType1Font.HELVETICA, 12);
-            content.newLineAtOffset(0, -30);
-            content.showText("Cliente: " + cotizacion.getCliente().getNombre());
-            content.newLineAtOffset(0, -20);
-            content.showText("Fecha: " + cotizacion.getFecha());
-            content.newLineAtOffset(0, -20);
-            content.showText("Dirección: " + cotizacion.getCliente().getDireccion());
-            content.newLineAtOffset(0, -20);
-            content.showText("Teléfono: " + cotizacion.getCliente().getTelefono());
+            content.setFont(PDType1Font.HELVETICA_BOLD, fontSize);
+            content.newLineAtOffset(centerX, 700);
+            content.showText(titulo);
             content.endText();
 
-            float y = 590;
+            // ================= DATOS DEL CLIENTE =================
+            content.beginText();
+            content.setFont(PDType1Font.HELVETICA, 12);
+            content.newLineAtOffset(40, 640);
+            content.showText("Cliente: " + limpiarTexto(cotizacion.getCliente().getNombre()));
+            content.newLineAtOffset(0, -18);
+            content.showText("Teléfono: " + limpiarTexto(cotizacion.getCliente().getTelefono()));
+            content.newLineAtOffset(0, -18);
+            content.showText("Dirección: " + limpiarTexto(cotizacion.getCliente().getDireccion()));
+            content.newLineAtOffset(0, -18);
+            content.showText("Fecha: " + limpiarTexto(String.valueOf(cotizacion.getFecha())));
+            content.endText();
+
+            float y = 540;
             float startX = 40;
 
-            // Encabezados de tabla
-            content.setLineWidth(1f);
-            content.moveTo(startX, y + 20);
-            content.lineTo(startX + 510, y + 20);
-            content.stroke();
-
+            // ================= TÍTULO DESCRIPCIONES =================
             content.beginText();
-            content.setFont(PDType1Font.HELVETICA_BOLD, 12);
-            content.newLineAtOffset(startX, y);
-            content.showText("Tipo");
-            content.newLineAtOffset(80, 0);
-            content.showText("Descripción");
-            content.newLineAtOffset(180, 0);
-            content.showText("Medidas");
-            content.newLineAtOffset(100, 0);
-            content.showText("Cantidad");
-            content.newLineAtOffset(60, 0);
-            content.showText("Subtotal");
-            content.endText();
-
-            y -= 20;
-
-            List<VentanaDetalle> detallesVentana = cotizacion.getVentanaDetalles();
-            for (VentanaDetalle v : detallesVentana) {
-                content.beginText();
-                content.setFont(PDType1Font.HELVETICA, 12);
-                content.newLineAtOffset(startX, y);
-                content.showText("Ventana");
-                content.newLineAtOffset(80, 0);
-                content.showText(v.getDescripcion());
-                content.newLineAtOffset(180, 0);
-                content.showText("" + v.getMedidaHorizontal() + " X " + v.getMedidaVertical() + ""); // Espacios añadidos
-                content.newLineAtOffset(100, 0);
-                content.showText(String.valueOf(v.getCantidad()));
-                content.newLineAtOffset(60, 0);
-                content.showText("$" + v.getSubtotalLinea());
-                content.endText();
-                y -= 18;
-            }
-            List<PuertaAbatibleDetalle> detallesPuerta = cotizacion.getPuertaAbatibleDetalles();
-            for (PuertaAbatibleDetalle p : detallesPuerta) {
-                content.beginText();
-                content.setFont(PDType1Font.HELVETICA, 12);
-                content.newLineAtOffset(startX, y);
-                content.showText("Puerta");
-                content.newLineAtOffset(80, 0);
-                content.showText(p.getDescripcion());
-                content.newLineAtOffset(180, 0);
-                content.showText("" + p.getMedidaHorizontal() + " X " + p.getMedidaVertical() + "");
-                content.newLineAtOffset(100, 0);
-                content.showText(String.valueOf(p.getCantidad()));
-                content.newLineAtOffset(60, 0);
-                content.showText("$" + p.getSubtotalLinea());
-                content.endText();
-                y -= 18;
-            }
-            List<CanceleriaFijaDetalle> detallesCanceleria = cotizacion.getCanceleriaFijaDetalles();
-            for (CanceleriaFijaDetalle c : detallesCanceleria) {
-                content.beginText();
-                content.setFont(PDType1Font.HELVETICA, 12);
-                content.newLineAtOffset(startX, y);
-                content.showText("Cancelería");
-                content.newLineAtOffset(80, 0);
-                content.showText(c.getDescripcion());
-                content.newLineAtOffset(180, 0);
-                content.showText("" + c.getMedidaHorizontal() + " X " + c.getMedidaVertical() + "");
-                content.newLineAtOffset(100, 0);
-                content.showText(String.valueOf(c.getCantidad()));
-                content.newLineAtOffset(60, 0);
-                content.showText("$" + c.getSubtotalLinea());
-                content.endText();
-                y -= 18;
-            }
-
-            // Línea separadora
-            y -= 12;
-            content.moveTo(startX, y);
-            content.lineTo(startX + 510, y);
-            content.stroke();
-
-            // ||---------- SECCIÓN DE TOTALES ----------||
-            y -= 20; 
             content.setFont(PDType1Font.HELVETICA_BOLD, 13);
-
-            //  Subtotal
-            content.beginText();
             content.newLineAtOffset(startX, y);
-            content.showText("Subtotal (Materiales): $" + cotizacion.getSubtotal());
-            content.endText();
-            y -= 20; 
-
-            // Mano de Obra
-            BigDecimal manoDeObra = cotizacion.getManoObra() != null ? cotizacion.getManoObra() : BigDecimal.ZERO;
-            content.beginText();
-            content.newLineAtOffset(startX, y);
-            content.showText("Mano de Obra: $" + manoDeObra);
-            content.endText();
-            y -= 20; 
-
-            // Descuento 
-            content.beginText();
-            content.newLineAtOffset(startX, y);
-            content.showText("Descuento: $" + cotizacion.getDescuentoMonto());
-            content.endText();
-            y -= 20; 
-
-            // IVA 
-            content.beginText();
-            content.newLineAtOffset(startX, y);
-            content.showText("IVA: $" + cotizacion.getIva());
+            content.showText("DESCRIPCIÓN DE LOS TRABAJOS:");
             content.endText();
 
-            //  Línea final de Total 
-            y -= 25; 
+            y -= 25;
+
+            content.setFont(PDType1Font.HELVETICA, 12);
+
+            // ================= VENTANAS =================
+            List<VentanaDetalle> v = cotizacion.getVentanaDetalles();
+            if (v != null) {
+                for (VentanaDetalle d : v) {
+                    content.beginText();
+                    content.newLineAtOffset(startX, y);
+                    content.showText("- " + limpiarTexto(d.getDescripcion()));
+                    content.endText();
+                    y -= 18;
+                }
+            }
+
+            // ================= PUERTAS =================
+            List<PuertaAbatibleDetalle> p = cotizacion.getPuertaAbatibleDetalles();
+            if (p != null) {
+                for (PuertaAbatibleDetalle d : p) {
+                    content.beginText();
+                    content.newLineAtOffset(startX, y);
+                    content.showText("- " + limpiarTexto(d.getDescripcion()));
+                    content.endText();
+                    y -= 18;
+                }
+            }
+
+            // ================= CANCELERÍAS =================
+            List<CanceleriaFijaDetalle> c = cotizacion.getCanceleriaFijaDetalles();
+            if (c != null) {
+                for (CanceleriaFijaDetalle d : c) {
+                    content.beginText();
+                    content.newLineAtOffset(startX, y);
+                    content.showText("- " + limpiarTexto(d.getDescripcion()));
+                    content.endText();
+                    y -= 18;
+                }
+            }
+
+            // ================= TOTAL =================
+            y -= 30;
             content.beginText();
-            content.setFont(PDType1Font.HELVETICA_BOLD, 15); // Letra más grande
+            content.setFont(PDType1Font.HELVETICA_BOLD, 16);
             content.newLineAtOffset(startX, y);
-            content.showText("Total: $" + cotizacion.getTotal());
+            content.showText("TOTAL FINAL: $" + cotizacion.getTotal());
             content.endText();
+
             content.close();
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             doc.save(baos);
             doc.close();
+
             return baos.toByteArray();
+
         } catch (Exception ex) {
             ex.printStackTrace();
             return null;
