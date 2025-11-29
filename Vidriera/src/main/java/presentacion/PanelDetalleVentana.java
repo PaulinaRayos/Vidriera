@@ -487,12 +487,12 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
     }//GEN-LAST:event_cbxTipoArcoActionPerformed
 
     private void ckArcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckArcoActionPerformed
-
+      
 
     }//GEN-LAST:event_ckArcoActionPerformed
 
     private void ckMosquiteroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckMosquiteroActionPerformed
-
+      
     }//GEN-LAST:event_ckMosquiteroActionPerformed
 
     private void cbxTipoMosquiteroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxTipoMosquiteroActionPerformed
@@ -906,21 +906,13 @@ public class PanelDetalleVentana extends javax.swing.JPanel {
             d.setMosquitero(ckMosquitero.isSelected());
             d.setTipoCanalillo((String) cbxTipoCanalillo.getSelectedItem());
             d.setMedidaCanalillo(medidaCanalilloBD);
-            if (d.isMosquitero()) {
-                d.setTipoMosquitero((String) cbxTipoMosquitero.getSelectedItem());
-                d.setTipoPerfil((String) cbxTipoPerfil.getSelectedItem());
-                d.setNoEscuadras((Integer) spnNoEscuadras.getValue());
-                d.setTipoTela((String) cbxTelas.getSelectedItem());
 
-                BigDecimal largoTelaBD = new BigDecimal(txtLargoTela.getText().trim());
-                d.setLargoTela(largoTelaBD);
-            } else {
-                d.setTipoMosquitero(null);
-                d.setTipoPerfil(null);
-                d.setNoEscuadras(0);
-                d.setTipoTela(null);
-                d.setLargoTela(null);
-            }
+            d.setTipoMosquitero((String) cbxTipoMosquitero.getSelectedItem());
+            d.setTipoPerfil((String) cbxTipoPerfil.getSelectedItem());
+            d.setNoEscuadras((Integer) spnNoEscuadras.getValue());
+            d.setTipoTela((String) cbxTelas.getSelectedItem());
+            BigDecimal bigdecimal = new BigDecimal(txtLargoTela.getText());
+            d.setLargoTela(bigdecimal);
 
             // ============================================
             // MATERIALES & SUBTOTAL
