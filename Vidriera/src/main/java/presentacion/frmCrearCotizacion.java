@@ -205,7 +205,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         Descuento1 = new javax.swing.JLabel();
         panelBotones = new javax.swing.JPanel();
         pnlNuevaCotizacion = new javax.swing.JPanel();
-        btnVistaPrevia = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnDescartar = new javax.swing.JButton();
 
@@ -479,7 +478,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
         Descuento1.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         Descuento1.setForeground(new java.awt.Color(15, 105, 196));
-        Descuento1.setText("Materiales a utilizar:");
+        Descuento1.setText("Resumen Cotización");
 
         javax.swing.GroupLayout pnlTotalesLayout = new javax.swing.GroupLayout(pnlTotales);
         pnlTotales.setLayout(pnlTotalesLayout);
@@ -595,24 +594,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
         pnlNuevaCotizacion.setBackground(new java.awt.Color(255, 255, 255));
 
-        btnVistaPrevia.setBackground(new java.awt.Color(254, 188, 47));
-        btnVistaPrevia.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnVistaPrevia.setForeground(new java.awt.Color(255, 255, 255));
-        btnVistaPrevia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vistaprevia-20.png"))); // NOI18N
-        btnVistaPrevia.setText("Vista Previa");
-        btnVistaPrevia.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnVistaPrevia.setBorderPainted(false);
-        btnVistaPrevia.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnVistaPrevia.setDefaultCapable(false);
-        btnVistaPrevia.setFocusPainted(false);
-        btnVistaPrevia.setRequestFocusEnabled(false);
-        btnVistaPrevia.setRolloverEnabled(false);
-        btnVistaPrevia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVistaPreviaActionPerformed(evt);
-            }
-        });
-
         btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
         btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
@@ -654,9 +635,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
         pnlNuevaCotizacionLayout.setHorizontalGroup(
             pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
-                .addGap(63, 63, 63)
-                .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(693, 693, 693)
+                .addGap(883, 883, 883)
                 .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -670,9 +649,7 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
                     .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnlNuevaCotizacionLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(pnlNuevaCotizacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -1094,15 +1071,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnGuardarActionPerformed
 
-    private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
-        if (this.cotizacionSeleccionada == null) {
-            JOptionPane.showMessageDialog(this, "Seleccione una cotización.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        VistaPreviaCotizacionDialog.mostrarPrevia(this, this.cotizacionSeleccionada);
-
-    }//GEN-LAST:event_btnVistaPreviaActionPerformed
-
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         this.dispose();
         InicioAdministrarCotizaciones ini = new InicioAdministrarCotizaciones();
@@ -1443,7 +1411,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminarCotizacion;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevaCotizacion;
-    private javax.swing.JButton btnVistaPrevia;
     private javax.swing.JButton btnVolver;
     private javax.swing.JComboBox<String> cbxSeleccionarCliente;
     private javax.swing.JCheckBox ckbxDescuentoNo;

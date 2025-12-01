@@ -123,7 +123,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         btnNuevaCotizacion = new javax.swing.JButton();
         btnEditarCotizacion = new javax.swing.JButton();
         panelBotones = new javax.swing.JPanel();
-        btnVistaPrevia = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnDescartar = new javax.swing.JButton();
         pnlTotales2 = new javax.swing.JPanel();
@@ -320,24 +319,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
         panelBotones.setBackground(new java.awt.Color(255, 255, 255));
 
-        btnVistaPrevia.setBackground(new java.awt.Color(254, 188, 47));
-        btnVistaPrevia.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnVistaPrevia.setForeground(new java.awt.Color(255, 255, 255));
-        btnVistaPrevia.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vistaprevia-20.png"))); // NOI18N
-        btnVistaPrevia.setText("Vista Previa");
-        btnVistaPrevia.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnVistaPrevia.setBorderPainted(false);
-        btnVistaPrevia.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnVistaPrevia.setDefaultCapable(false);
-        btnVistaPrevia.setFocusPainted(false);
-        btnVistaPrevia.setRequestFocusEnabled(false);
-        btnVistaPrevia.setRolloverEnabled(false);
-        btnVistaPrevia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVistaPreviaActionPerformed(evt);
-            }
-        });
-
         btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
         btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
@@ -379,9 +360,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         panelBotonesLayout.setHorizontalGroup(
             panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBotonesLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 568, Short.MAX_VALUE)
+                .addContainerGap(718, Short.MAX_VALUE)
                 .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -392,7 +371,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
             .addGroup(panelBotonesLayout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addGroup(panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnVistaPrevia, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(36, Short.MAX_VALUE))
@@ -411,7 +389,7 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
 
         descuento.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         descuento.setForeground(new java.awt.Color(15, 105, 196));
-        descuento.setText("Material a utilizar:");
+        descuento.setText("Resumen Cotización");
 
         ckbxDescuentoNo2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         ckbxDescuentoNo2.setText("No");
@@ -869,16 +847,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEditarCotizacionActionPerformed
 
-    private void btnVistaPreviaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVistaPreviaActionPerformed
-        if (this.cotizacionSeleccionada == null) {
-            JOptionPane.showMessageDialog(this, "Seleccione una cotización.", "Aviso", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        VistaPreviaCotizacionDialog.mostrarPrevia(this, this.cotizacionSeleccionada);
-
-
-    }//GEN-LAST:event_btnVistaPreviaActionPerformed
-
     private void cbxEstadoCotizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxEstadoCotizacionActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbxEstadoCotizacionActionPerformed
@@ -1172,7 +1140,6 @@ public class frmEditarCotizacion extends javax.swing.JFrame {
     private javax.swing.JButton btnEliminarCotizacion;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnNuevaCotizacion;
-    private javax.swing.JButton btnVistaPrevia;
     private javax.swing.JComboBox<String> cbxEstadoCotizacion;
     private javax.swing.JCheckBox ckbxDescuentoNo2;
     private javax.swing.JCheckBox ckbxDescuentoSi2;
