@@ -57,12 +57,11 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="txtBuscarCliente3" alignment="0" min="-2" pref="409" max="-2" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="txtBuscarCliente5" alignment="0" pref="415" max="32767" attributes="0"/>
-                                          <Component id="txtBuscarCliente" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="txtDireccionCliente" alignment="0" pref="415" max="32767" attributes="0"/>
+                                          <Component id="txtTelefono" alignment="0" max="32767" attributes="0"/>
                                           <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -74,27 +73,20 @@
                                           <EmptySpace max="32767" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                                              <Component id="txtBuscarCliente1" min="-2" pref="413" max="-2" attributes="0"/>
+                                              <Component id="txtCorreoElectronico" min="-2" pref="413" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                               <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Component id="txtBuscarCliente7" alignment="0" min="-2" pref="415" max="-2" attributes="0"/>
-                                              <Component id="txtBuscarCliente6" alignment="0" min="-2" pref="409" max="-2" attributes="0"/>
+                                              <Component id="txtColoniaCliente" alignment="0" min="-2" pref="415" max="-2" attributes="0"/>
+                                              <Component id="txtCiudadCliente" alignment="0" min="-2" pref="409" max="-2" attributes="0"/>
                                               <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="txtBuscarCliente8" alignment="0" min="-2" pref="895" max="-2" attributes="0"/>
-                                      <Component id="txtBuscarCliente2" alignment="0" min="-2" pref="895" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="0" pref="6" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -104,11 +96,19 @@
                                           <EmptySpace min="-2" pref="842" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="btnGuardar" min="-2" pref="127" max="-2" attributes="0"/>
+                                          <Component id="btnGuardarCliente" min="-2" pref="127" max="-2" attributes="0"/>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="btnDescartar" min="-2" pref="127" max="-2" attributes="0"/>
+                                          <Component id="btnDescartarCliente" min="-2" pref="127" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Component id="txtEstadoCLiente" alignment="0" min="-2" pref="409" max="-2" attributes="0"/>
+                                      <Component id="txtNombreCompleto" alignment="0" min="-2" pref="895" max="-2" attributes="0"/>
+                                      <Component id="txtRFCCliente" alignment="0" min="-2" pref="895" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="0" pref="6" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -128,11 +128,11 @@
                   <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace pref="28" max="32767" attributes="0"/>
-                  <Component id="txtBuscarCliente8" min="-2" pref="36" max="-2" attributes="0"/>
+                  <Component id="txtNombreCompleto" min="-2" pref="36" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                  <Component id="txtBuscarCliente2" min="-2" pref="36" max="-2" attributes="0"/>
+                  <Component id="txtRFCCliente" min="-2" pref="36" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
@@ -142,18 +142,18 @@
                           </Group>
                           <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtBuscarCliente" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
-                              <Component id="txtBuscarCliente1" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                              <Component id="txtTelefono" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                              <Component id="txtCorreoElectronico" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtBuscarCliente5" min="-2" pref="36" max="-2" attributes="0"/>
+                          <Component id="txtDireccionCliente" min="-2" pref="36" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtBuscarCliente7" min="-2" pref="36" max="-2" attributes="0"/>
+                          <Component id="txtColoniaCliente" min="-2" pref="36" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -163,13 +163,13 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="txtBuscarCliente3" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
-                      <Component id="txtBuscarCliente6" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                      <Component id="txtEstadoCLiente" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                      <Component id="txtCiudadCliente" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="btnDescartar" alignment="0" max="32767" attributes="0"/>
-                      <Component id="btnGuardar" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
+                      <Component id="btnDescartarCliente" alignment="0" max="32767" attributes="0"/>
+                      <Component id="btnGuardarCliente" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -282,12 +282,8 @@
             <Property name="text" type="java.lang.String" value="Datos del cliente"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtBuscarCliente">
+        <Component class="javax.swing.JTextField" name="txtTelefono">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="cc" green="cc" red="cc" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Telefono"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
@@ -307,12 +303,8 @@
             <Property name="text" type="java.lang.String" value="Nombre completo:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtBuscarCliente1">
+        <Component class="javax.swing.JTextField" name="txtCorreoElectronico">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="cc" green="cc" red="cc" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Correo electronico"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
@@ -324,16 +316,12 @@
             <Property name="text" type="java.lang.String" value="Estado:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtBuscarCliente2">
+        <Component class="javax.swing.JTextField" name="txtRFCCliente">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="cc" green="cc" red="cc" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="RFC"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtBuscarCliente2ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtRFCClienteActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
@@ -344,12 +332,8 @@
             <Property name="text" type="java.lang.String" value="Correo electronico:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtBuscarCliente3">
+        <Component class="javax.swing.JTextField" name="txtEstadoCLiente">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="cc" green="cc" red="cc" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Estado"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
@@ -369,21 +353,13 @@
             <Property name="text" type="java.lang.String" value="Direccion:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtBuscarCliente5">
+        <Component class="javax.swing.JTextField" name="txtDireccionCliente">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="cc" green="cc" red="cc" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Direccion"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtBuscarCliente6">
+        <Component class="javax.swing.JTextField" name="txtCiudadCliente">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="cc" green="cc" red="cc" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Ciudad"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
@@ -395,12 +371,8 @@
             <Property name="text" type="java.lang.String" value="Ciudad:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtBuscarCliente7">
+        <Component class="javax.swing.JTextField" name="txtColoniaCliente">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="cc" green="cc" red="cc" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Colonia"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
@@ -412,7 +384,7 @@
             <Property name="text" type="java.lang.String" value="Colonia:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="btnGuardar">
+        <Component class="javax.swing.JButton" name="btnGuardarCliente">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="41" green="d2" red="4" type="rgb"/>
@@ -442,10 +414,10 @@
             <Property name="rolloverEnabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGuardarActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGuardarClienteActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnDescartar">
+        <Component class="javax.swing.JButton" name="btnDescartarCliente">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="33" green="0" red="ff" type="rgb"/>
@@ -475,19 +447,15 @@
             <Property name="rolloverEnabled" type="boolean" value="false"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDescartarActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDescartarClienteActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="txtBuscarCliente8">
+        <Component class="javax.swing.JTextField" name="txtNombreCompleto">
           <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="cc" green="cc" red="cc" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="nombre completo"/>
             <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtBuscarCliente8ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtNombreCompletoActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

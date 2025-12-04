@@ -5,6 +5,11 @@
 package presentacion.Cliente;
 
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+import modelo.Cliente;
+import negocio.ClienteBO;
 
 /**
  *
@@ -12,11 +17,77 @@ import javax.swing.JOptionPane;
  */
 public class frmAdministrarClientes extends javax.swing.JFrame {
 
+    private ClienteBO clienteBO;
+    private TableRowSorter<DefaultTableModel> sorter;
+    private static final int TAM_PAGINA = 5;
+    private int paginaActual = 1;
+    private java.util.List<Cliente> listaCompleta;
+
     /**
      * Creates new form frmAdministrarClientes
      */
     public frmAdministrarClientes() {
         initComponents();
+        clienteBO = new ClienteBO();
+        cargarClientesEnTabla();
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        sorter = new TableRowSorter<>(modelo);
+        jTable1.setRowSorter(sorter);
+        txtBuscarCliente.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            private void filtrar() {
+                String texto = txtBuscarCliente.getText().trim();
+                if (texto.isEmpty()) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + texto, 1)); // col 1 = Nombre
+                }
+            }
+
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                filtrar();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                filtrar();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                filtrar();
+            }
+        });
+
+    }
+
+    private void cargarClientesEnTabla() {
+        listaCompleta = clienteBO.obtenerClientes(); // toda la lista desde BD
+        mostrarPagina(1);
+    }
+
+    private void mostrarPagina(int numeroPagina) {
+        paginaActual = numeroPagina;
+
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0);
+
+        if (listaCompleta == null || listaCompleta.isEmpty()) {
+            return;
+        }
+
+        int desde = (numeroPagina - 1) * TAM_PAGINA;
+        int hasta = Math.min(desde + TAM_PAGINA, listaCompleta.size());
+
+        for (int i = desde; i < hasta; i++) {
+            Cliente c = listaCompleta.get(i);
+            modelo.addRow(new Object[]{
+                c.getIdCliente(),
+                c.getNombre(),
+                c.getTelefono(),
+                c.getDireccion()
+            });
+        }
     }
 
     /**
@@ -36,20 +107,20 @@ public class frmAdministrarClientes extends javax.swing.JFrame {
         iconoCrear = new javax.swing.JLabel();
         Buscar = new javax.swing.JLabel();
         txtBuscarCliente = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnBuscarCliente = new javax.swing.JButton();
         Buscar1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         btnCrearCliente = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        btnDescartar = new javax.swing.JButton();
-        btnGuardar = new javax.swing.JButton();
+        btnPag1Clientes = new javax.swing.JButton();
+        btnPag2clientes = new javax.swing.JButton();
+        btnPag3clientes = new javax.swing.JButton();
+        btnPag4clientes = new javax.swing.JButton();
+        btnPag5clientes = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnModificar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -113,12 +184,12 @@ public class frmAdministrarClientes extends javax.swing.JFrame {
 
         txtBuscarCliente.setToolTipText("");
 
-        jButton1.setBackground(new java.awt.Color(0, 81, 168));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Buscar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscarCliente.setBackground(new java.awt.Color(0, 81, 168));
+        btnBuscarCliente.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscarCliente.setText("Buscar");
+        btnBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnBuscarClienteActionPerformed(evt);
             }
         });
 
@@ -153,60 +224,85 @@ public class frmAdministrarClientes extends javax.swing.JFrame {
         btnCrearCliente.setFocusPainted(false);
         btnCrearCliente.setRequestFocusEnabled(false);
         btnCrearCliente.setRolloverEnabled(false);
-
-        jButton3.setText("1");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnCrearCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-        jPanel2.add(jButton3);
-
-        jButton2.setText("2");
-        jPanel2.add(jButton2);
-
-        jButton4.setText("3");
-        jPanel2.add(jButton4);
-
-        jButton5.setText("4");
-        jPanel2.add(jButton5);
-
-        jButton6.setText("5");
-        jPanel2.add(jButton6);
-
-        btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
-        btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
-        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
-        btnDescartar.setText("Eliminar");
-        btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnDescartar.setBorderPainted(false);
-        btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnDescartar.setDefaultCapable(false);
-        btnDescartar.setFocusPainted(false);
-        btnDescartar.setRequestFocusEnabled(false);
-        btnDescartar.setRolloverEnabled(false);
-        btnDescartar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDescartarActionPerformed(evt);
+                btnCrearClienteActionPerformed(evt);
             }
         });
 
-        btnGuardar.setBackground(new java.awt.Color(255, 153, 51));
-        btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
-        btnGuardar.setText("Modificar");
-        btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnGuardar.setBorderPainted(false);
-        btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnGuardar.setDefaultCapable(false);
-        btnGuardar.setFocusPainted(false);
-        btnGuardar.setRequestFocusEnabled(false);
-        btnGuardar.setRolloverEnabled(false);
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+        btnPag1Clientes.setText("1");
+        btnPag1Clientes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
+                btnPag1ClientesActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnPag1Clientes);
+
+        btnPag2clientes.setText("2");
+        btnPag2clientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPag2clientesActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnPag2clientes);
+
+        btnPag3clientes.setText("3");
+        btnPag3clientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPag3clientesActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnPag3clientes);
+
+        btnPag4clientes.setText("4");
+        btnPag4clientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPag4clientesActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnPag4clientes);
+
+        btnPag5clientes.setText("5");
+        btnPag5clientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPag5clientesActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnPag5clientes);
+
+        btnEliminar.setBackground(new java.awt.Color(255, 0, 51));
+        btnEliminar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnEliminar.setForeground(new java.awt.Color(255, 255, 255));
+        btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
+        btnEliminar.setText("Eliminar");
+        btnEliminar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnEliminar.setBorderPainted(false);
+        btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnEliminar.setDefaultCapable(false);
+        btnEliminar.setFocusPainted(false);
+        btnEliminar.setRequestFocusEnabled(false);
+        btnEliminar.setRolloverEnabled(false);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
+        btnModificar.setBackground(new java.awt.Color(255, 153, 51));
+        btnModificar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnModificar.setForeground(new java.awt.Color(255, 255, 255));
+        btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
+        btnModificar.setText("Modificar");
+        btnModificar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnModificar.setBorderPainted(false);
+        btnModificar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnModificar.setDefaultCapable(false);
+        btnModificar.setFocusPainted(false);
+        btnModificar.setRequestFocusEnabled(false);
+        btnModificar.setRolloverEnabled(false);
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
             }
         });
 
@@ -219,9 +315,9 @@ public class frmAdministrarClientes extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(22, 22, 22)
@@ -230,7 +326,7 @@ public class frmAdministrarClientes extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButton1))))
+                                    .addComponent(btnBuscarCliente))))
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addContainerGap()
                             .addComponent(jLabel2)
@@ -259,7 +355,7 @@ public class frmAdministrarClientes extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(btnBuscarCliente))
                 .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Buscar1)
@@ -272,8 +368,8 @@ public class frmAdministrarClientes extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(189, 189, 189))
         );
 
@@ -295,23 +391,102 @@ public class frmAdministrarClientes extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
+        String texto = txtBuscarCliente.getText().trim();
+        if (texto.isEmpty()) {
+            sorter.setRowFilter(null); // sin filtro
+        } else {
+            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + texto, 1));
+            // 1 = columna "Nombre del cliente"
+        }
+    }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void btnPag1ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPag1ClientesActionPerformed
+        mostrarPagina(1);
+    }//GEN-LAST:event_btnPag1ClientesActionPerformed
 
-    private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
-      
-    }//GEN-LAST:event_btnDescartarActionPerformed
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int fila = jTable1.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un cliente de la tabla");
+            return;
+        }
 
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        int filaModelo = jTable1.convertRowIndexToModel(fila);
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        int id = (Integer) modelo.getValueAt(filaModelo, 0);
+        String nombre = (String) modelo.getValueAt(filaModelo, 1);
 
-         
+        int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Eliminar al cliente \"" + nombre + "\"?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION);
 
-    }//GEN-LAST:event_btnGuardarActionPerformed
+        if (opcion == JOptionPane.YES_OPTION) {
+            if (clienteBO.eliminarCliente(id)) {
+                JOptionPane.showMessageDialog(this, "Cliente eliminado");
+                cargarClientesEnTabla();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo eliminar el cliente");
+            }
+        }
+
+
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+        int fila = jTable1.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un cliente de la tabla");
+            return;
+        }
+
+        int filaModelo = jTable1.convertRowIndexToModel(fila);
+        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        int id = (Integer) modelo.getValueAt(filaModelo, 0);
+
+        Cliente seleccionado = clienteBO.obtenerClientePorId(id);
+        if (seleccionado == null) {
+            JOptionPane.showMessageDialog(this, "No se pudo encontrar el cliente en la base de datos");
+            return;
+        }
+
+        PanelInformacionGeneralCliente frm = new PanelInformacionGeneralCliente(this, seleccionado);
+        frm.setLocationRelativeTo(this);
+        frm.setVisible(true);   // al cerrarse, el hijo ya llamó a padre.recargarClientes()
+
+
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnPag2clientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPag2clientesActionPerformed
+        mostrarPagina(2);
+
+    }//GEN-LAST:event_btnPag2clientesActionPerformed
+
+    private void btnCrearClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearClienteActionPerformed
+        PanelInformacionGeneralCliente frm = new PanelInformacionGeneralCliente(this);
+        frm.setLocationRelativeTo(this);
+        frm.setVisible(true);
+    }//GEN-LAST:event_btnCrearClienteActionPerformed
+
+    private void btnPag4clientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPag4clientesActionPerformed
+        mostrarPagina(4);
+    }//GEN-LAST:event_btnPag4clientesActionPerformed
+
+    private void btnPag5clientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPag5clientesActionPerformed
+        mostrarPagina(5);
+
+    }//GEN-LAST:event_btnPag5clientesActionPerformed
+
+    private void btnPag3clientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPag3clientesActionPerformed
+        mostrarPagina(3);
+
+    }//GEN-LAST:event_btnPag3clientesActionPerformed
+
+    public void recargarClientes() {
+        cargarClientesEnTabla();
+    }
 
     /**
      * @param args the command line arguments
@@ -327,16 +502,24 @@ public class frmAdministrarClientes extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmAdministrarClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmAdministrarClientes.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmAdministrarClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmAdministrarClientes.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmAdministrarClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmAdministrarClientes.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmAdministrarClientes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmAdministrarClientes.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -352,16 +535,16 @@ public class frmAdministrarClientes extends javax.swing.JFrame {
     private javax.swing.JLabel Buscar;
     private javax.swing.JLabel Buscar1;
     private javax.swing.JLabel ConsultarCotizacion;
+    private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnCrearCliente;
-    private javax.swing.JButton btnDescartar;
-    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnModificar;
+    private javax.swing.JButton btnPag1Clientes;
+    private javax.swing.JButton btnPag2clientes;
+    private javax.swing.JButton btnPag3clientes;
+    private javax.swing.JButton btnPag4clientes;
+    private javax.swing.JButton btnPag5clientes;
     private javax.swing.JLabel iconoCrear;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

@@ -40,11 +40,11 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        btnPag1Clientes = new javax.swing.JButton();
+        btnPag2Clientes = new javax.swing.JButton();
+        btnPag3Clientes = new javax.swing.JButton();
+        btnPag4Clientes = new javax.swing.JButton();
+        btnPag5Clientes = new javax.swing.JButton();
         btnGuardar = new javax.swing.JButton();
         btnBuscar2 = new javax.swing.JButton();
         btnDescartar = new javax.swing.JButton();
@@ -175,20 +175,40 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jButton3.setText("1");
-        jPanel2.add(jButton3);
+        btnPag1Clientes.setText("1");
+        btnPag1Clientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPag1ClientesActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnPag1Clientes);
 
-        jButton2.setText("2");
-        jPanel2.add(jButton2);
+        btnPag2Clientes.setText("2");
+        btnPag2Clientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPag2ClientesActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnPag2Clientes);
 
-        jButton4.setText("3");
-        jPanel2.add(jButton4);
+        btnPag3Clientes.setText("3");
+        btnPag3Clientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPag3ClientesActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnPag3Clientes);
 
-        jButton5.setText("4");
-        jPanel2.add(jButton5);
+        btnPag4Clientes.setText("4");
+        btnPag4Clientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPag4ClientesActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnPag4Clientes);
 
-        jButton6.setText("5");
-        jPanel2.add(jButton6);
+        btnPag5Clientes.setText("5");
+        jPanel2.add(btnPag5Clientes);
 
         btnGuardar.setBackground(new java.awt.Color(255, 153, 51));
         btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
@@ -292,10 +312,8 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
                 .addGap(44, 44, 44)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Buscar1)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnBuscar2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscar2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(3, 3, 3)
@@ -340,6 +358,22 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
     private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnDescartarActionPerformed
+
+    private void btnPag1ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPag1ClientesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPag1ClientesActionPerformed
+
+    private void btnPag2ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPag2ClientesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPag2ClientesActionPerformed
+
+    private void btnPag3ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPag3ClientesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPag3ClientesActionPerformed
+
+    private void btnPag4ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPag4ClientesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPag4ClientesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -386,12 +420,12 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
     private javax.swing.JButton btnBuscar2;
     private javax.swing.JButton btnDescartar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnPag1Clientes;
+    private javax.swing.JButton btnPag2Clientes;
+    private javax.swing.JButton btnPag3Clientes;
+    private javax.swing.JButton btnPag4Clientes;
+    private javax.swing.JButton btnPag5Clientes;
     private javax.swing.JLabel iconoCrear;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

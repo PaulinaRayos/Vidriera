@@ -92,12 +92,8 @@
                   <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="Buscar1" alignment="0" min="-2" max="-2" attributes="0"/>
-                      <Group type="103" alignment="0" groupAlignment="0" attributes="0">
-                          <Component id="btnBuscar" alignment="0" min="-2" pref="36" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btnBuscar2" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
+                      <Component id="btnBuscar" alignment="0" min="-2" pref="36" max="-2" attributes="0"/>
+                      <Component id="btnBuscar2" min="-2" pref="36" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="272" max="-2" attributes="0"/>
@@ -380,27 +376,39 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="jButton3">
+            <Component class="javax.swing.JButton" name="btnPag1Clientes">
               <Properties>
                 <Property name="text" type="java.lang.String" value="1"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPag1ClientesActionPerformed"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton2">
+            <Component class="javax.swing.JButton" name="btnPag2Clientes">
               <Properties>
                 <Property name="text" type="java.lang.String" value="2"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPag2ClientesActionPerformed"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton4">
+            <Component class="javax.swing.JButton" name="btnPag3Clientes">
               <Properties>
                 <Property name="text" type="java.lang.String" value="3"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPag3ClientesActionPerformed"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton5">
+            <Component class="javax.swing.JButton" name="btnPag4Clientes">
               <Properties>
                 <Property name="text" type="java.lang.String" value="4"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPag4ClientesActionPerformed"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButton6">
+            <Component class="javax.swing.JButton" name="btnPag5Clientes">
               <Properties>
                 <Property name="text" type="java.lang.String" value="5"/>
               </Properties>

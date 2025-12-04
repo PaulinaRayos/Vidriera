@@ -18,6 +18,7 @@ import modelo.Cliente;
  * @author pauli
  */
 public class ClienteDAO {
+
     private Connection conexion;
 
     public ClienteDAO(Connection conexion) {
@@ -26,13 +27,18 @@ public class ClienteDAO {
 
     // Crear un nuevo cliente
     public boolean crearCliente(Cliente cliente) {
-        String sql = "INSERT INTO cliente (nombre, telefono, direccion, email, RFC) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO cliente "
+                + "(nombre, telefono, direccion, email, RFC, estado, ciudad, colonia) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, cliente.getNombre());
             ps.setString(2, cliente.getTelefono());
             ps.setString(3, cliente.getDireccion());
             ps.setString(4, cliente.getEmail());
             ps.setString(5, cliente.getRFC());
+            ps.setString(6, cliente.getEstado());
+            ps.setString(7, cliente.getCiudad());
+            ps.setString(8, cliente.getColonia());
 
             int filas = ps.executeUpdate();
             if (filas > 0) {
@@ -67,8 +73,7 @@ public class ClienteDAO {
     public List<Cliente> obtenerTodos() {
         String sql = "SELECT * FROM cliente ORDER BY nombre";
         List<Cliente> clientes = new ArrayList<>();
-        try (Statement stmt = conexion.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+        try (Statement stmt = conexion.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 clientes.add(mapearCliente(rs));
             }
@@ -80,14 +85,19 @@ public class ClienteDAO {
 
     // Actualizar cliente
     public boolean actualizarCliente(Cliente cliente) {
-        String sql = "UPDATE cliente SET nombre = ?, telefono = ?, direccion = ?, email = ?, RFC = ? WHERE idCliente = ?";
+        String sql = "UPDATE cliente SET nombre = ?, telefono = ?, direccion = ?, "
+                + "email = ?, RFC = ?, estado = ?, ciudad = ?, colonia = ? "
+                + "WHERE idCliente = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setString(1, cliente.getNombre());
             ps.setString(2, cliente.getTelefono());
             ps.setString(3, cliente.getDireccion());
             ps.setString(4, cliente.getEmail());
             ps.setString(5, cliente.getRFC());
-            ps.setInt(6, cliente.getIdCliente());
+            ps.setString(6, cliente.getEstado());
+            ps.setString(7, cliente.getCiudad());
+            ps.setString(8, cliente.getColonia());
+            ps.setInt(9, cliente.getIdCliente());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -96,7 +106,6 @@ public class ClienteDAO {
         return false;
     }
 
-    // Eliminar cliente
     public boolean eliminarCliente(int idCliente) {
         String sql = "DELETE FROM cliente WHERE idCliente = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -108,7 +117,6 @@ public class ClienteDAO {
         return false;
     }
 
-    // Verificar si existe cliente
     public boolean existeCliente(int idCliente) {
         String sql = "SELECT COUNT(*) FROM cliente WHERE idCliente = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -123,22 +131,7 @@ public class ClienteDAO {
         return false;
     }
 
-    //obtener id por nombre cliente
-     public int obtenerIdPorNombre(String nombreCliente) throws SQLException {
-        String sql = "SELECT idCliente FROM cliente WHERE nombre = ?";
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setString(1, nombreCliente);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("idCliente");
-            } else {
-                throw new SQLException("Cliente no encontrado: " + nombreCliente);
-            }
-        }
-    }
-
-    
-    // Mapear ResultSet a Cliente
+// mapearCliente completo
     private Cliente mapearCliente(ResultSet rs) throws SQLException {
         Cliente cliente = new Cliente();
         cliente.setIdCliente(rs.getInt("idCliente"));
@@ -147,6 +140,10 @@ public class ClienteDAO {
         cliente.setDireccion(rs.getString("direccion"));
         cliente.setEmail(rs.getString("email"));
         cliente.setRFC(rs.getString("RFC"));
+        cliente.setEstado(rs.getString("estado"));
+        cliente.setCiudad(rs.getString("ciudad"));
+        cliente.setColonia(rs.getString("colonia"));
         return cliente;
     }
+
 }

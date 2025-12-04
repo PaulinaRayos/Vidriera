@@ -16,28 +16,40 @@ public class Cliente {
     private String direccion;
     private String email;
     private String RFC;
+    private String estado;
+    private String ciudad;
+    private String colonia;
+    
 
     //Constructor vacío
     public Cliente() {
     }
 
-    //Constructor con id
-    public Cliente(int idCliente, String nombre, String telefono, String direccion, String email, String RFC) {
+    public Cliente(int idCliente, String nombre, String telefono, String direccion, String email, String RFC, String estado, String ciudad, String colonia) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.telefono = telefono;
         this.direccion = direccion;
         this.email = email;
         this.RFC = RFC;
+        this.estado = estado;
+        this.ciudad = ciudad;
+        this.colonia = colonia;
     }
 
+   
+    
+
     //Constructor sin id
-    public Cliente(String nombre, String telefono, String direccion, String email, String RFC) {
+    public Cliente(String nombre, String telefono, String direccion, String email, String RFC, String estado, String ciudad, String colonia) {    
         this.nombre = nombre;
         this.telefono = telefono;
         this.direccion = direccion;
         this.email = email;
         this.RFC = RFC;
+        this.estado = estado;
+        this.ciudad = ciudad;
+        this.colonia = colonia;
     }
 
     // Getters y setters
@@ -92,6 +104,30 @@ public class Cliente {
     @Override
     public String toString() {
         return nombre;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
+
+    public String getColonia() {
+        return colonia;
+    }
+
+    public void setColonia(String colonia) {
+        this.colonia = colonia;
     }
 
 }
