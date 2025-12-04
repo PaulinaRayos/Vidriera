@@ -4,17 +4,42 @@
  */
 package presentacion.proyecto;
 
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modelo.Proyecto;
+import negocio.ProyectoBO;
+
 /**
  *
  * @author cesar
  */
 public class frmAdministrarProyectos extends javax.swing.JFrame {
 
+    private ProyectoBO proyectoBO;
+    private java.util.List<Proyecto> listaCompleta;
+
     /**
      * Creates new form frmRegistrarMateriales
      */
     public frmAdministrarProyectos() {
         initComponents();
+        proyectoBO = new ProyectoBO();
+        cargarProyectosEnTabla();
+    }
+
+    private void cargarProyectosEnTabla() {
+        DefaultTableModel modelo = (DefaultTableModel) tblListaProyectos.getModel();
+        modelo.setRowCount(0);
+        listaCompleta = proyectoBO.obtenerProyectos();
+        for (Proyecto p : listaCompleta) {
+            modelo.addRow(new Object[]{
+                p.getIdProyecto(),
+                p.getCliente().getNombre(),
+                p.getFechaInicio(),
+                p.getFechaEntregaEstimada(),
+                p.getEstado()
+            });
+        }
     }
 
     /**
@@ -32,22 +57,16 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
         panelSubtitulo = new javax.swing.JPanel();
         ConsultarCotizacion = new javax.swing.JLabel();
         iconoCrear = new javax.swing.JLabel();
-        panelFechas = new javax.swing.JPanel();
-        btnBuscar = new javax.swing.JButton();
+        txtBusquedaProyecto = new javax.swing.JPanel();
+        btnCreardesdeCeroProyecto = new javax.swing.JButton();
         Buscar = new javax.swing.JLabel();
         Buscar1 = new javax.swing.JLabel();
-        btnBuscar1 = new javax.swing.JButton();
+        btnBuscarProyecto = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jPanel2 = new javax.swing.JPanel();
-        btnPag1Clientes = new javax.swing.JButton();
-        btnPag2Clientes = new javax.swing.JButton();
-        btnPag3Clientes = new javax.swing.JButton();
-        btnPag4Clientes = new javax.swing.JButton();
-        btnPag5Clientes = new javax.swing.JButton();
-        btnGuardar = new javax.swing.JButton();
-        btnBuscar2 = new javax.swing.JButton();
-        btnDescartar = new javax.swing.JButton();
+        tblListaProyectos = new javax.swing.JTable();
+        btnCambiarEstadoProyecto = new javax.swing.JButton();
+        btnNuevoProyecto = new javax.swing.JButton();
+        btnEliminarProyecto = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -103,35 +122,35 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        panelFechas.setBackground(new java.awt.Color(255, 255, 255));
-        panelFechas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        txtBusquedaProyecto.setBackground(new java.awt.Color(255, 255, 255));
+        txtBusquedaProyecto.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        javax.swing.GroupLayout panelFechasLayout = new javax.swing.GroupLayout(panelFechas);
-        panelFechas.setLayout(panelFechasLayout);
-        panelFechasLayout.setHorizontalGroup(
-            panelFechasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout txtBusquedaProyectoLayout = new javax.swing.GroupLayout(txtBusquedaProyecto);
+        txtBusquedaProyecto.setLayout(txtBusquedaProyectoLayout);
+        txtBusquedaProyectoLayout.setHorizontalGroup(
+            txtBusquedaProyectoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 831, Short.MAX_VALUE)
         );
-        panelFechasLayout.setVerticalGroup(
-            panelFechasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        txtBusquedaProyectoLayout.setVerticalGroup(
+            txtBusquedaProyectoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 36, Short.MAX_VALUE)
         );
 
-        btnBuscar.setBackground(new java.awt.Color(0, 81, 168));
-        btnBuscar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
-        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
-        btnBuscar.setText("Crear desde cotizacion");
-        btnBuscar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnBuscar.setBorderPainted(false);
-        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnBuscar.setDefaultCapable(false);
-        btnBuscar.setFocusPainted(false);
-        btnBuscar.setRequestFocusEnabled(false);
-        btnBuscar.setRolloverEnabled(false);
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+        btnCreardesdeCeroProyecto.setBackground(new java.awt.Color(0, 81, 168));
+        btnCreardesdeCeroProyecto.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnCreardesdeCeroProyecto.setForeground(new java.awt.Color(255, 255, 255));
+        btnCreardesdeCeroProyecto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
+        btnCreardesdeCeroProyecto.setText("Crear desde cotizacion");
+        btnCreardesdeCeroProyecto.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnCreardesdeCeroProyecto.setBorderPainted(false);
+        btnCreardesdeCeroProyecto.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCreardesdeCeroProyecto.setDefaultCapable(false);
+        btnCreardesdeCeroProyecto.setFocusPainted(false);
+        btnCreardesdeCeroProyecto.setRequestFocusEnabled(false);
+        btnCreardesdeCeroProyecto.setRolloverEnabled(false);
+        btnCreardesdeCeroProyecto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
+                btnCreardesdeCeroProyectoActionPerformed(evt);
             }
         });
 
@@ -143,26 +162,26 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
         Buscar1.setForeground(new java.awt.Color(15, 105, 196));
         Buscar1.setText("Listado de proyectos");
 
-        btnBuscar1.setBackground(new java.awt.Color(0, 81, 168));
-        btnBuscar1.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnBuscar1.setForeground(new java.awt.Color(255, 255, 255));
-        btnBuscar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/search-20.png"))); // NOI18N
-        btnBuscar1.setText("Buscar");
-        btnBuscar1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnBuscar1.setBorderPainted(false);
-        btnBuscar1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnBuscar1.setDefaultCapable(false);
-        btnBuscar1.setDisplayedMnemonicIndex(0);
-        btnBuscar1.setFocusPainted(false);
-        btnBuscar1.setRequestFocusEnabled(false);
-        btnBuscar1.setRolloverEnabled(false);
-        btnBuscar1.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscarProyecto.setBackground(new java.awt.Color(0, 81, 168));
+        btnBuscarProyecto.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnBuscarProyecto.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscarProyecto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/search-20.png"))); // NOI18N
+        btnBuscarProyecto.setText("Buscar");
+        btnBuscarProyecto.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnBuscarProyecto.setBorderPainted(false);
+        btnBuscarProyecto.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnBuscarProyecto.setDefaultCapable(false);
+        btnBuscarProyecto.setDisplayedMnemonicIndex(0);
+        btnBuscarProyecto.setFocusPainted(false);
+        btnBuscarProyecto.setRequestFocusEnabled(false);
+        btnBuscarProyecto.setRolloverEnabled(false);
+        btnBuscarProyecto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscar1ActionPerformed(evt);
+                btnBuscarProyectoActionPerformed(evt);
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblListaProyectos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -173,94 +192,59 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
                 "ID", "Cliente", "Fecha inicio", "Fecha entrega est.", "Estado actual"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblListaProyectos);
 
-        btnPag1Clientes.setText("1");
-        btnPag1Clientes.addActionListener(new java.awt.event.ActionListener() {
+        btnCambiarEstadoProyecto.setBackground(new java.awt.Color(255, 153, 51));
+        btnCambiarEstadoProyecto.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnCambiarEstadoProyecto.setForeground(new java.awt.Color(255, 255, 255));
+        btnCambiarEstadoProyecto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edit-20.png"))); // NOI18N
+        btnCambiarEstadoProyecto.setText("Cambiar estado");
+        btnCambiarEstadoProyecto.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnCambiarEstadoProyecto.setBorderPainted(false);
+        btnCambiarEstadoProyecto.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCambiarEstadoProyecto.setDefaultCapable(false);
+        btnCambiarEstadoProyecto.setFocusPainted(false);
+        btnCambiarEstadoProyecto.setRequestFocusEnabled(false);
+        btnCambiarEstadoProyecto.setRolloverEnabled(false);
+        btnCambiarEstadoProyecto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPag1ClientesActionPerformed(evt);
-            }
-        });
-        jPanel2.add(btnPag1Clientes);
-
-        btnPag2Clientes.setText("2");
-        btnPag2Clientes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPag2ClientesActionPerformed(evt);
-            }
-        });
-        jPanel2.add(btnPag2Clientes);
-
-        btnPag3Clientes.setText("3");
-        btnPag3Clientes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPag3ClientesActionPerformed(evt);
-            }
-        });
-        jPanel2.add(btnPag3Clientes);
-
-        btnPag4Clientes.setText("4");
-        btnPag4Clientes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPag4ClientesActionPerformed(evt);
-            }
-        });
-        jPanel2.add(btnPag4Clientes);
-
-        btnPag5Clientes.setText("5");
-        jPanel2.add(btnPag5Clientes);
-
-        btnGuardar.setBackground(new java.awt.Color(255, 153, 51));
-        btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnGuardar.setForeground(new java.awt.Color(255, 255, 255));
-        btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edit-20.png"))); // NOI18N
-        btnGuardar.setText("Cambiar estado");
-        btnGuardar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnGuardar.setBorderPainted(false);
-        btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnGuardar.setDefaultCapable(false);
-        btnGuardar.setFocusPainted(false);
-        btnGuardar.setRequestFocusEnabled(false);
-        btnGuardar.setRolloverEnabled(false);
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
+                btnCambiarEstadoProyectoActionPerformed(evt);
             }
         });
 
-        btnBuscar2.setBackground(new java.awt.Color(0, 81, 168));
-        btnBuscar2.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnBuscar2.setForeground(new java.awt.Color(255, 255, 255));
-        btnBuscar2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-24.png"))); // NOI18N
-        btnBuscar2.setText("Nuevo proyecto");
-        btnBuscar2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnBuscar2.setBorderPainted(false);
-        btnBuscar2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnBuscar2.setDefaultCapable(false);
-        btnBuscar2.setFocusPainted(false);
-        btnBuscar2.setRequestFocusEnabled(false);
-        btnBuscar2.setRolloverEnabled(false);
-        btnBuscar2.addActionListener(new java.awt.event.ActionListener() {
+        btnNuevoProyecto.setBackground(new java.awt.Color(0, 81, 168));
+        btnNuevoProyecto.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnNuevoProyecto.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevoProyecto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-24.png"))); // NOI18N
+        btnNuevoProyecto.setText("Nuevo proyecto");
+        btnNuevoProyecto.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnNuevoProyecto.setBorderPainted(false);
+        btnNuevoProyecto.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnNuevoProyecto.setDefaultCapable(false);
+        btnNuevoProyecto.setFocusPainted(false);
+        btnNuevoProyecto.setRequestFocusEnabled(false);
+        btnNuevoProyecto.setRolloverEnabled(false);
+        btnNuevoProyecto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscar2ActionPerformed(evt);
+                btnNuevoProyectoActionPerformed(evt);
             }
         });
 
-        btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
-        btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
-        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
-        btnDescartar.setText("Eliminar");
-        btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnDescartar.setBorderPainted(false);
-        btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnDescartar.setDefaultCapable(false);
-        btnDescartar.setFocusPainted(false);
-        btnDescartar.setRequestFocusEnabled(false);
-        btnDescartar.setRolloverEnabled(false);
-        btnDescartar.addActionListener(new java.awt.event.ActionListener() {
+        btnEliminarProyecto.setBackground(new java.awt.Color(255, 0, 51));
+        btnEliminarProyecto.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnEliminarProyecto.setForeground(new java.awt.Color(255, 255, 255));
+        btnEliminarProyecto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
+        btnEliminarProyecto.setText("Eliminar");
+        btnEliminarProyecto.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnEliminarProyecto.setBorderPainted(false);
+        btnEliminarProyecto.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnEliminarProyecto.setDefaultCapable(false);
+        btnEliminarProyecto.setFocusPainted(false);
+        btnEliminarProyecto.setRequestFocusEnabled(false);
+        btnEliminarProyecto.setRolloverEnabled(false);
+        btnEliminarProyecto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDescartarActionPerformed(evt);
+                btnEliminarProyectoActionPerformed(evt);
             }
         });
 
@@ -277,24 +261,23 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 957, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnCambiarEstadoProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(18, 18, 18)
-                                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(btnEliminarProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGap(20, 20, 20))
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(panelFechas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtBusquedaProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
-                            .addComponent(btnBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnBuscarProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addContainerGap())
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(Buscar1)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCreardesdeCeroProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
-                            .addComponent(btnBuscar2, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnNuevoProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(16, 16, 16)))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -307,21 +290,19 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
                 .addComponent(Buscar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(panelFechas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtBusquedaProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(44, 44, 44)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Buscar1)
-                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnCreardesdeCeroProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevoProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(3, 3, 3)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(48, 48, 48)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnDescartar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE))
+                    .addComponent(btnEliminarProyecto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCambiarEstadoProyecto, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
@@ -339,41 +320,59 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-       
-    }//GEN-LAST:event_btnBuscarActionPerformed
+    private void btnCreardesdeCeroProyectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreardesdeCeroProyectoActionPerformed
 
-    private void btnBuscar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscar1ActionPerformed
+    }//GEN-LAST:event_btnCreardesdeCeroProyectoActionPerformed
+
+    private void btnBuscarProyectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProyectoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnBuscar1ActionPerformed
+    }//GEN-LAST:event_btnBuscarProyectoActionPerformed
 
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+    private void btnCambiarEstadoProyectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarEstadoProyectoActionPerformed
+        int fila = tblListaProyectos.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un proyecto");
+            return;
+        }
+        int id = (Integer) tblListaProyectos.getValueAt(fila, 0);
+        Proyecto p = proyectoBO.obtenerProyectoPorId(id);
+        if (p == null) {
+            JOptionPane.showMessageDialog(this, "No se encontró el proyecto");
+            return;
+        }
+        PanelDetallesProyecto frm = new PanelDetallesProyecto(this, p);
+        frm.setLocationRelativeTo(this);
+        frm.setVisible(true);
+    }//GEN-LAST:event_btnCambiarEstadoProyectoActionPerformed
 
-    }//GEN-LAST:event_btnGuardarActionPerformed
+    private void btnNuevoProyectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProyectoActionPerformed
+        PanelDetallesProyecto frm = new PanelDetallesProyecto(this);
+        frm.setLocationRelativeTo(this);
+        frm.setVisible(true);
+    }//GEN-LAST:event_btnNuevoProyectoActionPerformed
 
-    private void btnBuscar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscar2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBuscar2ActionPerformed
+    private void btnEliminarProyectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProyectoActionPerformed
+        int fila = tblListaProyectos.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un proyecto");
+            return;
+        }
+        int id = (Integer) tblListaProyectos.getValueAt(fila, 0);
+        int op = JOptionPane.showConfirmDialog(this, "¿Eliminar proyecto?", "Confirmar",
+                JOptionPane.YES_NO_OPTION);
+        if (op == JOptionPane.YES_OPTION) {
+            if (proyectoBO.eliminarProyecto(id)) {
+                JOptionPane.showMessageDialog(this, "Proyecto eliminado");
+                cargarProyectosEnTabla();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo eliminar");
+            }
+        }
+    }//GEN-LAST:event_btnEliminarProyectoActionPerformed
 
-    private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDescartarActionPerformed
-
-    private void btnPag1ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPag1ClientesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPag1ClientesActionPerformed
-
-    private void btnPag2ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPag2ClientesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPag2ClientesActionPerformed
-
-    private void btnPag3ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPag3ClientesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPag3ClientesActionPerformed
-
-    private void btnPag4ClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPag4ClientesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPag4ClientesActionPerformed
+    public void recargarProyectos() {
+        cargarProyectosEnTabla();
+    }
 
     /**
      * @param args the command line arguments
@@ -415,24 +414,18 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
     private javax.swing.JLabel Buscar;
     private javax.swing.JLabel Buscar1;
     private javax.swing.JLabel ConsultarCotizacion;
-    private javax.swing.JButton btnBuscar;
-    private javax.swing.JButton btnBuscar1;
-    private javax.swing.JButton btnBuscar2;
-    private javax.swing.JButton btnDescartar;
-    private javax.swing.JButton btnGuardar;
-    private javax.swing.JButton btnPag1Clientes;
-    private javax.swing.JButton btnPag2Clientes;
-    private javax.swing.JButton btnPag3Clientes;
-    private javax.swing.JButton btnPag4Clientes;
-    private javax.swing.JButton btnPag5Clientes;
+    private javax.swing.JButton btnBuscarProyecto;
+    private javax.swing.JButton btnCambiarEstadoProyecto;
+    private javax.swing.JButton btnCreardesdeCeroProyecto;
+    private javax.swing.JButton btnEliminarProyecto;
+    private javax.swing.JButton btnNuevoProyecto;
     private javax.swing.JLabel iconoCrear;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JPanel panelFechas;
     private javax.swing.JPanel panelSubtitulo;
     private javax.swing.JPanel panelTitulo;
+    private javax.swing.JTable tblListaProyectos;
+    private javax.swing.JPanel txtBusquedaProyecto;
     // End of variables declaration//GEN-END:variables
 }

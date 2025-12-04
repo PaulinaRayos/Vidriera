@@ -4,7 +4,13 @@
  */
 package presentacion.proyecto;
 
+import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
+import modelo.Cliente;
+import modelo.Proyecto;
+import negocio.ClienteBO;
+import negocio.ProyectoBO;
 
 /**
  *
@@ -12,11 +18,66 @@ import javax.swing.JOptionPane;
  */
 public class PanelDetallesProyecto extends javax.swing.JFrame {
 
-    /**
-     * Creates new form PanelInformacionGeneralCliente
-     */
-    public PanelDetallesProyecto() {
+    private final ProyectoBO proyectoBO;
+    private List<Cliente> listaClientes;
+    private final ClienteBO clienteBO;
+    private final frmAdministrarProyectos padre;
+    private Proyecto proyectoEditar;
+
+    public PanelDetallesProyecto(frmAdministrarProyectos padre) {
+        this(padre, null);
+    }
+
+    public PanelDetallesProyecto(frmAdministrarProyectos padre, Proyecto proyecto) {
         initComponents();
+        this.proyectoBO = new ProyectoBO();
+        this.clienteBO = new ClienteBO();
+        this.padre = padre;
+        this.proyectoEditar = proyecto;
+
+        cargarClientesEnCombo();   // llena jComboBox1 con clientes
+
+        if (proyectoEditar != null) {
+            setTitle("Editar proyecto");
+            cargarProyectoEnFormulario(proyectoEditar);
+        } else {
+            setTitle("Nuevo proyecto");
+        }
+    }
+
+    public PanelDetallesProyecto() {
+        this(null, null);
+    }
+
+    private void cargarClientesEnCombo() {
+        jComboBox1.removeAllItems();
+        listaClientes = clienteBO.obtenerClientes();   // guarda la lista
+        jComboBox1.addItem("Cliente...");              // opción por defecto
+
+        for (Cliente c : listaClientes) {
+            jComboBox1.addItem(c.getNombre());         // solo el nombre en el combo
+        }
+    }
+
+    private void cargarProyectoEnFormulario(Proyecto p) {
+        // Cliente
+        Cliente cli = p.getCliente();
+        if (cli != null && listaClientes != null) {
+            for (int i = 0; i < listaClientes.size(); i++) {
+                if (listaClientes.get(i).getIdCliente() == cli.getIdCliente()) {
+                    jComboBox1.setSelectedIndex(i + 1); // +1 por el "Cliente..."
+                    break;
+                }
+            }
+        }
+
+        // Estado actual (jComboBox2 con "Activo", "Entregado", "Cancelado")
+        jComboBox2.setSelectedItem(p.getEstado());
+
+        // Fechas y observaciones: ajusta a tus componentes reales
+        txtBuscarCliente2.setText(p.getFechaInicio() != null ? p.getFechaInicio().toString() : "");
+        txtBuscarCliente4.setText(p.getFechaEntregaEstimada() != null ? p.getFechaEntregaEstimada().toString() : "");
+        txtBuscarCliente1.setText(""); // Observaciones si luego las agregas al modelo
     }
 
     /**
@@ -176,6 +237,11 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         });
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cliente...", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jComboBox1KeyTyped(evt);
+            }
+        });
 
         Buscar1.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         Buscar1.setForeground(new java.awt.Color(15, 105, 196));
@@ -298,12 +364,61 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        int idx = jComboBox1.getSelectedIndex();
+        if (idx <= 0) { // 0 = "Cliente..."
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un cliente");
+            return;
+        }
+        Cliente clienteSel = listaClientes.get(idx - 1); // -1 por el "Cliente..."
+        String estado = (String) jComboBox2.getSelectedItem();
+        String fechaInicioTxt = txtBuscarCliente2.getText().trim();
+        String fechaFinTxt = txtBuscarCliente4.getText().trim();
 
-      
+        if (clienteSel == null) {
+            JOptionPane.showMessageDialog(this, "Debes seleccionar un cliente");
+            return;
+        }
+        if (fechaInicioTxt.isEmpty() || fechaFinTxt.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Las fechas de inicio y fin son obligatorias");
+            return;
+        }
+
+        try {
+            // ejemplo simple con java.sql.Date.valueOf("2025-12-04")
+            java.sql.Date fInicio = java.sql.Date.valueOf(fechaInicioTxt);
+            java.sql.Date fFin = java.sql.Date.valueOf(fechaFinTxt);
+
+            boolean ok;
+            if (proyectoEditar == null) {
+                Proyecto nuevo = new Proyecto(estado, new Date(fInicio.getTime()),
+                        new Date(fFin.getTime()), clienteSel);
+                ok = proyectoBO.crearProyecto(nuevo);
+            } else {
+                proyectoEditar.setEstado(estado);
+                proyectoEditar.setFechaInicio(new Date(fInicio.getTime()));
+                proyectoEditar.setFechaEntregaEstimada(new Date(fFin.getTime()));
+                proyectoEditar.setCliente(clienteSel);
+                ok = proyectoBO.actualizarProyecto(proyectoEditar);
+            }
+
+            if (ok) {
+                JOptionPane.showMessageDialog(this, "Proyecto guardado correctamente");
+                if (padre != null) {
+                    padre.recargarProyectos();   // método público en el padre
+                }
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo guardar el proyecto");
+            }
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, "Formato de fecha inválido (usa AAAA-MM-DD)");
+        }
+
+
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
-        
+        dispose();
     }//GEN-LAST:event_btnDescartarActionPerformed
 
     private void txtBuscarCliente2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarCliente2ActionPerformed
@@ -313,6 +428,10 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
     private void txtBuscarCliente4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarCliente4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBuscarCliente4ActionPerformed
+
+    private void jComboBox1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jComboBox1KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1KeyTyped
 
     /**
      * @param args the command line arguments
@@ -359,7 +478,8 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
     private javax.swing.JButton btnDescartar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JLabel iconoCrear;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String
+    > jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
