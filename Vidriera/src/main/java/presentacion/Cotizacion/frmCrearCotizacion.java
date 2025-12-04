@@ -1,4 +1,4 @@
-package presentacion;
+package presentacion.Cotizacion;
 
 import dao.CatalogoTrabajoDAO;
 import dao.ClienteDAO;

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package presentacion;
+package presentacion.Materiales;
 
 import javax.swing.JOptionPane;
 
@@ -10,12 +10,12 @@ import javax.swing.JOptionPane;
  *
  * @author cesar
  */
-public class PanelInformacionGeneralCliente extends javax.swing.JFrame {
+public class PanelRegistronuevoMaterial extends javax.swing.JFrame {
 
     /**
      * Creates new form PanelInformacionGeneralCliente
      */
-    public PanelInformacionGeneralCliente() {
+    public PanelRegistronuevoMaterial() {
         initComponents();
     }
 
@@ -38,21 +38,16 @@ public class PanelInformacionGeneralCliente extends javax.swing.JFrame {
         txtBuscarCliente = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        txtBuscarCliente1 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txtBuscarCliente2 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        txtBuscarCliente3 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        txtBuscarCliente5 = new javax.swing.JTextField();
-        txtBuscarCliente6 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        txtBuscarCliente7 = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
         btnDescartar = new javax.swing.JButton();
-        txtBuscarCliente8 = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        Buscar1 = new javax.swing.JLabel();
+        jComboBox2 = new javax.swing.JComboBox<>();
+        txtBuscarCliente4 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -62,7 +57,7 @@ public class PanelInformacionGeneralCliente extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("SansSerif", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Administrar clientes");
+        jLabel1.setText("Registrar Materiales");
 
         javax.swing.GroupLayout panelTituloLayout = new javax.swing.GroupLayout(panelTitulo);
         panelTitulo.setLayout(panelTituloLayout);
@@ -85,7 +80,7 @@ public class PanelInformacionGeneralCliente extends javax.swing.JFrame {
 
         ConsultarCotizacion.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         ConsultarCotizacion.setForeground(new java.awt.Color(255, 255, 255));
-        ConsultarCotizacion.setText("Informacion general del cliente");
+        ConsultarCotizacion.setText("Registro de nuevo material");
 
         iconoCrear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add-24.png"))); // NOI18N
 
@@ -112,27 +107,23 @@ public class PanelInformacionGeneralCliente extends javax.swing.JFrame {
 
         Buscar.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         Buscar.setForeground(new java.awt.Color(15, 105, 196));
-        Buscar.setText("Datos del cliente");
+        Buscar.setText("Datos generales");
 
         txtBuscarCliente.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente.setText("Telefono");
+        txtBuscarCliente.setText("Precio $00.00");
         txtBuscarCliente.setToolTipText("");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel2.setText("Telefono:");
+        jLabel2.setText("Precio");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel3.setText("Nombre completo:");
-
-        txtBuscarCliente1.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente1.setText("Correo electronico");
-        txtBuscarCliente1.setToolTipText("");
+        jLabel3.setText("Tipo material:");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel4.setText("Estado:");
+        jLabel4.setText("Unidad:");
 
         txtBuscarCliente2.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente2.setText("RFC");
+        txtBuscarCliente2.setText("Descripcion");
         txtBuscarCliente2.setToolTipText("");
         txtBuscarCliente2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,36 +131,11 @@ public class PanelInformacionGeneralCliente extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel5.setText("Correo electronico:");
-
-        txtBuscarCliente3.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente3.setText("Estado");
-        txtBuscarCliente3.setToolTipText("");
-
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel6.setText("RFC:");
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel7.setText("Direccion:");
-
-        txtBuscarCliente5.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente5.setText("Direccion");
-        txtBuscarCliente5.setToolTipText("");
-
-        txtBuscarCliente6.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente6.setText("Ciudad");
-        txtBuscarCliente6.setToolTipText("");
+        jLabel6.setText("Descripcion:");
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel8.setText("Ciudad:");
-
-        txtBuscarCliente7.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente7.setText("Colonia");
-        txtBuscarCliente7.setToolTipText("");
-
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel9.setText("Colonia:");
+        jLabel8.setText("Descripcion adicional:");
 
         btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
         btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
@@ -207,12 +173,20 @@ public class PanelInformacionGeneralCliente extends javax.swing.JFrame {
             }
         });
 
-        txtBuscarCliente8.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente8.setText("nombre completo");
-        txtBuscarCliente8.setToolTipText("");
-        txtBuscarCliente8.addActionListener(new java.awt.event.ActionListener() {
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione un tipo...", "Item 2", "Item 3", "Item 4" }));
+
+        Buscar1.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
+        Buscar1.setForeground(new java.awt.Color(15, 105, 196));
+        Buscar1.setText("Precio y unidades");
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Unidad", "Item 2", "Item 3", "Item 4" }));
+
+        txtBuscarCliente4.setForeground(new java.awt.Color(204, 204, 204));
+        txtBuscarCliente4.setText("Descripcion");
+        txtBuscarCliente4.setToolTipText("");
+        txtBuscarCliente4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBuscarCliente8ActionPerformed(evt);
+                txtBuscarCliente4ActionPerformed(evt);
             }
         });
 
@@ -230,45 +204,31 @@ public class PanelInformacionGeneralCliente extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(49, 49, 49)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtBuscarCliente3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(txtBuscarCliente5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
-                                        .addComponent(txtBuscarCliente, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel6))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel5)
-                                            .addComponent(txtBuscarCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(71, 71, 71)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(txtBuscarCliente7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtBuscarCliente6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING))
-                                        .addGap(0, 0, Short.MAX_VALUE))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(txtBuscarCliente8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtBuscarCliente2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 6, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel4)
-                                        .addGap(842, 842, 842))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(Buscar1)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel2))
+                                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(494, 494, 494))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtBuscarCliente2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 895, Short.MAX_VALUE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 895, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtBuscarCliente4, javax.swing.GroupLayout.Alignment.LEADING))))
                 .addGap(57, 57, 57))
         );
         jPanel1Layout.setVerticalGroup(
@@ -279,41 +239,29 @@ public class PanelInformacionGeneralCliente extends javax.swing.JFrame {
                 .addComponent(panelSubtitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(Buscar)
-                .addGap(45, 45, 45)
+                .addGap(27, 27, 27)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                .addComponent(txtBuscarCliente8, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(jLabel6)
-                .addGap(8, 8, 8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtBuscarCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel5))
-                        .addGap(10, 10, 10)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtBuscarCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtBuscarCliente5, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtBuscarCliente7, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtBuscarCliente3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtBuscarCliente6, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(7, 7, 7)
+                .addComponent(Buscar1)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel8)
+                .addGap(14, 14, 14)
+                .addComponent(txtBuscarCliente4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(55, 55, 55)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnDescartar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -330,7 +278,7 @@ public class PanelInformacionGeneralCliente extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 1, Short.MAX_VALUE))
+                .addGap(0, 6, Short.MAX_VALUE))
         );
 
         pack();
@@ -349,9 +297,9 @@ public class PanelInformacionGeneralCliente extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBuscarCliente2ActionPerformed
 
-    private void txtBuscarCliente8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarCliente8ActionPerformed
+    private void txtBuscarCliente4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarCliente4ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtBuscarCliente8ActionPerformed
+    }//GEN-LAST:event_txtBuscarCliente4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -370,49 +318,45 @@ public class PanelInformacionGeneralCliente extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PanelInformacionGeneralCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PanelRegistronuevoMaterial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PanelInformacionGeneralCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PanelRegistronuevoMaterial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PanelInformacionGeneralCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PanelRegistronuevoMaterial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PanelInformacionGeneralCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PanelRegistronuevoMaterial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PanelInformacionGeneralCliente().setVisible(true);
+                new PanelRegistronuevoMaterial().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Buscar;
+    private javax.swing.JLabel Buscar1;
     private javax.swing.JLabel ConsultarCotizacion;
     private javax.swing.JButton btnDescartar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JLabel iconoCrear;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel panelSubtitulo;
     private javax.swing.JPanel panelTitulo;
     private javax.swing.JTextField txtBuscarCliente;
-    private javax.swing.JTextField txtBuscarCliente1;
     private javax.swing.JTextField txtBuscarCliente2;
-    private javax.swing.JTextField txtBuscarCliente3;
-    private javax.swing.JTextField txtBuscarCliente5;
-    private javax.swing.JTextField txtBuscarCliente6;
-    private javax.swing.JTextField txtBuscarCliente7;
-    private javax.swing.JTextField txtBuscarCliente8;
+    private javax.swing.JTextField txtBuscarCliente4;
     // End of variables declaration//GEN-END:variables
 }

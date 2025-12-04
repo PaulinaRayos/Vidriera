@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package presentacion;
+package presentacion.Materiales;
 
 import dao.MaterialDAO;
 import java.awt.Window;
@@ -78,11 +78,9 @@ public class MaterlialesCanalillos extends javax.swing.JDialog {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         lblCanalillo2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblCanalillo2.setForeground(new java.awt.Color(0, 0, 0));
         lblCanalillo2.setText("Canalillo serie 2\"");
 
         lblCanalillo3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblCanalillo3.setForeground(new java.awt.Color(0, 0, 0));
         lblCanalillo3.setText("Canalillo serie 3\"");
 
         btnGuardar4.setBackground(new java.awt.Color(4, 210, 65));

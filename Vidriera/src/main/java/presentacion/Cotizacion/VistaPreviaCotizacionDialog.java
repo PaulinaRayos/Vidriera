@@ -1,4 +1,4 @@
-package presentacion;
+package presentacion.Cotizacion;
 
 import modelo.Cotizacion;
 import modelo.VentanaDetalle;

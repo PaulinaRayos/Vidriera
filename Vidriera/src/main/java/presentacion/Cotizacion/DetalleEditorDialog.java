@@ -2,8 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package presentacion;
+package presentacion.Cotizacion;
 
+import presentacion.Ventana.PanelDetalleVentana;
+import presentacion.PuertaAbatible.PanelDetallePuertaAbatible;
+import presentacion.Canceleria.PanelDetalleCanceleria;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Frame;

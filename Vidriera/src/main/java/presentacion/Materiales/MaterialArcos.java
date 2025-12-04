@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
-package presentacion;
+package presentacion.Materiales;
 
 import dao.MaterialDAO;
 import java.awt.Window;
@@ -75,11 +75,9 @@ public class MaterialArcos extends javax.swing.JDialog {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         lblJunquillo3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblJunquillo3.setForeground(new java.awt.Color(0, 0, 0));
         lblJunquillo3.setText("Arco aluminio serie 2\"");
 
         lblJunquillo1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblJunquillo1.setForeground(new java.awt.Color(0, 0, 0));
         lblJunquillo1.setText("Arco aluminio serie 3\"");
 
         btnGuardar5.setBackground(new java.awt.Color(4, 210, 65));

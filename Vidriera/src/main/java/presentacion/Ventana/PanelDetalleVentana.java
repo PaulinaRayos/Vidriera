@@ -1,4 +1,4 @@
-package presentacion;
+package presentacion.Ventana;
 
 import dao.CatalogoTrabajoDAO;
 import dao.MaterialDetalleDAO;
