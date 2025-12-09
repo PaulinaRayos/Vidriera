@@ -35,8 +35,8 @@ public class CotizacionDAO {
 
     // Crear Cotizacion
     public boolean crearCotizacion(Cotizacion cotizacion) {
-        String sql = "INSERT INTO cotizacion (fecha, subtotal, manoObra, iva, descuentoMonto, total, estado, idCliente, idProyecto, idVendedor) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO cotizacion (fecha, subtotal, manoObra, iva, descuentoMonto, total, estado, idCliente, idVendedor) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setDate(1, new java.sql.Date(cotizacion.getFecha().getTime()));
             ps.setBigDecimal(2, cotizacion.getSubtotal());
@@ -45,15 +45,8 @@ public class CotizacionDAO {
             ps.setBigDecimal(5, cotizacion.getDescuentoMonto());
             ps.setBigDecimal(6, cotizacion.getTotal());
             ps.setString(7, cotizacion.getEstado());
-
             ps.setInt(8, cotizacion.getCliente().getIdCliente());
-
-            if (cotizacion.getProyecto() != null) {
-                ps.setInt(9, cotizacion.getProyecto().getIdProyecto());
-            } else {
-                ps.setNull(9, java.sql.Types.INTEGER); // Permite proyectos nulos
-            }
-            ps.setInt(10, cotizacion.getVendedor().getIdVendedor());
+            ps.setInt(9, cotizacion.getVendedor().getIdVendedor());
 
             int filas = ps.executeUpdate();
             if (filas > 0) {
@@ -92,7 +85,6 @@ public class CotizacionDAO {
                 c.setTotal(rs.getBigDecimal("total"));
                 c.setEstado(rs.getString("estado"));
                 c.setCliente(clienteDAO.obtenerPorId(rs.getInt("idCliente")));
-                c.setProyecto(proyectoDAO.obtenerPorId(rs.getInt("idProyecto")));
                 c.setVendedor(vendedorDAO.obtenerPorId(rs.getInt("idVendedor")));
 
                 lista.add(c);
@@ -104,7 +96,7 @@ public class CotizacionDAO {
     }
 
     public boolean actualizarCotizacion(Cotizacion cotizacion) {
-        String sql = "UPDATE cotizacion SET fecha=?, subtotal=?, manoObra=?, iva=?, descuentoMonto=?, total=?, estado=?, idCliente=?, idProyecto=?, idVendedor=? "
+        String sql = "UPDATE cotizacion SET fecha=?, subtotal=?, manoObra=?, iva=?, descuentoMonto=?, total=?, estado=?, idCliente=?, idVendedor=? "
                 + "WHERE idCotizacion=?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setDate(1, new java.sql.Date(cotizacion.getFecha().getTime()));
@@ -115,15 +107,8 @@ public class CotizacionDAO {
             ps.setBigDecimal(6, cotizacion.getTotal());
             ps.setString(7, cotizacion.getEstado());
             ps.setInt(8, cotizacion.getCliente().getIdCliente());
-
-            if (cotizacion.getProyecto() != null) {
-                ps.setInt(9, cotizacion.getProyecto().getIdProyecto());
-            } else {
-                ps.setNull(9, java.sql.Types.INTEGER);
-            }
-
-            ps.setInt(10, cotizacion.getVendedor().getIdVendedor());
-            ps.setInt(11, cotizacion.getIdCotizacion());
+            ps.setInt(9, cotizacion.getVendedor().getIdVendedor());
+            ps.setInt(10, cotizacion.getIdCotizacion());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -226,14 +211,9 @@ public class CotizacionDAO {
         cotizacion.setEstado(rs.getString("estado"));
 
         ClienteDAO clienteDAO = new ClienteDAO(this.conexion);
-        ProyectoDAO proyectoDAO = new ProyectoDAO(this.conexion);
         VendedorDAO vendedorDAO = new VendedorDAO(this.conexion);
         Cliente cliente = clienteDAO.obtenerPorId(rs.getInt("idCliente"));
         cotizacion.setCliente(cliente);
-
-        Proyecto proyecto = proyectoDAO.obtenerPorId(rs.getInt("idProyecto"));
-        cotizacion.setProyecto(proyecto);
-
         Vendedor vendedor = vendedorDAO.obtenerPorId(rs.getInt("idVendedor"));
         cotizacion.setVendedor(vendedor);
         return cotizacion;
@@ -247,7 +227,6 @@ public class CotizacionDAO {
             stmt.setDate(2, new java.sql.Date(fechaFin.getTime()));
             ResultSet rs = stmt.executeQuery();
             ClienteDAO clienteDAO = new ClienteDAO(conexion);
-            ProyectoDAO proyectoDAO = new ProyectoDAO(conexion);
             VendedorDAO vendedorDAO = new VendedorDAO(conexion);
             while (rs.next()) {
                 Cotizacion cotizacion = new Cotizacion();
@@ -260,7 +239,6 @@ public class CotizacionDAO {
                 cotizacion.setTotal(rs.getBigDecimal("total"));
                 cotizacion.setEstado(rs.getString("estado"));
                 cotizacion.setCliente(clienteDAO.obtenerPorId(rs.getInt("idCliente")));
-                cotizacion.setProyecto(proyectoDAO.obtenerPorId(rs.getInt("idProyecto")));
                 cotizacion.setVendedor(vendedorDAO.obtenerPorId(rs.getInt("idVendedor")));
                 cotizaciones.add(cotizacion);
             }
@@ -269,5 +247,21 @@ public class CotizacionDAO {
         }
         return cotizaciones;
     }
+    
+       public List<Cotizacion> obtenerCotizacionesAceptadas() {
+            List<Cotizacion> lista = new ArrayList<>();
+        String sql = "SELECT * FROM cotizacion WHERE estado = 'Aceptado'";
+         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+        ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Cotizacion cotizacion = crearCotizacionDesdeResultSet(rs);
+                lista.add(cotizacion);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
 
 }

@@ -4,17 +4,31 @@
  */
 package presentacion.proyecto;
 
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modelo.Cotizacion;
+import modelo.Proyecto;
+import negocio.ProyectoBO;
+
 /**
  *
  * @author cesar
  */
 public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
 
+    private ProyectoBO proyectoBO;
+    private List<Cotizacion> listaCotizacionesActuales;
+    private DefaultTableModel modeloTablaCotizaciones;
+
     /**
      * Creates new form frmRegistrarMateriales
      */
     public PanelCotizacionesAceptadas() {
         initComponents();
+        inicializarLogica();
+        cargarTodasLasCotizaciones();
+
     }
 
     /**
@@ -33,12 +47,12 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
         ConsultarCotizacion = new javax.swing.JLabel();
         iconoCrear = new javax.swing.JLabel();
         panelFechas = new javax.swing.JPanel();
-        btnBuscar = new javax.swing.JButton();
+        btnBuscarCot = new javax.swing.JButton();
         Buscar = new javax.swing.JLabel();
         Buscar1 = new javax.swing.JLabel();
         btnBuscar1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblCotizaciones = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jButton3 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -115,20 +129,20 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
             .addGap(0, 36, Short.MAX_VALUE)
         );
 
-        btnBuscar.setBackground(new java.awt.Color(0, 81, 168));
-        btnBuscar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
-        btnBuscar.setText("Seleccionar cotizacion");
-        btnBuscar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnBuscar.setBorderPainted(false);
-        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnBuscar.setDefaultCapable(false);
-        btnBuscar.setFocusPainted(false);
-        btnBuscar.setRequestFocusEnabled(false);
-        btnBuscar.setRolloverEnabled(false);
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscarCot.setBackground(new java.awt.Color(0, 81, 168));
+        btnBuscarCot.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnBuscarCot.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscarCot.setText("Seleccionar cotizacion");
+        btnBuscarCot.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnBuscarCot.setBorderPainted(false);
+        btnBuscarCot.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnBuscarCot.setDefaultCapable(false);
+        btnBuscarCot.setFocusPainted(false);
+        btnBuscarCot.setRequestFocusEnabled(false);
+        btnBuscarCot.setRolloverEnabled(false);
+        btnBuscarCot.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
+                btnBuscarCotActionPerformed(evt);
             }
         });
 
@@ -159,7 +173,7 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblCotizaciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -167,10 +181,10 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Cliente", "Fecha inicio", "Total", "Estado actual"
+                "ID", "Cliente", "Fecha ", "Total", "Estado actual"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblCotizaciones);
 
         jButton3.setText("1");
         jPanel2.add(jButton3);
@@ -225,7 +239,7 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(Buscar1)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(btnBuscarCot, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 957, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -246,7 +260,7 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(38, 38, 38)
-                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnBuscarCot, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(Buscar1)))
@@ -273,9 +287,11 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-       
-    }//GEN-LAST:event_btnBuscarActionPerformed
+    private void btnBuscarCotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCotActionPerformed
+   
+    
+
+    }//GEN-LAST:event_btnBuscarCotActionPerformed
 
     private void btnBuscar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscar1ActionPerformed
         // TODO add your handling code here:
@@ -284,7 +300,48 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
     private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnDescartarActionPerformed
+  private void inicializarLogica() {
+        this.proyectoBO = new ProyectoBO();
 
+        this.modeloTablaCotizaciones = (DefaultTableModel) tblCotizaciones.getModel();
+
+       
+    }
+    
+    /**
+     * carga todas las cotizaciones aceptadas
+     */
+    private void cargarTodasLasCotizaciones() {
+        try {
+            // Guarda la lista en la variable de la clase
+            this.listaCotizacionesActuales = proyectoBO.obtenerCotAceptadas();
+            // Pasa esa misma lista para llenar la tabla
+            llenarTablaCotizaciones(this.listaCotizacionesActuales);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar cotizaciones: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+      /**
+     * llena la tabla de cotizaciones
+     *
+     * @param cotizaciones lista de cotizaciones a mostrar.
+     */
+    private void llenarTablaCotizaciones(List<Cotizacion> cotizaciones) {
+        modeloTablaCotizaciones.setRowCount(0);
+
+        // llena la tabla con las cotizaciones
+        for (Cotizacion c : cotizaciones) {
+            modeloTablaCotizaciones.addRow(new Object[]{
+                c.getIdCotizacion(),
+                c.getCliente().getNombre(),
+                c.getFecha(),
+                c.getTotal(),
+                c.getEstado()
+                
+            });
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -299,16 +356,28 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-                }
+
+}
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PanelCotizacionesAceptadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PanelCotizacionesAceptadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PanelCotizacionesAceptadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PanelCotizacionesAceptadas.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PanelCotizacionesAceptadas.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+} catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(PanelCotizacionesAceptadas.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+} catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(PanelCotizacionesAceptadas.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(PanelCotizacionesAceptadas.class  
+
+.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -327,8 +396,8 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
     private javax.swing.JLabel Buscar;
     private javax.swing.JLabel Buscar1;
     private javax.swing.JLabel ConsultarCotizacion;
-    private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnBuscar1;
+    private javax.swing.JButton btnBuscarCot;
     private javax.swing.JButton btnDescartar;
     private javax.swing.JLabel iconoCrear;
     private javax.swing.JButton jButton2;
@@ -340,9 +409,9 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JPanel panelFechas;
     private javax.swing.JPanel panelSubtitulo;
     private javax.swing.JPanel panelTitulo;
+    private javax.swing.JTable tblCotizaciones;
     // End of variables declaration//GEN-END:variables
 }

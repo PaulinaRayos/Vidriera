@@ -75,7 +75,7 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         jComboBox2.setSelectedItem(p.getEstado());
 
         // Fechas y observaciones: ajusta a tus componentes reales
-        txtBuscarCliente2.setText(p.getFechaInicio() != null ? p.getFechaInicio().toString() : "");
+        txtCot.setText(p.getFechaInicio() != null ? p.getFechaInicio().toString() : "");
         txtBuscarCliente4.setText(p.getFechaEntregaEstimada() != null ? p.getFechaEntregaEstimada().toString() : "");
         txtBuscarCliente1.setText(""); // Observaciones si luego las agregas al modelo
     }
@@ -100,7 +100,7 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        txtBuscarCliente2 = new javax.swing.JTextField();
+        txtCot = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
@@ -185,12 +185,12 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel4.setText("Fecha de inicio estimada");
 
-        txtBuscarCliente2.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente2.setText("Descripcion");
-        txtBuscarCliente2.setToolTipText("");
-        txtBuscarCliente2.addActionListener(new java.awt.event.ActionListener() {
+        txtCot.setForeground(new java.awt.Color(204, 204, 204));
+        txtCot.setText("Descripcion");
+        txtCot.setToolTipText("");
+        txtCot.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBuscarCliente2ActionPerformed(evt);
+                txtCotActionPerformed(evt);
             }
         });
 
@@ -291,7 +291,7 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtBuscarCliente2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCot, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -319,7 +319,7 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtBuscarCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtCot, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Buscar1)
                 .addGap(18, 18, 18)
@@ -371,9 +371,9 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         }
         Cliente clienteSel = listaClientes.get(idx - 1); // -1 por el "Cliente..."
         String estado = (String) jComboBox2.getSelectedItem();
-        String fechaInicioTxt = txtBuscarCliente2.getText().trim();
+        String fechaInicioTxt = txtCot.getText().trim();
         String fechaFinTxt = txtBuscarCliente4.getText().trim();
-
+        int Idcot = Integer.parseInt(txtCot.getText().trim());
         if (clienteSel == null) {
             JOptionPane.showMessageDialog(this, "Debes seleccionar un cliente");
             return;
@@ -391,7 +391,7 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
             boolean ok;
             if (proyectoEditar == null) {
                 Proyecto nuevo = new Proyecto(estado, new Date(fInicio.getTime()),
-                        new Date(fFin.getTime()), clienteSel);
+                        new Date(fFin.getTime()), clienteSel,Idcot);
                 ok = proyectoBO.crearProyecto(nuevo);
             } else {
                 proyectoEditar.setEstado(estado);
@@ -421,9 +421,9 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btnDescartarActionPerformed
 
-    private void txtBuscarCliente2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarCliente2ActionPerformed
+    private void txtCotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCotActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtBuscarCliente2ActionPerformed
+    }//GEN-LAST:event_txtCotActionPerformed
 
     private void txtBuscarCliente4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarCliente4ActionPerformed
         // TODO add your handling code here:
@@ -493,7 +493,7 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
     private javax.swing.JPanel panelTitulo;
     private javax.swing.JTextField txtBuscarCliente;
     private javax.swing.JTextField txtBuscarCliente1;
-    private javax.swing.JTextField txtBuscarCliente2;
     private javax.swing.JTextField txtBuscarCliente4;
+    private javax.swing.JTextField txtCot;
     // End of variables declaration//GEN-END:variables
 }

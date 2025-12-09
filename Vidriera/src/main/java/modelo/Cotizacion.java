@@ -24,7 +24,6 @@ public class Cotizacion {
     private BigDecimal total;
     private String estado;
     private Cliente cliente;
-    private Proyecto proyecto;
     private Vendedor vendedor;
 
     // Relación con los detalles de trabajo
@@ -38,7 +37,7 @@ public class Cotizacion {
     }
 
     //Constructor con id
-    public Cotizacion(int idCotizacion, Date fecha, BigDecimal subtotal, BigDecimal manoObra, BigDecimal iva, BigDecimal descuentoMonto, BigDecimal total, String estado, Cliente cliente, Proyecto proyecto, Vendedor vendedor, List<VentanaDetalle> ventanaDetalles, List<PuertaAbatibleDetalle> puertaAbatibleDetalles, List<CanceleriaFijaDetalle> canceleriaFijaDetalles) {    
+    public Cotizacion(int idCotizacion, Date fecha, BigDecimal subtotal, BigDecimal manoObra, BigDecimal iva, BigDecimal descuentoMonto, BigDecimal total, String estado, Cliente cliente, Vendedor vendedor, List<VentanaDetalle> ventanaDetalles, List<PuertaAbatibleDetalle> puertaAbatibleDetalles, List<CanceleriaFijaDetalle> canceleriaFijaDetalles) {    
         this.idCotizacion = idCotizacion;
         this.fecha = fecha;
         this.subtotal = subtotal;
@@ -48,7 +47,6 @@ public class Cotizacion {
         this.total = total;
         this.estado = estado;
         this.cliente = cliente;
-        this.proyecto = proyecto;
         this.vendedor = vendedor;
         this.ventanaDetalles = ventanaDetalles;
         this.puertaAbatibleDetalles = puertaAbatibleDetalles;
@@ -56,7 +54,7 @@ public class Cotizacion {
     }
 
     //Constructor sin id
-    public Cotizacion(Date fecha, BigDecimal subtotal, BigDecimal manoObra, BigDecimal iva, BigDecimal descuentoMonto, BigDecimal total, String estado, Cliente cliente, Proyecto proyecto, Vendedor vendedor, List<VentanaDetalle> ventanaDetalles, List<PuertaAbatibleDetalle> puertaAbatibleDetalles, List<CanceleriaFijaDetalle> canceleriaFijaDetalles) {    
+    public Cotizacion(Date fecha, BigDecimal subtotal, BigDecimal manoObra, BigDecimal iva, BigDecimal descuentoMonto, BigDecimal total, String estado, Cliente cliente, Vendedor vendedor, List<VentanaDetalle> ventanaDetalles, List<PuertaAbatibleDetalle> puertaAbatibleDetalles, List<CanceleriaFijaDetalle> canceleriaFijaDetalles) {    
         this.fecha = fecha;
         this.subtotal = subtotal;
         this.manoObra = manoObra;
@@ -65,7 +63,6 @@ public class Cotizacion {
         this.total = total;
         this.estado = estado;
         this.cliente = cliente;
-        this.proyecto = proyecto;
         this.vendedor = vendedor;
         this.ventanaDetalles = ventanaDetalles;
         this.puertaAbatibleDetalles = puertaAbatibleDetalles;
@@ -145,14 +142,7 @@ public class Cotizacion {
         this.cliente = cliente;
     }
 
-    public Proyecto getProyecto() {
-        return proyecto;
-    }
-
-    public void setProyecto(Proyecto proyecto) {
-        this.proyecto = proyecto;
-    }
-
+  
     public Vendedor getVendedor() {
         return vendedor;
     }
@@ -195,7 +185,7 @@ public class Cotizacion {
 
     @Override
     public String toString() {
-        return "Cotizacion{" + "idCotizacion=" + idCotizacion + ", fecha=" + fecha + ", subtotal=" + subtotal + ", manoObra=" + manoObra + ", iva=" + iva + ", descuentoMonto=" + descuentoMonto + ", total=" + total + ", estado=" + estado + ", cliente=" + cliente + ", proyecto=" + proyecto + ", vendedor=" + vendedor + ", ventanaDetalles=" + ventanaDetalles + ", puertaAbatibleDetalles=" + puertaAbatibleDetalles + ", canceleriaFijaDetalles=" + canceleriaFijaDetalles + '}';
+        return "Cotizacion{" + "idCotizacion=" + idCotizacion + ", fecha=" + fecha + ", subtotal=" + subtotal + ", manoObra=" + manoObra + ", iva=" + iva + ", descuentoMonto=" + descuentoMonto + ", total=" + total + ", estado=" + estado + ", cliente=" + cliente + ", vendedor=" + vendedor + ", ventanaDetalles=" + ventanaDetalles + ", puertaAbatibleDetalles=" + puertaAbatibleDetalles + ", canceleriaFijaDetalles=" + canceleriaFijaDetalles + '}';
     }
 
     public double getDescuento() {

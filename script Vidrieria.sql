@@ -14,7 +14,11 @@ CREATE TABLE cliente (
     telefono VARCHAR(20),
     direccion TEXT,
     email VARCHAR(255),
-    RFC VARCHAR(13)
+    RFC VARCHAR(13),
+	estado VARCHAR(255),
+    ciudad VARCHAR(255),
+    colonia VARCHAR(255)
+
 );
 
 -- ===========================
@@ -26,19 +30,6 @@ CREATE TABLE vendedor (
     telefono VARCHAR(20),
     email VARCHAR(255)
 );
-
--- ===========================
--- Tabla: proyecto
--- ===========================
-CREATE TABLE proyecto (
-    idProyecto INT PRIMARY KEY AUTO_INCREMENT,
-    estado ENUM('Activo', 'Entregado', 'Cancelado') NOT NULL DEFAULT 'Activo',
-    fechaInicio DATE,
-    fechaEntregaEstimada DATE,
-    idCliente INT,
-    FOREIGN KEY (idCliente) REFERENCES cliente(idCliente)
-);
-
 -- ===========================
 -- Tabla: cotizacion
 -- ===========================
@@ -52,12 +43,26 @@ CREATE TABLE cotizacion (
     total DECIMAL(10,2),
     estado ENUM('Pendiente', 'Aceptado', 'Cancelada') NOT NULL DEFAULT 'Pendiente',
     idCliente INT,
-    idProyecto INT,
     idVendedor INT,
     FOREIGN KEY (idCliente) REFERENCES cliente(idCliente),
-    FOREIGN KEY (idProyecto) REFERENCES proyecto(idProyecto),
     FOREIGN KEY (idVendedor) REFERENCES vendedor(idVendedor)
 );
+-- ===========================
+-- Tabla: proyecto
+-- ===========================
+CREATE TABLE proyecto (
+    idProyecto INT PRIMARY KEY AUTO_INCREMENT,
+    estado ENUM('Activo', 'Entregado', 'Cancelado') NOT NULL DEFAULT 'Activo',
+    fechaInicio DATE,
+    fechaEntregaEstimada DATE,
+    idCliente INT,
+	idCotizacion INT NOT NULL,
+
+    FOREIGN KEY (idCliente) REFERENCES cliente(idCliente),
+	FOREIGN KEY (idCotizacion) REFERENCES cotizacion(idCotizacion)
+);
+
+
 
 -- ===========================
 -- Tabla: catalogotrabajos

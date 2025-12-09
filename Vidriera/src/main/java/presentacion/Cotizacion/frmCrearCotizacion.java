@@ -1029,7 +1029,6 @@ public class frmCrearCotizacion extends javax.swing.JFrame {
             Cotizacion cotizacion = new Cotizacion();
             cotizacion.setCliente(clienteSeleccionado);
             cotizacion.setVendedor(vendedorPorDefecto);
-            cotizacion.setProyecto(null);
             cotizacion.setFecha(new Date());
             cotizacion.setEstado("Pendiente");
             cotizacion.setSubtotal(subtotal);

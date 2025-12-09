@@ -4,22 +4,26 @@
  */
 package negocio;
 
+import dao.CotizacionDAO;
 import dao.ProyectoDAO;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import modelo.Cotizacion;
 import modelo.Proyecto;
 import utils.Conexion;
 
 public class ProyectoBO {
 
     private final ProyectoDAO proyectoDAO;
+    private final CotizacionDAO cotiDAO;
     private final Connection conexion;
 
     public ProyectoBO() {
         try {
             this.conexion = Conexion.getConnection();
             this.proyectoDAO = new ProyectoDAO(conexion);
+            this.cotiDAO = new CotizacionDAO(conexion);
         } catch (SQLException ex) {
             ex.printStackTrace();
             throw new RuntimeException("No se pudo inicializar la conexión a la base de datos.");
@@ -53,5 +57,9 @@ public class ProyectoBO {
 
     public boolean eliminarProyecto(int id) {
         return proyectoDAO.eliminarProyecto(id);
+    }
+    
+     public List<Cotizacion> obtenerCotAceptadas() {
+        return cotiDAO.obtenerCotizacionesAceptadas();
     }
 }

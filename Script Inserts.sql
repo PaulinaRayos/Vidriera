@@ -16,22 +16,22 @@ INSERT INTO vendedor (nombre, telefono, email)
 VALUES
 ('Juan Pérez', '6441112233', 'juanperez@vidrieria.com'),
 ('María López', '6442223344', 'marialopez@vidrieria.com');
+-- ===========================
+-- COTIZACIONES
+-- ===========================
+INSERT INTO cotizacion (fecha, subtotal, manoObra, iva, descuentoMonto, total, estado, idCliente, idVendedor)
+VALUES
+('2025-10-05', 8500.00, 1200.00, 1600.00, 0.00, 11300.00, 'Aceptado', 1, 1),
+('2025-10-15', 4500.00, 800.00, 850.00, 0.00, 6150.00, 'Pendiente', 2, 2);
 
 -- ===========================
 -- PROYECTOS
 -- ===========================
-INSERT INTO proyecto (estado, fechaInicio, fechaEntregaEstimada, idCliente)
+INSERT INTO proyecto (estado, fechaInicio, fechaEntregaEstimada, idCliente,idCotizacion)
 VALUES
-('Activo', '2025-10-01', '2025-11-15', 1),
-('Activo', '2025-10-10', '2025-11-20', 2);
+('Activo', '2025-10-01', '2025-11-15', 1,1),
+('Activo', '2025-10-10', '2025-11-20', 2,2);
 
--- ===========================
--- COTIZACIONES
--- ===========================
-INSERT INTO cotizacion (fecha, subtotal, manoObra, iva, descuentoMonto, total, estado, idCliente, idProyecto, idVendedor)
-VALUES
-('2025-10-05', 8500.00, 1200.00, 1600.00, 0.00, 11300.00, 'Aceptado', 1, 1, 1),
-('2025-10-15', 4500.00, 800.00, 850.00, 0.00, 6150.00, 'Pendiente', 2, 2, 2);
 
 -- ===========================
 -- CATALOGO DE TRABAJOS

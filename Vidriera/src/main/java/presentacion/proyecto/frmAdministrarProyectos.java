@@ -342,13 +342,13 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se encontró el proyecto");
             return;
         }
-        PanelDetallesProyecto frm = new PanelDetallesProyecto(this, p);
+        PanelDetallesProyecto frm = new PanelDetallesProyecto(this,p);
         frm.setLocationRelativeTo(this);
         frm.setVisible(true);
     }//GEN-LAST:event_btnCambiarEstadoProyectoActionPerformed
 
     private void btnNuevoProyectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProyectoActionPerformed
-        PanelDetallesProyecto frm = new PanelDetallesProyecto(this);
+        PanelCotizacionesAceptadas frm = new PanelCotizacionesAceptadas();
         frm.setLocationRelativeTo(this);
         frm.setVisible(true);
     }//GEN-LAST:event_btnNuevoProyectoActionPerformed
