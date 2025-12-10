@@ -14,10 +14,17 @@ import java.sql.SQLException;
  */
 public class Conexion {
     private static final String URL = "jdbc:mysql://localhost:3306/vidrieria";
+<<<<<<< HEAD
     //Generalmente este es el usuario, pero si no cambienlo
     private static final String USER = "root";
     //ponga su contraseña de MYSQL
     private static final String PASS = "root";
+=======
+
+    private static final String USER = "root"; //root
+   
+    private static final String PASS = "root"; //password
+>>>>>>> main
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASS);

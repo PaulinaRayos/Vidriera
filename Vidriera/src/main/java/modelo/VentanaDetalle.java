@@ -1,16 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
 
 /**
  *
  * @author Vidrieria
  */
-public class VentanaDetalle extends DetalleCotizacion{
+public class VentanaDetalle extends DetalleCotizacion {
+
     private int idVentanaDetalle;
     private int idTipoTrabajo;
     private Cotizacion cotizacion;
@@ -24,21 +23,25 @@ public class VentanaDetalle extends DetalleCotizacion{
     private String descripcion;
     private TipoVentana tipoVentana;
     private boolean mosquitero;
+    private String tipoMosquitero;
+    private String tipoPerfil;
+    private int noEscuadras;
+    private String tipoTela;
+    private BigDecimal LargoTela;
     private boolean arco;
     private String tipoArco;
     private BigDecimal medidaArco;
     private String tipoCanalillo;
     private BigDecimal medidaCanalillo;
-
-    
-
+    private CatalogoTrabajo tipoTrabajo;
+    private List<MaterialDetalle> materiales;
 
     public VentanaDetalle() {
-        super(); // Llama al constructor de DetalleCotizacion
+        super();
     }
-    
+
     //Constructor con id
-    public VentanaDetalle(int idVentanaDetalle, int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoVentana tipoVentana, boolean mosquitero, boolean arco, String tipoArco, BigDecimal medidaArco, String tipoCanalillo, BigDecimal medidaCanalillo) {
+    public VentanaDetalle(int idVentanaDetalle, int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoVentana tipoVentana, boolean mosquitero, String tipoMosquitero, String tipoPerfil, int noEscuadras, String tipoTela, BigDecimal LargoTela, boolean arco, String tipoArco, BigDecimal medidaArco, String tipoCanalillo, BigDecimal medidaCanalillo) {
         this.idVentanaDetalle = idVentanaDetalle;
         this.idTipoTrabajo = idTipoTrabajo;
         this.cotizacion = cotizacion;
@@ -52,15 +55,20 @@ public class VentanaDetalle extends DetalleCotizacion{
         this.descripcion = descripcion;
         this.tipoVentana = tipoVentana;
         this.mosquitero = mosquitero;
+        this.tipoMosquitero = tipoMosquitero;
+        this.tipoPerfil = tipoPerfil;
+        this.noEscuadras = noEscuadras;
+        this.tipoTela = tipoTela;
+        this.LargoTela = LargoTela;
         this.arco = arco;
         this.tipoArco = tipoArco;
         this.medidaArco = medidaArco;
         this.tipoCanalillo = tipoCanalillo;
         this.medidaCanalillo = medidaCanalillo;
     }
-    
+
     //Constructor sin id
-    public VentanaDetalle(int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoVentana tipoVentana, boolean mosquitero, boolean arco, String tipoArco, BigDecimal medidaArco, String tipoCanalillo, BigDecimal medidaCanalillo) {
+    public VentanaDetalle(int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoVentana tipoVentana, boolean mosquitero, String tipoMosquitero, String tipoPerfil, int noEscuadras, String tipoTela, BigDecimal LargoTela, boolean arco, String tipoArco, BigDecimal medidaArco, String tipoCanalillo, BigDecimal medidaCanalillo) {
         this.idTipoTrabajo = idTipoTrabajo;
         this.cotizacion = cotizacion;
         this.medidaHorizontal = medidaHorizontal;
@@ -73,13 +81,18 @@ public class VentanaDetalle extends DetalleCotizacion{
         this.descripcion = descripcion;
         this.tipoVentana = tipoVentana;
         this.mosquitero = mosquitero;
+        this.tipoMosquitero = tipoMosquitero;
+        this.tipoPerfil = tipoPerfil;
+        this.noEscuadras = noEscuadras;
+        this.tipoTela = tipoTela;
+        this.LargoTela = LargoTela;
         this.arco = arco;
         this.tipoArco = tipoArco;
         this.medidaArco = medidaArco;
         this.tipoCanalillo = tipoCanalillo;
         this.medidaCanalillo = medidaCanalillo;
     }
-    
+
     //Getters y setters
     public int getIdVentanaDetalle() {
         return idVentanaDetalle;
@@ -177,7 +190,6 @@ public class VentanaDetalle extends DetalleCotizacion{
         this.tipoVentana = tipoVentana;
     }
 
-    
     public boolean isMosquitero() {
         return mosquitero;
     }
@@ -225,9 +237,81 @@ public class VentanaDetalle extends DetalleCotizacion{
     public void setMedidaCanalillo(BigDecimal medidaCanalillo) {
         this.medidaCanalillo = medidaCanalillo;
     }
-    
-    
-    
-    
-    
+
+    public CatalogoTrabajo getTipoTrabajo() {
+        return tipoTrabajo;
+    }
+
+    public void setTipoTrabajo(CatalogoTrabajo tipoTrabajo) {
+        this.tipoTrabajo = tipoTrabajo;
+    }
+
+    public List<MaterialDetalle> getMateriales() {
+        return materiales;
+    }
+
+    public void setMateriales(List<MaterialDetalle> materiales) {
+        this.materiales = materiales;
+    }
+
+    public String getTipoMosquitero() {
+        return tipoMosquitero;
+    }
+
+    public void setTipoMosquitero(String tipoMosquitero) {
+        this.tipoMosquitero = tipoMosquitero;
+    }
+
+    public String getTipoPerfil() {
+        return tipoPerfil;
+    }
+
+    public void setTipoPerfil(String tipoPerfil) {
+        this.tipoPerfil = tipoPerfil;
+    }
+
+    public int getNoEscuadras() {
+        return noEscuadras;
+    }
+
+    public void setNoEscuadras(int noEscuadras) {
+        this.noEscuadras = noEscuadras;
+    }
+
+    public String getTipoTela() {
+        return tipoTela;
+    }
+
+    public void setTipoTela(String tipoTela) {
+        this.tipoTela = tipoTela;
+    }
+
+    public BigDecimal getLargoTela() {
+        return LargoTela;
+    }
+
+    public void setLargoTela(BigDecimal LargoTela) {
+        this.LargoTela = LargoTela;
+    }
+
+    public void calcularSubtotal() {
+        BigDecimal subtotal = BigDecimal.ZERO;
+
+        if (materiales != null) {
+            for (MaterialDetalle md : materiales) {
+                if (md.getMaterial() != null && md.getCantidad() != null) {
+                    subtotal = subtotal.add(md.getMaterial().getPrecio().multiply(md.getCantidad()));
+                }
+            }
+        }
+
+        this.subtotalLinea = subtotal;
+
+        if (this.cantidad > 0) {
+            this.precioSoloUnaUnidadCalculado
+                    = subtotal.divide(new BigDecimal(this.cantidad), BigDecimal.ROUND_HALF_UP);
+        } else {
+            this.precioSoloUnaUnidadCalculado = BigDecimal.ZERO;
+        }
+    }
 }

@@ -16,26 +16,30 @@ public class Proyecto {
     private Date fechaInicio;
     private Date fechaEntregaEstimada;
     private Cliente cliente;
+    private int IdCotizacion;
+
  
     //Constructor vacío
     public Proyecto() {
     }
 
     //Constructor con id
-    public Proyecto(int idProyecto, String estado, Date fechaInicio, Date fechaEntregaEstimada, Cliente cliente) {
+    public Proyecto(int idProyecto, String estado, Date fechaInicio, Date fechaEntregaEstimada, Cliente cliente,int IdCotizacion) {
         this.idProyecto = idProyecto;
         this.estado = estado;
         this.fechaInicio = fechaInicio;
         this.fechaEntregaEstimada = fechaEntregaEstimada;
         this.cliente = cliente;
+        this.IdCotizacion=IdCotizacion;
     }
 
     //Constructor sin id
-    public Proyecto(String estado, Date fechaInicio, Date fechaEntregaEstimada, Cliente cliente) {
+    public Proyecto(String estado, Date fechaInicio, Date fechaEntregaEstimada, Cliente cliente,int IdCotizacion) {
         this.estado = estado;
         this.fechaInicio = fechaInicio;
         this.fechaEntregaEstimada = fechaEntregaEstimada;
         this.cliente = cliente;
+        this.IdCotizacion=IdCotizacion;
     }
     
     // Getters y setters
@@ -79,9 +83,18 @@ public class Proyecto {
         this.cliente = cliente;
     }
 
+    public int getIdCotizacion() {
+        return IdCotizacion;
+    }
+
+    public void setIdCotizacion(int IdCotizacion) {
+        this.IdCotizacion = IdCotizacion;
+    }
+
+    
     @Override
     public String toString() {
-        return "Proyecto{" + "idProyecto=" + idProyecto + ", estado=" + estado + ", fechaInicio=" + fechaInicio + ", fechaEntregaEstimada=" + fechaEntregaEstimada + ", cliente=" + cliente + '}';
+        return "Proyecto{" + "idProyecto=" + idProyecto + ", estado=" + estado + ", fechaInicio=" + fechaInicio + ", fechaEntregaEstimada=" + fechaEntregaEstimada + ", cliente=" + cliente + ",Idcotizacion="+IdCotizacion+'}';
     }
     
     

@@ -1,5 +1,5 @@
 -- ===========================
--- Base de datos: DMS_VIDRIERIA
+-- Base de datos: VIDRIERIA
 -- ===========================
 
 CREATE DATABASE IF NOT EXISTS VIDRIERIA;
@@ -14,7 +14,11 @@ CREATE TABLE cliente (
     telefono VARCHAR(20),
     direccion TEXT,
     email VARCHAR(255),
-    RFC VARCHAR(13)
+    RFC VARCHAR(13),
+	estado VARCHAR(255),
+    ciudad VARCHAR(255),
+    colonia VARCHAR(255)
+
 );
 
 -- ===========================
@@ -26,19 +30,6 @@ CREATE TABLE vendedor (
     telefono VARCHAR(20),
     email VARCHAR(255)
 );
-
--- ===========================
--- Tabla: proyecto
--- ===========================
-CREATE TABLE proyecto (
-    idProyecto INT PRIMARY KEY AUTO_INCREMENT,
-    estado ENUM('Activo', 'Entregado', 'Cancelado') NOT NULL DEFAULT 'Activo',
-    fechaInicio DATE,
-    fechaEntregaEstimada DATE,
-    idCliente INT,
-    FOREIGN KEY (idCliente) REFERENCES cliente(idCliente)
-);
-
 -- ===========================
 -- Tabla: cotizacion
 -- ===========================
@@ -52,12 +43,26 @@ CREATE TABLE cotizacion (
     total DECIMAL(10,2),
     estado ENUM('Pendiente', 'Aceptado', 'Cancelada') NOT NULL DEFAULT 'Pendiente',
     idCliente INT,
-    idProyecto INT,
     idVendedor INT,
     FOREIGN KEY (idCliente) REFERENCES cliente(idCliente),
-    FOREIGN KEY (idProyecto) REFERENCES proyecto(idProyecto),
     FOREIGN KEY (idVendedor) REFERENCES vendedor(idVendedor)
 );
+-- ===========================
+-- Tabla: proyecto
+-- ===========================
+CREATE TABLE proyecto (
+    idProyecto INT PRIMARY KEY AUTO_INCREMENT,
+    estado ENUM('Activo', 'Entregado', 'Cancelado') NOT NULL DEFAULT 'Activo',
+    fechaInicio DATE,
+    fechaEntregaEstimada DATE,
+    idCliente INT,
+	idCotizacion INT NOT NULL,
+
+    FOREIGN KEY (idCliente) REFERENCES cliente(idCliente),
+	FOREIGN KEY (idCotizacion) REFERENCES cotizacion(idCotizacion)
+);
+
+
 
 -- ===========================
 -- Tabla: catalogotrabajos
@@ -83,11 +88,14 @@ CREATE TABLE ventanadetalle (
     cantidad INT,
     tipoCristal VARCHAR(100),
     noHojas INT,
-    precioSoloUnaUnidadCalculado DECIMAL(10,2),
-    subtotalLinea DECIMAL(10,2),
     descripcion TEXT,
     tipoVentana ENUM('1 ½"', '2"', '3 7/8"') NOT NULL, 
     mosquitero BOOLEAN NOT NULL DEFAULT FALSE,
+    tipoMosquitero VARCHAR(100),
+    tipoPerfil VARCHAR(100),
+    noEscuadras INT,
+    tipoTela VARCHAR(100),
+    largoTela DECIMAL(10,2),
     arco BOOLEAN NOT NULL DEFAULT FALSE,
     tipoArco VARCHAR(100),
     medidaArco DECIMAL(10,2),
@@ -98,9 +106,9 @@ CREATE TABLE ventanadetalle (
 );
 
 -- ===========================
--- Tabla: detalle_puertaabatible
+-- Tabla: puertaabatibledetalle
 -- ===========================
-CREATE TABLE detalle_puertaabatible (
+CREATE TABLE puertaabatibledetalle (
     id_detalle_puerta INT PRIMARY KEY AUTO_INCREMENT,
     id_cotizacion INT,
     id_tipo_trabajo INT,
@@ -109,11 +117,14 @@ CREATE TABLE detalle_puertaabatible (
     cantidad INT,
     tipoCristal VARCHAR(100),
     noHojas INT,
-    precioSoloUnaUnidadCalculado DECIMAL(10,2),
-    subtotalLinea DECIMAL(10,2),
     descripcion TEXT,
     tipo_puerta ENUM('SERIE_1751', 'LINEA_PESADA'),
-    mosquitero TINYINT(1),
+    mosquitero BOOLEAN NOT NULL DEFAULT FALSE,
+    tipoMosquitero VARCHAR(100),
+    tipoPerfil VARCHAR(100),
+    noEscuadras INT,
+    tipoTela VARCHAR(100),
+    largoTela DECIMAL(10,2),
     duela TINYINT(1),
     tipo_duela VARCHAR(50),
     medida_duela DECIMAL(8,2),
@@ -147,8 +158,6 @@ CREATE TABLE canceleriafijadetalle (
     cantidad INT,
     tipoCristal VARCHAR(100),
     noHojas INT,
-    precioSoloUnaUnidadCalculado DECIMAL(10,2),
-    subtotalLinea DECIMAL(10,2),
     descripcion TEXT,
     tipoCanceleria ENUM('2"', '3"'),
     bolsa TINYINT(1),
@@ -178,7 +187,12 @@ CREATE TABLE material (
     descripcion TEXT,
     precio DECIMAL(10,2),
     stockActual INT,
-    tipo ENUM('Vidrio', 'Aluminio', 'Accesorio') NOT NULL
+    tipo ENUM(
+        'VIDRIO', 'ALUMINIO', 'JUNQUILLO', 'ZOCLO', 'TAPA', 'CANALILLO',
+        'DUELA', 'ADAPTADOR', 'MOSQUITERO', 'PIVOTE', 'JALADERA', 'BARRA',
+        'BISAGRA', 'TORNILLERIA', 'EMPAQUE', 'SELLADOR', 'HERRAJE', 'ACCESORIO',
+        'PERFIL', 'ARCO', 'BOLSA', 'OTRO', 'TELA'
+    ) NOT NULL
 );
 
 -- ===========================
@@ -224,9 +238,7 @@ CREATE TABLE proveedor (
     nombreEmpresa VARCHAR(255),
     contacto VARCHAR(255),
     telefono VARCHAR(20),
-    email VARCHAR(255),
-    ordencompra_idOrdenCompra INT,
-    FOREIGN KEY (ordencompra_idOrdenCompra) REFERENCES ordencompra(idOrdenCompra)
+    email VARCHAR(255)
 );
 
 -- ===========================
@@ -238,6 +250,14 @@ CREATE TABLE ordentrabajo (
     medidasFinales TEXT,
     idProyecto INT,
     FOREIGN KEY (idProyecto) REFERENCES proyecto(idProyecto)
+);
+
+CREATE TABLE proveedor_ordencompra (
+    idProveedor INT,
+    idOrdenCompra INT,
+    PRIMARY KEY (idProveedor, idOrdenCompra),
+    FOREIGN KEY (idProveedor) REFERENCES proveedor(idProveedor),
+    FOREIGN KEY (idOrdenCompra) REFERENCES ordencompra(idOrdenCompra)
 );
 
 -- ===========================
@@ -259,6 +279,8 @@ CREATE TABLE VentanaDetalle_Material (
     idVentanaDetalle INT NOT NULL,
     idMaterial INT NOT NULL,
     cantidad DECIMAL(10,2) NOT NULL,
+    precioUnitario DECIMAL(10,2) NOT NULL,
+    precioTotal DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (idVentanaDetalle, idMaterial),
     FOREIGN KEY (idVentanaDetalle) REFERENCES VentanaDetalle(idVentanaDetalle) ON DELETE CASCADE,
     FOREIGN KEY (idMaterial) REFERENCES Material(idMaterial) ON DELETE CASCADE
@@ -268,16 +290,23 @@ CREATE TABLE CanceleriaFijaDetalle_Material (
     idCanceleriaDetalle INT NOT NULL,
     idMaterial INT NOT NULL,
     cantidad DECIMAL(10,2) NOT NULL,
+    precioUnitario DECIMAL(10,2) NOT NULL,
+    precioTotal DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (idCanceleriaDetalle, idMaterial),
     FOREIGN KEY (idCanceleriaDetalle) REFERENCES CanceleriaFijaDetalle(idCanceleriaDetalle) ON DELETE CASCADE,
     FOREIGN KEY (idMaterial) REFERENCES Material(idMaterial) ON DELETE CASCADE
 );
 
-CREATE TABLE PuertaAbatible_Material (
+CREATE TABLE PuertaAbatibleDetalle_Material (
     id_detalle_puerta INT NOT NULL,
     idMaterial INT NOT NULL,
     cantidad DECIMAL(10,2) NOT NULL,
+    precioUnitario DECIMAL(10,2) NOT NULL,
+    precioTotal DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (id_detalle_puerta, idMaterial),
-    FOREIGN KEY (id_detalle_puerta) REFERENCES Detalle_PuertaAbatible(id_detalle_puerta) ON DELETE CASCADE,
+    FOREIGN KEY (id_detalle_puerta) REFERENCES puertaabatibledetalle(id_detalle_puerta) ON DELETE CASCADE,
     FOREIGN KEY (idMaterial) REFERENCES Material(idMaterial) ON DELETE CASCADE
 );
+
+
+

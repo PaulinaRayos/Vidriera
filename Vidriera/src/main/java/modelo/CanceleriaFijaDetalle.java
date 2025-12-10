@@ -1,16 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package modelo;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *
  * @author Vidrieria
  */
 public class CanceleriaFijaDetalle {
+
     private int idCanceleriaDetalle;
     private int idTipoTrabajo;
     private Cotizacion cotizacion;
@@ -22,7 +21,7 @@ public class CanceleriaFijaDetalle {
     private BigDecimal precioSoloUnaUnidadCalculado;
     private BigDecimal subtotalLinea;
     private String descripcion;
-    private TipoCanceleria tipoCanceleria; 
+    private TipoCanceleria tipoCanceleria;
     private boolean bolsa;
     private int numFijosVerticales;
     private int numFijosHorizontales;
@@ -38,10 +37,13 @@ public class CanceleriaFijaDetalle {
     private boolean canalillo;
     private String tipoCanalillo;
     private BigDecimal medidaCanalillo;
+    private CatalogoTrabajo tipoTrabajo;
+    private List<MaterialDetalle> materiales;
 
     // Constructor vacío
     public CanceleriaFijaDetalle() {
     }
+
     // Constructor con id
     public CanceleriaFijaDetalle(int idCanceleriaDetalle, int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoCanceleria tipoCanceleria, boolean bolsa, int numFijosVerticales, int numFijosHorizontales, String tipoTapa, int cantidadTapa, boolean zoclo, String tipoZoclo, boolean junquillo, String tipoJunquillo, boolean arco, String tipoArco, BigDecimal medidaArco, boolean canalillo, String tipoCanalillo, BigDecimal medidaCanalillo) {
         this.idCanceleriaDetalle = idCanceleriaDetalle;
@@ -72,6 +74,7 @@ public class CanceleriaFijaDetalle {
         this.tipoCanalillo = tipoCanalillo;
         this.medidaCanalillo = medidaCanalillo;
     }
+
     // Constructor sin id
     public CanceleriaFijaDetalle(int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoCanceleria tipoCanceleria, boolean bolsa, int numFijosVerticales, int numFijosHorizontales, String tipoTapa, int cantidadTapa, boolean zoclo, String tipoZoclo, boolean junquillo, String tipoJunquillo, boolean arco, String tipoArco, BigDecimal medidaArco, boolean canalillo, String tipoCanalillo, BigDecimal medidaCanalillo) {
         this.idTipoTrabajo = idTipoTrabajo;
@@ -101,9 +104,8 @@ public class CanceleriaFijaDetalle {
         this.tipoCanalillo = tipoCanalillo;
         this.medidaCanalillo = medidaCanalillo;
     }
-    
-    // Getters y setters  
 
+    // Getters y setters  
     public int getIdCanceleriaDetalle() {
         return idCanceleriaDetalle;
     }
@@ -200,7 +202,7 @@ public class CanceleriaFijaDetalle {
         this.tipoCanceleria = tipoCanceleria;
     }
 
-       public boolean isBolsa() {
+    public boolean isBolsa() {
         return bolsa;
     }
 
@@ -320,11 +322,43 @@ public class CanceleriaFijaDetalle {
         this.medidaCanalillo = medidaCanalillo;
     }
 
+    public CatalogoTrabajo getTipoTrabajo() {
+        return tipoTrabajo;
+    }
+
+    public void setTipoTrabajo(CatalogoTrabajo tipoTrabajo) {
+        this.tipoTrabajo = tipoTrabajo;
+    }
+
+    public List<MaterialDetalle> getMateriales() {
+        return materiales;
+    }
+
+    public void setMateriales(List<MaterialDetalle> materiales) {
+        this.materiales = materiales;
+    }
+
+    
+    
+    public void calcularSubtotal() {
+        BigDecimal subtotal = BigDecimal.ZERO;
+        for (MaterialDetalle md : materiales) {
+            if (md.getMaterial() != null && md.getCantidad() != null) {
+                subtotal = subtotal.add(md.getMaterial().getPrecio().multiply(md.getCantidad()));
+            }
+        }
+        this.subtotalLinea = subtotal;
+
+        if (this.cantidad > 0) {
+            this.precioSoloUnaUnidadCalculado = subtotal.divide(new BigDecimal(this.cantidad), BigDecimal.ROUND_HALF_UP);
+        } else {
+            this.precioSoloUnaUnidadCalculado = BigDecimal.ZERO;
+        }
+    }
+
     @Override
     public String toString() {
         return "CanceleriaFijaDetalle{" + "idCanceleriaDetalle=" + idCanceleriaDetalle + ", idTipoTrabajo=" + idTipoTrabajo + ", cotizacion=" + cotizacion + ", medidaHorizontal=" + medidaHorizontal + ", medidaVertical=" + medidaVertical + ", cantidad=" + cantidad + ", tipoCristal=" + tipoCristal + ", noHojas=" + noHojas + ", precioSoloUnaUnidadCalculado=" + precioSoloUnaUnidadCalculado + ", subtotalLinea=" + subtotalLinea + ", descripcion=" + descripcion + ", tipoCanceleria=" + tipoCanceleria + ", bolsa=" + bolsa + ", numFijosVerticales=" + numFijosVerticales + ", numFijosHorizontales=" + numFijosHorizontales + ", tipoTapa=" + tipoTapa + ", cantidadTapa=" + cantidadTapa + ", zoclo=" + zoclo + ", tipoZoclo=" + tipoZoclo + ", junquillo=" + junquillo + ", tipoJunquillo=" + tipoJunquillo + ", arco=" + arco + ", tipoArco=" + tipoArco + ", medidaArco=" + medidaArco + ", canalillo=" + canalillo + ", tipoCanalillo=" + tipoCanalillo + ", medidaCanalillo=" + medidaCanalillo + '}';
     }
-    
-    
-    
+
 }

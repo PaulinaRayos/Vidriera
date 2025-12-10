@@ -10,11 +10,14 @@ import dao.MaterialDAO;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import modelo.CanceleriaFijaDetalle;
 import modelo.Cotizacion;
 import modelo.PuertaAbatibleDetalle;
 import modelo.VentanaDetalle;
+import utils.Conexion;
 
 /**
  *
@@ -24,16 +27,24 @@ public class CotizacionBO {
 
     private CotizacionDAO cotizacionDAO;
     private DetalleCotizacionDAO detalleDAO;
-     private MaterialDAO materialDetalleDAO;
+    private MaterialDAO materialDetalleDAO;
+    private Connection conexion;
 
-
-    public CotizacionBO(Connection conexion) {
-        this.cotizacionDAO = new CotizacionDAO(conexion);
-        this.detalleDAO = new DetalleCotizacionDAO(conexion);
-        
+    public Connection getConexion() {
+        return this.conexion;
     }
 
     public CotizacionBO() {
+        try {
+            this.conexion = Conexion.getConnection();
+            this.cotizacionDAO = new CotizacionDAO(conexion);
+            this.detalleDAO = new DetalleCotizacionDAO(conexion);
+            this.materialDetalleDAO = new MaterialDAO(conexion);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("No se pudo inicializar la conexión a la base de datos.");
+
+        }
 
     }
 
@@ -57,7 +68,7 @@ public class CotizacionBO {
             List<PuertaAbatibleDetalle> puertas) {
         // Calcular Mano de Obra
         // 10% del subtotal
-        BigDecimal porcentajeManoObra = new BigDecimal("0.10");
+        BigDecimal porcentajeManoObra = new BigDecimal("0.45");
         BigDecimal manoObra = c.getSubtotal().multiply(porcentajeManoObra);
 
         // Calcular IVA 
@@ -79,19 +90,36 @@ public class CotizacionBO {
         if (!ok) {
             return false;
         }
+        if (ventanas != null) {
+            for (VentanaDetalle detalle : ventanas) {
+                detalle.setCotizacion(c);
 
-        // Guardar detalles 
-        boolean okVentanas = ventanas != null && !ventanas.isEmpty()
-                ? detalleDAO.crearDetalleVentana(ventanas)
-                : true;
-        boolean okCanceleria = cancelerias != null && !cancelerias.isEmpty()
-                ? detalleDAO.crearDetalleCanceleria(cancelerias)
-                : true;
-        boolean okPuertas = puertas != null && !puertas.isEmpty()
-                ? detalleDAO.crearDetallePuerta(puertas)
-                : true;
+            }
+            if (cancelerias != null) {
+                for (CanceleriaFijaDetalle detalle : cancelerias) {
+                    detalle.setCotizacion(c);
+                }
+            }
+            if (puertas != null) {
+                for (PuertaAbatibleDetalle detalle : puertas) {
+                    detalle.setCotizacion(c);
+                }
+            }
 
-        return okVentanas && okCanceleria && okPuertas;
+            boolean okVentanas = ventanas != null && !ventanas.isEmpty()
+                    ? detalleDAO.crearDetalleVentana(ventanas)
+                    : true;
+            boolean okCanceleria = cancelerias != null && !cancelerias.isEmpty()
+                    ? detalleDAO.crearDetalleCanceleria(cancelerias)
+                    : true;
+            boolean okPuertas = puertas != null && !puertas.isEmpty()
+                    ? detalleDAO.crearDetallePuerta(puertas)
+                    : true;
+
+            return okVentanas && okCanceleria && okPuertas;
+        }
+        return false;
+
     }
 
     // Obtener todas las cotizaciones
@@ -106,8 +134,8 @@ public class CotizacionBO {
 
     // Actualizar cotizacion (solo la tabla principal)
     public boolean actualizarCotizacion(Cotizacion c) {
-        if (c.getEstado().equalsIgnoreCase("Aceptado") || c.getEstado().equalsIgnoreCase("Rechazada")) {
-            System.out.println("No se puede modificar cotizacion aceptada o rechazada");
+        if (c.getEstado().equalsIgnoreCase("Aceptado") || c.getEstado().equalsIgnoreCase("Cancelada")) {
+            System.out.println("No se puede modificar cotizacion aceptada o Cancelada");
             return false;
         }
         return cotizacionDAO.actualizarCotizacion(c);
@@ -128,19 +156,28 @@ public class CotizacionBO {
             List<CanceleriaFijaDetalle> cancelerias,
             List<PuertaAbatibleDetalle> puertas) throws SQLException {
 
-        // Extraemos la conexion del DAO para manejar la transaccion
-        Connection conn = this.cotizacionDAO.getConexion(); // Necesitaras un getter para la conexion en tu DAO
+        Connection conn = this.cotizacionDAO.getConexion();
 
         try {
-            // --- INICIO DE LA TRANSACCION ---
             conn.setAutoCommit(false);
 
+            // ⚠️ Validación: no eliminar si todas las listas son nulas o vacías
+            boolean hayDetalles
+                    = (ventanas != null && !ventanas.isEmpty())
+                    || (cancelerias != null && !cancelerias.isEmpty())
+                    || (puertas != null && !puertas.isEmpty());
+
+            if (!hayDetalles) {
+                throw new SQLException("No se proporcionaron detalles para actualizar la cotización.");
+            }
+
+            // 🔥 Eliminar los anteriores (solo si se van a reemplazar)
             detalleDAO.eliminarDetallesVentanaPorCotizacionId(c.getIdCotizacion());
             detalleDAO.eliminarDetallesCanceleriaPorCotizacionId(c.getIdCotizacion());
             detalleDAO.eliminarDetallesPuertaPorCotizacionId(c.getIdCotizacion());
 
-            // 2. Recalcular los montos 
-            BigDecimal porcentajeManoObra = new BigDecimal("0.10");
+            // Recalcular los montos
+            BigDecimal porcentajeManoObra = new BigDecimal("0.45");
             BigDecimal manoObra = c.getSubtotal().multiply(porcentajeManoObra);
             BigDecimal iva = (c.getSubtotal().add(manoObra)).multiply(new BigDecimal("0.16"));
             BigDecimal total = c.getSubtotal().add(manoObra).add(iva)
@@ -150,10 +187,27 @@ public class CotizacionBO {
             c.setIva(iva);
             c.setTotal(total);
 
-            // 3. Actualizar la cotizacion principal
+            // Actualizar la cotización principal
             cotizacionDAO.actualizarCotizacion(c);
 
-            // 4. Insertar los nuevos detalles (si existen)
+            // Asociar detalles con la cotización actual
+            if (ventanas != null) {
+                for (VentanaDetalle detalle : ventanas) {
+                    detalle.setCotizacion(c);
+                }
+            }
+            if (cancelerias != null) {
+                for (CanceleriaFijaDetalle detalle : cancelerias) {
+                    detalle.setCotizacion(c);
+                }
+            }
+            if (puertas != null) {
+                for (PuertaAbatibleDetalle detalle : puertas) {
+                    detalle.setCotizacion(c);
+                }
+            }
+
+            // Insertar los nuevos detalles
             if (ventanas != null && !ventanas.isEmpty()) {
                 detalleDAO.crearDetalleVentana(ventanas);
             }
@@ -168,13 +222,42 @@ public class CotizacionBO {
             return true;
 
         } catch (SQLException e) {
-            System.err.println("Error en la transaccion, revirtiendo cambios.");
+            System.err.println("Error en la transacción, revirtiendo cambios.");
             conn.rollback();
             e.printStackTrace();
             return false;
         } finally {
-            // Devolver la conexion a su estado original
             conn.setAutoCommit(true);
         }
+    }
+
+    public List<Cotizacion> obtenerCotizacionesPorCliente(String nombre) {
+        return cotizacionDAO.obtenerCotizacionesCliente(nombre);
+    }
+
+    public Cotizacion obtenerCotizacionesPorNumero(int numero) {
+        return cotizacionDAO.obtenerCotizacionPorNumero(numero);
+    }
+
+    public List<Cotizacion> obtenerCotizacionesPorRangoFechas(Date fechaInicio, Date fechaFin) {
+        return cotizacionDAO.obtenerCotizacionesPorRangoFechas(fechaInicio, fechaFin);
+    }
+
+    public List<Cotizacion> filtrarPorNumero(List<Cotizacion> lista, int numero) {
+        return lista.stream()
+                .filter(c -> c.getIdCotizacion() == numero)
+                .collect(Collectors.toList());
+    }
+
+    public List<Cotizacion> filtrarPorCliente(List<Cotizacion> lista, String nombre) {
+        return lista.stream()
+                .filter(c -> c.getCliente().getNombre().toLowerCase().contains(nombre.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Cotizacion> filtrarPorFechas(List<Cotizacion> lista, Date inicio, Date fin) {
+        return lista.stream()
+                .filter(c -> !c.getFecha().before(inicio) && !c.getFecha().after(fin))
+                .collect(Collectors.toList());
     }
 }

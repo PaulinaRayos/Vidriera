@@ -1,16 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  *
  * @author Vidrieria
  */
 public class PuertaAbatibleDetalle {
+
     private int idDetallePuerta;
     private int idTipoTrabajo;
     private Cotizacion cotizacion;
@@ -22,8 +20,13 @@ public class PuertaAbatibleDetalle {
     private BigDecimal precioSoloUnaUnidadCalculado;
     private BigDecimal subtotalLinea;
     private String descripcion;
-    private TipoPuerta tipoPuerta; 
+    private TipoPuerta tipoPuerta;
     private boolean mosquitero;
+    private String tipoMosquitero;
+    private String tipoPerfil;
+    private int noEscuadras;
+    private String tipoTela;
+    private BigDecimal LargoTela;
     private boolean duela;
     private String tipoDuela;
     private BigDecimal medidaDuela;
@@ -54,14 +57,15 @@ public class PuertaAbatibleDetalle {
     private String tipoSwiggle;
     private int numFijosVerticales;
     private int numFijosHorizontales;
+    private CatalogoTrabajo tipoTrabajo;
+    private List<MaterialDetalle> materiales;
 
-    
     //Constructor vacío
-    public PuertaAbatibleDetalle() {    
+    public PuertaAbatibleDetalle() {
     }
 
     //Constructor con id
-    public PuertaAbatibleDetalle(int idDetallePuerta, int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoPuerta tipoPuerta, boolean mosquitero, boolean duela, String tipoDuela, BigDecimal medidaDuela, boolean adaptador, String tipoAdaptador, boolean junquillo, String tipoJunquillo, boolean canal, String tipoCanal, boolean pivote, String tipoPivote, int cantidadPivote, boolean jaladera, String tipoJaladera, int cantidadJaladera, boolean barra, String tipoBarra, boolean chapa, String tipoChapa, int cantidadChapa, boolean bisagra, String tipoBisagra, int cantidadBisagra, boolean cierraPuerta, String tipoCierraPuerta, int cantidadCierraPuerta, boolean swiggle, String tipoSwiggle, int numFijosVerticales, int numFijosHorizontales) {    
+    public PuertaAbatibleDetalle(int idDetallePuerta, int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoPuerta tipoPuerta, boolean mosquitero, String tipoMosquitero, String tipoPerfil, int noEscuadras, String tipoTela, BigDecimal LargoTela, boolean duela, String tipoDuela, BigDecimal medidaDuela, boolean adaptador, String tipoAdaptador, boolean junquillo, String tipoJunquillo, boolean canal, String tipoCanal, boolean pivote, String tipoPivote, int cantidadPivote, boolean jaladera, String tipoJaladera, int cantidadJaladera, boolean barra, String tipoBarra, boolean chapa, String tipoChapa, int cantidadChapa, boolean bisagra, String tipoBisagra, int cantidadBisagra, boolean cierraPuerta, String tipoCierraPuerta, int cantidadCierraPuerta, boolean swiggle, String tipoSwiggle, int numFijosVerticales, int numFijosHorizontales) {
         this.idDetallePuerta = idDetallePuerta;
         this.idTipoTrabajo = idTipoTrabajo;
         this.cotizacion = cotizacion;
@@ -75,6 +79,11 @@ public class PuertaAbatibleDetalle {
         this.descripcion = descripcion;
         this.tipoPuerta = tipoPuerta;
         this.mosquitero = mosquitero;
+        this.tipoMosquitero = tipoMosquitero;
+        this.tipoPerfil = tipoPerfil;
+        this.noEscuadras = noEscuadras;
+        this.tipoTela = tipoTela;
+        this.LargoTela = LargoTela;
         this.duela = duela;
         this.tipoDuela = tipoDuela;
         this.medidaDuela = medidaDuela;
@@ -108,7 +117,7 @@ public class PuertaAbatibleDetalle {
     }
 
     //Constructor sin id
-    public PuertaAbatibleDetalle(int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoPuerta tipoPuerta, boolean mosquitero, boolean duela, String tipoDuela, BigDecimal medidaDuela, boolean adaptador, String tipoAdaptador, boolean junquillo, String tipoJunquillo, boolean canal, String tipoCanal, boolean pivote, String tipoPivote, int cantidadPivote, boolean jaladera, String tipoJaladera, int cantidadJaladera, boolean barra, String tipoBarra, boolean chapa, String tipoChapa, int cantidadChapa, boolean bisagra, String tipoBisagra, int cantidadBisagra, boolean cierraPuerta, String tipoCierraPuerta, int cantidadCierraPuerta, boolean swiggle, String tipoSwiggle, int numFijosVerticales, int numFijosHorizontales) {    
+    public PuertaAbatibleDetalle(int idTipoTrabajo, Cotizacion cotizacion, BigDecimal medidaHorizontal, BigDecimal medidaVertical, int cantidad, String tipoCristal, int noHojas, BigDecimal precioSoloUnaUnidadCalculado, BigDecimal subtotalLinea, String descripcion, TipoPuerta tipoPuerta, boolean mosquitero, String tipoMosquitero, String tipoPerfil, int noEscuadras, String tipoTela, BigDecimal LargoTela, boolean duela, String tipoDuela, BigDecimal medidaDuela, boolean adaptador, String tipoAdaptador, boolean junquillo, String tipoJunquillo, boolean canal, String tipoCanal, boolean pivote, String tipoPivote, int cantidadPivote, boolean jaladera, String tipoJaladera, int cantidadJaladera, boolean barra, String tipoBarra, boolean chapa, String tipoChapa, int cantidadChapa, boolean bisagra, String tipoBisagra, int cantidadBisagra, boolean cierraPuerta, String tipoCierraPuerta, int cantidadCierraPuerta, boolean swiggle, String tipoSwiggle, int numFijosVerticales, int numFijosHorizontales) {
         this.idTipoTrabajo = idTipoTrabajo;
         this.cotizacion = cotizacion;
         this.medidaHorizontal = medidaHorizontal;
@@ -121,6 +130,11 @@ public class PuertaAbatibleDetalle {
         this.descripcion = descripcion;
         this.tipoPuerta = tipoPuerta;
         this.mosquitero = mosquitero;
+        this.tipoMosquitero = tipoMosquitero;
+        this.tipoPerfil = tipoPerfil;
+        this.noEscuadras = noEscuadras;
+        this.tipoTela = tipoTela;
+        this.LargoTela = LargoTela;
         this.duela = duela;
         this.tipoDuela = tipoDuela;
         this.medidaDuela = medidaDuela;
@@ -498,12 +512,81 @@ public class PuertaAbatibleDetalle {
         this.numFijosHorizontales = numFijosHorizontales;
     }
 
+    public CatalogoTrabajo getTipoTrabajo() {
+        return tipoTrabajo;
+    }
+
+    public void setTipoTrabajo(CatalogoTrabajo tipoTrabajo) {
+        this.tipoTrabajo = tipoTrabajo;
+    }
+
+    public List<MaterialDetalle> getMateriales() {
+        return materiales;
+    }
+
+    public void setMateriales(List<MaterialDetalle> materiales) {
+        this.materiales = materiales;
+    }
+
+    public String getTipoMosquitero() {
+        return tipoMosquitero;
+    }
+
+    public void setTipoMosquitero(String tipoMosquitero) {
+        this.tipoMosquitero = tipoMosquitero;
+    }
+
+    public String getTipoPerfil() {
+        return tipoPerfil;
+    }
+
+    public void setTipoPerfil(String tipoPerfil) {
+        this.tipoPerfil = tipoPerfil;
+    }
+
+    public int getNoEscuadras() {
+        return noEscuadras;
+    }
+
+    public void setNoEscuadras(int noEscuadras) {
+        this.noEscuadras = noEscuadras;
+    }
+
+    public String getTipoTela() {
+        return tipoTela;
+    }
+
+    public void setTipoTela(String tipoTela) {
+        this.tipoTela = tipoTela;
+    }
+
+    public BigDecimal getLargoTela() {
+        return LargoTela;
+    }
+
+    public void setLargoTela(BigDecimal LargoTela) {
+        this.LargoTela = LargoTela;
+    }
+
+    public void calcularSubtotal() {
+        BigDecimal subtotal = BigDecimal.ZERO;
+        for (MaterialDetalle md : materiales) {
+            if (md.getMaterial() != null && md.getCantidad() != null) {
+                subtotal = subtotal.add(md.getMaterial().getPrecio().multiply(md.getCantidad()));
+            }
+        }
+        this.subtotalLinea = subtotal;
+
+        if (this.cantidad > 0) {
+            this.precioSoloUnaUnidadCalculado = subtotal.divide(new BigDecimal(this.cantidad), BigDecimal.ROUND_HALF_UP);
+        } else {
+            this.precioSoloUnaUnidadCalculado = BigDecimal.ZERO;
+        }
+    }
+
     @Override
     public String toString() {
         return "PuertaAbatibleDetalle{" + "idDetallePuerta=" + idDetallePuerta + ", idTipoTrabajo=" + idTipoTrabajo + ", cotizacion=" + cotizacion + ", medidaHorizontal=" + medidaHorizontal + ", medidaVertical=" + medidaVertical + ", cantidad=" + cantidad + ", tipoCristal=" + tipoCristal + ", noHojas=" + noHojas + ", precioSoloUnaUnidadCalculado=" + precioSoloUnaUnidadCalculado + ", subtotalLinea=" + subtotalLinea + ", descripcion=" + descripcion + ", tipoPuerta=" + tipoPuerta + ", mosquitero=" + mosquitero + ", duela=" + duela + ", tipoDuela=" + tipoDuela + ", medidaDuela=" + medidaDuela + ", adaptador=" + adaptador + ", tipoAdaptador=" + tipoAdaptador + ", junquillo=" + junquillo + ", tipoJunquillo=" + tipoJunquillo + ", canal=" + canal + ", tipoCanal=" + tipoCanal + ", pivote=" + pivote + ", tipoPivote=" + tipoPivote + ", cantidadPivote=" + cantidadPivote + ", jaladera=" + jaladera + ", tipoJaladera=" + tipoJaladera + ", cantidadJaladera=" + cantidadJaladera + ", barra=" + barra + ", tipoBarra=" + tipoBarra + ", chapa=" + chapa + ", tipoChapa=" + tipoChapa + ", cantidadChapa=" + cantidadChapa + ", bisagra=" + bisagra + ", tipoBisagra=" + tipoBisagra + ", cantidadBisagra=" + cantidadBisagra + ", cierraPuerta=" + cierraPuerta + ", tipoCierraPuerta=" + tipoCierraPuerta + ", cantidadCierraPuerta=" + cantidadCierraPuerta + ", swiggle=" + swiggle + ", tipoSwiggle=" + tipoSwiggle + ", numFijosVerticales=" + numFijosVerticales + ", numFijosHorizontales=" + numFijosHorizontales + '}';
     }
-    
-    
-    
-    
+
 }

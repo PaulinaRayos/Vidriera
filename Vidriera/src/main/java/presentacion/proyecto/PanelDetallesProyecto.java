@@ -48,9 +48,13 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
     public PanelDetallesProyecto() {
         this(null, null);
     }
+<<<<<<< HEAD
     
     public PanelDetallesProyecto(Proyecto p) {
         }
+=======
+
+>>>>>>> main
     private void cargarClientesEnCombo() {
         jComboBox1.removeAllItems();
         listaClientes = clienteBO.obtenerClientes();   // guarda la lista

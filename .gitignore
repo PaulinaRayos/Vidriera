@@ -1,0 +1,19 @@
+# Ignorar carpetas de compilación
+**/target/
+
+# Ignorar configuraciones locales de NetBeans
+**/nbproject/private/
+**/build/
+**/dist/
+**/nbbuild/
+**/nblibraries.properties
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Configuración de IDEs
+.idea/
+.vscode/
+*.iml

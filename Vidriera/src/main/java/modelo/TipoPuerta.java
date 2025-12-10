@@ -26,4 +26,31 @@ public enum TipoPuerta {
     public String toString() {
         return descripcion;
     }
+
+    /**
+     * Busca una instancia del Enum basado en su descripción o nombre.
+     *
+     * @param dbValue El detalle de la base de datos
+     * @return El Enum correspondiente
+     */
+    public static TipoPuerta fromDescripcion(String dbValue) {
+        if (dbValue == null) {
+            return null;
+        }
+
+        // buscar por la descripción 
+        for (TipoPuerta tipo : values()) {
+            if (tipo.getDescripcion().equals(dbValue)) {
+                return tipo;
+            }
+        }
+
+        // si falla busca por el nombre 
+        try {
+            return TipoPuerta.valueOf(dbValue);
+        } catch (IllegalArgumentException e) {
+        }
+
+        return null;
+    }
 }

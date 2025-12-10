@@ -28,4 +28,30 @@ public enum TipoVentana {
         return descripcion;
     }
 
+    /**
+     * Busca una instancia del Enum basado en su descripción o nombre.
+     *
+     * @param dbValue El detalle de la base de datos 
+     * @return El Enum correspondiente 
+     */
+    public static TipoVentana fromDescripcion(String dbValue) {
+        if (dbValue == null) {
+            return null;
+        }
+
+        // buscar por la descripción
+        for (TipoVentana tipo : values()) {
+            if (tipo.getDescripcion().equals(dbValue)) {
+                return tipo;
+            }
+        }
+
+        // si falla busca por el nombre
+        try {
+            return TipoVentana.valueOf(dbValue);
+        } catch (IllegalArgumentException e) {
+        }
+
+        return null;
+    }
 }

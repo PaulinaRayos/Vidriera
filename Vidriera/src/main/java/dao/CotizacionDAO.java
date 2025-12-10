@@ -4,18 +4,18 @@
  */
 package dao;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import modelo.Cliente;
 import modelo.Cotizacion;
+import modelo.Proyecto;
 import modelo.Vendedor;
-import utils.Conexion;
 
 /**
  *
@@ -35,8 +35,8 @@ public class CotizacionDAO {
 
     // Crear Cotizacion
     public boolean crearCotizacion(Cotizacion cotizacion) {
-        String sql = "INSERT INTO cotizacion(fecha, subtotal, manoObra, iva, descuentoMonto, total, estado, idCliente, idProyecto, idVendedor) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO cotizacion (fecha, subtotal, manoObra, iva, descuentoMonto, total, estado, idCliente, idVendedor) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setDate(1, new java.sql.Date(cotizacion.getFecha().getTime()));
             ps.setBigDecimal(2, cotizacion.getSubtotal());
@@ -46,14 +46,7 @@ public class CotizacionDAO {
             ps.setBigDecimal(6, cotizacion.getTotal());
             ps.setString(7, cotizacion.getEstado());
             ps.setInt(8, cotizacion.getCliente().getIdCliente());
-
-            if (cotizacion.getProyecto() != null) {
-                ps.setInt(9, cotizacion.getProyecto().getIdProyecto());
-            } else {
-                ps.setNull(9, java.sql.Types.INTEGER);
-            }
-
-            ps.setInt(10, cotizacion.getVendedor().getIdVendedor());
+            ps.setInt(9, cotizacion.getVendedor().getIdVendedor());
 
             int filas = ps.executeUpdate();
             if (filas > 0) {
@@ -72,7 +65,13 @@ public class CotizacionDAO {
     // Leer todas las Cotizaciones
     public List<Cotizacion> obtenerTodas() {
         List<Cotizacion> lista = new ArrayList<>();
-        String sql = "SELECT * FROM cotizacion"; // Para una version mas completa, este tambien deberia usar JOINs
+        String sql = "SELECT * FROM cotizacion ORDER BY fecha DESC"; // O el orden que prefieras
+
+        // Necesitas los DAOs de las otras entidades para cargar los objetos
+        ClienteDAO clienteDAO = new ClienteDAO(conexion);
+        ProyectoDAO proyectoDAO = new ProyectoDAO(conexion);
+        VendedorDAO vendedorDAO = new VendedorDAO(conexion);
+
         try (Statement stmt = conexion.createStatement()) {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
@@ -80,10 +79,14 @@ public class CotizacionDAO {
                 c.setIdCotizacion(rs.getInt("idCotizacion"));
                 c.setFecha(rs.getDate("fecha"));
                 c.setSubtotal(rs.getBigDecimal("subtotal"));
+                c.setManoObra(rs.getBigDecimal("manoObra"));
+                c.setIva(rs.getBigDecimal("iva"));
                 c.setDescuentoMonto(rs.getBigDecimal("descuentoMonto"));
                 c.setTotal(rs.getBigDecimal("total"));
                 c.setEstado(rs.getString("estado"));
-                // NOTA: Faltaria cargar Cliente y Vendedor
+                c.setCliente(clienteDAO.obtenerPorId(rs.getInt("idCliente")));
+                c.setVendedor(vendedorDAO.obtenerPorId(rs.getInt("idVendedor")));
+
                 lista.add(c);
             }
         } catch (SQLException e) {
@@ -92,10 +95,8 @@ public class CotizacionDAO {
         return lista;
     }
 
-    // ========= METODO CORREGIDO =========
-    // Actualizar Cotizacion (Version Completa)
     public boolean actualizarCotizacion(Cotizacion cotizacion) {
-        String sql = "UPDATE cotizacion SET fecha=?, subtotal=?, manoObra=?, iva=?, descuentoMonto=?, total=?, estado=?, idCliente=?, idProyecto=?, idVendedor=? "
+        String sql = "UPDATE cotizacion SET fecha=?, subtotal=?, manoObra=?, iva=?, descuentoMonto=?, total=?, estado=?, idCliente=?, idVendedor=? "
                 + "WHERE idCotizacion=?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setDate(1, new java.sql.Date(cotizacion.getFecha().getTime()));
@@ -106,15 +107,8 @@ public class CotizacionDAO {
             ps.setBigDecimal(6, cotizacion.getTotal());
             ps.setString(7, cotizacion.getEstado());
             ps.setInt(8, cotizacion.getCliente().getIdCliente());
-
-            if (cotizacion.getProyecto() != null) {
-                ps.setInt(9, cotizacion.getProyecto().getIdProyecto());
-            } else {
-                ps.setNull(9, java.sql.Types.INTEGER);
-            }
-            
-            ps.setInt(10, cotizacion.getVendedor().getIdVendedor());
-            ps.setInt(11, cotizacion.getIdCotizacion());
+            ps.setInt(9, cotizacion.getVendedor().getIdVendedor());
+            ps.setInt(10, cotizacion.getIdCotizacion());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -135,8 +129,7 @@ public class CotizacionDAO {
         return false;
     }
 
-    // ========= METODO CORRECTO =========
-    // Obtener Cotizacion por ID con datos relacionados
+
     public Cotizacion obtenerPorId(int id) {
         Cotizacion c = null;
         String sql = "SELECT c.*, cl.nombre AS cliente_nombre, v.nombre AS vendedor_nombre "
@@ -175,4 +168,100 @@ public class CotizacionDAO {
         }
         return c;
     }
+
+    public List<Cotizacion> obtenerCotizacionesCliente(String nombreCliente) {
+        List<Cotizacion> cotizaciones = new ArrayList<>();
+        String sql = "SELECT c.* FROM cotizacion c INNER JOIN cliente cl ON c.idCliente = cl.idCliente WHERE cl.nombre LIKE ?";
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setString(1, "%" + nombreCliente + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Cotizacion cotizacion = crearCotizacionDesdeResultSet(rs);
+                cotizaciones.add(cotizacion);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cotizaciones;
+    }
+
+    public Cotizacion obtenerCotizacionPorNumero(int numeroCotizacion) {
+        String sql = "SELECT * FROM cotizacion WHERE idCotizacion = ?";
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setInt(1, numeroCotizacion);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return crearCotizacionDesdeResultSet(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Cotizacion crearCotizacionDesdeResultSet(ResultSet rs) throws SQLException {
+        Cotizacion cotizacion = new Cotizacion();
+        cotizacion.setIdCotizacion(rs.getInt("idCotizacion"));
+        cotizacion.setFecha(rs.getDate("fecha"));
+        cotizacion.setSubtotal(rs.getBigDecimal("subtotal"));
+        cotizacion.setManoObra(rs.getBigDecimal("manoObra"));
+        cotizacion.setIva(rs.getBigDecimal("iva"));
+        cotizacion.setDescuentoMonto(rs.getBigDecimal("descuentoMonto"));
+        cotizacion.setTotal(rs.getBigDecimal("total"));
+        cotizacion.setEstado(rs.getString("estado"));
+
+        ClienteDAO clienteDAO = new ClienteDAO(this.conexion);
+        VendedorDAO vendedorDAO = new VendedorDAO(this.conexion);
+        Cliente cliente = clienteDAO.obtenerPorId(rs.getInt("idCliente"));
+        cotizacion.setCliente(cliente);
+        Vendedor vendedor = vendedorDAO.obtenerPorId(rs.getInt("idVendedor"));
+        cotizacion.setVendedor(vendedor);
+        return cotizacion;
+    }
+
+    public List<Cotizacion> obtenerCotizacionesPorRangoFechas(Date fechaInicio, Date fechaFin) {
+        List<Cotizacion> cotizaciones = new ArrayList<>();
+        String sql = "SELECT * FROM cotizacion WHERE fecha BETWEEN ? AND ?";
+        try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+            stmt.setDate(1, new java.sql.Date(fechaInicio.getTime()));
+            stmt.setDate(2, new java.sql.Date(fechaFin.getTime()));
+            ResultSet rs = stmt.executeQuery();
+            ClienteDAO clienteDAO = new ClienteDAO(conexion);
+            VendedorDAO vendedorDAO = new VendedorDAO(conexion);
+            while (rs.next()) {
+                Cotizacion cotizacion = new Cotizacion();
+                cotizacion.setIdCotizacion(rs.getInt("idCotizacion"));
+                cotizacion.setFecha(rs.getDate("fecha"));
+                cotizacion.setSubtotal(rs.getBigDecimal("subtotal"));
+                cotizacion.setManoObra(rs.getBigDecimal("manoObra"));
+                cotizacion.setIva(rs.getBigDecimal("iva"));
+                cotizacion.setDescuentoMonto(rs.getBigDecimal("descuentoMonto"));
+                cotizacion.setTotal(rs.getBigDecimal("total"));
+                cotizacion.setEstado(rs.getString("estado"));
+                cotizacion.setCliente(clienteDAO.obtenerPorId(rs.getInt("idCliente")));
+                cotizacion.setVendedor(vendedorDAO.obtenerPorId(rs.getInt("idVendedor")));
+                cotizaciones.add(cotizacion);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cotizaciones;
+    }
+    
+       public List<Cotizacion> obtenerCotizacionesAceptadas() {
+            List<Cotizacion> lista = new ArrayList<>();
+        String sql = "SELECT * FROM cotizacion WHERE estado = 'Aceptado'";
+         try (PreparedStatement stmt = conexion.prepareStatement(sql)) {
+        ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Cotizacion cotizacion = crearCotizacionDesdeResultSet(rs);
+                lista.add(cotizacion);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+
 }
