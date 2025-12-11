@@ -29,6 +29,7 @@ C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\modelo\
 C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\negocio\ClienteBO.java
 C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\negocio\CotizacionBO.java
 C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\negocio\GeneradorPDF.java
+C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\negocio\MaterialBO.java
 C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\negocio\ProyectoBO.java
 C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\presentacion\Canceleria\PanelDetalleCanceleria.java
 C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\presentacion\Cliente\frmAdministrarClientes.java
@@ -39,7 +40,7 @@ C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\present
 C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\presentacion\Cotizacion\InicioAdministrarCotizaciones.java
 C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\presentacion\Cotizacion\VistaPreviaCotizacionDialog.java
 C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\presentacion\Materiales\frmMaterialesExistentes.java
-C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\presentacion\Materiales\frmRegistroMaterial.java
+C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\presentacion\Materiales\frmRegistrarMateriales.java
 C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\presentacion\Materiales\MaterialArcos.java
 C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\presentacion\Materiales\MaterialMosquiteras.java
 C:\Users\User\OneDrive\Documentos\GitHub\Vidriera\Vidriera\src\main\java\presentacion\Materiales\MaterlialesCanalillos.java

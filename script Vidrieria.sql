@@ -190,9 +190,11 @@ CREATE TABLE material (
     tipo ENUM(
         'VIDRIO', 'ALUMINIO', 'JUNQUILLO', 'ZOCLO', 'TAPA', 'CANALILLO',
         'DUELA', 'ADAPTADOR', 'MOSQUITERO', 'PIVOTE', 'JALADERA', 'BARRA',
-        'BISAGRA', 'TORNILLERIA', 'EMPAQUE', 'SELLADOR', 'HERRAJE', 'ACCESORIO',
+        'BISAGRA', 'MALLA', 'TORNILLERIA', 'EMPAQUE', 'SELLADOR', 'HERRAJE', 'ACCESORIO',
         'PERFIL', 'ARCO', 'BOLSA', 'OTRO', 'TELA'
-    ) NOT NULL
+    ) NOT NULL,
+    unidadMedida VARCHAR(20) NOT NULL, 
+    estado VARCHAR(10) NOT NULL DEFAULT 'ACTIVO'
 );
 
 -- ===========================

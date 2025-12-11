@@ -45,106 +45,107 @@ VALUES
 -- ===========================
 -- MATERIALES
 -- ===========================
-INSERT INTO material (descripcion, precio, stockActual, tipo)
+-- MATERIALES (ACTIVO por defecto)
+INSERT INTO material (descripcion, precio, stockActual, tipo, unidadMedida, estado)
 VALUES
 -- VIDRIO
-('Claro 6mm (1.83x2.44)' , 480.00, 60, 'VIDRIO'),
-('Tintex 6mm (2.13x2.44)', 550.00, 45, 'VIDRIO'),
-('Reflecta 6mm (2.14x3.30)', 620.00, 30, 'VIDRIO'),
-('Reflecta 6mm (2.25x3.21)', 620.00, 30, 'VIDRIO'),
-('Reflecta 6mm (2.44x3.66)', 620.00, 30, 'VIDRIO'),
+('Claro 6mm (1.83x2.44)', 480.00, 60, 'VIDRIO', 'HOJA', 'ACTIVO'),
+('Tintex 6mm (2.13x2.44)', 550.00, 45, 'VIDRIO', 'HOJA', 'ACTIVO'),
+('Reflecta 6mm (2.14x3.30)', 620.00, 30, 'VIDRIO', 'HOJA', 'ACTIVO'),
+('Reflecta 6mm (2.25x3.21)', 620.00, 30, 'VIDRIO', 'HOJA', 'ACTIVO'),
+('Reflecta 6mm (2.44x3.66)', 620.00, 30, 'VIDRIO', 'HOJA', 'ACTIVO'),
 
 -- ALUMINIO
-('Perfil aluminio serie 2" natural', 340.00, 120, 'ALUMINIO'),
-('Perfil aluminio serie 3" blanco', 360.00, 90, 'ALUMINIO'),
-('Perfil aluminio anodizado negro', 420.00, 80, 'ALUMINIO'),
+('Perfil aluminio serie 2" natural', 340.00, 120, 'ALUMINIO', 'M', 'ACTIVO'),
+('Perfil aluminio serie 3" blanco', 360.00, 90, 'ALUMINIO', 'M', 'ACTIVO'),
+('Perfil aluminio anodizado negro', 420.00, 80, 'ALUMINIO', 'M', 'ACTIVO'),
 
 -- JUNQUILLO
-('Junquillo 3/8" aluminio natural', 75.00, 200, 'JUNQUILLO'),
-('Junquillo 1/4" anodizado', 85.00, 180, 'JUNQUILLO'),
+('Junquillo 3/8" aluminio natural', 75.00, 200, 'JUNQUILLO', 'M', 'ACTIVO'),
+('Junquillo 1/4" anodizado', 85.00, 180, 'JUNQUILLO', 'M', 'ACTIVO'),
 
 -- ZOCOLO
-('Zócalo aluminio natural', 110.00, 150, 'ZOCLO'),
-('Zócalo aluminio blanco', 120.00, 140, 'ZOCLO'),
+('Zócalo aluminio natural', 110.00, 150, 'ZOCLO', 'M', 'ACTIVO'),
+('Zócalo aluminio blanco', 120.00, 140, 'ZOCLO', 'M', 'ACTIVO'),
 
 -- TAPA
-('Tapa aluminio blanca', 90.00, 160, 'TAPA'),
-('Tapa aluminio negra', 95.00, 130, 'TAPA'),
+('Tapa aluminio blanca', 90.00, 160, 'TAPA', 'M', 'ACTIVO'),
+('Tapa aluminio negra', 95.00, 130, 'TAPA', 'M', 'ACTIVO'),
 
 -- CANALILLO
-('Canalillo serie 2"', 135.00, 100, 'CANALILLO'),
-('Canalillo serie 3"', 145.00, 80, 'CANALILLO'),
+('Canalillo serie 2"', 135.00, 100, 'CANALILLO', 'M', 'ACTIVO'),
+('Canalillo serie 3"', 145.00, 80, 'CANALILLO', 'M', 'ACTIVO'),
 
 -- DUÉLA
-('Duela plástica blanca', 65.00, 200, 'DUELA'),
-('Duela plástica gris', 70.00, 180, 'DUELA'),
+('Duela plástica blanca', 65.00, 200, 'DUELA', 'M', 'ACTIVO'),
+('Duela plástica gris', 70.00, 180, 'DUELA', 'M', 'ACTIVO'),
 
 -- ADAPTADOR
-('Adaptador aluminio serie 2"', 85.00, 120, 'ADAPTADOR'),
-('Adaptador aluminio serie 3"', 95.00, 100, 'ADAPTADOR'),
+('Adaptador aluminio serie 2"', 85.00, 120, 'ADAPTADOR', 'PZA', 'ACTIVO'),
+('Adaptador aluminio serie 3"', 95.00, 100, 'ADAPTADOR', 'PZA', 'ACTIVO'),
 
 -- MOSQUITERO
-('Mosquitero corredizo', 250.00, 60, 'MOSQUITERO'),
-('Mosquitero fijo', 180.00, 90, 'MOSQUITERO'),
+('Mosquitero corredizo', 250.00, 60, 'MOSQUITERO', 'PZA', 'ACTIVO'),
+('Mosquitero fijo', 180.00, 90, 'MOSQUITERO', 'PZA', 'ACTIVO'),
 
 -- PIVOTE
-('Pivote metálico reforzado', 85.00, 100, 'PIVOTE'),
-('Pivote tipo resorte', 95.00, 80, 'PIVOTE'),
+('Pivote metálico reforzado', 85.00, 100, 'PIVOTE', 'PZA', 'ACTIVO'),
+('Pivote tipo resorte', 95.00, 80, 'PIVOTE', 'PZA', 'ACTIVO'),
 
 -- JALADERA
-('Jaladera tipo concha', 55.00, 140, 'JALADERA'),
-('Jaladera tipo barra', 80.00, 100, 'JALADERA'),
+('Jaladera tipo concha', 55.00, 140, 'JALADERA', 'PZA', 'ACTIVO'),
+('Jaladera tipo barra', 80.00, 100, 'JALADERA', 'PZA', 'ACTIVO'),
 
 -- BARRA
-('Barra de empuje inoxidable', 320.00, 50, 'BARRA'),
-('Barra tipo pasamanos 1m', 280.00, 60, 'BARRA'),
+('Barra de empuje inoxidable', 320.00, 50, 'BARRA', 'PZA', 'ACTIVO'),
+('Barra tipo pasamanos 1m', 280.00, 60, 'BARRA', 'PZA', 'ACTIVO'),
 
 -- BISAGRA
-('Bisagra tipo piano 1.5m', 100.00, 70, 'BISAGRA'),
-('Bisagra reforzada de acero', 130.00, 60, 'BISAGRA'),
+('Bisagra tipo piano 1.5m', 100.00, 70, 'BISAGRA', 'PZA', 'ACTIVO'),
+('Bisagra reforzada de acero', 130.00, 60, 'BISAGRA', 'PZA', 'ACTIVO'),
 
 -- TORNILLERIA
-('Tornillos autorroscantes 1”', 180.00, 400, 'TORNILLERIA'),
-('Tornillos galvanizados ¾”', 150.00, 500, 'TORNILLERIA'),
+('Tornillos autorroscantes 1”', 180.00, 400, 'TORNILLERIA', 'PZA', 'ACTIVO'),
+('Tornillos galvanizados ¾”', 150.00, 500, 'TORNILLERIA', 'PZA', 'ACTIVO'),
 
 -- EMPAQUE
-('Empaque negro para vidrio 6mm', 25.00, 300, 'EMPAQUE'),
-('Empaque transparente flexible', 28.00, 250, 'EMPAQUE'),
+('Empaque negro para vidrio 6mm', 25.00, 300, 'EMPAQUE', 'M', 'ACTIVO'),
+('Empaque transparente flexible', 28.00, 250, 'EMPAQUE', 'M', 'ACTIVO'),
 
 -- SELLADOR
-('Sellador silicón transparente 300ml', 75.00, 200, 'SELLADOR'),
-('Sellador negro resistente UV', 85.00, 180, 'SELLADOR'),
+('Sellador silicón transparente 300ml', 75.00, 200, 'SELLADOR', 'TUBO', 'ACTIVO'),
+('Sellador negro resistente UV', 85.00, 180, 'SELLADOR', 'TUBO', 'ACTIVO'),
 
 -- HERRAJE
-('Herraje para puerta abatible', 260.00, 80, 'HERRAJE'),
-('Herraje corredizo tipo 3" doble', 320.00, 60, 'HERRAJE'),
+('Herraje para puerta abatible', 260.00, 80, 'HERRAJE', 'PZA', 'ACTIVO'),
+('Herraje corredizo tipo 3" doble', 320.00, 60, 'HERRAJE', 'PZA', 'ACTIVO'),
 
 -- ACCESORIO
-('Escuadra de unión aluminio', 40.00, 150, 'ACCESORIO'),
-('Tapa de perfil plástica', 35.00, 180, 'ACCESORIO'),
+('Escuadra de unión aluminio', 40.00, 150, 'ACCESORIO', 'PZA', 'ACTIVO'),
+('Tapa de perfil plástica', 35.00, 180, 'ACCESORIO', 'PZA', 'ACTIVO'),
 
 -- PERFIL
-('Aluminio tipo U 1”', 170.00, 100, 'PERFIL'),
-('Aluminio tipo L 3/4”', 160.00, 110, 'PERFIL'),
+('Aluminio tipo U 1”', 170.00, 100, 'PERFIL', 'M', 'ACTIVO'),
+('Aluminio tipo L 3/4”', 160.00, 110, 'PERFIL', 'M', 'ACTIVO'),
 
 -- ARCO
-('Arco aluminio serie 2"', 180.00, 50, 'ARCO'),
-('Arco aluminio serie 3"', 200.00, 40, 'ARCO'),
+('Arco aluminio serie 2"', 180.00, 50, 'ARCO', 'M', 'ACTIVO'),
+('Arco aluminio serie 3"', 200.00, 40, 'ARCO', 'M', 'ACTIVO'),
 
 -- BOLSA
-('Bolsa para panel fijo', 50.00, 100, 'BOLSA'),
-('Bolsa reforzada transparente', 65.00, 80, 'BOLSA'),
+('Bolsa para panel fijo', 50.00, 100, 'BOLSA', 'PZA', 'ACTIVO'),
+('Bolsa reforzada transparente', 65.00, 80, 'BOLSA', 'PZA', 'ACTIVO'),
 
 -- OTRO
-('Cinta doble cara industrial', 90.00, 70, 'OTRO'),
-('Espaciador plástico 3mm', 15.00, 200, 'OTRO'),
+('Cinta doble cara industrial', 90.00, 70, 'OTRO', 'PZA', 'ACTIVO'),
+('Espaciador plástico 3mm', 15.00, 200, 'OTRO', 'PZA', 'ACTIVO'),
 
 -- TELA
-('Tela (0.60m de ancho)', 90.00, 70, 'TELA'),
-('Tela (0.90m de ancho)', 150.00, 200, 'TELA'),
-('Tela (1.0m de ancho)', 200.00, 200, 'TELA'),
-('Tela (1.2m de ancho)', 230.00, 200, 'TELA'),
-('Tela (1.5m de ancho)', 260.00, 200, 'TELA');
+('Tela (0.60m de ancho)', 90.00, 70, 'TELA', 'M', 'ACTIVO'),
+('Tela (0.90m de ancho)', 150.00, 200, 'TELA', 'M', 'ACTIVO'),
+('Tela (1.0m de ancho)', 200.00, 200, 'TELA', 'M', 'ACTIVO'),
+('Tela (1.2m de ancho)', 230.00, 200, 'TELA', 'M', 'ACTIVO'),
+('Tela (1.5m de ancho)', 260.00, 200, 'TELA', 'M', 'ACTIVO');
 
 -- ===========================
 -- DETALLES DE TRABAJOS
