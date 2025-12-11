@@ -31,14 +31,15 @@ public class MaterialDAO {
      * @return true si se insertó correctamente
      */
     public boolean crearMaterial(Material material) {
-        String sql = "INSERT INTO material (descripcion, precio, stockActual, tipo) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO material (descripcion, precio, stockActual, tipo, unidadMedida, estado) VALUES (?, ?, ?, ?, ?, 'ACTIVO')";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, material.getDescripcion());
             ps.setBigDecimal(2, material.getPrecio());
-            ps.setInt(3, material.getStockActual());
+            ps.setInt(3, 0);
             ps.setString(4, material.getTipo().name());
-
+            ps.setString(5, material.getUnidadMedida());
+            
             int filasAfectadas = ps.executeUpdate();
 
             if (filasAfectadas > 0) {
@@ -48,6 +49,40 @@ public class MaterialDAO {
                 }
                 return true;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+     public boolean actualizarMaterial(Material material) {
+        String sql = "UPDATE material SET descripcion = ?, precio = ?, stockActual = ?, tipo = ?, unidadMedida = ?, estado = ? WHERE idMaterial = ?";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, material.getDescripcion());
+            ps.setBigDecimal(2, material.getPrecio());
+            ps.setInt(3, material.getStockActual());
+            ps.setString(4, material.getTipo().name());
+            ps.setString(5, material.getUnidadMedida()); 
+            ps.setString(6, material.getEstadoActivo() ? "ACTIVO" : "INACTIVO");
+            ps.setInt(7, material.getIdMaterial());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+     
+     public boolean cambiarEstado(int idMaterial, boolean activo) {
+        String sql = "UPDATE material SET estado = ? WHERE idMaterial = ?";
+        String estado = activo ? "ACTIVO" : "INACTIVO";
+
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, estado);
+            ps.setInt(2, idMaterial);
+
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -85,7 +120,7 @@ public class MaterialDAO {
      * @param idMaterial ID del material
      * @return Material encontrado o null
      */
-    public Material obtenerPorId(int idMaterial) {
+     public Material obtenerPorId(int idMaterial) {
         String sql = "SELECT * FROM material WHERE idMaterial = ?";
 
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -108,17 +143,17 @@ public class MaterialDAO {
      */
     public List<Material> obtenerTodos() {
         String sql = "SELECT * FROM material ORDER BY tipo, descripcion";
-        List<Material> materiales = new ArrayList<>();
-
+        
         try (Statement stmt = conexion.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-
+            List<Material> materiales = new ArrayList<>();
             while (rs.next()) {
                 materiales.add(mapearMaterial(rs));
             }
+            return materiales;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return materiales;
+        return new ArrayList<>();
     }
 
     /**
@@ -190,28 +225,6 @@ public class MaterialDAO {
         return materiales;
     }
 
-    /**
-     * Actualizar un material existente
-     *
-     * @param material Material con datos actualizados
-     * @return true si se actualizó correctamente
-     */
-    public boolean actualizarMaterial(Material material) {
-        String sql = "UPDATE material SET descripcion = ?, precio = ?, stockActual = ?, tipo = ? WHERE idMaterial = ?";
-
-        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
-            ps.setString(1, material.getDescripcion());
-            ps.setBigDecimal(2, material.getPrecio());
-            ps.setInt(3, material.getStockActual());
-            ps.setString(4, material.getTipo().name());
-            ps.setInt(5, material.getIdMaterial());
-
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 
     /**
      * Actualizar solo el stock de un material
@@ -352,6 +365,9 @@ public class MaterialDAO {
         material.setPrecio(rs.getBigDecimal("precio"));
         material.setStockActual(rs.getInt("stockActual"));
         material.setTipo(TipoMaterial.valueOf(rs.getString("tipo")));
+        material.setUnidadMedida(rs.getString("unidadMedida")); 
+        material.setEstadoActivo(rs.getString("estado").equalsIgnoreCase("ACTIVO"));
+        
         return material;
     }
 
@@ -420,4 +436,25 @@ public class MaterialDAO {
         }
     }
 
+    public boolean verificarDuplicado(String descripcion, Integer idExcluir) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM material WHERE descripcion = ?";
+        if (idExcluir != null && idExcluir != 0) {
+            sql += " AND idMaterial <> ?";
+        }
+        
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, descripcion);
+            if (idExcluir != null && idExcluir != 0) {
+                ps.setInt(2, idExcluir);
+            }
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
 }
+

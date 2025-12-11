@@ -1,24 +1,38 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package presentacion.Materiales;
 
+import java.math.BigDecimal;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import modelo.Material;
+import negocio.MaterialBO;
 
 /**
  *
- * @author cesar
+ * @author vidireria
  */
-public class frmRegistroMaterial extends javax.swing.JFrame {
+public class frmRegistrarMateriales extends javax.swing.JFrame {
+
+    private Material materialAEditar = null;
+    private MaterialBO materialBO = new MaterialBO();
 
     /**
      * Creates new form PanelInformacionGeneralCliente
      */
-    public frmRegistroMaterial() {
+    public frmRegistrarMateriales() {
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        cargarTipos();
+        cargarUnidades();
+    }
+
+    public frmRegistrarMateriales(Material materialAEditar) {
+        initComponents();
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        cargarTipos();
+        cargarUnidades();
+
+        this.materialAEditar = materialAEditar;
+        cargarDatosMaterial();
     }
 
     /**
@@ -37,17 +51,17 @@ public class frmRegistroMaterial extends javax.swing.JFrame {
         ConsultarCotizacion = new javax.swing.JLabel();
         iconoCrear = new javax.swing.JLabel();
         Buscar = new javax.swing.JLabel();
-        txtBuscarCliente = new javax.swing.JTextField();
+        txtPrecioUnitario = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        txtBuscarCliente2 = new javax.swing.JTextField();
+        txtDescripcion = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cbxTipoMateriales = new javax.swing.JComboBox<>();
         Buscar1 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        txtBuscarCliente4 = new javax.swing.JTextField();
+        cbxUnidades = new javax.swing.JComboBox<>();
+        txtDetallesAdicional = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
         btnDescartar = new javax.swing.JButton();
 
@@ -111,9 +125,13 @@ public class frmRegistroMaterial extends javax.swing.JFrame {
         Buscar.setForeground(new java.awt.Color(15, 105, 196));
         Buscar.setText("Datos generales");
 
-        txtBuscarCliente.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente.setText("Precio $00.00");
-        txtBuscarCliente.setToolTipText("");
+        txtPrecioUnitario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtPrecioUnitario.setToolTipText("");
+        txtPrecioUnitario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPrecioUnitarioActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 38, 115));
@@ -127,12 +145,11 @@ public class frmRegistroMaterial extends javax.swing.JFrame {
         jLabel4.setForeground(new java.awt.Color(0, 38, 115));
         jLabel4.setText("Unidad:");
 
-        txtBuscarCliente2.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente2.setText("Descripcion");
-        txtBuscarCliente2.setToolTipText("");
-        txtBuscarCliente2.addActionListener(new java.awt.event.ActionListener() {
+        txtDescripcion.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        txtDescripcion.setToolTipText("");
+        txtDescripcion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBuscarCliente2ActionPerformed(evt);
+                txtDescripcionActionPerformed(evt);
             }
         });
 
@@ -142,22 +159,23 @@ public class frmRegistroMaterial extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(0, 38, 115));
-        jLabel8.setText("Descripcion adicional:");
+        jLabel8.setText("Detalles adicionales:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione un tipo...", "Item 2", "Item 3", "Item 4" }));
+        cbxTipoMateriales.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        cbxTipoMateriales.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione un tipo...", "Item 2", "Item 3", "Item 4" }));
 
         Buscar1.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         Buscar1.setForeground(new java.awt.Color(15, 105, 196));
         Buscar1.setText("Precio y unidades");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Unidad", "Item 2", "Item 3", "Item 4" }));
+        cbxUnidades.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
+        cbxUnidades.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Unidad", "Item 2", "Item 3", "Item 4" }));
 
-        txtBuscarCliente4.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente4.setText("Descripcion");
-        txtBuscarCliente4.setToolTipText("");
-        txtBuscarCliente4.addActionListener(new java.awt.event.ActionListener() {
+        txtDetallesAdicional.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        txtDetallesAdicional.setToolTipText("");
+        txtDetallesAdicional.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBuscarCliente4ActionPerformed(evt);
+                txtDetallesAdicionalActionPerformed(evt);
             }
         });
 
@@ -214,14 +232,14 @@ public class frmRegistroMaterial extends javax.swing.JFrame {
                                 .addComponent(jLabel6)
                                 .addComponent(jLabel2)
                                 .addComponent(jLabel8)
-                                .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtPrecioUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel4)
                                 .addComponent(Buscar1))
                             .addGap(0, 531, Short.MAX_VALUE))
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtBuscarCliente2)
-                        .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtBuscarCliente4)))
+                        .addComponent(cbxTipoMateriales, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtDescripcion)
+                        .addComponent(cbxUnidades, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtDetallesAdicional)))
                 .addGap(34, 34, 34))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -241,25 +259,25 @@ public class frmRegistroMaterial extends javax.swing.JFrame {
                 .addGap(8, 8, 8)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cbxTipoMateriales, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(jLabel6)
                 .addGap(12, 12, 12)
-                .addComponent(txtBuscarCliente2, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addComponent(Buscar1)
                 .addGap(8, 8, 8)
                 .addComponent(jLabel4)
                 .addGap(12, 12, 12)
-                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cbxUnidades, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(jLabel2)
                 .addGap(12, 12, 12)
-                .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtPrecioUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtBuscarCliente4, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtDetallesAdicional, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -281,22 +299,153 @@ public class frmRegistroMaterial extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+    private void cargarDatosMaterial() {
+        if (materialAEditar == null) {
+            return;
+        }
 
-      
+        String descripcionCompleta = materialAEditar.getDescripcion();
+        String[] partes = descripcionCompleta.split(" ", 2);
+
+        txtDescripcion.setText(partes[0]);
+
+        if (partes.length > 1) {
+            txtDetallesAdicional.setText(partes[1]);
+        }
+
+        txtPrecioUnitario.setText(materialAEditar.getPrecio().toString());
+        cbxTipoMateriales.setSelectedItem(materialAEditar.getTipo().name());
+        cbxUnidades.setSelectedItem(materialAEditar.getUnidadMedida());
+
+        btnGuardar.setText("Guardar Cambios");
+    }
+
+    private void cargarTipos() {
+        cbxTipoMateriales.removeAllItems();
+        for (Material.TipoMaterial tipo : Material.TipoMaterial.values()) {
+            cbxTipoMateriales.addItem(tipo.name());
+        }
+    }
+
+    private void cargarUnidades() {
+        cbxUnidades.removeAllItems();
+        cbxUnidades.addItem("M");
+        cbxUnidades.addItem("PZA");
+        cbxUnidades.addItem("HOJA");
+        cbxUnidades.addItem("TUBO");
+    }
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        try {
+            // Datos del formulario
+            String descripcion = txtDescripcion.getText().trim();
+            String detalleAdicional = txtDetallesAdicional.getText().trim();
+            String tipoSeleccionado = (String) cbxTipoMateriales.getSelectedItem();
+            String unidad = (String) cbxUnidades.getSelectedItem();
+            String precioTxt = txtPrecioUnitario.getText().trim();
+
+            // Validaciones
+            if (descripcion.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "La descripción es obligatoria.");
+                return;
+            }
+            if (precioTxt.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Ingresa un precio.");
+                return;
+            }
+
+            BigDecimal precio;
+            try {
+                precio = new BigDecimal(precioTxt);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Precio inválido.");
+                return;
+            }
+
+            // Detectar si es registro nuevo o edición
+            Material material;
+
+            if (materialAEditar == null) {
+                // NUEVO
+                material = new Material();
+                material.setEstadoActivo(true);
+                material.setStockActual(0);
+            } else {
+                // EDITAR
+                material = materialAEditar;
+            }
+
+            // Asignar valores
+            material.setDescripcion(descripcion);
+            material.setPrecio(precio);
+            material.setUnidadMedida(unidad);
+            material.setTipo(Material.TipoMaterial.valueOf(tipoSeleccionado));
+
+            // Validar
+            String error = materialBO.validarMaterial(material, materialAEditar != null);
+            if (error != null) {
+                JOptionPane.showMessageDialog(this, error);
+                return;
+            }
+
+            // Guardar
+            boolean ok;
+
+            if (materialAEditar == null) {
+                ok = materialBO.registrarMaterial(material);
+            } else {
+                ok = materialBO.actualizarMaterial(material);
+            }
+
+            if (ok) {
+                JOptionPane.showMessageDialog(this,
+                        materialAEditar == null ? "Material registrado con éxito." : "Material actualizado con éxito.");
+
+                if (materialAEditar == null) {
+                    frmMaterialesExistentes ventana = new frmMaterialesExistentes();
+                    ventana.setVisible(true);
+                    this.dispose(); // cerrar pantalla actual
+
+                } else {
+                    frmMaterialesExistentes ventana = new frmMaterialesExistentes();
+                    ventana.setVisible(true);
+                    this.dispose();
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al guardar el material.");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
-        
+        this.dispose();
     }//GEN-LAST:event_btnDescartarActionPerformed
 
-    private void txtBuscarCliente2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarCliente2ActionPerformed
+    private void txtDescripcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescripcionActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtBuscarCliente2ActionPerformed
+    }//GEN-LAST:event_txtDescripcionActionPerformed
 
-    private void txtBuscarCliente4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarCliente4ActionPerformed
+    private void txtDetallesAdicionalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDetallesAdicionalActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtBuscarCliente4ActionPerformed
+    }//GEN-LAST:event_txtDetallesAdicionalActionPerformed
+
+    private void txtPrecioUnitarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioUnitarioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPrecioUnitarioActionPerformed
+
+    private void limpiarFormulario() {
+        txtDescripcion.setText("");
+        txtDetallesAdicional.setText("");
+        txtPrecioUnitario.setText("");
+        cbxTipoMateriales.setSelectedIndex(0);
+        cbxUnidades.setSelectedIndex(0);
+    }
 
     /**
      * @param args the command line arguments
@@ -315,14 +464,18 @@ public class frmRegistroMaterial extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(frmRegistroMaterial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRegistrarMateriales.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(frmRegistroMaterial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRegistrarMateriales.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(frmRegistroMaterial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRegistrarMateriales.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(frmRegistroMaterial.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(frmRegistrarMateriales.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -331,7 +484,7 @@ public class frmRegistroMaterial extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new frmRegistroMaterial().setVisible(true);
+                new frmRegistrarMateriales().setVisible(true);
             }
         });
     }
@@ -342,9 +495,9 @@ public class frmRegistroMaterial extends javax.swing.JFrame {
     private javax.swing.JLabel ConsultarCotizacion;
     private javax.swing.JButton btnDescartar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JComboBox<String> cbxTipoMateriales;
+    private javax.swing.JComboBox<String> cbxUnidades;
     private javax.swing.JLabel iconoCrear;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -354,8 +507,8 @@ public class frmRegistroMaterial extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel panelSubtitulo;
     private javax.swing.JPanel panelTitulo;
-    private javax.swing.JTextField txtBuscarCliente;
-    private javax.swing.JTextField txtBuscarCliente2;
-    private javax.swing.JTextField txtBuscarCliente4;
+    private javax.swing.JTextField txtDescripcion;
+    private javax.swing.JTextField txtDetallesAdicional;
+    private javax.swing.JTextField txtPrecioUnitario;
     // End of variables declaration//GEN-END:variables
 }

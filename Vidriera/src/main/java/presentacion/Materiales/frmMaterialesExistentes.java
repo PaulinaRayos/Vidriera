@@ -1,16 +1,31 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package presentacion.Materiales;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.sql.SQLException;
+import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableRowSorter;
+import modelo.Material;
+import negocio.MaterialBO;
 
 /**
  *
- * @author cesar
+ * @author vidireria
  */
 public class frmMaterialesExistentes extends javax.swing.JFrame {
+
+    private MaterialBO materialBO = new MaterialBO();
+    private DefaultTableModel modeloTabla;
+    TableRowSorter sorter;
 
     /**
      * Creates new form frmRegistrarMateriales
@@ -18,6 +33,58 @@ public class frmMaterialesExistentes extends javax.swing.JFrame {
     public frmMaterialesExistentes() {
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        inicializarTabla();
+        editarTabla();
+
+        DefaultTableModel model = (DefaultTableModel) tblMateriales.getModel();
+        sorter = new TableRowSorter<>(model);
+        tblMateriales.setRowSorter(sorter);
+
+        tblMateriales.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                actualizarTextoBotonEstado();
+            }
+        });
+
+        activarFiltroEnTiempoReal();
+    }
+
+    private void inicializarTabla() {
+        modeloTabla = new DefaultTableModel(
+                new Object[]{"ID", "Descripción", "Precio", "Stock", "Tipo", "Unidad", "Estado"},
+                0
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        tblMateriales.setModel(modeloTabla);
+        cargarMateriales();
+    }
+
+    public void cargarMateriales() {
+        modeloTabla.setRowCount(0);
+
+        try {
+            List<Material> lista = materialBO.obtenerTodos();
+
+            for (Material m : lista) {
+                modeloTabla.addRow(new Object[]{
+                    m.getIdMaterial(),
+                    m.getDescripcion(),
+                    m.getPrecio(),
+                    m.getStockActual(),
+                    m.getTipo(),
+                    m.getUnidadMedida(),
+                    m.getEstadoActivo() ? "ACTIVO" : "INACTIVO"
+
+                });
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar los materiales: " + ex.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -37,12 +104,11 @@ public class frmMaterialesExistentes extends javax.swing.JFrame {
         btnNuevoMaterial = new javax.swing.JButton();
         Buscar = new javax.swing.JLabel();
         lblListadoMateriales = new javax.swing.JLabel();
-        btnBuscar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblMateriales = new javax.swing.JTable();
-        btn = new javax.swing.JButton();
-        btnDescartar = new javax.swing.JButton();
+        btnCambiarEstado = new javax.swing.JButton();
         txtBuscarMaterial = new javax.swing.JTextField();
+        btnEditarMaterial = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -120,25 +186,7 @@ public class frmMaterialesExistentes extends javax.swing.JFrame {
         lblListadoMateriales.setForeground(new java.awt.Color(15, 105, 196));
         lblListadoMateriales.setText("Listado de Materiales");
 
-        btnBuscar.setBackground(new java.awt.Color(0, 81, 168));
-        btnBuscar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
-        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/search-20.png"))); // NOI18N
-        btnBuscar.setText("Buscar");
-        btnBuscar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnBuscar.setBorderPainted(false);
-        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnBuscar.setDefaultCapable(false);
-        btnBuscar.setDisplayedMnemonicIndex(0);
-        btnBuscar.setFocusPainted(false);
-        btnBuscar.setRequestFocusEnabled(false);
-        btnBuscar.setRolloverEnabled(false);
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
-            }
-        });
-
+        tblMateriales.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         tblMateriales.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -181,39 +229,40 @@ public class frmMaterialesExistentes extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblMateriales);
 
-        btn.setBackground(new java.awt.Color(255, 153, 51));
-        btn.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btn.setForeground(new java.awt.Color(255, 255, 255));
-        btn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
-        btn.setText("Modificar");
-        btn.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btn.setBorderPainted(false);
-        btn.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btn.setDefaultCapable(false);
-        btn.setFocusPainted(false);
-        btn.setRequestFocusEnabled(false);
-        btn.setRolloverEnabled(false);
-        btn.addActionListener(new java.awt.event.ActionListener() {
+        btnCambiarEstado.setBackground(new java.awt.Color(255, 153, 0));
+        btnCambiarEstado.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        btnCambiarEstado.setForeground(new java.awt.Color(255, 255, 255));
+        btnCambiarEstado.setText("Inactivar");
+        btnCambiarEstado.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnCambiarEstado.setBorderPainted(false);
+        btnCambiarEstado.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnCambiarEstado.setDefaultCapable(false);
+        btnCambiarEstado.setFocusPainted(false);
+        btnCambiarEstado.setRequestFocusEnabled(false);
+        btnCambiarEstado.setRolloverEnabled(false);
+        btnCambiarEstado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnActionPerformed(evt);
+                btnCambiarEstadoActionPerformed(evt);
             }
         });
 
-        btnDescartar.setBackground(new java.awt.Color(255, 0, 51));
-        btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
-        btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
-        btnDescartar.setText("Inactivar");
-        btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnDescartar.setBorderPainted(false);
-        btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnDescartar.setDefaultCapable(false);
-        btnDescartar.setFocusPainted(false);
-        btnDescartar.setRequestFocusEnabled(false);
-        btnDescartar.setRolloverEnabled(false);
-        btnDescartar.addActionListener(new java.awt.event.ActionListener() {
+        txtBuscarMaterial.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        btnEditarMaterial.setBackground(new java.awt.Color(97, 85, 245));
+        btnEditarMaterial.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        btnEditarMaterial.setForeground(new java.awt.Color(255, 255, 255));
+        btnEditarMaterial.setIcon(new javax.swing.ImageIcon(getClass().getResource("/edit-20.png"))); // NOI18N
+        btnEditarMaterial.setText("Editar");
+        btnEditarMaterial.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnEditarMaterial.setBorderPainted(false);
+        btnEditarMaterial.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnEditarMaterial.setDefaultCapable(false);
+        btnEditarMaterial.setFocusPainted(false);
+        btnEditarMaterial.setRequestFocusEnabled(false);
+        btnEditarMaterial.setRolloverEnabled(false);
+        btnEditarMaterial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDescartarActionPerformed(evt);
+                btnEditarMaterialActionPerformed(evt);
             }
         });
 
@@ -228,25 +277,25 @@ public class frmMaterialesExistentes extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(lblListadoMateriales)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnNuevoMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btn, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnCambiarEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnEditarMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26)))
                         .addGap(35, 35, 35))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(Buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(txtBuscarMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 888, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(98, Short.MAX_VALUE))))
+                            .addComponent(txtBuscarMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 888, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(230, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addGap(35, 35, 35))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -257,20 +306,18 @@ public class frmMaterialesExistentes extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtBuscarMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                .addComponent(txtBuscarMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNuevoMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblListadoMateriales))
-                .addGap(9, 9, 9)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 22, Short.MAX_VALUE))
+                    .addComponent(btnCambiarEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEditarMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 292, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -288,20 +335,155 @@ public class frmMaterialesExistentes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnNuevoMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoMaterialActionPerformed
-       
+        frmRegistrarMateriales frm = new frmRegistrarMateriales();
+        frm.setVisible(true);
     }//GEN-LAST:event_btnNuevoMaterialActionPerformed
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBuscarActionPerformed
+    private void btnCambiarEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarEstadoActionPerformed
+        int fila = tblMateriales.getSelectedRow();
 
-    private void btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActionPerformed
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Seleccione un material para cambiar su estado.",
+                    "Aviso",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-    }//GEN-LAST:event_btnActionPerformed
+        try {
+            int idMaterial = (int) modeloTabla.getValueAt(fila, 0);
+            String estadoActual = modeloTabla.getValueAt(fila, 6).toString();
 
-    private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
+            // Detectar si está inactivo sin importar texto adicional
+            boolean activar = estadoActual.startsWith("INACTIVO");
+            String accion = activar ? "Activar" : "Inactivar";
 
-    }//GEN-LAST:event_btnDescartarActionPerformed
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "¿Está seguro de " + accion.toLowerCase() + " el material " + idMaterial + "?",
+                    "Confirmar cambio de estado",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+
+                if (materialBO.cambiarEstado(idMaterial, activar)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Material " + (activar ? "ACTIVADO" : "INACTIVADO") + " correctamente.");
+
+                    cargarMateriales();
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Error al actualizar el estado.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Error de base de datos: " + ex.getMessage(),
+                    "Error SQL",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_btnCambiarEstadoActionPerformed
+
+    private void btnEditarMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarMaterialActionPerformed
+        int fila = tblMateriales.getSelectedRow();
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un material para modificar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            int id = (int) modeloTabla.getValueAt(fila, 0);
+            Material materialAEditar = materialBO.obtenerPorId(id);
+
+            if (materialAEditar != null) {
+                abrirFormularioEdicion(materialAEditar);
+            } else {
+                JOptionPane.showMessageDialog(this, "Material no encontrado en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al consultar material: " + ex.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEditarMaterialActionPerformed
+
+    //filtro para buscar materiales
+    private void activarFiltroEnTiempoReal() {
+        txtBuscarMaterial.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+
+            private void filtrar() {
+                String texto = txtBuscarMaterial.getText().trim();
+
+                if (texto.length() == 0) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + texto));
+                }
+            }
+
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                filtrar();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                filtrar();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                filtrar();
+            }
+        });
+    }
+
+    /**
+     * Función para abrir el formulario de registro y edición.
+     */
+    private void abrirFormularioEdicion(Material materialAEditar) {
+        frmRegistrarMateriales frm = new frmRegistrarMateriales(materialAEditar);
+        frm.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                cargarMateriales();
+            }
+        });
+
+        frm.setVisible(true);
+    }
+
+    private void editarTabla() {
+        JTableHeader headerCotizaciones = tblMateriales.getTableHeader();
+        headerCotizaciones.setDefaultRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component comp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                comp.setBackground(new Color(15, 105, 196)); // Fondo azul
+                comp.setForeground(Color.WHITE);             // Texto blanco
+                return comp;
+            }
+        });
+    }
+
+    private void actualizarTextoBotonEstado() {
+        int fila = tblMateriales.getSelectedRow();
+
+        if (fila == -1) {
+            btnCambiarEstado.setText("Cambiar Estado");
+            return;
+        }
+
+        String estado = modeloTabla.getValueAt(fila, 6).toString(); 
+
+        if (estado.equalsIgnoreCase("ACTIVO")) {
+            btnCambiarEstado.setText("Inactivar");
+        } else {
+            btnCambiarEstado.setText("Activar");
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -342,9 +524,8 @@ public class frmMaterialesExistentes extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Buscar;
     private javax.swing.JLabel MaterialesExitentes;
-    private javax.swing.JButton btn;
-    private javax.swing.JButton btnBuscar;
-    private javax.swing.JButton btnDescartar;
+    private javax.swing.JButton btnCambiarEstado;
+    private javax.swing.JButton btnEditarMaterial;
     private javax.swing.JButton btnNuevoMaterial;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
