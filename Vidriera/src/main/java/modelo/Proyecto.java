@@ -17,6 +17,7 @@ public class Proyecto {
     private Date fechaEntregaEstimada;
     private Cliente cliente;
     private int IdCotizacion;
+    private String observaciones;
 
  
     //Constructor vacío
@@ -24,22 +25,25 @@ public class Proyecto {
     }
 
     //Constructor con id
-    public Proyecto(int idProyecto, String estado, Date fechaInicio, Date fechaEntregaEstimada, Cliente cliente,int IdCotizacion) {
+    public Proyecto(int idProyecto, String estado, Date fechaInicio, Date fechaEntregaEstimada, Cliente cliente,int IdCotizacion,String observaciones) {
         this.idProyecto = idProyecto;
         this.estado = estado;
         this.fechaInicio = fechaInicio;
         this.fechaEntregaEstimada = fechaEntregaEstimada;
         this.cliente = cliente;
         this.IdCotizacion=IdCotizacion;
+        this.observaciones=observaciones;
     }
 
     //Constructor sin id
-    public Proyecto(String estado, Date fechaInicio, Date fechaEntregaEstimada, Cliente cliente,int IdCotizacion) {
+    public Proyecto(String estado, Date fechaInicio, Date fechaEntregaEstimada, Cliente cliente,int IdCotizacion,String observaciones) {
         this.estado = estado;
         this.fechaInicio = fechaInicio;
         this.fechaEntregaEstimada = fechaEntregaEstimada;
         this.cliente = cliente;
         this.IdCotizacion=IdCotizacion;
+        this.observaciones=observaciones;
+
     }
     
     // Getters y setters
@@ -91,10 +95,18 @@ public class Proyecto {
         this.IdCotizacion = IdCotizacion;
     }
 
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
     
     @Override
     public String toString() {
-        return "Proyecto{" + "idProyecto=" + idProyecto + ", estado=" + estado + ", fechaInicio=" + fechaInicio + ", fechaEntregaEstimada=" + fechaEntregaEstimada + ", cliente=" + cliente + ",Idcotizacion="+IdCotizacion+'}';
+        return "Proyecto{" + "idProyecto=" + idProyecto + ", estado=" + estado + ", fechaInicio=" + fechaInicio + ", fechaEntregaEstimada=" + fechaEntregaEstimada + ", cliente=" + cliente + ",Idcotizacion="+IdCotizacion+",Observaciones"+observaciones+'}';
     }
     
     

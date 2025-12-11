@@ -4,6 +4,8 @@
  */
 package presentacion.proyecto;
 
+import com.toedter.calendar.JDateChooser;
+import java.awt.FlowLayout;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -11,6 +13,7 @@ import modelo.Cliente;
 import modelo.Proyecto;
 import negocio.ClienteBO;
 import negocio.ProyectoBO;
+import presentacion.Cotizacion.InicioAdministrarCotizaciones;
 
 /**
  *
@@ -18,67 +21,85 @@ import negocio.ProyectoBO;
  */
 public class PanelDetallesProyecto extends javax.swing.JFrame {
 
-    private final ProyectoBO proyectoBO;
+    private ProyectoBO proyectoBO;
     private List<Cliente> listaClientes;
-    private final ClienteBO clienteBO;
-    private final frmAdministrarProyectos padre;
-    private Proyecto proyectoEditar;
+    private ClienteBO clienteBO;
+    private Integer idCotizacionOrigen;
+    private String nombreClienteOrigen;
+    private Date fechaInicioOrigin;
+    private Date fechaFinOrigin;
+    private String estadoOrigin;
+    private String observacionesOrigin;
+    private boolean EsEditar;
 
-    public PanelDetallesProyecto(frmAdministrarProyectos padre) {
-        this(padre, null);
+    public PanelDetallesProyecto() {
+
     }
 
-    public PanelDetallesProyecto(frmAdministrarProyectos padre, Proyecto proyecto) {
+    public PanelDetallesProyecto(Integer idCotizacion, String nombreCliente) {
         initComponents();
         this.proyectoBO = new ProyectoBO();
         this.clienteBO = new ClienteBO();
-        this.padre = padre;
-        this.proyectoEditar = proyecto;
 
-        cargarClientesEnCombo();   // llena jComboBox1 con clientes
+        this.idCotizacionOrigen = idCotizacion;
+        this.nombreClienteOrigen = nombreCliente;
+        cargarDatosDesdeParametros(); // llena txtIdCot y txtNombreC
+        modoSoloDatosCotizacion();
+        fechaInicioCho.setDateFormatString("yyyy-MM-dd");
+        fechaFinCho.setDateFormatString("yyyy-MM-dd");
+        // fechaInicio.setDateFormatString("dd-MM-yyyy");
 
-        if (proyectoEditar != null) {
-            setTitle("Editar proyecto");
-            cargarProyectoEnFormulario(proyectoEditar);
-        } else {
-            setTitle("Nuevo proyecto");
+    }
+
+    public PanelDetallesProyecto(Integer idCotizacion, String nombreCliente, Date fechaI, Date fecahF, String estado, String obvser, boolean editar) {
+        initComponents();
+        this.proyectoBO = new ProyectoBO();
+        this.clienteBO = new ClienteBO();
+
+        this.idCotizacionOrigen = idCotizacion;
+        this.nombreClienteOrigen = nombreCliente;
+        this.EsEditar = editar;
+        cargarDatosDesdeParametros(); // llena txtIdCot y txtNombreC
+        modoSoloDatosCotizacion();
+        fechaInicioCho.setDateFormatString("yyyy-MM-dd");
+        fechaFinCho.setDateFormatString("yyyy-MM-dd");
+        // fechaInicio.setDateFormatString("dd-MM-yyyy");
+
+    }
+
+    private void cargarDatosDesdeParametros() {
+        // ID de la cotización
+        if (idCotizacionOrigen != null) {
+            txtIdCot.setText(String.valueOf(idCotizacionOrigen));
+        }      
+        if (nombreClienteOrigen != null) {
+            txtNombreC.setText(nombreClienteOrigen);
+        }
+        // Fecha inicio desde admin
+        if (fechaInicioOrigin != null) {
+            fechaInicioCho.getDate();
+        }
+        // Fecha fin desde admin
+        if (fechaFinOrigin != null) {
+            fechaFinCho.getDate();
+        }
+         
+          // estado
+        if (estadoOrigin != null) {
+           cbxEstado.setSelectedItem(estadoOrigin);
+        }
+    
+        // observaciones
+        if (observacionesOrigin != null) {
+            txtObservaciones.setText(observacionesOrigin);
         }
     }
 
-    public PanelDetallesProyecto() {
-        this(null, null);
+    public void modoSoloDatosCotizacion() {
+        txtIdCot.setEditable(false);
+        txtNombreC.setEditable(false);
     }
 
-    private void cargarClientesEnCombo() {
-        jComboBox1.removeAllItems();
-        listaClientes = clienteBO.obtenerClientes();   // guarda la lista
-        jComboBox1.addItem("Cliente...");              // opción por defecto
-
-        for (Cliente c : listaClientes) {
-            jComboBox1.addItem(c.getNombre());         // solo el nombre en el combo
-        }
-    }
-
-    private void cargarProyectoEnFormulario(Proyecto p) {
-        // Cliente
-        Cliente cli = p.getCliente();
-        if (cli != null && listaClientes != null) {
-            for (int i = 0; i < listaClientes.size(); i++) {
-                if (listaClientes.get(i).getIdCliente() == cli.getIdCliente()) {
-                    jComboBox1.setSelectedIndex(i + 1); // +1 por el "Cliente..."
-                    break;
-                }
-            }
-        }
-
-        // Estado actual (jComboBox2 con "Activo", "Entregado", "Cancelado")
-        jComboBox2.setSelectedItem(p.getEstado());
-
-        // Fechas y observaciones: ajusta a tus componentes reales
-        txtCot.setText(p.getFechaInicio() != null ? p.getFechaInicio().toString() : "");
-        txtBuscarCliente4.setText(p.getFechaEntregaEstimada() != null ? p.getFechaEntregaEstimada().toString() : "");
-        txtBuscarCliente1.setText(""); // Observaciones si luego las agregas al modelo
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -96,21 +117,21 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         ConsultarCotizacion = new javax.swing.JLabel();
         iconoCrear = new javax.swing.JLabel();
         Buscar = new javax.swing.JLabel();
-        txtBuscarCliente = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        txtCot = new javax.swing.JTextField();
+        txtIdCot = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         btnGuardar = new javax.swing.JButton();
         btnDescartar = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
         Buscar1 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        txtBuscarCliente4 = new javax.swing.JTextField();
+        cbxEstado = new javax.swing.JComboBox<>();
+        txtObservaciones = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        txtBuscarCliente1 = new javax.swing.JTextField();
+        txtNombreC = new javax.swing.JTextField();
+        fechaInicioCho = new com.toedter.calendar.JDateChooser();
+        fechaFinCho = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -172,10 +193,6 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         Buscar.setForeground(new java.awt.Color(15, 105, 196));
         Buscar.setText("Datos de la cotizacion");
 
-        txtBuscarCliente.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente.setText("fecha de inicio");
-        txtBuscarCliente.setToolTipText("");
-
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel2.setText("Estado actual:");
 
@@ -185,12 +202,13 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel4.setText("Fecha de inicio estimada");
 
-        txtCot.setForeground(new java.awt.Color(204, 204, 204));
-        txtCot.setText("Descripcion");
-        txtCot.setToolTipText("");
-        txtCot.addActionListener(new java.awt.event.ActionListener() {
+        txtIdCot.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtIdCot.setForeground(new java.awt.Color(51, 51, 51));
+        txtIdCot.setText("ID ");
+        txtIdCot.setToolTipText("");
+        txtIdCot.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCotActionPerformed(evt);
+                txtIdCotActionPerformed(evt);
             }
         });
 
@@ -236,34 +254,32 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cliente...", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jComboBox1KeyTyped(evt);
-            }
-        });
-
         Buscar1.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         Buscar1.setForeground(new java.awt.Color(15, 105, 196));
         Buscar1.setText("Detalles del proyecto");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Estado", "Item 2", "Item 3", "Item 4" }));
+        cbxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Entregado", "Cancelado" }));
 
-        txtBuscarCliente4.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente4.setText("Observaciones");
-        txtBuscarCliente4.setToolTipText("");
-        txtBuscarCliente4.addActionListener(new java.awt.event.ActionListener() {
+        txtObservaciones.setForeground(new java.awt.Color(204, 204, 204));
+        txtObservaciones.setText("Observaciones");
+        txtObservaciones.setToolTipText("");
+        txtObservaciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBuscarCliente4ActionPerformed(evt);
+                txtObservacionesActionPerformed(evt);
             }
         });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         jLabel5.setText("Fecha fin");
 
-        txtBuscarCliente1.setForeground(new java.awt.Color(204, 204, 204));
-        txtBuscarCliente1.setText("fecha fin");
-        txtBuscarCliente1.setToolTipText("");
+        txtNombreC.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        txtNombreC.setText("Nombre Cliente");
+        txtNombreC.setToolTipText("");
+        txtNombreC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNombreCActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -274,35 +290,35 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(49, 49, 49)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(49, 49, 49)
-                        .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(78, 78, 78))
+                    .addComponent(jLabel2)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(txtObservaciones, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 894, Short.MAX_VALUE)
+                        .addComponent(cbxEstado, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(Buscar1, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtIdCot, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtBuscarCliente4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 895, Short.MAX_VALUE)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(Buscar1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtCot, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtBuscarCliente1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 11, Short.MAX_VALUE))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(Buscar)
-                .addGap(57, 57, 57))
+                        .addGap(28, 28, 28)
+                        .addComponent(Buscar))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(fechaInicioCho, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel4))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(fechaFinCho, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel5)))
+                        .addComponent(txtNombreC, javax.swing.GroupLayout.PREFERRED_SIZE, 835, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 189, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(100, 100, 100))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -315,36 +331,34 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addComponent(txtNombreC, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtCot, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtIdCot, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Buscar1)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtBuscarCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(fechaFinCho, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                    .addComponent(fechaInicioCho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtBuscarCliente4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(51, 51, 51)
+                .addComponent(txtObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(45, 45, 45))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -357,81 +371,69 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 12, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        int idx = jComboBox1.getSelectedIndex();
-        if (idx <= 0) { // 0 = "Cliente..."
-            JOptionPane.showMessageDialog(this, "Debes seleccionar un cliente");
-            return;
-        }
-        Cliente clienteSel = listaClientes.get(idx - 1); // -1 por el "Cliente..."
-        String estado = (String) jComboBox2.getSelectedItem();
-        String fechaInicioTxt = txtCot.getText().trim();
-        String fechaFinTxt = txtBuscarCliente4.getText().trim();
-        int Idcot = Integer.parseInt(txtCot.getText().trim());
-        if (clienteSel == null) {
-            JOptionPane.showMessageDialog(this, "Debes seleccionar un cliente");
-            return;
-        }
-        if (fechaInicioTxt.isEmpty() || fechaFinTxt.isEmpty()) {
+
+        String estado = (String) cbxEstado.getSelectedItem();
+       Date fechaInicio=fechaInicioCho.getDate();
+        Date fechaFin=fechaFinCho.getDate();
+        String observaciones = txtObservaciones.getText().trim();
+
+        if (fechaInicio == null || fechaFin == null) {
             JOptionPane.showMessageDialog(this, "Las fechas de inicio y fin son obligatorias");
             return;
         }
-
-        try {
-            // ejemplo simple con java.sql.Date.valueOf("2025-12-04")
-            java.sql.Date fInicio = java.sql.Date.valueOf(fechaInicioTxt);
-            java.sql.Date fFin = java.sql.Date.valueOf(fechaFinTxt);
-
-            boolean ok;
-            if (proyectoEditar == null) {
-                Proyecto nuevo = new Proyecto(estado, new Date(fInicio.getTime()),
-                        new Date(fFin.getTime()), clienteSel,Idcot);
-                ok = proyectoBO.crearProyecto(nuevo);
-            } else {
-                proyectoEditar.setEstado(estado);
-                proyectoEditar.setFechaInicio(new Date(fInicio.getTime()));
-                proyectoEditar.setFechaEntregaEstimada(new Date(fFin.getTime()));
-                proyectoEditar.setCliente(clienteSel);
-                ok = proyectoBO.actualizarProyecto(proyectoEditar);
-            }
-
-            if (ok) {
-                JOptionPane.showMessageDialog(this, "Proyecto guardado correctamente");
-                if (padre != null) {
-                    padre.recargarProyectos();   // método público en el padre
-                }
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo guardar el proyecto");
-            }
-        } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(this, "Formato de fecha inválido (usa AAAA-MM-DD)");
+        if (fechaInicio.after(fechaFin)) {
+            JOptionPane.showMessageDialog(this, "La fecha de inicio no puede ser posterior a la fecha de fin.",
+                    "Fechas Inválidas", JOptionPane.WARNING_MESSAGE);
+            return;
         }
-
+        
+        Cliente cliente=clienteBO.obtenerPornombre(nombreClienteOrigen);
+            boolean ok;
+            if (EsEditar !=true) {
+                
+                 Proyecto nuevo = new Proyecto(estado, fechaInicio, fechaFin, cliente,idCotizacionOrigen,observaciones);
+                ok = proyectoBO.crearProyecto(nuevo);
+            }else{
+               Proyecto proyectoEditar = new Proyecto(estado, fechaInicio, fechaFin, cliente,idCotizacionOrigen,observaciones);
+               ok=proyectoBO.actualizarProyecto(proyectoEditar);
+            }
+//           
 
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
-        dispose();
+        int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de descartar los cambios?",
+                "Confirmar Cancelación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (opcion == JOptionPane.YES_OPTION) {
+            this.dispose();
+            new frmAdministrarProyectos().setVisible(true);
+        }
     }//GEN-LAST:event_btnDescartarActionPerformed
 
-    private void txtCotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCotActionPerformed
+    private void txtIdCotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdCotActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtCotActionPerformed
+    }//GEN-LAST:event_txtIdCotActionPerformed
 
-    private void txtBuscarCliente4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarCliente4ActionPerformed
+    private void txtObservacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtObservacionesActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtBuscarCliente4ActionPerformed
+    }//GEN-LAST:event_txtObservacionesActionPerformed
 
-    private void jComboBox1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jComboBox1KeyTyped
+    private void txtNombreCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreCActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1KeyTyped
+    }//GEN-LAST:event_txtNombreCActionPerformed
 
     /**
      * @param args the command line arguments
@@ -477,10 +479,10 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
     private javax.swing.JLabel ConsultarCotizacion;
     private javax.swing.JButton btnDescartar;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JComboBox<String> cbxEstado;
+    private com.toedter.calendar.JDateChooser fechaFinCho;
+    private com.toedter.calendar.JDateChooser fechaInicioCho;
     private javax.swing.JLabel iconoCrear;
-    private javax.swing.JComboBox<String
-    > jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -491,9 +493,8 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel panelSubtitulo;
     private javax.swing.JPanel panelTitulo;
-    private javax.swing.JTextField txtBuscarCliente;
-    private javax.swing.JTextField txtBuscarCliente1;
-    private javax.swing.JTextField txtBuscarCliente4;
-    private javax.swing.JTextField txtCot;
+    private javax.swing.JTextField txtIdCot;
+    private javax.swing.JTextField txtNombreC;
+    private javax.swing.JTextField txtObservaciones;
     // End of variables declaration//GEN-END:variables
 }

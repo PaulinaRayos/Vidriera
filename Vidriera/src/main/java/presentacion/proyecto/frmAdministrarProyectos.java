@@ -4,6 +4,8 @@
  */
 package presentacion.proyecto;
 
+import com.toedter.calendar.JDateChooser;
+import java.awt.FlowLayout;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Proyecto;
@@ -342,7 +344,7 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se encontró el proyecto");
             return;
         }
-        PanelDetallesProyecto frm = new PanelDetallesProyecto(this,p);
+        PanelDetallesProyecto frm = new PanelDetallesProyecto();
         frm.setLocationRelativeTo(this);
         frm.setVisible(true);
     }//GEN-LAST:event_btnCambiarEstadoProyectoActionPerformed

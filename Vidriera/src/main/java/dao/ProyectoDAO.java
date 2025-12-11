@@ -26,13 +26,15 @@ public class ProyectoDAO {
 
     // Crear
     public boolean crearProyecto(Proyecto p) {
-        String sql = "INSERT INTO proyecto (estado, fechaInicio, fechaEntregaEstimada, idCliente) "
-                + "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO proyecto (estado, fechaInicio, fechaEntregaEstimada, idCliente,idCotizacion,observaciones) "
+                + "VALUES (?, ?, ?, ?,?,?)";
         try (PreparedStatement ps = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, p.getEstado());
             ps.setDate(2, new java.sql.Date(p.getFechaInicio().getTime()));
             ps.setDate(3, new java.sql.Date(p.getFechaEntregaEstimada().getTime()));
             ps.setInt(4, p.getCliente().getIdCliente());
+            ps.setInt(5, p.getIdCotizacion());
+            ps.setString(6, p.getObservaciones());
 
             int filas = ps.executeUpdate();
             if (filas > 0) {
@@ -84,14 +86,16 @@ public class ProyectoDAO {
     // Actualizar
     public boolean actualizarProyecto(Proyecto p) {
         String sql = "UPDATE proyecto SET estado = ?, fechaInicio = ?, "
-                + "fechaEntregaEstimada = ?, idCliente = ? "
+                + "fechaEntregaEstimada = ?, idCliente = ? ,idCotizacion = ?,observaciones=?"
                 + "WHERE idProyecto = ?";
         try (PreparedStatement ps = conexion.prepareStatement(sql)) {
             ps.setString(1, p.getEstado());
             ps.setDate(2, new java.sql.Date(p.getFechaInicio().getTime()));
             ps.setDate(3, new java.sql.Date(p.getFechaEntregaEstimada().getTime()));
             ps.setInt(4, p.getCliente().getIdCliente());
-            ps.setInt(5, p.getIdProyecto());
+            ps.setInt(5, p.getIdCotizacion());
+            ps.setString(6, p.getObservaciones());
+            ps.setInt(7, p.getIdProyecto());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -122,7 +126,8 @@ public class ProyectoDAO {
         c.setIdCliente(rs.getInt("idCliente"));
         c.setNombre(rs.getString("nombre"));
         p.setCliente(c);
-
+        p.setIdCotizacion(rs.getInt("idCotizacion"));
+        p.setObservaciones(rs.getString("observaciones"));
         return p;
     }
     

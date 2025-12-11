@@ -57,7 +57,7 @@ CREATE TABLE proyecto (
     fechaEntregaEstimada DATE,
     idCliente INT,
 	idCotizacion INT NOT NULL,
-
+	observaciones VARCHAR(255),
     FOREIGN KEY (idCliente) REFERENCES cliente(idCliente),
 	FOREIGN KEY (idCotizacion) REFERENCES cotizacion(idCotizacion)
 );

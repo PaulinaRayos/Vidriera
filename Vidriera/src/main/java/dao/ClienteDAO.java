@@ -69,6 +69,35 @@ public class ClienteDAO {
         return null;
     }
 
+    public Cliente obtenerPorNombre(String nombre) {
+        String sql = "SELECT * FROM cliente WHERE nombre = ?";
+        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+            ps.setString(1, nombre);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapearCliente(rs);   // aquí llenas idCliente, nombre, etc.
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // si no encuentra nada
+    }
+
+//    // Obtener cliente por nombre
+//    public Integer obtenerIDPornombre(String nombre) {
+//        String sql = "SELECT idCliente  FROM cliente WHERE nombre = ?";
+//        try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+//            ps.setString(1, nombre);
+//            ResultSet rs = ps.executeQuery();
+//            if (rs.next()) {
+//              return rs.getInt("idCliente");
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
     // Obtener todos los clientes
     public List<Cliente> obtenerTodos() {
         String sql = "SELECT * FROM cliente ORDER BY nombre";

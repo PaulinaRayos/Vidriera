@@ -43,6 +43,10 @@ public class ClienteBO {
         return clienteDAO.obtenerPorId(id);
     }
 
+    public Cliente obtenerPornombre(String nombre) {
+        return clienteDAO.obtenerPorNombre(nombre);
+    }
+
     public boolean actualizarCliente(Cliente c) {
         if (c.getIdCliente() <= 0) {
             System.out.println("ID de cliente inválido");
@@ -58,4 +62,5 @@ public class ClienteBO {
     public boolean existeCliente(int idCliente) {
         return clienteDAO.existeCliente(idCliente);
     }
+    
 }

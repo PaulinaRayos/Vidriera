@@ -27,10 +27,10 @@ VALUES
 -- ===========================
 -- PROYECTOS
 -- ===========================
-INSERT INTO proyecto (estado, fechaInicio, fechaEntregaEstimada, idCliente,idCotizacion)
+INSERT INTO proyecto (estado, fechaInicio, fechaEntregaEstimada, idCliente,idCotizacion,observaciones)
 VALUES
-('Activo', '2025-10-01', '2025-11-15', 1,1),
-('Activo', '2025-10-10', '2025-11-20', 2,2);
+('Activo', '2025-10-01', '2025-11-15', 1,1,'falta material'),
+('Activo', '2025-10-10', '2025-11-20', 2,2,'el cliente quiere adelanto en 1 semana');
 
 
 -- ===========================
