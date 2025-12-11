@@ -5,14 +5,18 @@ import java.awt.Component;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import modelo.Material;
 import negocio.MaterialBO;
@@ -85,6 +89,54 @@ public class frmMaterialesExistentes extends javax.swing.JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar los materiales: " + ex.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
         }
+
+        tblMateriales.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int col) {
+
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+
+                // Convertir row del JTable al row del modelo (por el sorter)
+                int modelRow = tblMateriales.convertRowIndexToModel(row);
+
+                String estado = table.getModel().getValueAt(modelRow, 6).toString();
+
+                if (estado.equals("INACTIVO")) {
+                    c.setForeground(Color.GRAY);
+                } else {
+                    c.setForeground(Color.BLACK);
+                }
+
+                return c;
+            }
+        });
+
+
+        // Orden ACTIVO va primero, INACTIVO al final        
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(modeloTabla);
+
+        sorter.setComparator(6, (o1, o2) -> {
+            String e1 = o1.toString();
+            String e2 = o2.toString();
+
+            if (e1.equals(e2)) {
+                return 0;
+            }
+            if (e1.equals("ACTIVO")) {
+                return -1; // ACTIVO va arriba
+            }
+            return 1; // INACTIVO va abajo
+        });
+
+        tblMateriales.setRowSorter(sorter);
+
+// Aplicar orden
+        List<RowSorter.SortKey> order = new ArrayList<>();
+        order.add(new RowSorter.SortKey(6, SortOrder.ASCENDING));
+        sorter.setSortKeys(order);
+        sorter.sort();
+
     }
 
     /**
@@ -343,46 +395,40 @@ public class frmMaterialesExistentes extends javax.swing.JFrame {
         int fila = tblMateriales.getSelectedRow();
 
         if (fila == -1) {
-            JOptionPane.showMessageDialog(this,
-                    "Seleccione un material para cambiar su estado.",
-                    "Aviso",
-                    JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Seleccione un material para cambiar su estado.", "Aviso", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         try {
             int idMaterial = (int) modeloTabla.getValueAt(fila, 0);
-            String estadoActual = modeloTabla.getValueAt(fila, 6).toString();
+            String estadoActual = (String) modeloTabla.getValueAt(fila, 6);
 
-            // Detectar si está inactivo sin importar texto adicional
-            boolean activar = estadoActual.startsWith("INACTIVO");
+            if (estadoActual.equals("ACTIVO")) {
+                btnCambiarEstado.setText("Inactivar");
+            } else {
+                btnCambiarEstado.setText("Activar");
+            }
+
+            btnEditarMaterial.setEnabled(estadoActual.equals("ACTIVO"));
+
+            boolean activar = estadoActual.equals("INACTIVO");
             String accion = activar ? "Activar" : "Inactivar";
 
             int confirm = JOptionPane.showConfirmDialog(this,
                     "¿Está seguro de " + accion.toLowerCase() + " el material " + idMaterial + "?",
-                    "Confirmar cambio de estado",
-                    JOptionPane.YES_NO_OPTION);
+                    "Confirmar Cambio de Estado", JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
-
                 if (materialBO.cambiarEstado(idMaterial, activar)) {
-                    JOptionPane.showMessageDialog(this,
-                            "Material " + (activar ? "ACTIVADO" : "INACTIVADO") + " correctamente.");
-
+                    JOptionPane.showMessageDialog(this, "Estado actualizado a " + (activar ? "ACTIVO" : "INACTIVO") + " correctamente.");
                     cargarMateriales();
                 } else {
-                    JOptionPane.showMessageDialog(this,
-                            "Error al actualizar el estado.",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Error al actualizar el estado.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this,
-                    "Error de base de datos: " + ex.getMessage(),
-                    "Error SQL",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error de base de datos: " + ex.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_btnCambiarEstadoActionPerformed
@@ -476,7 +522,7 @@ public class frmMaterialesExistentes extends javax.swing.JFrame {
             return;
         }
 
-        String estado = modeloTabla.getValueAt(fila, 6).toString(); 
+        String estado = modeloTabla.getValueAt(fila, 6).toString();
 
         if (estado.equalsIgnoreCase("ACTIVO")) {
             btnCambiarEstado.setText("Inactivar");
