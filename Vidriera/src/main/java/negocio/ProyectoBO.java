@@ -48,10 +48,11 @@ public class ProyectoBO {
         return proyectoDAO.obtenerPorId(id);
     }
 
+    public List<Proyecto> buscarPorNombreCliente(String nombre){
+        return proyectoDAO.buscarPorNombreCliente(nombre);
+    }
+      
     public boolean actualizarProyecto(Proyecto p) {
-        if (p.getIdProyecto() <= 0) {
-            return false;
-        }
         return proyectoDAO.actualizarProyecto(p);
     }
 

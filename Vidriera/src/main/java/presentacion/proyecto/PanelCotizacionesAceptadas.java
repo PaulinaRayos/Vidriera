@@ -50,7 +50,7 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
         ConsultarCotizacion = new javax.swing.JLabel();
         iconoCrear = new javax.swing.JLabel();
         panelFechas = new javax.swing.JPanel();
-        btnBuscarCot = new javax.swing.JButton();
+        btnSeleCot = new javax.swing.JButton();
         Buscar = new javax.swing.JLabel();
         Buscar1 = new javax.swing.JLabel();
         btnBuscar1 = new javax.swing.JButton();
@@ -132,20 +132,20 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
             .addGap(0, 36, Short.MAX_VALUE)
         );
 
-        btnBuscarCot.setBackground(new java.awt.Color(0, 81, 168));
-        btnBuscarCot.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnBuscarCot.setForeground(new java.awt.Color(255, 255, 255));
-        btnBuscarCot.setText("Seleccionar cotizacion");
-        btnBuscarCot.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnBuscarCot.setBorderPainted(false);
-        btnBuscarCot.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnBuscarCot.setDefaultCapable(false);
-        btnBuscarCot.setFocusPainted(false);
-        btnBuscarCot.setRequestFocusEnabled(false);
-        btnBuscarCot.setRolloverEnabled(false);
-        btnBuscarCot.addActionListener(new java.awt.event.ActionListener() {
+        btnSeleCot.setBackground(new java.awt.Color(0, 81, 168));
+        btnSeleCot.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
+        btnSeleCot.setForeground(new java.awt.Color(255, 255, 255));
+        btnSeleCot.setText("Seleccionar cotizacion");
+        btnSeleCot.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnSeleCot.setBorderPainted(false);
+        btnSeleCot.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnSeleCot.setDefaultCapable(false);
+        btnSeleCot.setFocusPainted(false);
+        btnSeleCot.setRequestFocusEnabled(false);
+        btnSeleCot.setRolloverEnabled(false);
+        btnSeleCot.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarCotActionPerformed(evt);
+                btnSeleCotActionPerformed(evt);
             }
         });
 
@@ -242,7 +242,7 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(Buscar1)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnBuscarCot, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(btnSeleCot, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 957, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -263,7 +263,7 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(38, 38, 38)
-                        .addComponent(btnBuscarCot, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnSeleCot, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(Buscar1)))
@@ -290,7 +290,7 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnBuscarCotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCotActionPerformed
+    private void btnSeleCotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleCotActionPerformed
 
         int fila = tblCotizaciones.getSelectedRow();
         if (fila == -1) {
@@ -304,7 +304,7 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
         PanelDetallesProyecto frm = new PanelDetallesProyecto(idCotizacion, nombreCliente);
         frm.setLocationRelativeTo(this);
         frm.setVisible(true);
-    }//GEN-LAST:event_btnBuscarCotActionPerformed
+    }//GEN-LAST:event_btnSeleCotActionPerformed
 
     private void btnBuscar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscar1ActionPerformed
         // TODO add your handling code here:
@@ -408,8 +408,8 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
     private javax.swing.JLabel Buscar1;
     private javax.swing.JLabel ConsultarCotizacion;
     private javax.swing.JButton btnBuscar1;
-    private javax.swing.JButton btnBuscarCot;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JButton btnSeleCot;
     private javax.swing.JLabel iconoCrear;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

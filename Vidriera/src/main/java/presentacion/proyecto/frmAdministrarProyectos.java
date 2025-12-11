@@ -6,6 +6,8 @@ package presentacion.proyecto;
 
 import com.toedter.calendar.JDateChooser;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Proyecto;
@@ -19,6 +21,7 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
 
     private ProyectoBO proyectoBO;
     private java.util.List<Proyecto> listaCompleta;
+    private java.util.List<Proyecto> listaProyectos;
 
     /**
      * Creates new form frmRegistrarMateriales
@@ -26,14 +29,14 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
     public frmAdministrarProyectos() {
         initComponents();
         proyectoBO = new ProyectoBO();
-        cargarProyectosEnTabla();
+        listaCompleta = proyectoBO.obtenerProyectos();
+        cargarProyectosEnTabla(listaCompleta);
     }
 
-    private void cargarProyectosEnTabla() {
+    private void cargarProyectosEnTabla(List<Proyecto> lista) {
         DefaultTableModel modelo = (DefaultTableModel) tblListaProyectos.getModel();
         modelo.setRowCount(0);
-        listaCompleta = proyectoBO.obtenerProyectos();
-        for (Proyecto p : listaCompleta) {
+        for (Proyecto p : lista) {
             modelo.addRow(new Object[]{
                 p.getIdProyecto(),
                 p.getCliente().getNombre(),
@@ -59,8 +62,6 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
         panelSubtitulo = new javax.swing.JPanel();
         ConsultarCotizacion = new javax.swing.JLabel();
         iconoCrear = new javax.swing.JLabel();
-        txtBusquedaProyecto = new javax.swing.JPanel();
-        btnCreardesdeCeroProyecto = new javax.swing.JButton();
         Buscar = new javax.swing.JLabel();
         Buscar1 = new javax.swing.JLabel();
         btnBuscarProyecto = new javax.swing.JButton();
@@ -69,6 +70,7 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
         btnCambiarEstadoProyecto = new javax.swing.JButton();
         btnNuevoProyecto = new javax.swing.JButton();
         btnEliminarProyecto = new javax.swing.JButton();
+        txFiltrar = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -123,38 +125,6 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
                     .addComponent(ConsultarCotizacion))
                 .addContainerGap(12, Short.MAX_VALUE))
         );
-
-        txtBusquedaProyecto.setBackground(new java.awt.Color(255, 255, 255));
-        txtBusquedaProyecto.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        javax.swing.GroupLayout txtBusquedaProyectoLayout = new javax.swing.GroupLayout(txtBusquedaProyecto);
-        txtBusquedaProyecto.setLayout(txtBusquedaProyectoLayout);
-        txtBusquedaProyectoLayout.setHorizontalGroup(
-            txtBusquedaProyectoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 831, Short.MAX_VALUE)
-        );
-        txtBusquedaProyectoLayout.setVerticalGroup(
-            txtBusquedaProyectoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 36, Short.MAX_VALUE)
-        );
-
-        btnCreardesdeCeroProyecto.setBackground(new java.awt.Color(0, 81, 168));
-        btnCreardesdeCeroProyecto.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
-        btnCreardesdeCeroProyecto.setForeground(new java.awt.Color(255, 255, 255));
-        btnCreardesdeCeroProyecto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-20.png"))); // NOI18N
-        btnCreardesdeCeroProyecto.setText("Crear desde cotizacion");
-        btnCreardesdeCeroProyecto.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnCreardesdeCeroProyecto.setBorderPainted(false);
-        btnCreardesdeCeroProyecto.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnCreardesdeCeroProyecto.setDefaultCapable(false);
-        btnCreardesdeCeroProyecto.setFocusPainted(false);
-        btnCreardesdeCeroProyecto.setRequestFocusEnabled(false);
-        btnCreardesdeCeroProyecto.setRolloverEnabled(false);
-        btnCreardesdeCeroProyecto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreardesdeCeroProyectoActionPerformed(evt);
-            }
-        });
 
         Buscar.setFont(new java.awt.Font("SansSerif", 1, 16)); // NOI18N
         Buscar.setForeground(new java.awt.Color(15, 105, 196));
@@ -270,17 +240,16 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
                                     .addComponent(btnEliminarProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGap(20, 20, 20))
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(Buscar1)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnCreardesdeCeroProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(24, 24, 24)
                                     .addComponent(btnNuevoProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(txtBusquedaProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(btnBuscarProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(txFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 841, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnBuscarProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(0, 0, Short.MAX_VALUE)))
                             .addContainerGap()))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -291,16 +260,14 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
                 .addComponent(panelSubtitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addComponent(Buscar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtBusquedaProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBuscarProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(44, 44, 44)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Buscar1)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnCreardesdeCeroProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnNuevoProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnNuevoProyecto, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48)
@@ -324,12 +291,38 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCreardesdeCeroProyectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreardesdeCeroProyectoActionPerformed
-
-    }//GEN-LAST:event_btnCreardesdeCeroProyectoActionPerformed
-
     private void btnBuscarProyectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProyectoActionPerformed
         // TODO add your handling code here:
+        String criterio = txFiltrar.getText().trim();
+
+    if (criterio.isEmpty()) {
+        listaCompleta = proyectoBO.obtenerProyectos();
+        cargarProyectosEnTabla(listaCompleta);
+       
+    }
+
+    List<Proyecto> resultados = new ArrayList<>();
+
+    // ¿es número? -> buscar por idProyecto
+    try {
+        int id = Integer.parseInt(criterio);
+        Proyecto p = proyectoBO.obtenerProyectoPorId(id);
+        if (p != null) {
+            resultados.add(p);
+        }
+    } catch (NumberFormatException ex) {
+        // no es número, buscar por nombre de cliente
+        resultados = proyectoBO.buscarPorNombreCliente(criterio);
+    }
+
+    if (resultados.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "No se encontraron proyectos");
+        return;
+    }
+
+    // aquí usas tu método para llenar la tabla
+    listaProyectos = resultados;          // actualizas la lista interna
+    cargarProyectosEnTabla(listaProyectos); // método que ya usas para la tabla
     }//GEN-LAST:event_btnBuscarProyectoActionPerformed
 
     private void btnCambiarEstadoProyectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarEstadoProyectoActionPerformed
@@ -340,13 +333,17 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
         }
         int id = (Integer) tblListaProyectos.getValueAt(fila, 0);
         Proyecto p = proyectoBO.obtenerProyectoPorId(id);
+        
         if (p == null) {
             JOptionPane.showMessageDialog(this, "No se encontró el proyecto");
             return;
+        }else{
+          PanelDetallesProyecto pn=new PanelDetallesProyecto(p, true);  
+           this.dispose();
+          pn.setLocationRelativeTo(this);  
+          pn.setVisible(true);
         }
-        PanelDetallesProyecto frm = new PanelDetallesProyecto();
-        frm.setLocationRelativeTo(this);
-        frm.setVisible(true);
+        
     }//GEN-LAST:event_btnCambiarEstadoProyectoActionPerformed
 
     private void btnNuevoProyectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProyectoActionPerformed
@@ -367,7 +364,8 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
         if (op == JOptionPane.YES_OPTION) {
             if (proyectoBO.eliminarProyecto(id)) {
                 JOptionPane.showMessageDialog(this, "Proyecto eliminado");
-                cargarProyectosEnTabla();
+                listaCompleta = proyectoBO.obtenerProyectos();
+                cargarProyectosEnTabla(listaCompleta);
             } else {
                 JOptionPane.showMessageDialog(this, "No se pudo eliminar");
             }
@@ -375,7 +373,8 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEliminarProyectoActionPerformed
 
     public void recargarProyectos() {
-        cargarProyectosEnTabla();
+        listaCompleta = proyectoBO.obtenerProyectos();
+        cargarProyectosEnTabla(listaCompleta);
     }
 
     /**
@@ -420,7 +419,6 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
     private javax.swing.JLabel ConsultarCotizacion;
     private javax.swing.JButton btnBuscarProyecto;
     private javax.swing.JButton btnCambiarEstadoProyecto;
-    private javax.swing.JButton btnCreardesdeCeroProyecto;
     private javax.swing.JButton btnEliminarProyecto;
     private javax.swing.JButton btnNuevoProyecto;
     private javax.swing.JLabel iconoCrear;
@@ -430,6 +428,6 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
     private javax.swing.JPanel panelSubtitulo;
     private javax.swing.JPanel panelTitulo;
     private javax.swing.JTable tblListaProyectos;
-    private javax.swing.JPanel txtBusquedaProyecto;
+    private javax.swing.JTextField txFiltrar;
     // End of variables declaration//GEN-END:variables
 }

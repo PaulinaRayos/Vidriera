@@ -10,8 +10,6 @@ import java.util.List;
 import modelo.Cliente;
 import modelo.Proyecto;
 
-
-
 /**
  *
  * @author delll
@@ -96,7 +94,9 @@ public class ProyectoDAO {
             ps.setInt(5, p.getIdCotizacion());
             ps.setString(6, p.getObservaciones());
             ps.setInt(7, p.getIdProyecto());
+            System.out.println("se actualizo");
             return ps.executeUpdate() > 0;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -115,6 +115,25 @@ public class ProyectoDAO {
         return false;
     }
 
+    // Buscar por nombre de cliente
+public List<Proyecto> buscarPorNombreCliente(String nombre) {
+    String sql = "SELECT p.*, c.idCliente, c.nombre "
+               + "FROM proyecto p "
+               + "JOIN cliente c ON p.idCliente = c.idCliente "
+               + "WHERE c.nombre LIKE ?";
+    List<Proyecto> lista = new ArrayList<>();
+    try (PreparedStatement ps = conexion.prepareStatement(sql)) {
+        ps.setString(1, "%" + nombre + "%");
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            lista.add(mapearProyecto(rs)); // mapearProyecto sigue igual
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return lista;
+}
+
     private Proyecto mapearProyecto(ResultSet rs) throws SQLException {
         Proyecto p = new Proyecto();
         p.setIdProyecto(rs.getInt("idProyecto"));
@@ -130,6 +149,5 @@ public class ProyectoDAO {
         p.setObservaciones(rs.getString("observaciones"));
         return p;
     }
-    
-    
+
 }

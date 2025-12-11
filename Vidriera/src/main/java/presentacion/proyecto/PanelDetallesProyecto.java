@@ -25,6 +25,7 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
     private List<Cliente> listaClientes;
     private ClienteBO clienteBO;
     private Integer idCotizacionOrigen;
+    private Integer idProyectoOriginal;
     private String nombreClienteOrigen;
     private Date fechaInicioOrigin;
     private Date fechaFinOrigin;
@@ -51,13 +52,19 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
 
     }
 
-    public PanelDetallesProyecto(Integer idCotizacion, String nombreCliente, Date fechaI, Date fecahF, String estado, String obvser, boolean editar) {
+    public PanelDetallesProyecto(Proyecto p,boolean editar) {
         initComponents();
         this.proyectoBO = new ProyectoBO();
         this.clienteBO = new ClienteBO();
 
-        this.idCotizacionOrigen = idCotizacion;
-        this.nombreClienteOrigen = nombreCliente;
+        this.idProyectoOriginal = p.getIdProyecto();
+        this.nombreClienteOrigen = p.getCliente().getNombre();
+        this.estadoOrigin=p.getEstado();
+        this.fechaInicioOrigin=p.getFechaInicio();
+        this.fechaFinOrigin=p.getFechaEntregaEstimada();
+        this.observacionesOrigin=p.getObservaciones();
+        this.idCotizacionOrigen=p.getIdCotizacion(); 
+        
         this.EsEditar = editar;
         cargarDatosDesdeParametros(); // llena txtIdCot y txtNombreC
         modoSoloDatosCotizacion();
@@ -77,11 +84,11 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         }
         // Fecha inicio desde admin
         if (fechaInicioOrigin != null) {
-            fechaInicioCho.getDate();
+            fechaInicioCho.setDate(fechaInicioOrigin);
         }
         // Fecha fin desde admin
         if (fechaFinOrigin != null) {
-            fechaFinCho.getDate();
+            fechaFinCho.setDate(fechaFinOrigin);
         }
          
           // estado
@@ -200,7 +207,7 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         jLabel3.setText("Cliente");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel4.setText("Fecha de inicio estimada");
+        jLabel4.setText("Fecha inicio:");
 
         txtIdCot.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtIdCot.setForeground(new java.awt.Color(51, 51, 51));
@@ -258,10 +265,11 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         Buscar1.setForeground(new java.awt.Color(15, 105, 196));
         Buscar1.setText("Detalles del proyecto");
 
+        cbxEstado.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cbxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Entregado", "Cancelado" }));
 
-        txtObservaciones.setForeground(new java.awt.Color(204, 204, 204));
-        txtObservaciones.setText("Observaciones");
+        txtObservaciones.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        txtObservaciones.setForeground(new java.awt.Color(51, 51, 51));
         txtObservaciones.setToolTipText("");
         txtObservaciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -270,7 +278,7 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
-        jLabel5.setText("Fecha fin");
+        jLabel5.setText("Fecha fin estimada:");
 
         txtNombreC.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         txtNombreC.setText("Nombre Cliente");
@@ -290,28 +298,30 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(49, 49, 49)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(txtObservaciones, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 894, Short.MAX_VALUE)
-                        .addComponent(cbxEstado, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(Buscar1, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(txtIdCot, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(Buscar))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(fechaInicioCho, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel4))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(fechaFinCho, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5)))
-                        .addComponent(txtNombreC, javax.swing.GroupLayout.PREFERRED_SIZE, 835, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(fechaInicioCho, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fechaFinCho, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtObservaciones, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 894, Short.MAX_VALUE)
+                                .addComponent(cbxEstado, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(Buscar1, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtIdCot, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(28, 28, 28)
+                                .addComponent(Buscar))
+                            .addComponent(txtNombreC, javax.swing.GroupLayout.PREFERRED_SIZE, 835, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(0, 189, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -336,9 +346,9 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtIdCot, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Buscar1)
                 .addGap(18, 18, 18)
+                .addComponent(Buscar1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jLabel5))
@@ -353,9 +363,9 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
                 .addGap(21, 21, 21)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(txtObservaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(45, 45, 45))
@@ -371,7 +381,7 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 12, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -397,12 +407,35 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         Cliente cliente=clienteBO.obtenerPornombre(nombreClienteOrigen);
             boolean ok;
             if (EsEditar !=true) {
+                 int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de desea guardar los cambios?",
+                "Confirmar Guardar",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+            
+          
+        if (opcion == JOptionPane.YES_OPTION) {
+            Proyecto nuevo = new Proyecto(estado, fechaInicio, fechaFin, cliente,idCotizacionOrigen,observaciones);
+            ok = proyectoBO.crearProyecto(nuevo);
+            this.dispose();
+            new frmAdministrarProyectos().setVisible(true);
+        }
                 
-                 Proyecto nuevo = new Proyecto(estado, fechaInicio, fechaFin, cliente,idCotizacionOrigen,observaciones);
-                ok = proyectoBO.crearProyecto(nuevo);
+               
             }else{
-               Proyecto proyectoEditar = new Proyecto(estado, fechaInicio, fechaFin, cliente,idCotizacionOrigen,observaciones);
+                int opcion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro de desea guardar los cambios?",
+                "Confirmar Guardar",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+                 );
+                 Proyecto proyectoEditar = new Proyecto(idProyectoOriginal,estado, fechaInicio, fechaFin, cliente,idCotizacionOrigen,observaciones);
                ok=proyectoBO.actualizarProyecto(proyectoEditar);
+               this.dispose();
+            new frmAdministrarProyectos().setVisible(true);
             }
 //           
 
@@ -411,13 +444,14 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
     private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
         int opcion = JOptionPane.showConfirmDialog(
                 this,
-                "¿Está seguro de descartar los cambios?",
-                "Confirmar Cancelación",
+                "¿Está seguro deseas eliminar este proyecto?",
+                "Confirmar Eliminacion",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE
         );
-
         if (opcion == JOptionPane.YES_OPTION) {
+            proyectoBO.eliminarProyecto(idProyectoOriginal);
+            JOptionPane.showInputDialog("Proyecto Eliminado con exito");
             this.dispose();
             new frmAdministrarProyectos().setVisible(true);
         }
