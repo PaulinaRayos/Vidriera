@@ -295,34 +295,34 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
         // TODO add your handling code here:
         String criterio = txFiltrar.getText().trim();
 
-    if (criterio.isEmpty()) {
-        listaCompleta = proyectoBO.obtenerProyectos();
-        cargarProyectosEnTabla(listaCompleta);
-       
-    }
+        if (criterio.isEmpty()) {
+            listaCompleta = proyectoBO.obtenerProyectos();
+            cargarProyectosEnTabla(listaCompleta);
 
-    List<Proyecto> resultados = new ArrayList<>();
-
-    // ¿es número? -> buscar por idProyecto
-    try {
-        int id = Integer.parseInt(criterio);
-        Proyecto p = proyectoBO.obtenerProyectoPorId(id);
-        if (p != null) {
-            resultados.add(p);
         }
-    } catch (NumberFormatException ex) {
-        // no es número, buscar por nombre de cliente
-        resultados = proyectoBO.buscarPorNombreCliente(criterio);
-    }
 
-    if (resultados.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "No se encontraron proyectos");
-        return;
-    }
+        List<Proyecto> resultados = new ArrayList<>();
 
-    // aquí usas tu método para llenar la tabla
-    listaProyectos = resultados;          // actualizas la lista interna
-    cargarProyectosEnTabla(listaProyectos); // método que ya usas para la tabla
+        // ¿es número? -> buscar por idProyecto
+        try {
+            int id = Integer.parseInt(criterio);
+            Proyecto p = proyectoBO.obtenerProyectoPorId(id);
+            if (p != null) {
+                resultados.add(p);
+            }
+        } catch (NumberFormatException ex) {
+            // no es número, buscar por nombre de cliente
+            resultados = proyectoBO.buscarPorNombreCliente(criterio);
+        }
+
+        if (resultados.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No se encontraron proyectos");
+            return;
+        }
+
+        // aquí usas tu método para llenar la tabla
+        listaProyectos = resultados;          // actualizas la lista interna
+        cargarProyectosEnTabla(listaProyectos); // método que ya usas para la tabla
     }//GEN-LAST:event_btnBuscarProyectoActionPerformed
 
     private void btnCambiarEstadoProyectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarEstadoProyectoActionPerformed
@@ -331,19 +331,34 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Selecciona un proyecto");
             return;
         }
+
         int id = (Integer) tblListaProyectos.getValueAt(fila, 0);
         Proyecto p = proyectoBO.obtenerProyectoPorId(id);
-        
+
         if (p == null) {
             JOptionPane.showMessageDialog(this, "No se encontró el proyecto");
             return;
-        }else{
-          PanelDetallesProyecto pn=new PanelDetallesProyecto(p, true);  
-           this.dispose();
-          pn.setLocationRelativeTo(this);  
-          pn.setVisible(true);
         }
-        
+
+        String estado = p.getEstado();
+
+        if (estado.equalsIgnoreCase("Cancelado")
+                || estado.equalsIgnoreCase("Entregado")) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No es posible modificar un proyecto con estado \"" + estado + "\".",
+                    "Transición no válida",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        PanelDetallesProyecto pn = new PanelDetallesProyecto(p, true);
+        this.dispose();
+        pn.setLocationRelativeTo(this);
+        pn.setVisible(true);
+
     }//GEN-LAST:event_btnCambiarEstadoProyectoActionPerformed
 
     private void btnNuevoProyectoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProyectoActionPerformed
@@ -358,10 +373,38 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Selecciona un proyecto");
             return;
         }
+
         int id = (Integer) tblListaProyectos.getValueAt(fila, 0);
-        int op = JOptionPane.showConfirmDialog(this, "¿Eliminar proyecto?", "Confirmar",
+
+
+        Proyecto p = proyectoBO.obtenerProyectoPorId(id);
+
+        if (p == null) {
+            JOptionPane.showMessageDialog(this, "No se encontró el proyecto");
+            return;
+        }
+
+        String estado = p.getEstado();
+
+        if (estado.equalsIgnoreCase("Activo")
+                || estado.equalsIgnoreCase("Entregado")) {
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se puede eliminar un proyecto en estado \"" + estado + "\".",
+                    "Eliminación no permitida",
+                    JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        int op = JOptionPane.showConfirmDialog(this,
+                "¿Eliminar proyecto?",
+                "Confirmar",
                 JOptionPane.YES_NO_OPTION);
+
         if (op == JOptionPane.YES_OPTION) {
+
             if (proyectoBO.eliminarProyecto(id)) {
                 JOptionPane.showMessageDialog(this, "Proyecto eliminado");
                 listaCompleta = proyectoBO.obtenerProyectos();
@@ -371,6 +414,8 @@ public class frmAdministrarProyectos extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnEliminarProyectoActionPerformed
+
+    
 
     public void recargarProyectos() {
         listaCompleta = proyectoBO.obtenerProyectos();

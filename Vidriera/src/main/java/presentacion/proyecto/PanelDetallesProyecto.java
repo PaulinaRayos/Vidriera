@@ -52,19 +52,19 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
 
     }
 
-    public PanelDetallesProyecto(Proyecto p,boolean editar) {
+    public PanelDetallesProyecto(Proyecto p, boolean editar) {
         initComponents();
         this.proyectoBO = new ProyectoBO();
         this.clienteBO = new ClienteBO();
 
         this.idProyectoOriginal = p.getIdProyecto();
         this.nombreClienteOrigen = p.getCliente().getNombre();
-        this.estadoOrigin=p.getEstado();
-        this.fechaInicioOrigin=p.getFechaInicio();
-        this.fechaFinOrigin=p.getFechaEntregaEstimada();
-        this.observacionesOrigin=p.getObservaciones();
-        this.idCotizacionOrigen=p.getIdCotizacion(); 
-        
+        this.estadoOrigin = p.getEstado();
+        this.fechaInicioOrigin = p.getFechaInicio();
+        this.fechaFinOrigin = p.getFechaEntregaEstimada();
+        this.observacionesOrigin = p.getObservaciones();
+        this.idCotizacionOrigen = p.getIdCotizacion();
+
         this.EsEditar = editar;
         cargarDatosDesdeParametros(); // llena txtIdCot y txtNombreC
         modoSoloDatosCotizacion();
@@ -78,7 +78,7 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         // ID de la cotización
         if (idCotizacionOrigen != null) {
             txtIdCot.setText(String.valueOf(idCotizacionOrigen));
-        }      
+        }
         if (nombreClienteOrigen != null) {
             txtNombreC.setText(nombreClienteOrigen);
         }
@@ -90,12 +90,12 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         if (fechaFinOrigin != null) {
             fechaFinCho.setDate(fechaFinOrigin);
         }
-         
-          // estado
+
+        // estado
         if (estadoOrigin != null) {
-           cbxEstado.setSelectedItem(estadoOrigin);
+            cbxEstado.setSelectedItem(estadoOrigin);
         }
-    
+
         // observaciones
         if (observacionesOrigin != null) {
             txtObservaciones.setText(observacionesOrigin);
@@ -106,7 +106,6 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         txtIdCot.setEditable(false);
         txtNombreC.setEditable(false);
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -247,7 +246,7 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
         btnDescartar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
         btnDescartar.setForeground(new java.awt.Color(255, 255, 255));
         btnDescartar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cancelar-20.png"))); // NOI18N
-        btnDescartar.setText("Descartar");
+        btnDescartar.setText("Cancelar");
         btnDescartar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         btnDescartar.setBorderPainted(false);
         btnDescartar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -390,8 +389,8 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
 
         String estado = (String) cbxEstado.getSelectedItem();
-       Date fechaInicio=fechaInicioCho.getDate();
-        Date fechaFin=fechaFinCho.getDate();
+        Date fechaInicio = fechaInicioCho.getDate();
+        Date fechaFin = fechaFinCho.getDate();
         String observaciones = txtObservaciones.getText().trim();
 
         if (fechaInicio == null || fechaFin == null) {
@@ -403,40 +402,38 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
                     "Fechas Inválidas", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        
-        Cliente cliente=clienteBO.obtenerPornombre(nombreClienteOrigen);
-            boolean ok;
-            if (EsEditar !=true) {
-                 int opcion = JOptionPane.showConfirmDialog(
-                this,
-                "¿Está seguro de desea guardar los cambios?",
-                "Confirmar Guardar",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE
-        );
-            
-          
-        if (opcion == JOptionPane.YES_OPTION) {
-            Proyecto nuevo = new Proyecto(estado, fechaInicio, fechaFin, cliente,idCotizacionOrigen,observaciones);
-            ok = proyectoBO.crearProyecto(nuevo);
+
+        Cliente cliente = clienteBO.obtenerPornombre(nombreClienteOrigen);
+        boolean ok;
+        if (EsEditar != true) {
+            int opcion = JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Está seguro de desea guardar los cambios?",
+                    "Confirmar Guardar",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (opcion == JOptionPane.YES_OPTION) {
+                Proyecto nuevo = new Proyecto(estado, fechaInicio, fechaFin, cliente, idCotizacionOrigen, observaciones);
+                ok = proyectoBO.crearProyecto(nuevo);
+                this.dispose();
+                new frmAdministrarProyectos().setVisible(true);
+            }
+
+        } else {
+            int opcion = JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Está seguro de desea guardar los cambios?",
+                    "Confirmar Guardar",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+            Proyecto proyectoEditar = new Proyecto(idProyectoOriginal, estado, fechaInicio, fechaFin, cliente, idCotizacionOrigen, observaciones);
+            ok = proyectoBO.actualizarProyecto(proyectoEditar);
             this.dispose();
             new frmAdministrarProyectos().setVisible(true);
         }
-                
-               
-            }else{
-                int opcion = JOptionPane.showConfirmDialog(
-                this,
-                "¿Está seguro de desea guardar los cambios?",
-                "Confirmar Guardar",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE
-                 );
-                 Proyecto proyectoEditar = new Proyecto(idProyectoOriginal,estado, fechaInicio, fechaFin, cliente,idCotizacionOrigen,observaciones);
-               ok=proyectoBO.actualizarProyecto(proyectoEditar);
-               this.dispose();
-            new frmAdministrarProyectos().setVisible(true);
-            }
 //           
 
     }//GEN-LAST:event_btnGuardarActionPerformed
@@ -444,14 +441,13 @@ public class PanelDetallesProyecto extends javax.swing.JFrame {
     private void btnDescartarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDescartarActionPerformed
         int opcion = JOptionPane.showConfirmDialog(
                 this,
-                "¿Está seguro deseas eliminar este proyecto?",
-                "Confirmar Eliminacion",
+                "¿Deseas cancelar la creación del proyecto?",
+                "Cancelar",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.WARNING_MESSAGE
         );
+
         if (opcion == JOptionPane.YES_OPTION) {
-            proyectoBO.eliminarProyecto(idProyectoOriginal);
-            JOptionPane.showInputDialog("Proyecto Eliminado con exito");
             this.dispose();
             new frmAdministrarProyectos().setVisible(true);
         }
