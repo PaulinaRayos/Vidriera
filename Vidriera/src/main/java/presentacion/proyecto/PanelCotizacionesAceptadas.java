@@ -49,7 +49,6 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
         panelSubtitulo = new javax.swing.JPanel();
         ConsultarCotizacion = new javax.swing.JLabel();
         iconoCrear = new javax.swing.JLabel();
-        panelFechas = new javax.swing.JPanel();
         btnSeleCot = new javax.swing.JButton();
         Buscar = new javax.swing.JLabel();
         Buscar1 = new javax.swing.JLabel();
@@ -63,6 +62,7 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
+        txFiltrar = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,20 +116,6 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
                     .addComponent(iconoCrear)
                     .addComponent(ConsultarCotizacion))
                 .addContainerGap(12, Short.MAX_VALUE))
-        );
-
-        panelFechas.setBackground(new java.awt.Color(255, 255, 255));
-        panelFechas.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        javax.swing.GroupLayout panelFechasLayout = new javax.swing.GroupLayout(panelFechas);
-        panelFechas.setLayout(panelFechasLayout);
-        panelFechasLayout.setHorizontalGroup(
-            panelFechasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 831, Short.MAX_VALUE)
-        );
-        panelFechasLayout.setVerticalGroup(
-            panelFechasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 36, Short.MAX_VALUE)
         );
 
         btnSeleCot.setBackground(new java.awt.Color(0, 81, 168));
@@ -221,6 +207,12 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
             }
         });
 
+        txFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txFiltrarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -233,8 +225,8 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
                     .addComponent(Buscar)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(panelFechas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
+                            .addComponent(txFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 841, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(btnBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addContainerGap())
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -258,8 +250,8 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
                 .addComponent(Buscar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(panelFechas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(38, 38, 38)
@@ -308,18 +300,66 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
 
     private void btnBuscar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscar1ActionPerformed
         // TODO add your handling code here:
+            filtrarCotizaciones();
+
     }//GEN-LAST:event_btnBuscar1ActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void txFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txFiltrarActionPerformed
+            filtrarCotizaciones();
+
+    }//GEN-LAST:event_txFiltrarActionPerformed
     private void inicializarLogica() {
         this.proyectoBO = new ProyectoBO();
 
         this.modeloTablaCotizaciones = (DefaultTableModel) tblCotizaciones.getModel();
 
     }
+private void filtrarCotizaciones() {
+    String criterio = txFiltrar.getText().trim();
+
+    if (criterio.isEmpty()) {
+        // si está vacío, muestra todas
+        llenarTablaCotizaciones(listaCotizacionesActuales);
+        return;
+    }
+
+    List<Cotizacion> filtradas = new java.util.ArrayList<>();
+
+    try {
+        // intento convertir a número -> buscar por idCotizacion
+        int id = Integer.parseInt(criterio);
+        for (Cotizacion c : listaCotizacionesActuales) {
+            if (c.getIdCotizacion() == id) {
+                filtradas.add(c);
+            }
+        }
+    } catch (NumberFormatException ex) {
+        // no es número -> buscar por nombre de cliente
+        String criterioLower = criterio.toLowerCase();
+        for (Cotizacion c : listaCotizacionesActuales) {
+            String nombreCli = c.getCliente().getNombre();
+            if (nombreCli != null &&
+                nombreCli.toLowerCase().contains(criterioLower)) {
+                filtradas.add(c);
+            }
+        }
+    }
+
+    if (filtradas.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "No se encontraron cotizaciones");
+        llenarTablaCotizaciones(listaCotizacionesActuales);
+
+    }else{
+           llenarTablaCotizaciones(filtradas);
+ 
+    }
+
+}
 
     /**
      * carga todas las cotizaciones aceptadas
@@ -420,9 +460,9 @@ public class PanelCotizacionesAceptadas extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JPanel panelFechas;
     private javax.swing.JPanel panelSubtitulo;
     private javax.swing.JPanel panelTitulo;
     private javax.swing.JTable tblCotizaciones;
+    private javax.swing.JTextField txFiltrar;
     // End of variables declaration//GEN-END:variables
 }
