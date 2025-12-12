@@ -57,11 +57,9 @@ public class frmRegistrarMateriales extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         txtDescripcion = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         cbxTipoMateriales = new javax.swing.JComboBox<>();
         Buscar1 = new javax.swing.JLabel();
         cbxUnidades = new javax.swing.JComboBox<>();
-        txtDetallesAdicional = new javax.swing.JTextField();
         btnGuardar = new javax.swing.JButton();
         btnDescartar = new javax.swing.JButton();
 
@@ -157,10 +155,6 @@ public class frmRegistrarMateriales extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(0, 38, 115));
         jLabel6.setText("Descripcion:");
 
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 38, 115));
-        jLabel8.setText("Detalles adicionales:");
-
         cbxTipoMateriales.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         cbxTipoMateriales.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione un tipo...", "Item 2", "Item 3", "Item 4" }));
 
@@ -170,14 +164,6 @@ public class frmRegistrarMateriales extends javax.swing.JFrame {
 
         cbxUnidades.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
         cbxUnidades.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Unidad", "Item 2", "Item 3", "Item 4" }));
-
-        txtDetallesAdicional.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        txtDetallesAdicional.setToolTipText("");
-        txtDetallesAdicional.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDetallesAdicionalActionPerformed(evt);
-            }
-        });
 
         btnGuardar.setBackground(new java.awt.Color(4, 210, 65));
         btnGuardar.setFont(new java.awt.Font("SansSerif", 1, 12)); // NOI18N
@@ -231,22 +217,20 @@ public class frmRegistrarMateriales extends javax.swing.JFrame {
                                 .addComponent(jLabel3)
                                 .addComponent(jLabel6)
                                 .addComponent(jLabel2)
-                                .addComponent(jLabel8)
                                 .addComponent(txtPrecioUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel4)
                                 .addComponent(Buscar1))
                             .addGap(0, 531, Short.MAX_VALUE))
                         .addComponent(cbxTipoMateriales, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(txtDescripcion)
-                        .addComponent(cbxUnidades, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtDetallesAdicional)))
+                        .addComponent(cbxUnidades, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(34, 34, 34))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(19, 19, 19))
+                .addGap(46, 46, 46))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,15 +258,11 @@ public class frmRegistrarMateriales extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addGap(12, 12, 12)
                 .addComponent(txtPrecioUnitario, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtDetallesAdicional, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(29, 29, 29)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDescartar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20))
+                .addGap(135, 135, 135))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -305,13 +285,8 @@ public class frmRegistrarMateriales extends javax.swing.JFrame {
         }
 
         String descripcionCompleta = materialAEditar.getDescripcion();
-        String[] partes = descripcionCompleta.split(" ", 2);
+        txtDescripcion.setText(descripcionCompleta);
 
-        txtDescripcion.setText(partes[0]);
-
-        if (partes.length > 1) {
-            txtDetallesAdicional.setText(partes[1]);
-        }
 
         txtPrecioUnitario.setText(materialAEditar.getPrecio().toString());
         cbxTipoMateriales.setSelectedItem(materialAEditar.getTipo().name());
@@ -339,7 +314,6 @@ public class frmRegistrarMateriales extends javax.swing.JFrame {
         try {
             // Datos del formulario
             String descripcion = txtDescripcion.getText().trim();
-            String detalleAdicional = txtDetallesAdicional.getText().trim();
             String tipoSeleccionado = (String) cbxTipoMateriales.getSelectedItem();
             String unidad = (String) cbxUnidades.getSelectedItem();
             String precioTxt = txtPrecioUnitario.getText().trim();
@@ -359,6 +333,12 @@ public class frmRegistrarMateriales extends javax.swing.JFrame {
                 precio = new BigDecimal(precioTxt);
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Precio inválido.");
+                return;
+            }
+
+            // NUEVA VALIDACIÓN: precio debe ser > 0
+            if (precio.compareTo(BigDecimal.ZERO) <= 0) {
+                JOptionPane.showMessageDialog(this, "El precio debe ser mayor que 0.");
                 return;
             }
 
@@ -431,17 +411,12 @@ public class frmRegistrarMateriales extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDescripcionActionPerformed
 
-    private void txtDetallesAdicionalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDetallesAdicionalActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDetallesAdicionalActionPerformed
-
     private void txtPrecioUnitarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioUnitarioActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtPrecioUnitarioActionPerformed
 
     private void limpiarFormulario() {
         txtDescripcion.setText("");
-        txtDetallesAdicional.setText("");
         txtPrecioUnitario.setText("");
         cbxTipoMateriales.setSelectedIndex(0);
         cbxUnidades.setSelectedIndex(0);
@@ -503,12 +478,10 @@ public class frmRegistrarMateriales extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel panelSubtitulo;
     private javax.swing.JPanel panelTitulo;
     private javax.swing.JTextField txtDescripcion;
-    private javax.swing.JTextField txtDetallesAdicional;
     private javax.swing.JTextField txtPrecioUnitario;
     // End of variables declaration//GEN-END:variables
 }
